@@ -203,7 +203,6 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../files/env' => base_path('.env'),
             __DIR__ . '/../files/.env.example' => base_path('.env.example'),
             __DIR__ . '/../files/.env.production' => base_path('.env.production'),
-            __DIR__ . '/../files/.env.template' => base_path('.env.template'),
             __DIR__ . '/../files/.eslintignore' => base_path('.eslintignore'),
             __DIR__ . '/../files/.eslintrc' => base_path('.eslintrc'),
             __DIR__ . '/../files/.eslintrc-auto-import.json' => base_path('.eslintrc-auto-import.json'),
@@ -225,6 +224,11 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../files/vitest.config.ts' => base_path('vitest.config.ts'),
             __DIR__ . '/../files/window.d.ts' => base_path('window.d.ts'),
         ], 'creopse-other-files');
+
+        // Publish creopse admin
+        $this->publishes([
+            __DIR__ . '/../creopse' => public_path(),
+        ], 'creopse-admin');
     }
 
     public function register()

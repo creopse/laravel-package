@@ -3,6 +3,9 @@
 namespace Creopse\Creopse\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 class Install extends Command
 {
@@ -30,73 +33,128 @@ class Install extends Command
 
         $this->info('Starting package installation...');
 
-        // Step 1: Publish configuration files
+        // Step 1: Delete some files
+        // List of files to delete
+        $filesToDelete = [
+            base_path('vite.config.js'),
+        ];
+        // List of folders to delete
+        $foldersToDelete = [
+            base_path('resources'),
+        ];
+        // Delete files
+        foreach ($filesToDelete as $file) {
+            if (File::exists($file)) {
+                File::delete($file);
+                $this->info("Deleted file: $file");
+            } else {
+                $this->warn("File not found: $file");
+            }
+        }
+        // Delete folders
+        foreach ($foldersToDelete as $folder) {
+            if (File::isDirectory($folder)) {
+                File::deleteDirectory($folder);
+                $this->info("Deleted folder: $folder");
+            } else {
+                $this->warn("Folder not found: $folder");
+            }
+        }
+
+        // Step 2: Publish configuration files
         $this->info('Publishing configuration file...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-config',
             '--force' => $force,
         ]);
 
-        // Step 2: Publish public assets
+        // Step 3: Publish public assets
         $this->info('Publishing public assets...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-public',
             '--force' => $force,
         ]);
 
-        // Step 3: Publish resources
+        // Step 4: Publish resources
         $this->info('Publishing resources...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-resources',
             '--force' => $force,
         ]);
 
-        // Step 4: Publish translations
+        // Step 5: Publish translations
         $this->info('Publishing translations...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-translations',
             '--force' => $force,
         ]);
 
-        // Step 5: Publish inertia middleware
+        // Step 6: Publish inertia middleware
         $this->info('Publishing inertia middleware...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-inertia-middleware',
             '--force' => $force,
         ]);
 
-        // Step 6: Publish other files (e.g., routes, controllers)
+        // Step 7: Publish other files (e.g., routes, controllers)
         $this->info('Publishing other files...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-other-files',
             '--force' => $force,
         ]);
 
-        // Step 7: Install composer dependencies
-        $this->info('Installing composer dependencies...');
-        $this->call('composer install');
+        // Step 8: Publish admin
+        $this->info('Publishing creopse admin...');
+        $this->call('vendor:publish', [
+            '--tag' => 'creopse-admin',
+            '--force' => $force,
+        ]);
 
-        // Step 8: Install pnpm dependencies
+        // Step 9: Update composer dependencies
+        $this->info('Updating composer dependencies...');
+        $process = new Process(['composer', 'update']);
+        // Run the process
+        $process->run();
+        // Check if the process was successful
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        // Output the result
+        echo $process->getOutput();
+
+        // Step 10: Install pnpm dependencies
         $this->info('Installing pnpm dependencies...');
-        $this->call('pnpm i');
+        $process = new Process(['pnpm', 'i']);
+        // Run the process
+        $process->run();
+        // Check if the process was successful
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        // Output the result
+        echo $process->getOutput();
 
-        // Step 9: Clear cache
+        // Step 11: Clear cache
         $this->info('Clearing cache...');
         $this->call('cache:clear');
 
-        // Step 10: Generate app key
-        $this->info('Generating app key...');
-        $this->call('key:generate');
-
-        // Step 11: Link storage folder to public folder
+        // Step 12: Link storage folder to public folder
         $this->info('Linking storage folder to public folder...');
         $this->call('storage:link');
 
-        // Step 12: Run migrations
+        // Step 13: Generate app key
+        $this->info('Generating app key...');
+        $this->call('key:generate');
+
+        // Step 14: Generate IDE helper
+        $this->info('Generating IDE helper...');
+        $this->call('ide-helper:generate');
+
+        // Step 15: Run migrations
         // $this->info('Running migrations...');
         // $this->call('migrate');
 
-        // Step 13: Run seeders
+        // Step 16: Run seeders
         // $this->info('Running seeders...');
         // $this->call('db:seed');
 

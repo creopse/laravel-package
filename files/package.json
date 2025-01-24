@@ -16,12 +16,7 @@
         "format": "prettier . --write",
         "commit": "git add --all && commit",
         "commit-push": "git add --all && commit && git push origin --all",
-        "execute-husky": "npx husky install && npx husky add .husky/pre-commit \"npx --no-install lint-staged\" && npx husky add .husky/commit-msg \"npx --no -- commitlint --config commitlint.config.cjs --edit $1\"",
-        "docs:init": "mkdir docs && cd docs && git init && git remote add origin https://github.com/edPage-TG/docs.git && git pull origin master",
-        "docs:dev": "vitepress dev docs",
-        "docs:build": "vitepress build docs",
-        "docs:preview": "vitepress preview docs",
-        "docs:deploy": "pnpm docs:build && gh-pages -d docs/.vitepress/build"
+        "execute-husky": "npx husky install && npx husky add .husky/pre-commit \"npx --no-install lint-staged\" && npx husky add .husky/commit-msg \"npx --no -- commitlint --config commitlint.config.cjs --edit $1\""
     },
     "husky": {
         "hooks": {
@@ -81,7 +76,6 @@
         "unplugin-vue-components": "^0.26.0",
         "vfonts": "^0.0.3",
         "vite": "^5.1.4",
-        "vitepress": "1.0.0-rc.42",
         "vitest": "^0.34.6",
         "vue-tsc": "^2.0.10"
     },
@@ -143,7 +137,7 @@
         "uuid": "^9.0.1",
         "validator": "^13.11.0",
         "vite-svg-loader": "^5.1.0",
-        "vue": "3.4.0",
+        "vue": "^3.4.37",
         "vue-advanced-cropper": "^2.8.8",
         "vue-draggable-next": "^2.2.1",
         "vue-recaptcha": "3.0.0-alpha.6",
