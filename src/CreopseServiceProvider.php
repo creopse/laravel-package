@@ -227,7 +227,7 @@ class CreopseServiceProvider extends ServiceProvider
 
         // Publish creopse admin
         $this->publishes([
-            __DIR__ . '/../creopse' => public_path(),
+            __DIR__ . '/../creopse' => public_path('creopse'),
         ], 'creopse-admin');
     }
 
