@@ -1,16 +1,12 @@
-import ckeditor5 from '@ckeditor/vite-plugin-ckeditor5'
 import vue from '@vitejs/plugin-vue'
 import laravel from 'laravel-vite-plugin'
 import VueI18n from 'laravel-vue-i18n/vite'
-import { createRequire } from 'module'
 import path from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import SvgLoader from 'vite-svg-loader'
-
-const require = createRequire(import.meta.url)
 
 export default defineConfig({
   envPrefix: 'APP_',
@@ -160,9 +156,5 @@ export default defineConfig({
         globalsPropValue: true, // Default `true`, (true | false | 'readonly' | 'readable' | 'writable' | 'writeable')
       },
     }),
-    ckeditor5({ theme: require.resolve('@ckeditor/ckeditor5-theme-lark') }),
   ],
-  optimizeDeps: {
-    include: ['@ckeditor/ckeditor5-vue'],
-  },
 })

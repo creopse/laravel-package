@@ -4,18 +4,14 @@ import 'flowbite'
 import App from './App.vue'
 
 import pinia from '@/stores'
-import CKEditor from '@ckeditor/ckeditor5-vue'
 
 import { LANG_COOKIE } from '@/utils/constants'
 
 import { ZiggyVue } from 'ziggy-js'
 import { i18nVue } from 'laravel-vue-i18n'
-import { VueDraggableNext } from 'vue-draggable-next'
 import { VueRecaptchaPlugin } from 'vue-recaptcha/head'
 import { createInertiaApp, Link } from '@inertiajs/vue3'
 import { SFacebook, STwitter, SLinkedIn } from 'vue-socials'
-
-import Vue3GoogleLogin from 'vue3-google-login'
 
 import VueTelInput from 'vue-tel-input'
 import 'vue-tel-input/vue-tel-input.css'
@@ -74,7 +70,6 @@ createInertiaApp({
       .use(plugin)
       .use(ZiggyVue)
       .use(pinia)
-      .use(CKEditor)
       // @ts-ignore
       .use(VueTelInput)
       .use(i18nVue, {
@@ -85,15 +80,11 @@ createInertiaApp({
           return await langs[`../../lang/${lang}.json`]()
         },
       })
-      .use(Vue3GoogleLogin, {
-        clientId: import.meta.env.APP_GOOGLE_CLIENT_ID,
-      })
       .use(VueRecaptchaPlugin, {
         v2SiteKey: import.meta.env.APP_RECAPTCHA_V2_KEY,
         v3SiteKey: import.meta.env.APP_RECAPTCHA_V3_KEY,
       })
       .component('Flicking', Flicking)
-      .component('Draggable', VueDraggableNext)
       .component('SLinkedIn', SLinkedIn)
       .component('SFacebook', SFacebook)
       .component('STwitter', STwitter)
