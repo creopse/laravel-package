@@ -1,0 +1,11 @@
+<script lang="ts" setup>
+  // {{ name }} section
+
+  const { getSectionRootData } = useContent()
+
+  const {{ dataVar }} = getSectionRootData('{{ dataId }}')
+</script>
+
+<template>
+  <section id="{{ id }}"></section>
+</template>

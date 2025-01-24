@@ -1,0 +1,81 @@
+{
+    "name": "creopse/creopse",
+    "description": "Creopse is a hybrid Content Management System (CMS)",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Noé Gnanih",
+            "email": "noegnanih@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Creopse\\Creopse\\": "src/",
+            "Creopse\\Creopse\\Database\\Factories\\": "database/factories/",
+            "Creopse\\Creopse\\Database\\Seeders\\": "database/seeders/"
+        },
+        "files": [
+            "src/Helpers/Constants.php",
+            "src/Helpers/Functions.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Creopse\\Creopse\\CreopseServiceProvider"
+            ]
+        },
+        "google/apiclient-services": [
+            "Gmail"
+        ]
+    },
+    "scripts": {
+        "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
+    },
+    "require": {
+        "php": "^8.1",
+        "alirezasedghi/laravel-image-faker": "^1.0",
+        "doctrine/dbal": "^3.8",
+        "google/apiclient": "^2.15.0",
+        "guzzlehttp/guzzle": "^7.2",
+        "inertiajs/inertia-laravel": "^1.0",
+        "intervention/image-laravel": "^1.3",
+        "ipdata/api-client": "^0.1.1",
+        "ipinfo/ipinfo": "^3.1",
+        "laravel-lang/locales": "^2.5",
+        "laravel/framework": "^10.10",
+        "laravel/sanctum": "^3.3",
+        "laravel/socialite": "^5.12",
+        "laravel/tinker": "^2.8",
+        "nyholm/psr7": "^1.8",
+        "propaganistas/laravel-phone": "^5.3",
+        "santigarcor/laratrust": "^8.2",
+        "spatie/laravel-feed": "^4.4",
+        "spatie/laravel-query-builder": "^5.7",
+        "spatie/laravel-sluggable": "^3.6",
+        "symfony/http-client": "^6.4",
+        "symfony/mailgun-mailer": "^6.4",
+        "symfony/postmark-mailer": "^6.4",
+        "tightenco/ziggy": "^2.1",
+        "tomlerendu/laravel-convert-case-middleware": "^1.1",
+        "twilio/sdk": "^7.16"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.9.1",
+        "laravel-lang/common": "^6.1",
+        "laravel/pint": "^1.0",
+        "laravel/sail": "^1.18",
+        "mockery/mockery": "^1.4.4",
+        "nunomaduro/collision": "^7.0",
+        "pestphp/pest": "^2.0",
+        "pestphp/pest-plugin-laravel": "^2.0",
+        "spatie/laravel-ignition": "^2.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": false
+        },
+        "process-timeout": 600
+    }
+}
