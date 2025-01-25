@@ -38,6 +38,8 @@ class Install extends Command
         // List of files to delete
         $filesToDelete = [
             base_path('vite.config.js'),
+            base_path('routes/api.php'),
+            base_path('routes/web.php'),
         ];
         // List of folders to delete
         $foldersToDelete = [

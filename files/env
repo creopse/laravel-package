@@ -1,6 +1,6 @@
 APP_NAME="Creopse"
 APP_ENV=local
-APP_KEY=
+APP_KEY=base64:BP9ABQ4JUyqq3aC0ao5ggI88X3CrcNYw4XQgq63TTKs=
 APP_DEBUG=true
 APP_URL=https://creopse.test
 FRONTEND_URL=http://localhost:4320

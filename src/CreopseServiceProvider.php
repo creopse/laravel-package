@@ -222,6 +222,8 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../files/vite.config.ts' => base_path('vite.config.ts'),
             __DIR__ . '/../files/vitest.config.ts' => base_path('vitest.config.ts'),
             __DIR__ . '/../files/window.d.ts' => base_path('window.d.ts'),
+            __DIR__ . '/../files/api.php' => base_path('routes/api.php'),
+            __DIR__ . '/../files/web.php' => base_path('routes/web.php'),
         ], 'creopse-other-files');
 
         // Publish creopse admin
