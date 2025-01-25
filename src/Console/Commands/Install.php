@@ -2,6 +2,7 @@
 
 namespace Creopse\Creopse\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -42,6 +43,10 @@ class Install extends Command
         $foldersToDelete = [
             base_path('resources'),
         ];
+        // List of folders files to delete
+        $foldersFilesToDelete = [
+            database_path('migrations'),
+        ];
         // Delete files
         foreach ($filesToDelete as $file) {
             if (File::exists($file)) {
@@ -58,6 +63,22 @@ class Install extends Command
                 $this->info("Deleted folder: $folder");
             } else {
                 $this->warn("Folder not found: $folder");
+            }
+        }
+        // Delete folders files
+        foreach ($foldersFilesToDelete as $folder) {
+            try {
+                $files = File::files($folder);
+
+                foreach ($files as $file) {
+                    if (!File::delete($file)) {
+                        throw new Exception("Failed to delete file: $file");
+                    }
+                }
+
+                echo "All files in the folder $folder have been deleted.";
+            } catch (Exception $e) {
+                echo "Error: " . $e->getMessage();
             }
         }
 
@@ -110,11 +131,15 @@ class Install extends Command
             '--force' => $force,
         ]);
 
-        // Step 9: Generate app key
+        // Step 9: Clear config
+        $this->info('Clearing config...');
+        $this->call('config:clear');
+
+        // Step 10: Generate app key
         $this->info('Generating app key...');
         $this->call('key:generate');
 
-        // Step 10: Update composer dependencies
+        // Step 11: Update composer dependencies
         $this->info('Updating composer dependencies...');
         $process = new Process(['composer', 'update']);
         $process->setTimeout(300);
@@ -127,7 +152,7 @@ class Install extends Command
         // Output the result
         echo $process->getOutput();
 
-        // Step 11: Install pnpm dependencies
+        // Step 12: Install pnpm dependencies
         $this->info('Installing pnpm dependencies...');
         $process = new Process(['pnpm', 'i']);
         $process->setTimeout(300);
@@ -140,19 +165,19 @@ class Install extends Command
         // Output the result
         echo $process->getOutput();
 
-        // Step 12: Link storage folder to public folder
+        // Step 13: Link storage folder to public folder
         $this->info('Linking storage folder to public folder...');
         $this->call('storage:link');
 
-        // Step 13: Clear cache
+        // Step 14: Clear cache
         $this->info('Clearing cache...');
         $this->call('cache:clear');
 
-        // Step 14: Run migrations
+        // Step 15: Run migrations
         // $this->info('Running migrations...');
         // $this->call('migrate');
 
-        // Step 15: Run seeders
+        // Step 16: Run seeders
         // $this->info('Running seeders...');
         // $this->call('db:seed');
 
