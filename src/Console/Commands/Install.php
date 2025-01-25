@@ -110,7 +110,11 @@ class Install extends Command
             '--force' => $force,
         ]);
 
-        // Step 9: Update composer dependencies
+        // Step 9: Generate app key
+        $this->info('Generating app key...');
+        $this->call('key:generate');
+
+        // Step 10: Update composer dependencies
         $this->info('Updating composer dependencies...');
         $process = new Process(['composer', 'update']);
         $process->setTimeout(300);
@@ -123,7 +127,7 @@ class Install extends Command
         // Output the result
         echo $process->getOutput();
 
-        // Step 10: Install pnpm dependencies
+        // Step 11: Install pnpm dependencies
         $this->info('Installing pnpm dependencies...');
         $process = new Process(['pnpm', 'i']);
         $process->setTimeout(300);
@@ -136,17 +140,13 @@ class Install extends Command
         // Output the result
         echo $process->getOutput();
 
-        // Step 11: Clear cache
-        $this->info('Clearing cache...');
-        $this->call('cache:clear');
-
         // Step 12: Link storage folder to public folder
         $this->info('Linking storage folder to public folder...');
         $this->call('storage:link');
 
-        // Step 13: Generate app key
-        $this->info('Generating app key...');
-        $this->call('key:generate');
+        // Step 13: Clear cache
+        $this->info('Clearing cache...');
+        $this->call('cache:clear');
 
         // Step 14: Run migrations
         // $this->info('Running migrations...');
