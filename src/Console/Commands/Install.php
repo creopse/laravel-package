@@ -148,15 +148,11 @@ class Install extends Command
         $this->info('Generating app key...');
         $this->call('key:generate');
 
-        // Step 14: Generate IDE helper
-        $this->info('Generating IDE helper...');
-        $this->call('ide-helper:generate');
-
-        // Step 15: Run migrations
+        // Step 14: Run migrations
         // $this->info('Running migrations...');
         // $this->call('migrate');
 
-        // Step 16: Run seeders
+        // Step 15: Run seeders
         // $this->info('Running seeders...');
         // $this->call('db:seed');
 

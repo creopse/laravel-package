@@ -218,7 +218,6 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../files/postcss.config.js' => base_path('postcss.config.js'),
             __DIR__ . '/../files/tailwind.config.js' => base_path('tailwind.config.js'),
             __DIR__ . '/../files/tsconfig.json' => base_path('tsconfig.json'),
-            __DIR__ . '/../files/types.d.ts' => base_path('types.d.ts'),
             __DIR__ . '/../files/vite-env.d.ts' => base_path('vite-env.d.ts'),
             __DIR__ . '/../files/vite.config.ts' => base_path('vite.config.ts'),
             __DIR__ . '/../files/vitest.config.ts' => base_path('vitest.config.ts'),
