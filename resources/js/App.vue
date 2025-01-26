@@ -1,7 +1,6 @@
 <script setup lang="ts">
-  import { darkTheme, dateEnUS, dateFrFR, enUS, frFR } from 'naive-ui'
-
   import initializeData from '@/dataloader'
+  import { darkTheme, dateEnUS, dateFrFR, enUS, frFR } from 'naive-ui'
 
   import { hexToRgba } from './utils/functions'
   import Wrapper from './Wrapper.vue'
@@ -9,10 +8,9 @@
   const lang = getActiveLanguage()
 
   const uiStore = useUserInterfaceStore()
-  const notificationStore = useNotificationStore()
 
-  const { appPrimaryColor, appSecondaryColor, appAccentColor, pickByTheme } =
-    useHelper()
+  const { pickByTheme } = useHelper()
+  const { appPrimaryColor, appSecondaryColor, appAccentColor } = useContent()
 
   const themeOverrides = computed(() => {
     const settings: any = {
@@ -115,9 +113,6 @@
 
   // Initialize data
   initializeData()
-
-  // Start notifications listener
-  notificationStore.startNotificationsListener()
 </script>
 
 <template>

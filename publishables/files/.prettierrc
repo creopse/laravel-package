@@ -19,8 +19,6 @@
         "^@/layouts/(.*)$",
         "^@/components/(.*)$",
         "^@/composables/(.*)$",
-        "^@vicons/(.*)$",
-        "^naive-ui$",
         "<THIRD_PARTY_MODULES>",
         "^[./]"
     ],

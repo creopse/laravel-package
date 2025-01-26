@@ -1,4 +1,4 @@
-import type { SharedProps } from '@/utils/types'
+import type { AppInformationKey, SettingType, SharedProps } from '@/utils/types'
 
 import type { ContentModelModel } from '@/models/content-model'
 import type { ContentModelItemModel } from '@/models/content-model-item'
@@ -17,33 +17,11 @@ import type { ErrorBag, Errors, PageProps } from '@inertiajs/core'
  * easily accessing and manipulating page data, content models, menus,
  * menu items, and more.
  *
- * @returns {Object} An object containing the following properties:
- *  - page: The page props
- *  - pageData: The page data
- *  - newsArticle: The news article data
- *  - newsCategory: The news category data
- *  - newsTag: The news tag data
- *  - contentModelItem: The content model item data
- *  - getProps: A function that returns the page props
- *  - getMenu: A function that retrieves a menu by its name
- *  - getMenuByLocation: A function that retrieves a menu by its location name
- *  - getMenuItems: A function that retrieves and sorts menu items by their position for a specified menu
- *  - getMenuItemById: A function that retrieves a menu item by its ID
- *  - getMenuItemsByLocation: A function that retrieves and sorts menu items by their position for a specified menu location
- *  - getMenuGroups: A function that retrieves menu item groups from a specified menu, filtered by menu item group ID
- *  - getMenuItemsByGroup: A function that retrieves menu items from a specified menu, filtered by group ID
- *  - getMenuGroupedItems: A function that retrieves menu items from a menu by its name, grouped by their group
- *  - getMenuUngroupedItems: A function that retrieves menu items from a menu by its name, filtered to only return items that do not belong to a group
- *  - getSectionData: A function that retrieves the data of a section, given its slug
- *  - getSectionsInOrder: A function that returns the ordered list of sections that should be displayed on the page
- *  - getFinalPageSections: A function that returns the final ordered list of sections that should be displayed on the page, taking into account the `sectionsDisabled` property of the page data
- *  - getComponents: A function that loads and returns a map of Vue components from the specified directory
- *  - getContentModel: A function that retrieves a content model by its name
- *  - getContentModelItems: A function that retrieves content model items
- *  - getPaginatedContentModelItems: A function that retrieves paginated content model items
+ * @returns {Object}
  */
 export const useContent = () => {
   const { request } = useApi()
+  const { fileUrl } = useHelper()
 
   const page = usePage<SharedProps>()
 
@@ -190,13 +168,17 @@ export const useContent = () => {
   /**
    * Gets content model items.
    * @param {string} name The name of the content model.
+   * @param {boolean} filterByIsActive Whether to filter items by isActive or not.
    * @returns {Promise<ContentModelItemModel[]>}
    */
   const getContentModelItems = async (
-    name: string
+    name: string,
+    filterByIsActive = true
   ): Promise<ContentModelItemModel[]> => {
     const task = await request({
-      url: `content-model/items?contentModelName=${name}`,
+      url: `content-model/items?contentModelName=${name}${
+        filterByIsActive ? '&isActive=true' : ''
+      }`,
     })
 
     if (task.success && task.result) {
@@ -212,18 +194,22 @@ export const useContent = () => {
    * Gets paginated content model items.
    * @param {string} name The name of the content model.
    * @param {number} pageSize The number of items to return per page.
+   * @param {boolean} filterByIsActive Whether to filter items by isActive or not.
    * @returns {Promise<{ items: ContentModelItemModel[]; total: number; currentPage: number }>}
    */
   const getPaginatedContentModelItems = async (
     name: string,
-    pageSize: number
+    pageSize: number,
+    filterByIsActive = true
   ): Promise<{
     items: ContentModelItemModel[]
     total: number
     currentPage: number
   }> => {
     const task = await request({
-      url: `content-model/items?pageSize=${pageSize}&contentModelName=${name}`,
+      url: `content-model/items?pageSize=${pageSize}&contentModelName=${name}${
+        filterByIsActive ? '&isActive=true' : ''
+      }`,
     })
 
     if (task.success && task.result) {
@@ -272,10 +258,16 @@ export const useContent = () => {
    * Retrieves and sorts menu items by their position for a specified menu.
    *
    * @param {string} name - The name of the menu to retrieve items from.
+   * @param {boolean} [filterByIsVisible=true] - Whether to filter items by visibility or not
    * @returns {MenuItemModel[] | undefined} An array of menu items sorted by their position, or undefined if no items are found.
    */
-  const getMenuItems = (name: string): MenuItemModel[] | undefined => {
-    return getMenu(name)?.items?.sort((a, b) => a.position - b.position)
+  const getMenuItems = (
+    name: string,
+    filterByIsVisible = true
+  ): MenuItemModel[] | undefined => {
+    return getMenu(name)
+      ?.items?.filter((item) => !filterByIsVisible || item.isVisible)
+      ?.sort((a, b) => a.position - b.position)
   }
 
   /**
@@ -301,14 +293,16 @@ export const useContent = () => {
    * Retrieves and sorts menu items by their position for a specified menu location.
    *
    * @param {string} name - The name of the menu location to retrieve items from.
+   * @param {boolean} [filterByIsVisible=true] - Whether to filter items by visibility or not
    * @returns {MenuItemModel[] | undefined} An array of menu items sorted by their position, or undefined if no items are found.
    */
   const getMenuItemsByLocation = (
-    name: string
+    name: string,
+    filterByIsVisible = true
   ): MenuItemModel[] | undefined => {
-    return getMenuByLocation(name)?.items?.sort(
-      (a, b) => a.position - b.position
-    )
+    return getMenuByLocation(name)
+      ?.items?.filter((item) => !filterByIsVisible || item.isVisible)
+      ?.sort((a, b) => a.position - b.position)
   }
 
   /**
@@ -317,14 +311,18 @@ export const useContent = () => {
    *
    * @param {string} name - The name of the menu to retrieve groups from.
    * @param {boolean} [byLocation=false] - Whether to retrieve items by location instead of menu name.
+   * @param {boolean} [filterByIsVisible=true] - Whether to filter items by visibility or not
    * @returns {MenuItemGroupModel[]} An array of menu item groups that belong to the specified menu.
    */
   const getMenuGroups = (
     name: string,
-    byLocation = false
+    byLocation = false,
+    filterByIsVisible = true
   ): MenuItemGroupModel[] => {
     const groups: MenuItemGroupModel[] = []
-    const items = byLocation ? getMenuItemsByLocation(name) : getMenuItems(name)
+    const items = byLocation
+      ? getMenuItemsByLocation(name, filterByIsVisible)
+      : getMenuItems(name, filterByIsVisible)
 
     if (items) {
       for (const item of items) {
@@ -350,14 +348,18 @@ export const useContent = () => {
    * @param {string} name - The name of the menu to retrieve items from.
    * @param {number} groupId - The ID of the group to filter items by.
    * @param {boolean} [byLocation=false] - Whether to retrieve items by location instead of menu name.
+   * @param {boolean} [filterByIsVisible=true] - Whether to filter items by visibility or not
    * @returns {MenuItemModel[] | undefined} An array of menu items that belong to the specified group.
    */
   const getMenuItemsByGroup = (
     name: string,
     groupId: number,
-    byLocation = false
+    byLocation = false,
+    filterByIsVisible = true
   ): MenuItemModel[] | undefined => {
-    const items = byLocation ? getMenuItemsByLocation(name) : getMenuItems(name)
+    const items = byLocation
+      ? getMenuItemsByLocation(name, filterByIsVisible)
+      : getMenuItems(name, filterByIsVisible)
     return items?.filter((item) => item.menuItemGroupId === groupId)
   }
 
@@ -369,6 +371,7 @@ export const useContent = () => {
    * @param {string} name - The name of the menu to retrieve items from.
    * @param {boolean} [byLocation=false] - Whether to retrieve items by location
    *  or not.
+   * @param {boolean} [filterByIsVisible=true] - Whether to filter items by
    *
    * @returns {({ group: MenuItemGroupModel; items: MenuItemModel[] | undefined }[])} An array of objects, where each object
    *  contains a group and its corresponding menu items, or null if no items were
@@ -376,12 +379,18 @@ export const useContent = () => {
    */
   const getMenuGroupedItems = (
     name: string,
-    byLocation = false
+    byLocation = false,
+    filterByIsVisible = true
   ): { group: MenuItemGroupModel; items: MenuItemModel[] | undefined }[] => {
     const groups = getMenuGroups(name, byLocation)
     return groups.map((group) => ({
       group,
-      items: getMenuItemsByGroup(name, group.id || 0, byLocation),
+      items: getMenuItemsByGroup(
+        name,
+        group.id || 0,
+        byLocation,
+        filterByIsVisible
+      ),
     }))
   }
 
@@ -392,19 +401,113 @@ export const useContent = () => {
    * @param {string} name - The name of the menu to retrieve items from.
    * @param {boolean} [byLocation=false] - Whether to retrieve items by location
    *  or not.
+   * @param {boolean} [filterByIsVisible=true] - Whether to filter items by visibility or not
    *
    * @returns {(MenuItemModel[] | undefined)} An array of menu items that do not
    *  belong to a group, or null if no items were found.
    */
   const getMenuUngroupedItems = (
     name: string,
-    byLocation = false
+    byLocation = false,
+    filterByIsVisible = true
   ): MenuItemModel[] | undefined => {
-    const items = byLocation ? getMenuItemsByLocation(name) : getMenuItems(name)
+    const items = byLocation
+      ? getMenuItemsByLocation(name, filterByIsVisible)
+      : getMenuItems(name, filterByIsVisible)
     return items?.filter((item) => !item.menuItemGroupId)
   }
 
+  /**
+   * Retrieves a value from the app information settings, given a key and optional
+   * type. If the type is not specified, the value is returned as a string.
+   *
+   * @param {AppInformationKey} key - The key of the setting to retrieve.
+   * @param {SettingType} [type='string'] - The type of the value to retrieve. If
+   *  not specified, the value is returned as a string.
+   *
+   * @returns {any} The value of the setting.
+   */
+  const getAppInformationValue = (
+    key: AppInformationKey,
+    type: SettingType = 'string'
+  ): any => {
+    const appInformation = page.props.appInformation
+
+    const setting = appInformation.find((s) => s.key === key)
+
+    let value: unknown = ''
+
+    switch (type) {
+      case 'number':
+        value =
+          setting && parseInt(setting.value) && !isNaN(parseInt(setting.value))
+            ? parseInt(setting.value)
+            : 0
+
+        break
+
+      case 'boolean':
+        value =
+          setting &&
+          !isNaN(parseInt(setting.value)) &&
+          parseInt(setting.value) > 0
+
+        break
+
+      case 'object':
+        value = setting && setting.value ? JSON.parse(setting.value) : {}
+
+        break
+
+      case 'array':
+        value = setting && setting.value ? JSON.parse(setting.value) : []
+
+        break
+
+      default:
+        value = setting && setting.value ? setting.value : ''
+
+        break
+    }
+
+    return value
+  }
+
+  const appPrimaryColor = computed<string>(() => {
+    const primaryColor: string = getAppInformationValue(
+      'primaryColor'
+    ) as string
+
+    return primaryColor || import.meta.env.APP_PRIMARY_COLOR
+  })
+
+  const appSecondaryColor = computed<string>(() => {
+    const secondaryColor: string = getAppInformationValue(
+      'secondaryColor'
+    ) as string
+
+    return secondaryColor || import.meta.env.APP_SECONDARY_COLOR
+  })
+
+  const appAccentColor = computed<string>(() => {
+    const accentColor: string = getAppInformationValue('accentColor') as string
+
+    return accentColor || import.meta.env.APP_ACCENT_COLOR
+  })
+
+  const icon = computed<string>(() => {
+    const icon: string = getAppInformationValue('icon') as string
+    return fileUrl(icon) || ''
+  })
+
+  const logo = computed<string>(() => {
+    const logo: string = getAppInformationValue('logo') as string
+    return fileUrl(logo) || ''
+  })
+
   return {
+    logo,
+    icon,
     page,
     pageData,
     newsArticle,
@@ -429,5 +532,9 @@ export const useContent = () => {
     getContentModel,
     getContentModelItems,
     getPaginatedContentModelItems,
+    getAppInformationValue,
+    appAccentColor,
+    appPrimaryColor,
+    appSecondaryColor,
   }
 }

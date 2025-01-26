@@ -20,6 +20,7 @@ class ContentModelItemController extends Controller
     {
         $pageSize = $request->query('pageSize');
         $query = $request->query('query');
+        $isActive = $request->query('isActive');
         $contentModelId = $request->query('contentModelId');
         $contentModelName = $request->query('contentModelName');
 
@@ -38,6 +39,10 @@ class ContentModelItemController extends Controller
                 $items = $items->where(function ($q) use ($query) {
                     $q->where('title', 'like', '%' . $query . '%');
                 });
+            }
+
+            if ($isActive) {
+                $items = $items->where('is_active', $isActive);
             }
 
             $items = $items->paginate($pageSize);

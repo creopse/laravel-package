@@ -1,5 +1,5 @@
 @php
-use App\Models\AppInformation;
+use Creopse\Creopse\Models\AppInformation;
 
 $appNameItem = AppInformation::where('key', 'name')->first();
 $appName = $appNameItem ? $appNameItem->value : config('app.name');

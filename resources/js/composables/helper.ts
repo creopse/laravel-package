@@ -3,12 +3,7 @@ import gb from '@/assets/images/flags/gb.svg'
 
 import { API_BASE_URL, LANG_COOKIE } from '@/utils/constants'
 import { removeLeadingSlash } from '@/utils/functions'
-import type {
-  AppInformationKey,
-  SettingType,
-  SharedProps,
-  UserPrefs,
-} from '@/utils/types'
+import type { SharedProps, UserPrefs } from '@/utils/types'
 
 // @ts-ignore
 import { Ziggy } from '@/ziggy.js'
@@ -161,84 +156,6 @@ export const useHelper = () => {
    *                                        Possible types are 'string', 'number', 'boolean', 'object', or 'array'.
    * @returns {any} The value of the application information key, converted to the specified type.
    */
-
-  const getAppInformationValue = (
-    key: AppInformationKey,
-    type: SettingType = 'string'
-  ): any => {
-    const appInformation = page.props.appInformation
-
-    const setting = appInformation.find((s) => s.key === key)
-
-    let value: unknown = ''
-
-    switch (type) {
-      case 'number':
-        value =
-          setting && parseInt(setting.value) && !isNaN(parseInt(setting.value))
-            ? parseInt(setting.value)
-            : 0
-
-        break
-
-      case 'boolean':
-        value =
-          setting &&
-          !isNaN(parseInt(setting.value)) &&
-          parseInt(setting.value) > 0
-
-        break
-
-      case 'object':
-        value = setting && setting.value ? JSON.parse(setting.value) : {}
-
-        break
-
-      case 'array':
-        value = setting && setting.value ? JSON.parse(setting.value) : []
-
-        break
-
-      default:
-        value = setting && setting.value ? setting.value : ''
-
-        break
-    }
-
-    return value
-  }
-
-  const appPrimaryColor = computed<string>(() => {
-    const primaryColor: string = getAppInformationValue(
-      'primaryColor'
-    ) as string
-
-    return primaryColor || import.meta.env.APP_PRIMARY_COLOR
-  })
-
-  const appSecondaryColor = computed<string>(() => {
-    const secondaryColor: string = getAppInformationValue(
-      'secondaryColor'
-    ) as string
-
-    return secondaryColor || import.meta.env.APP_SECONDARY_COLOR
-  })
-
-  const appAccentColor = computed<string>(() => {
-    const accentColor: string = getAppInformationValue('accentColor') as string
-
-    return accentColor || import.meta.env.APP_ACCENT_COLOR
-  })
-
-  const icon = computed<string>(() => {
-    const icon: string = getAppInformationValue('icon') as string
-    return fileUrl(icon) || ''
-  })
-
-  const logo = computed<string>(() => {
-    const logo: string = getAppInformationValue('logo') as string
-    return fileUrl(logo) || ''
-  })
 
   /**
    * @param {any} data
@@ -508,14 +425,10 @@ export const useHelper = () => {
     isLgScreen,
     isMdScreen,
     isSmScreen,
-    appAccentColor,
-    appPrimaryColor,
-    appSecondaryColor,
     getTranslation,
     getLangageLabel,
     getLanguageValue,
     getLinkCursorClass,
-    getAppInformationValue,
     ckEditorToolbarItems,
     displayFormErrors,
     resolveHtmlLinks,
@@ -533,8 +446,6 @@ export const useHelper = () => {
     apiRoutes,
     routes,
     rHtml,
-    logo,
-    icon,
     tr,
   }
 }

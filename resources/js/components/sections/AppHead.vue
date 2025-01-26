@@ -1,8 +1,8 @@
 <script lang="ts" setup>
   import { Head } from '@inertiajs/vue3'
 
-  const { getAppInformationValue, logo, icon, tr, resolveUrl } = useHelper()
-  const { page } = useContent()
+  const { tr, resolveUrl } = useHelper()
+  const { getAppInformationValue, logo, icon, page } = useContent()
 
   interface Props {
     title?: string | undefined

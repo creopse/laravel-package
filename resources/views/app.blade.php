@@ -40,7 +40,7 @@
     <!-- RSS Feed -->
     @include('feed::links')
 
-    @vite(['resources/css/app.css','resources/css/cke-5-content-styles.css','resources/js/app.ts'])
+    @vite(['resources/css/app.css','resources/js/app.ts'])
     @routes
     @inertiaHead
 </head>

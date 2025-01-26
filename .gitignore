@@ -1,4 +1,3 @@
 !*
-!.gitignore
 vendor/
-.DS_Store
+!.gitignore
