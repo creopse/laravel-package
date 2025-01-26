@@ -161,17 +161,9 @@ class Install extends Command
             '--force' => $force,
         ]);
 
-        // Step 12: Clear config
-        $this->info('Clearing config...');
-        $this->call('config:clear');
-
-        // Step 13: Generate app key
-        $this->info('Generating app key...');
-        $this->call('key:generate');
-
-        // Step 14: Update composer dependencies
-        $this->info('Updating composer dependencies...');
-        $process = new Process(['composer', 'update']);
+        // Step 12: Install pnpm dependencies
+        $this->info('Installing pnpm dependencies...');
+        $process = new Process(['pnpm', 'i']);
         $process->setTimeout(300);
         // Run the process
         $process->run();
@@ -182,9 +174,17 @@ class Install extends Command
         // Output the result
         echo $process->getOutput();
 
-        // Step 15: Install pnpm dependencies
-        $this->info('Installing pnpm dependencies...');
-        $process = new Process(['pnpm', 'i']);
+        // Step 13: Clear config
+        $this->info('Clearing config...');
+        $this->call('config:clear');
+
+        // Step 14: Generate app key
+        $this->info('Generating app key...');
+        $this->call('key:generate');
+
+        // Step 15: Update composer dependencies
+        $this->info('Updating composer dependencies...');
+        $process = new Process(['composer', 'update']);
         $process->setTimeout(300);
         // Run the process
         $process->run();
@@ -211,6 +211,6 @@ class Install extends Command
         // $this->info('Running seeders...');
         // $this->call('db:seed');
 
-        $this->info('Package installation completed successfully!');
+        $this->info('Creopse package installation completed successfully!');
     }
 }

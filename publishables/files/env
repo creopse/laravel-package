@@ -1,4 +1,4 @@
-APP_NAME="Creopse"
+APP_NAME="Creopse App"
 APP_ENV=local
 APP_KEY=base64:BP9ABQ4JUyqq3aC0ao5ggI88X3CrcNYw4XQgq63TTKs=
 APP_DEBUG=true
