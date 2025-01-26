@@ -184,26 +184,6 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword,
     }
 
     /**
-     * Subscriber Profile accessor
-     *
-     * @return bool
-     */
-    public function getHasSubscriberProfileAttribute()
-    {
-        return $this->profile_type == ProfileType::SUBSCRIBER->value;
-    }
-
-    /**
-     * Subscriber Profile scope
-     *
-     * @return Builder
-     */
-    public function scopeWhereHasSubscriberProfile(Builder $builder)
-    {
-        return $builder->where('profile_type', ProfileType::SUBSCRIBER->value);
-    }
-
-    /**
      * Clear user notifications cache after updating or deleting a user.
      *
      * @return void

@@ -164,14 +164,6 @@ class UserController extends Controller
     }
 
     /**
-     * Display the list of subscribers.
-     */
-    public function showSubscribers()
-    {
-        return $this->sendResponse(UserResource::collection(User::with(['profile', 'roles', 'permissions'])->whereHasSubscriberProfile()->get()));
-    }
-
-    /**
      * Display the list of administrators.
      */
     public function showAdministrators()

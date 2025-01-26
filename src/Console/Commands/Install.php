@@ -15,7 +15,7 @@ class Install extends Command
      *
      * @var string
      */
-    protected $signature = 'creopse:install {name="Creopse"} {--force=true}';
+    protected $signature = 'creopse:install {--force=true}';
 
     /**
      * The console command description.
@@ -29,7 +29,6 @@ class Install extends Command
      */
     public function handle()
     {
-        $name = $this->argument('name');
         $force = $this->option('force');
 
         $this->info('Starting package installation...');
@@ -85,9 +84,17 @@ class Install extends Command
         }
 
         // Step 2: Publish configuration files
-        $this->info('Publishing configuration file...');
+        $this->info('Publishing configuration files...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-config',
+            '--force' => $force,
+        ]);
+        $this->call('vendor:publish', [
+            '--tag' => 'creopse-auth-config',
+            '--force' => $force,
+        ]);
+        $this->call('vendor:publish', [
+            '--tag' => 'creopse-laratrust-config',
             '--force' => $force,
         ]);
 
@@ -126,22 +133,43 @@ class Install extends Command
             '--force' => $force,
         ]);
 
-        // Step 8: Publish admin
+        // Step 8: Publish models
+        $this->info('Publishing models...');
+        $this->call('vendor:publish', [
+            '--tag' => 'creopse-models',
+            '--force' => $force,
+        ]);
+
+        // Step 9: Publish enums
+        $this->info('Publishing enums...');
+        $this->call('vendor:publish', [
+            '--tag' => 'creopse-enums',
+            '--force' => $force,
+        ]);
+
+        // Step 10: Publish subscriber profile factory
+        $this->info('Publishing subscriber profile factory...');
+        $this->call('vendor:publish', [
+            '--tag' => 'creopse-subscriber-profile-factory',
+            '--force' => $force,
+        ]);
+
+        // Step 11: Publish admin
         $this->info('Publishing creopse admin...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-admin',
             '--force' => $force,
         ]);
 
-        // Step 9: Clear config
+        // Step 12: Clear config
         $this->info('Clearing config...');
         $this->call('config:clear');
 
-        // Step 10: Generate app key
+        // Step 13: Generate app key
         $this->info('Generating app key...');
         $this->call('key:generate');
 
-        // Step 11: Update composer dependencies
+        // Step 14: Update composer dependencies
         $this->info('Updating composer dependencies...');
         $process = new Process(['composer', 'update']);
         $process->setTimeout(300);
@@ -154,7 +182,7 @@ class Install extends Command
         // Output the result
         echo $process->getOutput();
 
-        // Step 12: Install pnpm dependencies
+        // Step 15: Install pnpm dependencies
         $this->info('Installing pnpm dependencies...');
         $process = new Process(['pnpm', 'i']);
         $process->setTimeout(300);
@@ -167,19 +195,19 @@ class Install extends Command
         // Output the result
         echo $process->getOutput();
 
-        // Step 13: Link storage folder to public folder
+        // Step 16: Link storage folder to public folder
         $this->info('Linking storage folder to public folder...');
         $this->call('storage:link');
 
-        // Step 14: Clear cache
+        // Step 17: Clear cache
         $this->info('Clearing cache...');
         $this->call('cache:clear');
 
-        // Step 15: Run migrations
+        // Step 18: Run migrations
         // $this->info('Running migrations...');
         // $this->call('migrate');
 
-        // Step 16: Run seeders
+        // Step 19: Run seeders
         // $this->info('Running seeders...');
         // $this->call('db:seed');
 

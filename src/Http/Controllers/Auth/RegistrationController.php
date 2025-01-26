@@ -12,7 +12,7 @@ use Creopse\Creopse\Events\Auth\ProfileCreatedEvent;
 use Creopse\Creopse\Events\Auth\ProfileUpdatedEvent;
 use Creopse\Creopse\Helpers\Functions;
 use Creopse\Creopse\Http\Controllers\Controller;
-use Creopse\Creopse\Models\{User, AdminProfile, SubscriberProfile};
+use Creopse\Creopse\Models\{User, AdminProfile};
 use Creopse\Creopse\Http\Resources\UserResource;
 use Creopse\Creopse\Events\Auth\UserRegisteredEvent;
 use Creopse\Creopse\Http\Requests\Auth\RegisterRequest;
@@ -43,9 +43,17 @@ class RegistrationController extends Controller
         $user = User::create($validated);
 
         if ($user) {
-            if (User::count() === 1) $user->addRole(UserRole::SUPER_ADMIN->value);
-            else if ($request->input('is_user')) {
+            $configUserModel = app(config('creopse.user_model'));
+            $configUser = $configUserModel::whereId($user->id)->first();
+
+            if (User::count() === 1) {
+                $user->addRole(UserRole::SUPER_ADMIN->value);
+
+                $configUser->addRole(UserRole::SUPER_ADMIN->value);
+            } else if ($request->input('is_user')) {
                 $user->addRole(UserRole::USER->value);
+
+                $configUser->addRole(UserRole::USER->value);
             }
 
             event(new UserRegisteredEvent($user->id));
@@ -129,27 +137,6 @@ class RegistrationController extends Controller
                     }
                     break;
 
-                case ProfileType::SUBSCRIBER->value:
-                    $subscriberValidator = Validator::make($request->input('profile_data'), []);
-
-                    if ($subscriberValidator->fails()) {
-                        return $this->sendResponse(
-                            $validator->errors(),
-                            ResponseStatusCode::UNPROCESSABLE_ENTITY,
-                            'Validation failed',
-                            ResponseErrorCode::FORM_INVALID_DATA
-                        );
-                    }
-
-                    $subscriberProfile = SubscriberProfile::create([]);
-
-                    if ($subscriberProfile) {
-                        $user->profile_id = $subscriberProfile->id;
-                        $user->profile_type = ProfileType::SUBSCRIBER->value;
-                        $user->save();
-                    }
-                    break;
-
                 default:
                     // In case user type not found
                     return $this->sendResponse(
@@ -219,15 +206,6 @@ class RegistrationController extends Controller
             case ProfileType::ADMIN->value:
 
                 $profile = AdminProfile::find($id);
-
-                if ($profile) {
-                    $profile->update($request->input('profile_data'));
-                }
-                break;
-
-            case ProfileType::SUBSCRIBER->value:
-
-                $profile = SubscriberProfile::find($id);
 
                 if ($profile) {
                     $profile->update($request->input('profile_data'));

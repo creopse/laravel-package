@@ -12,7 +12,7 @@ declare module 'pinia' {
 
 export default createPinia().use(
   persistencePlugin({
-    storeKeysPrefix: 'creopse',
+    storeKeysPrefix: 'creopse-app',
     persistenceDefault: true,
     ensureAsyncStorageUpdateOrder: false,
     storageItemsDefault: [

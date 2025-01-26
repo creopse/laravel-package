@@ -122,23 +122,27 @@ class CreopseServiceProvider extends ServiceProvider
             $configFiles[__DIR__ . "/../config/{$config}.php"] = config_path("{$config}.php");
         }
 
+        /**
+         * FILES PUBLICATION
+         */
+
         // Publish config files
         $this->publishes($configFiles, 'creopse-all-config');
 
         // Publish group configs by type
         $this->publishes([
-            __DIR__ . '/../config/auth.php' => config_path('auth.php'),
-            __DIR__ . '/../config/sanctum.php' => config_path('sanctum.php'),
+            __DIR__ . '/../publishables/config/auth.php' => config_path('auth.php'),
+            __DIR__ . '/../publishables/config/sanctum.php' => config_path('sanctum.php'),
         ], 'creopse-auth-config');
 
         $this->publishes([
-            __DIR__ . '/../config/laratrust.php' => config_path('laratrust.php'),
-            __DIR__ . '/../config/laratrust_seeder.php' => config_path('laratrust_seeder.php'),
+            __DIR__ . '/../publishables/config/laratrust.php' => config_path('laratrust.php'),
+            __DIR__ . '/../publishables/config/laratrust_seeder.php' => config_path('laratrust_seeder.php'),
         ], 'creopse-laratrust-config');
 
         // Publish package config
         $this->publishes([
-            __DIR__ . '/../config/creopse.php' => config_path('creopse.php'),
+            __DIR__ . '/../publishables/config/creopse.php' => config_path('creopse.php'),
         ], 'creopse-config');
 
         // Publish migrations
@@ -155,6 +159,11 @@ class CreopseServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../publishables/factories' => database_path('factories/vendor/creopse'),
         ], 'creopse-factories');
+
+        // Publish subscriber profile factory
+        $this->publishes([
+            __DIR__ . '/../publishables/factories/SubscriberProfileFactory.php' => database_path('factories/SubscriberProfileFactory.php'),
+        ], 'creopse-subscriber-profile-factory');
 
         // Publish translations
         $this->publishes([
@@ -195,36 +204,46 @@ class CreopseServiceProvider extends ServiceProvider
 
         // Publish public assets
         $this->publishes([
-            __DIR__ . '/../public' => public_path('vendor/creopse'),
+            __DIR__ . '/../public' => public_path(),
         ], 'creopse-public');
 
         // Publish other files
         $this->publishes([
-            __DIR__ . '/../files/env' => base_path('.env'),
-            __DIR__ . '/../files/.env.example' => base_path('.env.example'),
-            __DIR__ . '/../files/.env.production' => base_path('.env.production'),
-            __DIR__ . '/../files/.eslintignore' => base_path('.eslintignore'),
-            __DIR__ . '/../files/.eslintrc' => base_path('.eslintrc'),
-            __DIR__ . '/../files/.eslintrc-auto-import.json' => base_path('.eslintrc-auto-import.json'),
-            __DIR__ . '/../files/.gitattributes' => base_path('.gitattributes'),
-            __DIR__ . '/../files/.gitignore' => base_path('.gitignore'),
-            __DIR__ . '/../files/htaccess' => base_path('.htaccess'),
-            __DIR__ . '/../files/htaccess-https' => base_path('.htaccess-https'),
-            __DIR__ . '/../files/.npmrc' => base_path('.npmrc'),
-            __DIR__ . '/../files/.prettierignore' => base_path('.prettierignore'),
-            __DIR__ . '/../files/.prettierrc' => base_path('.prettierrc'),
-            __DIR__ . '/../files/composer.json' => base_path('composer.json'),
-            __DIR__ . '/../files/package.json' => base_path('package.json'),
-            __DIR__ . '/../files/postcss.config.js' => base_path('postcss.config.js'),
-            __DIR__ . '/../files/tailwind.config.js' => base_path('tailwind.config.js'),
-            __DIR__ . '/../files/tsconfig.json' => base_path('tsconfig.json'),
-            __DIR__ . '/../files/vite-env.d.ts' => base_path('vite-env.d.ts'),
-            __DIR__ . '/../files/vite.config.ts' => base_path('vite.config.ts'),
-            __DIR__ . '/../files/vitest.config.ts' => base_path('vitest.config.ts'),
-            __DIR__ . '/../files/window.d.ts' => base_path('window.d.ts'),
-            __DIR__ . '/../files/api.php' => base_path('routes/api.php'),
-            __DIR__ . '/../files/web.php' => base_path('routes/web.php'),
+            __DIR__ . '/../publishables/files/env' => base_path('.env'),
+            __DIR__ . '/../publishables/files/.env.example' => base_path('.env.example'),
+            __DIR__ . '/../publishables/files/.env.production' => base_path('.env.production'),
+            __DIR__ . '/../publishables/files/.eslintignore' => base_path('.eslintignore'),
+            __DIR__ . '/../publishables/files/.eslintrc' => base_path('.eslintrc'),
+            __DIR__ . '/../publishables/files/.eslintrc-auto-import.json' => base_path('.eslintrc-auto-import.json'),
+            __DIR__ . '/../publishables/files/.gitattributes' => base_path('.gitattributes'),
+            __DIR__ . '/../publishables/files/.gitignore' => base_path('.gitignore'),
+            __DIR__ . '/../publishables/files/htaccess' => base_path('.htaccess'),
+            __DIR__ . '/../publishables/files/htaccess-https' => base_path('.htaccess-https'),
+            __DIR__ . '/../publishables/files/.npmrc' => base_path('.npmrc'),
+            __DIR__ . '/../publishables/files/.prettierignore' => base_path('.prettierignore'),
+            __DIR__ . '/../publishables/files/.prettierrc' => base_path('.prettierrc'),
+            __DIR__ . '/../publishables/files/composer.json' => base_path('composer.json'),
+            __DIR__ . '/../publishables/files/package.json' => base_path('package.json'),
+            __DIR__ . '/../publishables/files/postcss.config.js' => base_path('postcss.config.js'),
+            __DIR__ . '/../publishables/files/tailwind.config.js' => base_path('tailwind.config.js'),
+            __DIR__ . '/../publishables/files/tsconfig.json' => base_path('tsconfig.json'),
+            __DIR__ . '/../publishables/files/vite-env.d.ts' => base_path('vite-env.d.ts'),
+            __DIR__ . '/../publishables/files/vite.config.ts' => base_path('vite.config.ts'),
+            __DIR__ . '/../publishables/files/vitest.config.ts' => base_path('vitest.config.ts'),
+            __DIR__ . '/../publishables/files/window.d.ts' => base_path('window.d.ts'),
+            __DIR__ . '/../publishables/files/api.php' => base_path('routes/api.php'),
+            __DIR__ . '/../publishables/files/web.php' => base_path('routes/web.php'),
         ], 'creopse-other-files');
+
+        // Publish models
+        $this->publishes([
+            __DIR__ . '/../publishables/models' => base_path('app/Models'),
+        ], 'creopse-models');
+
+        // Publish enums
+        $this->publishes([
+            __DIR__ . '/../publishables/enums' => base_path('app/Enums'),
+        ], 'creopse-enums');
 
         // Publish creopse admin
         $this->publishes([

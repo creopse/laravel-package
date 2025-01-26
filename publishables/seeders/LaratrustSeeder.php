@@ -82,6 +82,10 @@ class LaratrustSeeder extends Seeder
                     'password' => Hash::make('password')
                 ]);
                 $user->addRole($role);
+
+                $configUserModel = app(config('creopse.user_model'));
+                $configUser = $configUserModel::whereId($user->id)->first();
+                $configUser->addRole($role);
             }
         }
     }

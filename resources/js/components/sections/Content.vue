@@ -11,20 +11,23 @@
 <template>
   <div class="tw-min-h-screen tw-bg-gray-50">
     <nav class="tw-bg-white tw-shadow-sm">
-      <div class="tw-container tw-mx-auto tw-px-4 tw-py-4">
-        <div class="tw-flex tw-justify-between tw-items-center">
+      <div class="tw-container tw-mx-auto">
+        <div class="tw-flex tw-justify-between tw-items-center tw-px-4 tw-py-4">
           <img
             src="/assets/images/creopse/logo.svg"
             alt="Vue logo"
             class="tw-h-8" />
-          <div class="tw-flex tw-space-x-4">
+          <div class="tw-flex tw-space-x-6">
             <a
               v-for="(link, i) in headlinks"
               :key="i"
               :href="link.url"
               target="_blank"
               class="tw-text-gray-600 hover:tw-text-[#1E9CD7]">
-              {{ tr(link.title) }}
+              <div class="tw-flex tw-items-center">
+                <Icon icon="mdi:open-in-new" class="tw-mr-1" />
+                {{ tr(link.title) }}
+              </div>
             </a>
           </div>
         </div>

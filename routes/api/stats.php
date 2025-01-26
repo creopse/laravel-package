@@ -21,8 +21,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/administrators', [StatsController::class, 'countAdministrators'])
             ->name('administrators');
 
-        Route::get('/subscribers', [StatsController::class, 'countSubscribers'])
-            ->name('subscribers');
+        Route::get('/others', [StatsController::class, 'countOthers'])
+            ->name('others');
 
         Route::get('/news-articles', [StatsController::class, 'countNewsArticles'])
             ->name('news-articles');

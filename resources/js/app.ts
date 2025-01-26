@@ -9,12 +9,8 @@ import { LANG_COOKIE } from '@/utils/constants'
 
 import { ZiggyVue } from 'ziggy-js'
 import { i18nVue } from 'laravel-vue-i18n'
-import { VueRecaptchaPlugin } from 'vue-recaptcha/head'
 import { createInertiaApp, Link } from '@inertiajs/vue3'
 import { SFacebook, STwitter, SLinkedIn } from 'vue-socials'
-
-import VueTelInput from 'vue-tel-input'
-import 'vue-tel-input/vue-tel-input.css'
 
 import Flicking from '@egjs/vue3-flicking'
 import '@egjs/vue3-flicking/dist/flicking.css'
@@ -70,8 +66,6 @@ createInertiaApp({
       .use(plugin)
       .use(ZiggyVue)
       .use(pinia)
-      // @ts-ignore
-      .use(VueTelInput)
       .use(i18nVue, {
         lang: localStorage.getItem(LANG_COOKIE) || lang || props.initialPage.props.appLocale || 'fr',
         fallbackLang: props.initialPage.props.appFallbackLocale || 'fr',
@@ -79,10 +73,6 @@ createInertiaApp({
           const langs: any = import.meta.glob('../../lang/*.json')
           return await langs[`../../lang/${lang}.json`]()
         },
-      })
-      .use(VueRecaptchaPlugin, {
-        v2SiteKey: import.meta.env.APP_RECAPTCHA_V2_KEY,
-        v3SiteKey: import.meta.env.APP_RECAPTCHA_V3_KEY,
       })
       .component('Flicking', Flicking)
       .component('SLinkedIn', SLinkedIn)

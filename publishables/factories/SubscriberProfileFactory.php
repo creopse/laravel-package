@@ -1,12 +1,12 @@
 <?php
 
-namespace Database\Factories\Vendor\Creopse;
+namespace Database\Factories;
 
-use Creopse\Creopse\Models\SubscriberProfile;
+use App\Models\SubscriberProfile;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Creopse\Creopse\Models\SubscriberProfile>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SubscriberProfile>
  */
 class SubscriberProfileFactory extends Factory
 {

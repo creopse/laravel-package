@@ -8,11 +8,11 @@ use Illuminate\Http\Request;
 class StatsController extends Controller
 {
     /**
-     * Count subscribers.
+     * Count others.
      */
-    public function countSubscribers()
+    public function countOthers()
     {
-        return $this->sendResponse(User::whereHasSubscriberProfile()->count());
+        return $this->sendResponse(User::count() - User::whereHasAdminProfile()->count());
     }
 
     /**

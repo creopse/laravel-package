@@ -4,7 +4,6 @@ import { AccountStatus } from '@/enums/account-status'
 import { AuthType } from '@/enums/auth-type'
 import { ProfileType } from '@/enums/profile-type'
 
-import { AdminProfileModel } from './admin-profile'
 import { PermissionModel } from './permission'
 import { RoleModel } from './role'
 import { SubscriberProfileModel } from './subscriber-profile'
@@ -35,7 +34,7 @@ export class UserModel {
   updatedAt?: string
 
   permissions?: PermissionModel[]
-  profile?: AdminProfileModel | SubscriberProfileModel
+  profile?: SubscriberProfileModel
   roles?: RoleModel[]
 
   constructor(

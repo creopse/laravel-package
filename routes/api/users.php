@@ -36,7 +36,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class)->only(['index', 'show']);
     Route::post('users/list', [UserController::class, 'showList'])->name('users.list');
     Route::get('users/search/{query?}', [UserController::class, 'searchUsers'])->name('users.search');
-    Route::get('users/type/subscribers', [UserController::class, 'showSubscribers'])->name('users.subscribers');
     Route::get('users/type/administrators', [UserController::class, 'showAdministrators'])->name('users.administrators');
 
     Route::apiResource('user-sessions', UserSessionController::class)->except(['store', 'update']);

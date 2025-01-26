@@ -48,10 +48,6 @@ class UserResource extends JsonResource
                     return new AdminProfileResource($this->profile);
                 }
 
-                if ($this->hasSubscriberProfile) {
-                    return new SubscriberProfileResource($this->profile);
-                }
-
                 return $this->profile;
             }),
             'newsComments' => $this->whenLoaded('newsComments', function () {

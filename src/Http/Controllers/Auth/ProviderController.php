@@ -105,7 +105,13 @@ class ProviderController extends Controller
                         $user->refresh();
                     }
 
-                    if (User::count() === 1) $user->addRole(UserRole::SUPER_ADMIN->value);
+                    if (User::count() === 1) {
+                        $user->addRole(UserRole::SUPER_ADMIN->value);
+
+                        $configUserModel = app(config('creopse.user_model'));
+                        $configUser = $configUserModel::whereId($user->id)->first();
+                        $configUser->addRole(UserRole::SUPER_ADMIN->value);
+                    }
 
                     event(new UserRegisteredEvent($user->id));
 
@@ -187,7 +193,13 @@ class ProviderController extends Controller
                 'preferences' => $request->input('preferences')
             ]);
 
-            if (User::count() === 1) $user->addRole(UserRole::SUPER_ADMIN->value);
+            if (User::count() === 1) {
+                $user->addRole(UserRole::SUPER_ADMIN->value);
+
+                $configUserModel = app(config('creopse.user_model'));
+                $configUser = $configUserModel::whereId($user->id)->first();
+                $configUser->addRole(UserRole::SUPER_ADMIN->value);
+            }
 
             event(new UserRegisteredEvent($user->id));
         }

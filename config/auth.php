@@ -62,7 +62,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => Creopse\Creopse\Models\User::class,
+            'model' => \Creopse\Creopse\Models\User::class,
         ],
 
         // 'users' => [

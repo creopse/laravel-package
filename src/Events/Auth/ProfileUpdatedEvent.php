@@ -3,7 +3,6 @@
 namespace Creopse\Creopse\Events\Auth;
 
 use Creopse\Creopse\Models\AdminProfile;
-use Creopse\Creopse\Models\SubscriberProfile;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -19,7 +18,7 @@ class ProfileUpdatedEvent
     /**
      * Create a new event instance.
      */
-    public function __construct(public AdminProfile | SubscriberProfile $profile, public string $type)
+    public function __construct(public AdminProfile $profile, public string $type)
     {
         //
     }
