@@ -174,15 +174,19 @@ class Install extends Command
         // Output the result
         echo $process->getOutput();
 
-        // Step 13: Clear config
-        $this->info('Clearing config...');
-        $this->call('config:clear');
+        // Step 13: Cache config
+        $this->info('Caching config...');
+        $this->call('config:cache');
 
         // Step 14: Generate app key
         $this->info('Generating app key...');
         $this->call('key:generate');
 
-        // Step 15: Update composer dependencies
+        // Step 15: Clear config
+        $this->info('Clearing config...');
+        $this->call('config:clear');
+
+        // Step 16: Update composer dependencies
         $this->info('Updating composer dependencies...');
         $process = new Process(['composer', 'update']);
         $process->setTimeout(300);
@@ -195,19 +199,19 @@ class Install extends Command
         // Output the result
         echo $process->getOutput();
 
-        // Step 16: Link storage folder to public folder
+        // Step 17: Link storage folder to public folder
         $this->info('Linking storage folder to public folder...');
         $this->call('storage:link');
 
-        // Step 17: Clear cache
+        // Step 18: Clear cache
         $this->info('Clearing cache...');
         $this->call('cache:clear');
 
-        // Step 18: Run migrations
+        // Step 19: Run migrations
         // $this->info('Running migrations...');
         // $this->call('migrate');
 
-        // Step 19: Run seeders
+        // Step 20: Run seeders
         // $this->info('Running seeders...');
         // $this->call('db:seed');
 
