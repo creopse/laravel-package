@@ -68,3 +68,5 @@ Route::apiResource('permalinks', PermalinkController::class)->only(['index', 'sh
 Route::apiResource('content-models', ContentModelController::class)->only(['index', 'show']);
 
 Route::apiResource('content-model/items', ContentModelItemController::class)->only(['index', 'show'])->parameters(['items' => 'contentModelItem']);
+
+Route::get('section-data/{sectionSlug}/source/{pageSlug}', [SectionController::class, 'getSectionData'])->name('section.data');

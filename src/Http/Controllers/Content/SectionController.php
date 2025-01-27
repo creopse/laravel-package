@@ -3,6 +3,7 @@
 namespace Creopse\Creopse\Http\Controllers\Content;
 
 use Creopse\Creopse\Enums\ResponseStatusCode;
+use Creopse\Creopse\Helpers\Functions;
 use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Requests\Content\SectionRequest;
 use Creopse\Creopse\Http\Resources\Content\SectionResource;
@@ -19,6 +20,42 @@ class SectionController extends Controller
     public function index()
     {
         return $this->sendResponse(SectionResource::collection(Section::all()->load(['pages:id,title'])->loadCount(['pages'])));
+    }
+
+    /**
+     * Display a section data.
+     */
+    public function getSectionData(String $sectionSlug, String $pageSlug)
+    {
+        $section = Section::where('slug', $sectionSlug)->first();
+        $page = Page::where('slug', $pageSlug)->first();
+
+        if ($section && $page) {
+            $sectionPage = DB::table('page_section')
+                ->where('section_id', $section->id)
+                ->where('page_id', $page->id)
+                ->first();
+
+            if ($sectionPage) {
+                $page = Page::find($sectionPage->data_source_page_id);
+
+                if ($page && $page->sections_data) {
+                    $data = Functions::convertKeysToCamelCase(data_get($page->sections_data, $section->slug));
+
+                    return $this->sendResponse(
+                        $data,
+                        ResponseStatusCode::OK,
+                        'Section data retrieved successfully'
+                    );
+                }
+            }
+        }
+
+        return $this->sendResponse(
+            null,
+            ResponseStatusCode::NOT_FOUND,
+            'Section or page not found'
+        );
     }
 
     /**

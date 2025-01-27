@@ -101,6 +101,25 @@ export const useContent = () => {
   }
 
   /**
+   * Fetches the data of a section from any page.
+   *
+   * @param {string} sectionSlug - The slug of the section.
+   * @param {string} pageSlug - The slug of the page.
+   * @returns {Promise<object | any | null>} - The data of the section, or `null` if the fetch fails or the data is empty.
+   */
+  const getAnySectionData = async (sectionSlug: string, pageSlug: string) => {
+    const task = await request({
+      url: `section-data/${sectionSlug}/source/${pageSlug}`,
+    })
+
+    if (task.success && task.result) {
+      return task.result.data
+    }
+
+    return null
+  }
+
+  /**
    * Loads and returns a map of Vue components from the specified directory.
    *
    * This function uses Vite's `import.meta.glob` to eagerly import all Vue components
@@ -238,20 +257,44 @@ export const useContent = () => {
    * Retrieves a menu by its name.
    *
    * @param {string} name - The name of the menu to retrieve.
+   * @param {boolean} [filterByIsActive=true] - Whether to filter the menu items by isActive or not.
    * @returns {MenuModel | undefined} The menu found by name, or undefined if no menu is found.
    */
-  const getMenu = (name: string): MenuModel | undefined => {
-    return page.props?.menus?.find((menu) => menu.name === name)
+  const getMenu = (
+    name: string,
+    filterByIsActive = true
+  ): MenuModel | undefined => {
+    const menu = page.props?.menus?.find((menu) => menu.name === name)
+
+    if (menu) {
+      menu.items
+        ?.filter((item) => !filterByIsActive || item.isActive)
+        ?.sort((a, b) => a.position - b.position)
+    }
+
+    return menu
   }
 
   /**
    * Retrieves a menu by its location name.
    *
    * @param {string} name - The name of the menu location to retrieve the menu from.
+   * @param {boolean} [filterByIsActive=true] - Whether to filter the menu items by isActive or not.
    * @returns {MenuModel | undefined} The menu found by location, or undefined if no menu is found.
    */
-  const getMenuByLocation = (name: string): MenuModel | undefined => {
-    return page.props?.menus?.find((menu) => menu.location?.name === name)
+  const getMenuByLocation = (
+    name: string,
+    filterByIsActive = true
+  ): MenuModel | undefined => {
+    const menu = page.props?.menus?.find((menu) => menu.location?.name === name)
+
+    if (menu) {
+      menu.items
+        ?.filter((item) => !filterByIsActive || item.isActive)
+        ?.sort((a, b) => a.position - b.position)
+    }
+
+    return menu
   }
 
   /**
@@ -525,6 +568,7 @@ export const useContent = () => {
     getMenuGroupedItems,
     getMenuUngroupedItems,
     getSectionData,
+    getAnySectionData,
     getSectionsInOrder,
     getFinalPageSections,
     getSectionRootData,
