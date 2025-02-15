@@ -4,19 +4,46 @@ namespace Creopse\Creopse\Http\Controllers;
 
 use Creopse\Creopse\Models\User;
 use Creopse\Creopse\Enums\ResponseStatusCode;
+use Creopse\Creopse\Http\Resources\NotificationResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\DatabaseNotification as Notification;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
     /**
      * Index all user notifications.
      */
-    public function userIndex()
+    public function userIndex(Request $request)
     {
         $userId = Auth::id();
         $cacheKey = "user_{$userId}_notifications";
+
+        $pageSize = $request->query('pageSize');
+
+        if ($pageSize) {
+
+            $notifications = Cache::remember($cacheKey, 3600, function () use ($userId, $pageSize) {
+                return User::find($userId)->notifications()->paginate($pageSize);
+            });
+
+            return $this->sendResponse([
+                'notifications' => NotificationResource::collection($notifications),
+                'meta' => [
+                    'links' => [
+                        'first' => $notifications->url(1),
+                        'last' => $notifications->url($notifications->lastPage()),
+                        'prev' => $notifications->previousPageUrl(),
+                        'next' => $notifications->nextPageUrl(),
+                    ],
+                    'currentPage' => $notifications->currentPage(),
+                    'perPage' => $notifications->perPage(),
+                    'total' => $notifications->total(),
+                    'lastPage' => $notifications->lastPage(),
+                ],
+            ]);
+        }
 
         $notifications = Cache::remember($cacheKey, 3600, function () use ($userId) {
             return User::find($userId)->notifications()->get();
