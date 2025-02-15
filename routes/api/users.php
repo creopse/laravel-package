@@ -2,6 +2,8 @@
 
 use Creopse\Creopse\Http\Controllers\UserController;
 use Creopse\Creopse\Http\Controllers\UserSessionController;
+use Creopse\Creopse\Http\Controllers\UserDeviceController;
+use Creopse\Creopse\Http\Controllers\UserPlaceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +17,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/permissions/{user?}', [UserController::class, 'userPermissions'])->name('permissions');
 
         Route::get('/sessions/{user?}', [UserController::class, 'userSessions'])->name('sessions');
+
+        Route::get('/devices/{user?}', [UserController::class, 'userDevices'])->name('devices');
+
+        Route::get('/place/{user?}', [UserController::class, 'userPlace'])->name('place');
 
         Route::get('/roles/{user?}', [UserController::class, 'userRoles'])->name('roles');
 
@@ -39,4 +45,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('users/type/administrators', [UserController::class, 'showAdministrators'])->name('users.administrators');
 
     Route::apiResource('user-sessions', UserSessionController::class)->except(['store', 'update']);
+    Route::apiResource('user-devices', UserDeviceController::class);
+    Route::apiResource('user-place', UserPlaceController::class);
 });

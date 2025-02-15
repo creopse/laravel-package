@@ -85,7 +85,7 @@ class CreopseServiceProvider extends ServiceProvider
                 \App\Http\Middleware\VerifyCsrfToken::class,
                 \Illuminate\Routing\Middleware\SubstituteBindings::class,
                 \Creopse\Creopse\Http\Middleware\LogSessionHistory::class,
-                \Creopse\Creopse\Http\Middleware\HandleInertiaRequests::class
+                class_exists('App\Http\Middleware\HandleInertiaRequests') ? \App\Http\Middleware\HandleInertiaRequests::class : \Creopse\Creopse\Http\Middleware\HandleInertiaRequests::class
             ],
         ], function () {
             $this->loadRoutesFrom(__DIR__ . '/../routes/web/index.php');

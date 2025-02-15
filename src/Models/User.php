@@ -101,7 +101,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword,
      *
      * @var array<int, string>
      */
-    protected $with = ['profile'];
+    protected $with = ['profile', 'place'];
 
     /**
      * Get the user's preferred locale.
@@ -117,6 +117,22 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword,
     public function profile()
     {
         return $this->morphTo();
+    }
+
+    /**
+     * Get the place associated with the user.
+     */
+    public function place()
+    {
+        return $this->hasOne(UserPlace::class);
+    }
+
+    /**
+     * Get all of the devices for the user.
+     */
+    public function devices()
+    {
+        return $this->hasMany(UserDevice::class);
     }
 
     /**

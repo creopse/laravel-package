@@ -267,9 +267,11 @@ export const useContent = () => {
     const menu = page.props?.menus?.find((menu) => menu.name === name)
 
     if (menu) {
-      menu.items
-        ?.filter((item) => !filterByIsActive || item.isActive)
-        ?.sort((a, b) => a.position - b.position)
+      menu.items = _.cloneDeep(
+        menu.items
+          ?.filter((item) => !filterByIsActive || item.isActive)
+          ?.sort((a, b) => a.position - b.position)
+      )
     }
 
     return menu
@@ -289,9 +291,11 @@ export const useContent = () => {
     const menu = page.props?.menus?.find((menu) => menu.location?.name === name)
 
     if (menu) {
-      menu.items
-        ?.filter((item) => !filterByIsActive || item.isActive)
-        ?.sort((a, b) => a.position - b.position)
+      menu.items = _.cloneDeep(
+        menu.items
+          ?.filter((item) => !filterByIsActive || item.isActive)
+          ?.sort((a, b) => a.position - b.position)
+      )
     }
 
     return menu

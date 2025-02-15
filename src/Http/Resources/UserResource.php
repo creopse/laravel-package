@@ -58,6 +58,10 @@ class UserResource extends JsonResource
                 return ArticleResource::collection($this->newsArticles);
             }),
             'newsArticlesCount' => $this->whenCounted('newsArticles'),
+            'devices' => $this->whenLoaded('devices', function () {
+                return $this->devices;
+            }),
+            'place' => $this->place,
         ];
     }
 }

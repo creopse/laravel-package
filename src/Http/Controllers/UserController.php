@@ -277,6 +277,28 @@ class UserController extends Controller
     }
 
     /**
+     * Display user place.
+     */
+    public function userPlace(User $user = null)
+    {
+        if ($user) {
+            return $this->sendResponse($user->place());
+        }
+        return $this->sendResponse(Auth::user()->place());
+    }
+
+    /**
+     * Display user devices.
+     */
+    public function userDevices(User $user = null)
+    {
+        if ($user) {
+            return $this->sendResponse($user->devices());
+        }
+        return $this->sendResponse(Auth::user()->devices());
+    }
+
+    /**
      * Display user sessions.
      */
     public function userSessions(User $user = null)
