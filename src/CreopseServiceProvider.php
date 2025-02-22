@@ -278,9 +278,48 @@ class CreopseServiceProvider extends ServiceProvider
     protected function registerSeeders()
     {
         $this->app->afterResolving(Seeder::class, function ($seeder) {
+            // Get the class name of the resolved seeder
+            $seederClass = get_class($seeder);
+
+            // Check if the resolved seeder is the DatabaseSeeder itself
+            if ($seederClass === DatabaseSeeder::class) {
+                return;
+            }
+
+            // Check if the resolved seeder is being run explicitly (not as part of DatabaseSeeder)
+            if ($this->isSeederRunExplicitly($seederClass)) {
+                return;
+            }
+
+            // Call DatabaseSeeder only if the resolved seeder is not being run explicitly
             $seeder->call([
                 DatabaseSeeder::class,
             ]);
         });
+    }
+
+    /**
+     * Check if the seeder is being run explicitly (not as part of DatabaseSeeder).
+     *
+     * @param string $seederClass
+     * @return bool
+     */
+    protected function isSeederRunExplicitly($seederClass)
+    {
+        // Get the command-line arguments passed to the Artisan command
+        $commandArgs = $_SERVER['argv'] ?? [];
+
+        // Extract the seeder class name from the fully qualified class name
+        $seederClassName = class_basename($seederClass);
+
+        // Check if the command is running a specific seeder
+        foreach ($commandArgs as $arg) {
+            // Normalize the argument to match the seeder class name
+            if (str_contains($arg, $seederClassName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

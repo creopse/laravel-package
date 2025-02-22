@@ -164,7 +164,7 @@ class Install extends Command
         // Step 12: Install pnpm dependencies
         $this->info('Installing pnpm dependencies...');
         $process = new Process(['pnpm', 'i']);
-        $process->setTimeout(300);
+        $process->setTimeout(900);
         // Run the process
         $process->run();
         // Check if the process was successful
@@ -189,7 +189,7 @@ class Install extends Command
         // Step 16: Update composer dependencies
         $this->info('Updating composer dependencies...');
         $process = new Process(['composer', 'update']);
-        $process->setTimeout(300);
+        $process->setTimeout(900);
         // Run the process
         $process->run();
         // Check if the process was successful
