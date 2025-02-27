@@ -188,23 +188,31 @@ class Install extends Command
         // Output the result
         echo $process->getOutput();
 
-        // Step 15: Clear cache
-        $this->info('Clearing cache...');
-        $this->call('cache:clear');
+        try {
+            // Step 15: Cache config
+            $this->info('Caching config...');
+            $this->call('config:cache');
+        } catch (Exception $e) {
+            //
+        }
 
-        // Step 16: Cache config
-        $this->info('Caching config...');
-        $this->call('config:cache');
+        try {
+            // Step 16: Generate app key
+            $this->info('Generating app key...');
+            $this->call('key:generate');
+        } catch (Exception $e) {
+            //
+        }
 
-        // Step 17: Generate app key
-        $this->info('Generating app key...');
-        $this->call('key:generate');
+        try {
+            // Step 17: Clear config
+            $this->info('Clearing config...');
+            $this->call('config:clear');
+        } catch (Exception $e) {
+            //
+        }
 
-        // Step 18: Clear config
-        $this->info('Clearing config...');
-        $this->call('config:clear');
-
-        // Step 19: Update composer dependencies
+        // Step 18: Update composer dependencies
         $this->info('Updating composer dependencies...');
         $process = new Process(['composer', 'update']);
         $process->setTimeout(900);
@@ -217,19 +225,19 @@ class Install extends Command
         // Output the result
         echo $process->getOutput();
 
-        // Step 20: Link storage folder to public folder
+        // Step 19: Link storage folder to public folder
         $this->info('Linking storage folder to public folder...');
         $this->call('storage:link');
 
-        // Step 21: Clear cache
+        // Step 20: Clear cache
         $this->info('Clearing cache...');
         $this->call('cache:clear');
 
-        // Step 22: Run migrations
+        // Step 21: Run migrations
         // $this->info('Running migrations...');
         // $this->call('migrate');
 
-        // Step 23: Run seeders
+        // Step 22: Run seeders
         // $this->info('Running seeders...');
         // $this->call('db:seed');
 
