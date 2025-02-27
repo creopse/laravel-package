@@ -232,7 +232,7 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../publishables/files/vitest.config.ts' => base_path('vitest.config.ts'),
             __DIR__ . '/../publishables/files/window.d.ts' => base_path('window.d.ts'),
             __DIR__ . '/../publishables/files/RouteServiceProvider.php' => app_path('Providers/RouteServiceProvider.php'),
-            __DIR__ . '/../publishables/files/HttpKernel.php.php' => app_path('Http/Kernel.php'),
+            __DIR__ . '/../publishables/files/HttpKernel.php' => app_path('Http/Kernel.php'),
         ], 'creopse-other-files');
 
         // Publish routes
