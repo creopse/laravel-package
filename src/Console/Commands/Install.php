@@ -133,35 +133,49 @@ class Install extends Command
             '--force' => $force,
         ]);
 
-        // Step 8: Publish models
+        // Step 8: Publish routes
+        $this->info('Publishing routes...');
+        $this->call('vendor:publish', [
+            '--tag' => 'creopse-routes',
+            '--force' => $force,
+        ]);
+
+        // Step 9: Publish controllers
+        $this->info('Publishing controllers...');
+        $this->call('vendor:publish', [
+            '--tag' => 'creopse-controllers',
+            '--force' => $force,
+        ]);
+
+        // Step 10: Publish models
         $this->info('Publishing models...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-models',
             '--force' => $force,
         ]);
 
-        // Step 9: Publish enums
+        // Step 11: Publish enums
         $this->info('Publishing enums...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-enums',
             '--force' => $force,
         ]);
 
-        // Step 10: Publish subscriber profile factory
+        // Step 12: Publish subscriber profile factory
         $this->info('Publishing subscriber profile factory...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-subscriber-profile-factory',
             '--force' => $force,
         ]);
 
-        // Step 11: Publish admin
+        // Step 13: Publish admin
         $this->info('Publishing creopse admin...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-admin',
             '--force' => $force,
         ]);
 
-        // Step 12: Install pnpm dependencies
+        // Step 14: Install pnpm dependencies
         $this->info('Installing pnpm dependencies...');
         $process = new Process(['pnpm', 'i']);
         $process->setTimeout(900);
@@ -174,19 +188,19 @@ class Install extends Command
         // Output the result
         echo $process->getOutput();
 
-        // Step 13: Cache config
+        // Step 15: Cache config
         $this->info('Caching config...');
         $this->call('config:cache');
 
-        // Step 14: Generate app key
+        // Step 16: Generate app key
         $this->info('Generating app key...');
         $this->call('key:generate');
 
-        // Step 15: Clear config
+        // Step 17: Clear config
         $this->info('Clearing config...');
         $this->call('config:clear');
 
-        // Step 16: Update composer dependencies
+        // Step 18: Update composer dependencies
         $this->info('Updating composer dependencies...');
         $process = new Process(['composer', 'update']);
         $process->setTimeout(900);
@@ -199,19 +213,19 @@ class Install extends Command
         // Output the result
         echo $process->getOutput();
 
-        // Step 17: Link storage folder to public folder
+        // Step 19: Link storage folder to public folder
         $this->info('Linking storage folder to public folder...');
         $this->call('storage:link');
 
-        // Step 18: Clear cache
+        // Step 20: Clear cache
         $this->info('Clearing cache...');
         $this->call('cache:clear');
 
-        // Step 19: Run migrations
+        // Step 21: Run migrations
         // $this->info('Running migrations...');
         // $this->call('migrate');
 
-        // Step 20: Run seeders
+        // Step 22: Run seeders
         // $this->info('Running seeders...');
         // $this->call('db:seed');
 

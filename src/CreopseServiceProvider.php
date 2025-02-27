@@ -231,9 +231,20 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../publishables/files/vite.config.ts' => base_path('vite.config.ts'),
             __DIR__ . '/../publishables/files/vitest.config.ts' => base_path('vitest.config.ts'),
             __DIR__ . '/../publishables/files/window.d.ts' => base_path('window.d.ts'),
-            __DIR__ . '/../publishables/files/api.php' => base_path('routes/api.php'),
-            __DIR__ . '/../publishables/files/web.php' => base_path('routes/web.php'),
+            __DIR__ . '/../publishables/files/RouteServiceProvider.php' => app_path('Providers/RouteServiceProvider.php'),
+            __DIR__ . '/../publishables/files/HttpKernel.php.php' => app_path('Http/Kernel.php'),
         ], 'creopse-other-files');
+
+        // Publish routes
+        $this->publishes([
+            __DIR__ . '/../publishables/routes/api' => base_path('routes/api'),
+            __DIR__ . '/../publishables/routes/web' => base_path('routes/web'),
+        ], 'creopse-routes');
+
+        // Publish controllers
+        $this->publishes([
+            __DIR__ . '/../publishables/controllers/UserProfileController.php' => app_path('Http/Controllers/UserProfileController.php'),
+        ], 'creopse-controllers');
 
         // Publish models
         $this->publishes([
