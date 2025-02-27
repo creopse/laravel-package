@@ -2,7 +2,7 @@ APP_NAME="Creopse App"
 APP_ENV=local
 APP_KEY=base64:BP9ABQ4JUyqq3aC0ao5ggI88X3CrcNYw4XQgq63TTKs=
 APP_DEBUG=true
-APP_URL=https://creopse.test
+APP_URL=https://creopse-example.test
 FRONTEND_URL=http://localhost:4320
 
 APP_PRIMARY_COLOR='#005B97'
@@ -11,7 +11,7 @@ APP_ACCENT_COLOR='#FF6501'
 
 APP_X_API_KEY=ba65426b-72cb-4c9e-97e7-c9f40585c009
 
-API_KEYS=ba65426b-72cb-4c9e-97e7-c9f40585c009,c7fec755-9b0f-46e8-bd2b-ca16de3068bb
+API_KEYS=ba65426b-72cb-4c9e-97e7-c9f40585c009,c7fec755-9b0f-46e8-bd2b-ca16de3068bb,19f5c512-f685-4d39-862b-5a833bceb9ef
 
 LOG_CHANNEL=stack
 LOG_DEPRECATIONS_CHANNEL=null
@@ -20,7 +20,7 @@ LOG_LEVEL=debug
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=creopse_db
+DB_DATABASE=creopse_test_db
 DB_USERNAME=root
 DB_PASSWORD=
 
