@@ -13,7 +13,7 @@ class AppInformationSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('app_information')->insert([
+        DB::table('app_information')->insertOrIgnore([
             [
                 'key'    => 'name',
                 'value' => 'creopse.com',
