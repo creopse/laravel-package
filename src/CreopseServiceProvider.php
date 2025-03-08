@@ -114,7 +114,9 @@ class CreopseServiceProvider extends ServiceProvider
         }
 
         // Register seeders
-        $this->registerSeeders();
+        if ($this->app->runningInConsole()) {
+            $this->registerSeeders();
+        }
 
         // Prepare config files for publishing
         $configFiles = [];
@@ -288,25 +290,27 @@ class CreopseServiceProvider extends ServiceProvider
 
     protected function registerSeeders()
     {
-        $this->app->afterResolving(Seeder::class, function ($seeder) {
-            // Get the class name of the resolved seeder
-            $seederClass = get_class($seeder);
+        if (config('creopse.seed_default_data')) {
+            $this->app->afterResolving(Seeder::class, function ($seeder) {
+                // Get the class name of the resolved seeder
+                $seederClass = get_class($seeder);
 
-            // Check if the resolved seeder is the DatabaseSeeder itself
-            if ($seederClass === DatabaseSeeder::class) {
-                return;
-            }
+                // Check if the resolved seeder is the DatabaseSeeder itself
+                if ($seederClass === DatabaseSeeder::class) {
+                    return;
+                }
 
-            // Check if the resolved seeder is being run explicitly (not as part of DatabaseSeeder)
-            if ($this->isSeederRunExplicitly($seederClass)) {
-                return;
-            }
+                // Check if the resolved seeder is being run explicitly (not as part of DatabaseSeeder)
+                if ($this->isSeederRunExplicitly($seederClass)) {
+                    return;
+                }
 
-            // Call DatabaseSeeder only if the resolved seeder is not being run explicitly
-            $seeder->call([
-                DatabaseSeeder::class,
-            ]);
-        });
+                // Call DatabaseSeeder only if the resolved seeder is not being run explicitly
+                $seeder->call([
+                    DatabaseSeeder::class,
+                ]);
+            });
+        }
     }
 
     /**

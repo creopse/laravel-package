@@ -13,7 +13,7 @@ class AppSettingSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('app_settings')->insert([
+        DB::table('app_settings')->insertOrIgnore([
             [
                 'key'    => 'disableInstaller',
                 'value' => '1',
