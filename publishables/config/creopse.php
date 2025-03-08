@@ -21,10 +21,10 @@ return [
     | This is typically used for authentication, relationships, or other
     | user-related functionality.
     |
-    | Default: \Creopse\Creopse\Models\User::class
+    | Default: \App\Models\User::class
     |
     */
-    'user_model' => \Creopse\Creopse\Models\User::class,
+    'user_model' => \App\Models\User::class,
 
     /*
     |--------------------------------------------------------------------------
