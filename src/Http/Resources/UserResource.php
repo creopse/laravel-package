@@ -16,7 +16,7 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+        return array_merge([
             'id' => $this->id,
             'uid' => $this->uid,
             'avatar' => $this->avatar,
@@ -62,6 +62,16 @@ class UserResource extends JsonResource
                 return $this->devices;
             }),
             'place' => $this->place,
-        ];
+        ], $this->getAppendedAttributes());
+    }
+
+    /**
+     * Retrieve only the appended attributes from the model.
+     */
+    protected function getAppendedAttributes()
+    {
+        return collect($this->resource->getAppends())
+            ->mapWithKeys(fn($attribute) => [$attribute => $this->{$attribute}])
+            ->toArray();
     }
 }

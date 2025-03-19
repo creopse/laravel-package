@@ -130,7 +130,7 @@ export const useHelper = () => {
 
       if (canUseIt) {
         try {
-          const url = fileUrl(`thumbnails/${size}/${imageName}`)
+          const url = fileUrl(`thumbnails/${checkableSizes[i]}/${imageName}`)
           const response = await axios.head(url)
           if (response.status === 200) {
             return url
