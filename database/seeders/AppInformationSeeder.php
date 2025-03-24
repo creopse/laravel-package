@@ -33,6 +33,18 @@ class AppInformationSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'key'    => 'oneColorIcon',
+                'value' => '',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'key'    => 'oneColorAdminIcon',
+                'value' => '',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'key'    => 'logo',
                 'value' => '',
                 'created_at' => now(),
@@ -40,6 +52,18 @@ class AppInformationSeeder extends Seeder
             ],
             [
                 'key'    => 'adminLogo',
+                'value' => '',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'key'    => 'oneColorLogo',
+                'value' => '',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'key'    => 'oneColorAdminLogo',
                 'value' => '',
                 'created_at' => now(),
                 'updated_at' => now(),

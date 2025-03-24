@@ -90,7 +90,7 @@ class Functions
         return $user->createToken(
             'access-token',
             [TokenAbility::ACCESS_API->value],
-            $expireAt ?? now()->addMinutes(42)
+            $expireAt ?? now()->addHours(24)
         );
     }
 
@@ -110,7 +110,7 @@ class Functions
         return $user->createToken(
             'refresh-token',
             [TokenAbility::ISSUE_ACCESS_TOKEN->value],
-            $longDuration ? now()->addWeeks(3) : now()->addHours(6)
+            $longDuration ? now()->addWeeks(3) : now()->addDays(3)
         );
     }
 
