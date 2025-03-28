@@ -70,8 +70,8 @@ class UserFactory extends Factory
     {
         return $this->state(fn(array $attributes) => [
             'preferences' => [
-                'inAppNotifEnabled' => '1',
-                'emailNotifEnabled' => '1',
+                'inAppNotifEnabled' => 1,
+                'emailNotifEnabled' => 1,
                 'locale' => $locale,
             ],
         ]);
