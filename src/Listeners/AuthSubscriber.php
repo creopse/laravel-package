@@ -15,7 +15,6 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class AuthSubscriber implements ShouldQueue
@@ -69,7 +68,7 @@ class AuthSubscriber implements ShouldQueue
         $user = User::find($event->userId);
         if ($user) {
             $user->notify(new WelcomeUser($user->id));
-            Cache::forget("user_{$user->id}_notifications");
+
             if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
                 try {
                     $user->sendEmailVerificationNotification();

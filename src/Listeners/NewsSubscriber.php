@@ -10,7 +10,6 @@ use Creopse\Creopse\Notifications\UserCreateComment;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Notification;
 
 class NewsSubscriber implements ShouldQueue
@@ -33,9 +32,6 @@ class NewsSubscriber implements ShouldQueue
         if (NewsComment::where('id', $event->commentId)->exists() && NewsArticle::where('id', $event->articleId)->exists()) {
             $admins = User::whereHasAdminProfile()->get();
             Notification::send($admins, new UserCreateComment($event->commentId, $event->articleId));
-            foreach ($admins as $admin) {
-                Cache::forget("user_{$admin->id}_notifications");
-            }
         }
     }
 

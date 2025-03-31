@@ -16,7 +16,6 @@ use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
-use Illuminate\Support\Facades\Cache;
 use Laratrust\Traits\HasRolesAndPermissions;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Str;
@@ -197,24 +196,6 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword,
     public function scopeWhereHasAdminProfile(Builder $builder)
     {
         return $builder->where('profile_type', ProfileType::ADMIN->value);
-    }
-
-    /**
-     * Clear user notifications cache after updating or deleting a user.
-     *
-     * @return void
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::updated(function ($user) {
-            Cache::forget("user_{$user->id}_notifications");
-        });
-
-        static::deleted(function ($user) {
-            Cache::forget("user_{$user->id}_notifications");
-        });
     }
 
     protected static function newFactory()

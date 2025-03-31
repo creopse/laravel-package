@@ -2,12 +2,10 @@
 
 namespace Creopse\Creopse\Http\Controllers;
 
-use Creopse\Creopse\Models\User;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Http\Resources\NotificationResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\DatabaseNotification as Notification;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
@@ -17,16 +15,11 @@ class NotificationController extends Controller
      */
     public function userIndex(Request $request)
     {
-        $userId = Auth::id();
-        $cacheKey = "user_{$userId}_notifications";
-
         $pageSize = $request->query('pageSize');
 
         if ($pageSize) {
 
-            $notifications = Cache::remember($cacheKey, 3600, function () use ($userId, $pageSize) {
-                return User::find($userId)->notifications()->paginate($pageSize);
-            });
+            $notifications = Auth::user()->notifications()->paginate($pageSize);
 
             return $this->sendResponse([
                 'notifications' => NotificationResource::collection($notifications),
@@ -45,11 +38,7 @@ class NotificationController extends Controller
             ]);
         }
 
-        $notifications = Cache::remember($cacheKey, 3600, function () use ($userId) {
-            return User::find($userId)->notifications()->get();
-        });
-
-        return $this->sendResponse($notifications);
+        return $this->sendResponse(Auth::user()->notifications()->get());
     }
 
     /**
@@ -57,14 +46,7 @@ class NotificationController extends Controller
      */
     public function userIndexUnread()
     {
-        $userId = Auth::id();
-        $cacheKey = "user_{$userId}_notifications";
-
-        $unreadNotifications = Cache::remember($cacheKey, 3600, function () use ($userId) {
-            return User::find($userId)->unreadNotifications()->get();
-        });
-
-        return $this->sendResponse($unreadNotifications);
+        return $this->sendResponse(Auth::user()->unreadNotifications()->get());
     }
 
     /**
@@ -72,14 +54,7 @@ class NotificationController extends Controller
      */
     public function userIndexRead()
     {
-        $userId = Auth::id();
-        $cacheKey = "user_{$userId}_notifications";
-
-        $readNotifications = Cache::remember($cacheKey, 3600, function () use ($userId) {
-            return User::find($userId)->readNotifications()->get();
-        });
-
-        return $this->sendResponse($readNotifications);
+        return $this->sendResponse(Auth::user()->readNotifications()->get());
     }
 
     /**
