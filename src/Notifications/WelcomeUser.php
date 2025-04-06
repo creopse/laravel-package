@@ -50,8 +50,8 @@ class WelcomeUser extends Notification implements ShouldQueue
 
         return [
             'user' => User::find($this->userId),
-            'title' => __('notifications.welcome_user.title', ['appName' => $appName]),
-            'content' => __('notifications.welcome_user.content_1'),
+            'title' => __('creopse::notifications.welcome_user.title', ['appName' => $appName]),
+            'content' => __('creopse::notifications.welcome_user.content_1'),
         ];
     }
 

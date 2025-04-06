@@ -34,6 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::middleware(['permission:action-add-user'])->post('/', [UserController::class, 'store'])->name('store');
 
+        Route::middleware(['permission:action-add-user'])->post('/import', [UserController::class, 'import'])->name('import');
+
         Route::middleware(['permission:action-edit-user'])->put('/{user}', [UserController::class, 'update'])->name('update');
 
         Route::middleware(['permission:action-delete-user'])->delete('/{user}', [UserController::class, 'destroy'])->name('destroy');

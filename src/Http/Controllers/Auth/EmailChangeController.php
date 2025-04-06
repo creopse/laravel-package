@@ -41,8 +41,8 @@ class EmailChangeController extends Controller
 
         Mail::to($user)->queue(new CommonMail(
             [
-                'title' => __('auth.email_change'),
-                'message' => __('auth.email_changed_successfully'),
+                'title' => __('creopse::auth.email_change'),
+                'message' => __('creopse::auth.email_changed_successfully'),
             ],
         ));
 

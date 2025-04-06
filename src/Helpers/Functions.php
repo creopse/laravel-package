@@ -261,4 +261,55 @@ class Functions
 
         return $name;
     }
+
+    /**
+     * Generates a password with the specified length and character options.
+     *
+     * @param int $length The length of the password to be generated. Default is 10.
+     * @param array $options The character options for the password. Default is ['letters' => true, 'numbers' => true, 'symbols' => false].
+     * @return string The generated password.
+     */
+    static function genPassword(int $length = 10, array $options = ['letters' => true, 'numbers' => true, 'symbols' => false]): string
+    {
+        $letters = $options['letters'] ?? true;
+        $numbers = $options['numbers'] ?? true;
+        $symbols = $options['symbols'] ?? false;
+
+        if (!$letters && !$numbers && !$symbols) {
+            return '';
+        }
+
+        $lettersBase = str_split('abcdefghijklmnopqrstuvwxyz');
+        $numbersBase = str_split('0123456789');
+        $symbolsBase = str_split('!@#$%^&*()');
+
+        $base = [];
+
+        if ($letters) {
+            $base = array_merge($base, $lettersBase);
+        }
+        if ($numbers) {
+            $base = array_merge($base, $numbersBase);
+        }
+        if ($symbols) {
+            $base = array_merge($base, $symbolsBase);
+        }
+
+        shuffle($base);
+
+        $password = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $char = $base[array_rand($base)];
+
+            // Randomly convert letters to uppercase
+            if (in_array($char, $lettersBase) && rand(0, 1) === 0) {
+                $char = strtoupper($char);
+            }
+
+            $password .= $char;
+        }
+
+        return $password;
+    }
 }

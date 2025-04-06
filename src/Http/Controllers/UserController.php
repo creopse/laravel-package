@@ -4,12 +4,15 @@ namespace Creopse\Creopse\Http\Controllers;
 
 use Creopse\Creopse\Enums\AccountStatus;
 use Creopse\Creopse\Enums\AuthType;
+use Creopse\Creopse\Enums\ProfileType;
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
+use Creopse\Creopse\Events\Auth\AccountActivatedEvent;
 use Creopse\Creopse\Events\Auth\UserRegisteredEvent;
 use Creopse\Creopse\Helpers\Functions;
 use Creopse\Creopse\Http\Resources\UserResource;
 use Creopse\Creopse\Mail\CommonMail;
+use Creopse\Creopse\Models\AdminProfile;
 use Creopse\Creopse\Models\AppInformation;
 use Creopse\Creopse\Models\User;
 use Illuminate\Http\Request;
@@ -120,8 +123,8 @@ class UserController extends Controller
 
                 Mail::to($user)->queue(new CommonMail(
                     [
-                        'title' => __('notifications.welcome_user.title', ['appName' => $appName]),
-                        'message' => __('notifications.welcome_user.content_1') . ' ' . __('notifications.welcome_user.content_2', ['password' => $request->input('password')]),
+                        'title' => __('creopse::notifications.welcome_user.title', ['appName' => $appName]),
+                        'message' => __('creopse::notifications.welcome_user.content_1') . ' ' . __('creopse::notifications.welcome_user.content_2', ['password' => $request->input('password')]),
                     ],
                 ));
             }
@@ -141,6 +144,100 @@ class UserController extends Controller
                 ResponseErrorCode::AUTH_REGISTRATION_FAILED
             );
         }
+    }
+
+    /**
+     * Import users.
+     */
+    public function import(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'users' => 'required|array',
+            'users.*.lastname' => 'required',
+            'users.*.firstname' => 'required',
+            'users.*.email' => [
+                'required',
+                'email',
+            ],
+        ]);
+
+        // If data not valid return error
+        if ($validator->fails()) {
+            return $this->sendResponse(
+                $validator->errors(),
+                ResponseStatusCode::UNPROCESSABLE_ENTITY,
+                'Validation failed',
+                ResponseErrorCode::FORM_INVALID_DATA
+            );
+        }
+
+        $users = [];
+        foreach ($request->input('users') as $userData) {
+            $password = Hash::make(Functions::genPassword(12));
+            $accountStatus = AccountStatus::ENABLED->value;
+            $authType = AuthType::EMAIL_PASSWORD->value;
+            $uid = Functions::generateUid();
+            $avatar = null;
+
+            $user = User::withTrashed()->where('email', $userData['email'])->first();
+
+            if ($user) {
+                if ($user->trashed()) {
+                    $user->restore();
+                } else {
+                    continue;
+                }
+            } else {
+                $user = User::create([
+                    'lastname' => $userData['lastname'],
+                    'firstname' => $userData['firstname'],
+                    'email' => $userData['email'],
+                    'password' => $password,
+                    'account_status' => $accountStatus,
+                    'auth_type' => $authType,
+                    'uid' => $uid,
+                    'avatar' => $avatar,
+                    'preferences' => $request->input('preferences') ?? [],
+                ]);
+            }
+
+            switch ($request->input('profile_type')) {
+                case ProfileType::ADMIN->value:
+                    $adminProfile = AdminProfile::create([]);
+
+                    if ($adminProfile) {
+                        $user->profile_id = $adminProfile->id;
+                        $user->profile_type = ProfileType::ADMIN->value;
+                        $user->save();
+                    }
+                    break;
+
+                default:
+                    // In case user type not found
+            }
+
+            $user->refresh();
+
+            if ($request->input('send_credentials_email')) {
+                $appNameItem = AppInformation::where('key', 'name')->first();
+                $appName = $appNameItem ? $appNameItem->value : config('app.name');
+
+                Mail::to($user)->queue(new CommonMail(
+                    [
+                        'title' => __('creopse::notifications.welcome_user.title', ['appName' => $appName]),
+                        'message' => __('creopse::notifications.welcome_user.content_1') . ' ' . __('creopse::notifications.welcome_user.content_2', ['password' => $request->input('password')]),
+                    ],
+                ));
+            }
+
+            $users[] = $user->load(['profile', 'roles', 'permissions']);
+        }
+
+        return $this->sendResponse(
+            UserResource::collection($users),
+            ResponseStatusCode::CREATED,
+            'Users created successfully'
+        );
     }
 
     /**
@@ -210,7 +307,16 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $user->update($request->all());
+        $user->update($request->except(['roles', 'send_credentials_email', 'account_status', 'password']));
+
+        if ($request->has('account_status')) {
+            if ($user->account_status == AccountStatus::DISABLED->value && $request->input('account_status') == AccountStatus::ENABLED->value) {
+                event(new AccountActivatedEvent($user->id));
+            }
+
+            $user->account_status = $request->input('account_status');
+            $user->save();
+        }
 
         if ($request->input('roles') && is_array($request->input('roles'))) {
             $user->syncRoles($request->input('roles'));
@@ -238,8 +344,8 @@ class UserController extends Controller
 
             Mail::to($user)->queue(new CommonMail(
                 [
-                    'title' => __('auth.password_reset'),
-                    'message' => __('notifications.welcome_user.content_2', ['password' => $password]),
+                    'title' => __('creopse::auth.password_reset'),
+                    'message' => __('creopse::notifications.welcome_user.content_2', ['password' => $password]),
                 ],
             ));
         }
@@ -267,7 +373,7 @@ class UserController extends Controller
     /**
      * Display user permissions.
      */
-    public function userPermissions(User $user = null)
+    public function userPermissions(?User $user = null)
     {
         if ($user) {
             return $this->sendResponse($user->allPermissions());
@@ -279,7 +385,7 @@ class UserController extends Controller
     /**
      * Display user place.
      */
-    public function userPlace(User $user = null)
+    public function userPlace(?User $user = null)
     {
         if ($user) {
             return $this->sendResponse($user->place());
@@ -290,7 +396,7 @@ class UserController extends Controller
     /**
      * Display user devices.
      */
-    public function userDevices(User $user = null)
+    public function userDevices(?User $user = null)
     {
         if ($user) {
             return $this->sendResponse($user->devices());
@@ -301,7 +407,7 @@ class UserController extends Controller
     /**
      * Display user sessions.
      */
-    public function userSessions(User $user = null)
+    public function userSessions(?User $user = null)
     {
         if ($user) {
             return $this->sendResponse($user->sessions());
@@ -313,7 +419,7 @@ class UserController extends Controller
     /**
      * Display user roles.
      */
-    public function userRoles(User $user = null)
+    public function userRoles(?User $user = null)
     {
         if ($user) {
             return $this->sendResponse($user->roles);

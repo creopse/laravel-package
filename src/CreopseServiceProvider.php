@@ -98,8 +98,8 @@ class CreopseServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         // Load translations
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'creopse');
-        $this->loadJsonTranslationsFrom(__DIR__ . '/../resources/lang', 'creopse');
+        $this->loadTranslationsFrom(__DIR__ . '/../lang', 'creopse');
+        $this->loadJsonTranslationsFrom(__DIR__ . '/../lang', 'creopse');
 
         // Load commands
         if ($this->app->runningInConsole()) {
@@ -233,9 +233,14 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../publishables/files/vite.config.ts' => base_path('vite.config.ts'),
             __DIR__ . '/../publishables/files/vitest.config.ts' => base_path('vitest.config.ts'),
             __DIR__ . '/../publishables/files/window.d.ts' => base_path('window.d.ts'),
-            __DIR__ . '/../publishables/files/RouteServiceProvider.php' => app_path('Providers/RouteServiceProvider.php'),
             __DIR__ . '/../publishables/files/HttpKernel.php' => app_path('Http/Kernel.php'),
         ], 'creopse-other-files');
+
+        // Publish providers
+        $this->publishes([
+            __DIR__ . '/../publishables/providers/RouteServiceProvider.php' => app_path('Providers/RouteServiceProvider.php'),
+            __DIR__ . '/../publishables/providers/EventServiceProvider.php' => app_path('Providers/EventServiceProvider.php'),
+        ], 'creopse-providers');
 
         // Publish routes
         $this->publishes([

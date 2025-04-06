@@ -225,7 +225,7 @@ class ProviderController extends Controller
                                 'access-token' => $wassaSmsConfig['token'],
                                 'sender'       => $appName,
                                 'receiver'     => str_replace('+', '', $phone),
-                                'text'         => __('auth.verification_code', ['code' => $verificationCode]),
+                                'text'         => __('creopse::auth.verification_code', ['code' => $verificationCode]),
                                 'dlr_url'      => '',
                             ]
                         ]

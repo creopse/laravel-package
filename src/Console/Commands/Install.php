@@ -133,49 +133,56 @@ class Install extends Command
             '--force' => $force,
         ]);
 
-        // Step 8: Publish routes
+        // Step 8: Publish providers
+        $this->info('Publishing providers...');
+        $this->call('vendor:publish', [
+            '--tag' => 'creopse-providers',
+            '--force' => $force,
+        ]);
+
+        // Step 9: Publish routes
         $this->info('Publishing routes...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-routes',
             '--force' => $force,
         ]);
 
-        // Step 9: Publish controllers
+        // Step 10: Publish controllers
         $this->info('Publishing controllers...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-controllers',
             '--force' => $force,
         ]);
 
-        // Step 10: Publish models
+        // Step 11: Publish models
         $this->info('Publishing models...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-models',
             '--force' => $force,
         ]);
 
-        // Step 11: Publish enums
+        // Step 12: Publish enums
         $this->info('Publishing enums...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-enums',
             '--force' => $force,
         ]);
 
-        // Step 12: Publish subscriber profile factory
+        // Step 13: Publish subscriber profile factory
         $this->info('Publishing subscriber profile factory...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-subscriber-profile-factory',
             '--force' => $force,
         ]);
 
-        // Step 13: Publish admin
+        // Step 14: Publish admin
         $this->info('Publishing creopse admin...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-admin',
             '--force' => $force,
         ]);
 
-        // Step 14: Install pnpm dependencies
+        // Step 15: Install pnpm dependencies
         $this->info('Installing pnpm dependencies...');
         $process = new Process(['pnpm', 'i']);
         $process->setTimeout(900);
@@ -189,7 +196,7 @@ class Install extends Command
         echo $process->getOutput();
 
         try {
-            // Step 15: Cache config
+            // Step 16: Cache config
             $this->info('Caching config...');
             $this->call('config:cache');
         } catch (Exception $e) {
@@ -197,7 +204,7 @@ class Install extends Command
         }
 
         try {
-            // Step 16: Generate app key
+            // Step 17: Generate app key
             $this->info('Generating app key...');
             $this->call('key:generate');
         } catch (Exception $e) {
@@ -205,14 +212,14 @@ class Install extends Command
         }
 
         try {
-            // Step 17: Clear config
+            // Step 18: Clear config
             $this->info('Clearing config...');
             $this->call('config:clear');
         } catch (Exception $e) {
             //
         }
 
-        // Step 18: Update composer dependencies
+        // Step 19: Update composer dependencies
         $this->info('Updating composer dependencies...');
         $process = new Process(['composer', 'update']);
         $process->setTimeout(900);
@@ -225,19 +232,19 @@ class Install extends Command
         // Output the result
         echo $process->getOutput();
 
-        // Step 19: Link storage folder to public folder
+        // Step 20: Link storage folder to public folder
         $this->info('Linking storage folder to public folder...');
         $this->call('storage:link');
 
-        // Step 20: Clear cache
+        // Step 21: Clear cache
         $this->info('Clearing cache...');
         $this->call('cache:clear');
 
-        // Step 21: Run migrations
+        // Step 22: Run migrations
         // $this->info('Running migrations...');
         // $this->call('migrate');
 
-        // Step 22: Run seeders
+        // Step 23: Run seeders
         // $this->info('Running seeders...');
         // $this->call('db:seed');
 

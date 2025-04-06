@@ -49,8 +49,8 @@ class UserCreateComment extends Notification
 
         return [
             'comment' => $comment,
-            'title' => __('notifications.user_create_comment.title', ['title' => Functions::trans($comment->article->title)]),
-            'content' => __('notifications.user_create_comment.content', ['name' => $comment->user->fullname]),
+            'title' => __('creopse::notifications.user_create_comment.title', ['title' => Functions::trans($comment->article->title)]),
+            'content' => __('creopse::notifications.user_create_comment.content', ['name' => $comment->user->fullname]),
         ];
     }
 
@@ -65,7 +65,7 @@ class UserCreateComment extends Notification
             ->subject($data['title'])
             ->line($data['title'])
             ->line($data['content'])
-            ->action(__('notifications.user_create_comment.action'), env('FRONTEND_URL') . '/news-management/comments');
+            ->action(__('creopse::notifications.user_create_comment.action'), env('FRONTEND_URL') . '/news-management/comments');
     }
 
     /**

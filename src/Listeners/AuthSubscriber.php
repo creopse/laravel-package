@@ -2,6 +2,7 @@
 
 namespace Creopse\Creopse\Listeners;
 
+use Creopse\Creopse\Events\Auth\AccountActivatedEvent;
 use Creopse\Creopse\Events\Auth\EmailVerifiedEvent;
 use Creopse\Creopse\Models\User;
 use Creopse\Creopse\Events\Auth\UserLoggedInEvent;
@@ -10,6 +11,7 @@ use Creopse\Creopse\Events\Auth\UserRegisteredEvent;
 use Creopse\Creopse\Events\Auth\ProfileCreatedEvent;
 use Creopse\Creopse\Events\Auth\ProfileUpdatedEvent;
 use Creopse\Creopse\Helpers\Functions;
+use Creopse\Creopse\Notifications\UserAccountActivated;
 use Creopse\Creopse\Notifications\WelcomeUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -27,6 +29,18 @@ class AuthSubscriber implements ShouldQueue
     public function __construct()
     {
         //
+    }
+
+    /**
+     * Handle the event AccountActivatedEvent.
+     */
+    public function onAccountActivated(AccountActivatedEvent $event)
+    {
+        $user = User::find($event->userId);
+
+        if ($user) {
+            $user->notify(new UserAccountActivated($user->id));
+        }
     }
 
     /**
@@ -104,6 +118,7 @@ class AuthSubscriber implements ShouldQueue
             ProfileCreatedEvent::class => 'onProfileCreated',
             ProfileUpdatedEvent::class => 'onProfileUpdated',
             EmailVerifiedEvent::class => 'onEmailVerified',
+            AccountActivatedEvent::class => 'onAccountActivated',
         ];
     }
 }
