@@ -10,6 +10,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Laravel\Facades\Image;
+use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
 class FileController extends Controller
 {
@@ -55,6 +56,21 @@ class FileController extends Controller
                 }
             } catch (\Exception $e) {
                 // Do nothing
+            }
+        }
+
+        if ($fileType === MediaFileType::VIDEO) {
+            try {
+                $thumbnailPath = 'thumbnails/video/' . pathinfo($path, PATHINFO_FILENAME) . '.jpg';
+
+                FFMpeg::fromDisk('public')
+                    ->open($path)
+                    ->getFrameFromSeconds(1)
+                    ->export()
+                    ->toDisk('public')
+                    ->save($thumbnailPath);
+            } catch (\Exception $e) {
+                // Failed to generate video thumbnail, do nothing
             }
         }
 

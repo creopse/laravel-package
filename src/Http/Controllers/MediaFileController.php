@@ -12,7 +12,9 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\Laravel\Facades\Image;
+use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
 class MediaFileController extends Controller
 {
@@ -209,6 +211,22 @@ class MediaFileController extends Controller
             }
         }
 
+        if ($fileType === MediaFileType::VIDEO) {
+            try {
+                $thumbnailPath = 'thumbnails/video/' . pathinfo($path, PATHINFO_FILENAME) . '.jpg';
+
+                FFMpeg::fromDisk('public')
+                    ->open($path)
+                    ->getFrameFromSeconds(1)
+                    ->export()
+                    ->toDisk('public')
+                    ->save($thumbnailPath);
+            } catch (\Exception $e) {
+                Log::info($e->getMessage());
+                // Failed to generate video thumbnail, do nothing
+            }
+        }
+
         $mediaFile = MediaFile::create([
             'path' => $path,
             'name' => $request->input('filename') ?? $file->getClientOriginalName(),
@@ -289,6 +307,21 @@ class MediaFileController extends Controller
                     }
                 } catch (\Exception $e) {
                     // Do nothing
+                }
+            }
+
+            if ($fileType === MediaFileType::VIDEO) {
+                try {
+                    $thumbnailPath = 'thumbnails/video/' . pathinfo($path, PATHINFO_FILENAME) . '.jpg';
+
+                    FFMpeg::fromDisk('public')
+                        ->open($path)
+                        ->getFrameFromSeconds(1)
+                        ->export()
+                        ->toDisk('public')
+                        ->save($thumbnailPath);
+                } catch (\Exception $e) {
+                    // Failed to generate video thumbnail, do nothing
                 }
             }
 

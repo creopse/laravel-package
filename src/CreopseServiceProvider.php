@@ -29,6 +29,7 @@ class CreopseServiceProvider extends ServiceProvider
         'laratrust',
         'laratrust_seeder',
         'thumbnail_sizes',
+        'laravel-ffmpeg',
     ];
 
     public function boot()
@@ -141,6 +142,10 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../publishables/config/laratrust.php' => config_path('laratrust.php'),
             __DIR__ . '/../publishables/config/laratrust_seeder.php' => config_path('laratrust_seeder.php'),
         ], 'creopse-laratrust-config');
+
+        $this->publishes([
+            __DIR__ . '/../publishables/config/laravel-ffmpeg.php' => config_path('laravel-ffmpeg.php'),
+        ], 'creopse-laravel-ffmpeg-config');
 
         // Publish package config
         $this->publishes([

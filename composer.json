@@ -59,7 +59,8 @@
         "symfony/postmark-mailer": "^6.4",
         "tightenco/ziggy": "^2.1",
         "tomlerendu/laravel-convert-case-middleware": "^1.1",
-        "twilio/sdk": "^7.16"
+        "twilio/sdk": "^7.16",
+        "pbmedia/laravel-ffmpeg": "^8.7"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
