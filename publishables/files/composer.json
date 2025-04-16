@@ -11,7 +11,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "creopse/creopse": "^0.0.23",
+        "creopse/creopse": "^0.0.24",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^1.0",
         "laravel-lang/locales": "^2.5",

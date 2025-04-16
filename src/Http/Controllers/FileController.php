@@ -187,4 +187,40 @@ class FileController extends Controller
         // Return response with file
         return response()->file(Storage::disk('public')->path($request->input('path')));
     }
+
+    public function check(Request $request)
+    {
+        // Validate incoming request data
+        $validator = Validator::make($request->all(), [
+            'path' => 'required',
+        ]);
+
+        // If data not valid return error
+        if ($validator->fails()) {
+            return $this->sendResponse(
+                $validator->errors(),
+                ResponseStatusCode::UNPROCESSABLE_ENTITY,
+                'File path required',
+                ResponseErrorCode::FORM_INVALID_DATA
+            );
+        }
+
+        // Check if file exists
+        if (!Storage::disk('public')->exists($request->input('path'))) {
+            return $this->sendResponse(
+                null,
+                ResponseStatusCode::NOT_FOUND,
+                'File not found',
+            );
+        }
+
+        return $this->sendResponse(
+            [
+                'path' => $request->input('path'),
+                'url' => Storage::disk('public')->url($request->input('path'))
+            ],
+            ResponseStatusCode::OK,
+            'File exists',
+        );
+    }
 }

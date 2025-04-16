@@ -22,5 +22,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Download file
         Route::post('/download', [FileController::class, 'download'])->name('download');
+
+        // Check if file exists
+        Route::post('/check', [FileController::class, 'check'])->name('check');
     });
 });

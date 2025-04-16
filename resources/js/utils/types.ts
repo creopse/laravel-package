@@ -24,7 +24,9 @@ export interface AppInformationModel {
 export interface AppInformationObject {
   name: string
   icon: string
+  oneColorIcon: string
   logo: string
+  oneColorLogo: string
   phone: string
   email: string
   address: string
