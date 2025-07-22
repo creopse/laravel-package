@@ -1,0 +1,1 @@
+import{S as o}from"./shepherd.js-D9WwpZ4S.js";var i={};const s="$shepherd",t=(...e)=>new o.Tour(...e),l=function(n){l.installed||(l.installed=!0,n.config.globalProperties[s]=t)},r={install:l};if(i.ES_BUILD==="false"){let e=null;typeof window<"u"?e=window.Vue:typeof global<"u"&&(e=global.Vue),e&&e.use(r)}export{r as p};

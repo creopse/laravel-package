@@ -1,5 +1,4 @@
-import { NewsCategoryModel } from '@/models/news-category'
-import { NewsTagModel } from '@/models/news-tag'
+import type { NewsCategoryModel, NewsTagModel } from '@creopse/utils'
 
 export interface CatalogState {
   categories: NewsCategoryModel[]

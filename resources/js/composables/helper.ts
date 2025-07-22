@@ -1,12 +1,16 @@
 import fr from '@/assets/images/flags/fr.svg'
 import gb from '@/assets/images/flags/gb.svg'
 
-import { API_BASE_URL, LANG_COOKIE } from '@/utils/constants'
-import { removeLeadingSlash } from '@/utils/functions'
-import type { SharedProps, UserPrefs } from '@/utils/types'
-
+import { API_BASE_URL, LANG_COOKIE } from '@/constants'
 // @ts-ignore
 import { Ziggy } from '@/ziggy.js'
+import {
+  isURL,
+  removeLeadingSlash,
+  type SharedProps,
+  type UserPrefs,
+} from '@creopse/utils'
+import { useMediaQuery } from '@vueuse/core'
 import type { RouteParams } from 'ziggy-js'
 
 /**
@@ -68,7 +72,7 @@ export const useHelper = () => {
     params: RouteParams<string> = {},
     absolute = false
   ): void => {
-    router.replace(route(name, params, absolute))
+    router.get(route(name, params, absolute), {}, { replace: true })
   }
 
   /**
@@ -82,7 +86,7 @@ export const useHelper = () => {
    * @returns {string} The resolved URL.
    */
   const resolveUrl = (path: string): string => {
-    if (_v.isURL(path)) return path
+    if (isURL(path)) return path
     else return `${API_BASE_URL}/${removeLeadingSlash(path)}`
   }
 
@@ -98,7 +102,7 @@ export const useHelper = () => {
    */
   const fileUrl = (path: string): string => {
     if (path) {
-      if (_v.isURL(path)) return path
+      if (isURL(path)) return path
       else return `${API_BASE_URL}/storage/${path}`
     }
 
@@ -372,13 +376,13 @@ export const useHelper = () => {
    * element depending on whether the link has a valid URL or not.
    *
    * If the link has no URL or its URL is '#', the function returns
-   * 'tw-cursor-default'. Otherwise, it returns 'tw-cursor-pointer'.
+   * 'tw:cursor-default'. Otherwise, it returns 'tw:cursor-pointer'.
    *
    * @param {string} url - The URL of the link element.
    * @returns {string} The Tailwind CSS class name for the cursor.
    */
   const getLinkCursorClass = (url: string) => {
-    return !url || url === '#' ? 'tw-cursor-default' : 'tw-cursor-pointer'
+    return !url || url === '#' ? 'tw:cursor-default' : 'tw:cursor-pointer'
   }
 
   const ckEditorToolbarItems = [

@@ -5,19 +5,11 @@ import App from './App.vue'
 
 import pinia from '@/stores'
 
-import { LANG_COOKIE } from '@/utils/constants'
-
 import { ZiggyVue } from 'ziggy-js'
 import { i18nVue } from 'laravel-vue-i18n'
 import { createInertiaApp, Link } from '@inertiajs/vue3'
-import { SFacebook, STwitter, SLinkedIn } from 'vue-socials'
 
-import Flicking from '@egjs/vue3-flicking'
-import '@egjs/vue3-flicking/dist/flicking.css'
-
-import 'vfonts/Lato.css'
-import 'vfonts/Roboto.css'
-import 'vfonts/OpenSans.css'
+import { LANG_COOKIE } from './constants'
 
 createInertiaApp({
   title: (title) => title ? `${title} - ${import.meta.env.APP_NAME}` : import.meta.env.APP_NAME,
@@ -74,10 +66,6 @@ createInertiaApp({
           return await langs[`../../lang/${lang}.json`]()
         },
       })
-      .component('Flicking', Flicking)
-      .component('SLinkedIn', SLinkedIn)
-      .component('SFacebook', SFacebook)
-      .component('STwitter', STwitter)
       .component('Link', Link)
       .mount(el)
   },

@@ -1,4 +1,4 @@
-import { ResponseErrorCode } from '@/enums/response-error-code'
+import { ResponseErrorCode } from '@creopse/utils'
 
 /**
  * A composable that exposes functions to subscribe the user to the newsletter using

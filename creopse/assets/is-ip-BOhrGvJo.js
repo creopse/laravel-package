@@ -1,0 +1,1 @@
+import{i as e}from"./ip-regex-DUK2NMzQ.js";import{i as n}from"./super-regex-GxN9vEKC.js";const r=15,o=45,i={timeout:400};function u(t){return t.length>o?!1:n(e.v6({exact:!0}),t,i)}function f(t){return t.length>r?!1:n(e.v4({exact:!0}),t,i)}function c(t){if(u(t))return 6;if(f(t))return 4}export{c as i};

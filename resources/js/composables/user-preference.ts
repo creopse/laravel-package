@@ -1,6 +1,4 @@
-import type { UserPrefs } from '@/utils/types'
-
-import { Bool } from '@/enums/bool'
+import { Bool, type UserPrefs } from '@creopse/utils'
 
 /**
  * A composable that exposes the default user preferences.

@@ -1,5 +1,5 @@
-import vue from '@vitejs/plugin-vue'
-import laravel from 'laravel-vite-plugin'
+import Vue from '@vitejs/plugin-vue'
+import Laravel from 'laravel-vite-plugin'
 import VueI18n from 'laravel-vue-i18n/vite'
 import path from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
@@ -44,7 +44,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 500,
   },
   plugins: [
-    vue({
+    Vue({
       template: {
         transformAssetUrls: {
           // The Vue plugin will re-write asset URLs, when referenced
@@ -62,7 +62,7 @@ export default defineConfig({
         },
       },
     }),
-    laravel({
+    Laravel({
       input: ['resources/css/app.css', 'resources/js/app.ts'],
       refresh: true,
     }),
@@ -105,25 +105,6 @@ export default defineConfig({
         'pinia',
         // custom
         {
-          '@vueuse/core': [
-            // named imports
-            'useMouse', // import { useMouse } from '@vueuse/core',
-            'useOnline',
-            'useFavicon',
-            'usePageLeave',
-            'useClipboard',
-            'useFileDialog',
-            'useMediaQuery',
-            'useWindowSize',
-            'computedAsync',
-            'onClickOutside',
-            'useGeolocation',
-            'useElementSize',
-            'useElementVisibility',
-            'useInfiniteScroll',
-            // alias
-            ['useFetch', 'useMyFetch'], // import { useFetch as useMyFetch } from '@vueuse/core',
-          ],
           'naive-ui': [
             'useModal',
             'useDialog',
@@ -141,11 +122,7 @@ export default defineConfig({
             'isLoaded',
           ],
           '@inertiajs/vue3': ['useForm', 'usePage', 'router'],
-          slugify: [['default', 'slugify']],
-          validator: [['default', '_v']],
-          lodash: [['default', '_']],
           axios: [['default', 'axios']],
-          uuid: [['v4', 'uuidv4']],
         },
       ],
 
@@ -155,6 +132,10 @@ export default defineConfig({
       // Auto import inside Vue template
       // see https://github.com/unjs/unimport/pull/15 and https://github.com/unjs/unimport/pull/72
       vueTemplate: true,
+
+      // Include auto-imported packages in Vite's `optimizeDeps` options
+      // Recommend to enable
+      viteOptimizeDeps: true,
 
       eslintrc: {
         enabled: true, // Default `false`

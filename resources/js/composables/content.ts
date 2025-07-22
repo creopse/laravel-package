@@ -1,15 +1,18 @@
-import type { AppInformationKey, SettingType, SharedProps } from '@/utils/types'
-
-import type { ContentModelModel } from '@/models/content-model'
-import type { ContentModelItemModel } from '@/models/content-model-item'
-import type { MenuModel } from '@/models/menu'
-import type { MenuItemModel } from '@/models/menu-item'
-import type { MenuItemGroupModel } from '@/models/menu-item-group'
-import type { NewsArticleModel } from '@/models/news-article'
-import type { NewsCategoryModel } from '@/models/news-category'
-import type { NewsTagModel } from '@/models/news-tag'
-import type { PageModel } from '@/models/page'
-import type { SectionModel } from '@/models/section'
+import type {
+  AppInformationKey,
+  ContentModelItemModel,
+  ContentModelModel,
+  MenuItemGroupModel,
+  MenuItemModel,
+  MenuModel,
+  NewsArticleModel,
+  NewsCategoryModel,
+  NewsTagModel,
+  PageModel,
+  SectionModel,
+  SettingType,
+  SharedProps,
+} from '@creopse/utils'
 import type { ErrorBag, Errors, PageProps } from '@inertiajs/core'
 
 /**

@@ -1,5 +1,4 @@
-import { ENCRYPTION_KEY } from '@/utils/constants'
-
+import { ENCRYPTION_KEY } from '@/constants'
 import CryptoJS from 'crypto-js'
 import { createPinia } from 'pinia'
 import { persistencePlugin } from 'pinia-persistence-plugin'

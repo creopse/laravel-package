@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { slideToId } from '@/utils/functions'
+  import { slideToId } from '@creopse/utils'
 
   const { getFinalPageSections, getComponents, page } = useContent()
 

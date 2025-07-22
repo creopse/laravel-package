@@ -18,6 +18,7 @@ require __DIR__ . '/stats.php';
 require __DIR__ . '/users.php';
 require __DIR__ . '/email.php';
 require __DIR__ . '/access.php';
+require __DIR__ . '/plugins.php';
 require __DIR__ . '/content.php';
 require __DIR__ . '/database.php';
 require __DIR__ . '/newsletter.php';

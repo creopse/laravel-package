@@ -2,7 +2,7 @@
   const { isUserConnected } = storeToRefs(useAuthStore())
 
   if (!isUserConnected.value) {
-    router.replace('/login')
+    router.get('/login', {}, { replace: true })
   }
 </script>
 

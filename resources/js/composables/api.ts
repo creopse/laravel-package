@@ -1,4 +1,4 @@
-import { API_REQUEST_HEADERS, API_URL } from '@/utils/constants'
+import { API_REQUEST_HEADERS, API_URL } from '@/constants'
 
 type Method = 'get' | 'post' | 'put' | 'delete'
 
@@ -96,7 +96,7 @@ export const useApi = () => {
       if (err.response && err.response.status == 401) {
         authStore.resetAuthData()
 
-        router.replace('/login')
+        router.get('/login', {}, { replace: true })
       } else handleError(err)
     }
 

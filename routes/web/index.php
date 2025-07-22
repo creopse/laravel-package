@@ -5,6 +5,7 @@ use Creopse\Creopse\Helpers\Functions;
 use Creopse\Creopse\Http\Controllers\Auth\EmailVerificationController;
 use Creopse\Creopse\Http\Controllers\Auth\PasswordResetController;
 use Creopse\Creopse\Http\Controllers\DynamicPageController;
+use Creopse\Creopse\Models\AppSetting;
 use Creopse\Creopse\Models\Menu;
 use Creopse\Creopse\Models\Permalink;
 use Illuminate\Support\Facades\DB;
@@ -52,7 +53,10 @@ try {
     //
 }
 
-Route::get('/creopse/{any?}', function () {
+$basePathItem = AppSetting::where('key', 'basePath')->first();
+$basePath = $basePathItem && !empty($basePathItem->value) ? $basePathItem->value : 'creopse';
+
+Route::get('/' . $basePath . '/{any?}', function () {
     return file_get_contents(public_path('creopse/index.html'));
 })->where('any', '.*');
 

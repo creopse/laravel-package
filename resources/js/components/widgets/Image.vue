@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { AsyncImg } from '@creopse/vue'
   import type { CSSProperties } from 'vue'
 
   interface Props {

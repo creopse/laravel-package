@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import initializeData from '@/dataloader'
+  import { hexToRgba } from '@creopse/utils'
   import { darkTheme, dateEnUS, dateFrFR, enUS, frFR } from 'naive-ui'
 
-  import { hexToRgba } from './utils/functions'
   import Wrapper from './Wrapper.vue'
 
   const lang = getActiveLanguage()

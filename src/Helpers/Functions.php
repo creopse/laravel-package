@@ -312,4 +312,80 @@ class Functions
 
         return $password;
     }
+
+
+    /**
+     * Decode a JSONC string into a PHP variable.
+     *
+     * JSONC (JSON with comments) is a superset of JSON that allows comments
+     * using the C-style comment syntax (// for single-line and \/* *\/ for
+     * multi-line comments).
+     *
+     * This function takes a JSONC string and returns the decoded PHP variable.
+     * It ignores any comments in the input string and passes the rest of the
+     * string to the json_decode function.
+     *
+     * @param string $jsonc The JSONC string to decode.
+     * @param bool $assoc When true, returned objects will be converted into associative arrays.
+     * @param int $depth User specified recursion depth.
+     * @param int $flags Bitmask of JSON decode flags.
+     * @return mixed The decoded PHP variable.
+     */
+    static function jsoncDecodeSafe(string $jsonc, bool $assoc = true, int $depth = 512, int $flags = 0)
+    {
+        $output = '';
+        $in_string = false;
+        $in_single_line_comment = false;
+        $in_multi_line_comment = false;
+        $prev_char = '';
+        $len = strlen($jsonc);
+
+        for ($i = 0; $i < $len; $i++) {
+            $char = $jsonc[$i];
+            $next_char = $i + 1 < $len ? $jsonc[$i + 1] : '';
+
+            // Handle string toggling
+            if (!$in_single_line_comment && !$in_multi_line_comment) {
+                if ($char === '"' && $prev_char !== '\\') {
+                    $in_string = !$in_string;
+                }
+            }
+
+            // Start of // comment
+            if (!$in_string && !$in_multi_line_comment && $char === '/' && $next_char === '/') {
+                $in_single_line_comment = true;
+                $i++; // skip next /
+                continue;
+            }
+
+            // Start of /* comment
+            if (!$in_string && !$in_single_line_comment && $char === '/' && $next_char === '*') {
+                $in_multi_line_comment = true;
+                $i++; // skip next *
+                continue;
+            }
+
+            // End of // comment
+            if ($in_single_line_comment && ($char === "\n" || $char === "\r")) {
+                $in_single_line_comment = false;
+                $output .= $char;
+                continue;
+            }
+
+            // End of /* comment */
+            if ($in_multi_line_comment && $char === '*' && $next_char === '/') {
+                $in_multi_line_comment = false;
+                $i++; // skip /
+                continue;
+            }
+
+            if (!$in_single_line_comment && !$in_multi_line_comment) {
+                $output .= $char;
+            }
+
+            $prev_char = $char;
+        }
+
+        return json_decode($output, $assoc, $depth, $flags);
+    }
 }

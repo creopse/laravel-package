@@ -1,4 +1,4 @@
-import { UserModel } from '@/models/user'
+import type { UserModel } from '@creopse/utils'
 
 export interface AuthState {
   userData: UserModel | null
@@ -69,7 +69,7 @@ export const useAuthStore = defineStore('auth', {
           if (task.success) {
             this.resetAuthData()
 
-            router.replace('/login')
+            router.get('/login', {}, { replace: true })
           }
         },
       })

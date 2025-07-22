@@ -1,0 +1,1 @@
+import{f as c}from"./function-timeout-CBh1h2TD.js";import{c as i}from"./clone-regexp-C68TLrfU.js";function f(t,r,{timeout:o}={}){try{return c(()=>i(t).test(r),{timeout:o})()}catch(e){throw e}}export{f as i};
