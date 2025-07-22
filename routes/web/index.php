@@ -49,16 +49,17 @@ try {
             }
         }
     }
+    if (Schema::hasTable('app_settings')) {
+        $basePathItem = AppSetting::where('key', 'basePath')->first();
+        $basePath = $basePathItem && !empty($basePathItem->value) ? $basePathItem->value : 'creopse';
+
+        Route::get('/' . $basePath . '/{any?}', function () {
+            return file_get_contents(public_path('creopse/index.html'));
+        })->where('any', '.*');
+    }
 } catch (Exception $e) {
     //
 }
-
-$basePathItem = AppSetting::where('key', 'basePath')->first();
-$basePath = $basePathItem && !empty($basePathItem->value) ? $basePathItem->value : 'creopse';
-
-Route::get('/' . $basePath . '/{any?}', function () {
-    return file_get_contents(public_path('creopse/index.html'));
-})->where('any', '.*');
 
 Route::get('/verify-email/{id}/{hash}', [EmailVerificationController::class, 'verifyManually'])
     ->middleware('guest')->name('verification.verify');

@@ -37,7 +37,25 @@ class AppSettingSeeder extends Seeder
                 'value' => '0',
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]
+            ],
+            [
+                'key'    => 'translation.googleTranslate.apiKey',
+                'value' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'key'    => 'translation.deeplTranslate.apiKey',
+                'value' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'key'    => 'basePath',
+                'value' => 'creopse',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }
