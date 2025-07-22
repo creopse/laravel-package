@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1c2b95e3cd7044a4fa686295d60107bb",
+    "content-hash": "80dca8426ba0b779608e954ec20a4fad",
     "packages": [
         {
             "name": "alirezasedghi/laravel-image-faker",
@@ -13746,7 +13746,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.1"
+        "php": "^8.1 || ^8.2"
     },
     "platform-dev": {},
     "plugin-api-version": "2.6.0"
