@@ -183,6 +183,11 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../publishables/factories/SubscriberProfileFactory.php' => database_path('factories/SubscriberProfileFactory.php'),
         ], 'creopse-subscriber-profile-factory');
 
+        // Publish database seeder
+        $this->publishes([
+            __DIR__ . '/../publishables/files/EmptyDatabaseSeeder.php' => database_path('seeders/DatabaseSeeder.php'),
+        ], 'creopse-database-seeder');
+
         // Publish translations
         $this->publishes([
             __DIR__ . '/../lang' => $this->app->langPath(),

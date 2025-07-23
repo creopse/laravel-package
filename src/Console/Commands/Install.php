@@ -50,6 +50,7 @@ class Install extends Command
         // List of folders files to delete
         $foldersFilesToDelete = [
             database_path('migrations'),
+            database_path('seeders'),
         ];
         // Delete files
         foreach ($filesToDelete as $file) {
@@ -186,21 +187,28 @@ class Install extends Command
             '--force' => $force,
         ]);
 
-        // Step 14: Publish bootstrap files
+        // Step 14: Publish database seeder
+        $this->info('Publishing database seeder...');
+        $this->call('vendor:publish', [
+            '--tag' => 'creopse-database-seeder',
+            '--force' => $force,
+        ]);
+
+        // Step 15: Publish bootstrap files
         $this->info('Publishing bootstrap files...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-bootstrap-files',
             '--force' => $force,
         ]);
 
-        // Step 15: Publish admin
+        // Step 16: Publish admin
         $this->info('Publishing creopse admin...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-admin',
             '--force' => $force,
         ]);
 
-        // Step 16: Install pnpm dependencies
+        // Step 17: Install pnpm dependencies
         $this->info('Installing pnpm dependencies...');
         $process = new Process(['pnpm', 'i']);
         $process->setTimeout(900);
@@ -214,7 +222,7 @@ class Install extends Command
         echo $process->getOutput();
 
         try {
-            // Step 17: Cache config
+            // Step 18: Cache config
             $this->info('Caching config...');
             $this->call('config:cache');
         } catch (Exception $e) {
@@ -222,7 +230,7 @@ class Install extends Command
         }
 
         try {
-            // Step 18: Generate app key
+            // Step 19: Generate app key
             $this->info('Generating app key...');
             $this->call('key:generate');
         } catch (Exception $e) {
@@ -230,14 +238,14 @@ class Install extends Command
         }
 
         try {
-            // Step 19: Clear config
+            // Step 20: Clear config
             $this->info('Clearing config...');
             $this->call('config:clear');
         } catch (Exception $e) {
             //
         }
 
-        // Step 20: Update composer dependencies
+        // Step 21: Update composer dependencies
         $this->info('Updating composer dependencies...');
         $process = new Process(['composer', 'update']);
         $process->setTimeout(900);
@@ -250,19 +258,19 @@ class Install extends Command
         // Output the result
         echo $process->getOutput();
 
-        // Step 21: Link storage folder to public folder
+        // Step 22: Link storage folder to public folder
         $this->info('Linking storage folder to public folder...');
         $this->call('storage:link');
 
-        // Step 22: Clear cache
+        // Step 23: Clear cache
         $this->info('Clearing cache...');
         $this->call('cache:clear');
 
-        // Step 23: Run migrations
+        // Step 24: Run migrations
         // $this->info('Running migrations...');
         // $this->call('migrate');
 
-        // Step 24: Run seeders
+        // Step 25: Run seeders
         // $this->info('Running seeders...');
         // $this->call('db:seed');
 
