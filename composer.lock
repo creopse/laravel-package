@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "80dca8426ba0b779608e954ec20a4fad",
+    "content-hash": "bcbc06a38c05814655330d5cfd8aeb2e",
     "packages": [
         {
             "name": "alirezasedghi/laravel-image-faker",
@@ -118,6 +118,51 @@
                 "source": "https://github.com/archtechx/enums/tree/v1.1.2"
             },
             "time": "2025-06-06T23:15:09+00:00"
+        },
+        {
+            "name": "arkn/laravel-convert-case-middleware",
+            "version": "1.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/noeGnh/laravel-convert-case-middleware.git",
+                "reference": "784a9616254127683f869d9772d31a7d0def411f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/noeGnh/laravel-convert-case-middleware/zipball/784a9616254127683f869d9772d31a7d0def411f",
+                "reference": "784a9616254127683f869d9772d31a7d0def411f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "laravel/framework": "^5.2|^6.0|^7.0|^8.0|^9.0|^10|^11",
+                "php": "^8.0|^8.1|^8.2|^8.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.5|^10"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "TomLerendu\\LaravelConvertCaseMiddleware\\": "src/",
+                    "TomLerendu\\LaravelConvertCaseMiddleware\\Tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tom Lerendu",
+                    "email": "tom.lerendu@gmail.com"
+                }
+            ],
+            "description": "Convert request and response keys to and from camel and snake case.",
+            "support": {
+                "source": "https://github.com/noeGnh/laravel-convert-case-middleware/tree/v1.1.5"
+            },
+            "time": "2025-07-23T09:04:24+00:00"
         },
         {
             "name": "brick/math",
@@ -2290,33 +2335,33 @@
         },
         {
             "name": "ipinfo/ipinfo",
-            "version": "v3.1.4",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ipinfo/php.git",
-                "reference": "978f7dd8554665e1ce50722afbe5906ae29e2a76"
+                "reference": "861ce7f4068c2236c7b41c6468accf5ef9be67b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ipinfo/php/zipball/978f7dd8554665e1ce50722afbe5906ae29e2a76",
-                "reference": "978f7dd8554665e1ce50722afbe5906ae29e2a76",
+                "url": "https://api.github.com/repos/ipinfo/php/zipball/861ce7f4068c2236c7b41c6468accf5ef9be67b4",
+                "reference": "861ce7f4068c2236c7b41c6468accf5ef9be67b4",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "guzzlehttp/guzzle": "^6.3||^7.0",
                 "php": ">=8.0",
-                "symfony/cache": "^6.3",
-                "symfony/http-foundation": "^6.2 || ^7.0"
+                "symfony/cache": "^6.0 || ^6.3 || ^7.0",
+                "symfony/http-foundation": "^6.0 || ^6.2 || ^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^10.0.0",
+                "phpunit/phpunit": "^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0",
                 "squizlabs/php_codesniffer": "^3.5.8"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.1.4-dev"
+                    "dev-master": "3.2.0-dev"
                 }
             },
             "autoload": {
@@ -2343,9 +2388,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ipinfo/php/issues",
-                "source": "https://github.com/ipinfo/php/tree/v3.1.4"
+                "source": "https://github.com/ipinfo/php/tree/v3.2.0"
             },
-            "time": "2025-02-15T03:51:43+00:00"
+            "time": "2025-07-23T01:59:59+00:00"
         },
         {
             "name": "kkszymanowski/traitor",
@@ -8989,52 +9034,6 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/v2.3.0"
             },
             "time": "2024-12-21T16:25:41+00:00"
-        },
-        {
-            "name": "tomlerendu/laravel-convert-case-middleware",
-            "version": "1.1.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tomlerendu/laravel-convert-case-middleware.git",
-                "reference": "2e5bfb460a5c28558c98d56c3446a687a775c877"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tomlerendu/laravel-convert-case-middleware/zipball/2e5bfb460a5c28558c98d56c3446a687a775c877",
-                "reference": "2e5bfb460a5c28558c98d56c3446a687a775c877",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "laravel/framework": "^5.2|^6.0|^7.0|^8.0|^9.0|^10",
-                "php": "^8.0|^8.1|^8.2"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^7.5|^10"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "TomLerendu\\LaravelConvertCaseMiddleware\\": "src/",
-                    "TomLerendu\\LaravelConvertCaseMiddleware\\Tests\\": "tests/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tom Lerendu",
-                    "email": "tom.lerendu@gmail.com"
-                }
-            ],
-            "description": "Convert request and response keys to and from camel and snake case.",
-            "support": {
-                "issues": "https://github.com/tomlerendu/laravel-convert-case-middleware/issues",
-                "source": "https://github.com/tomlerendu/laravel-convert-case-middleware/tree/1.1.4"
-            },
-            "time": "2024-01-18T22:19:45+00:00"
         },
         {
             "name": "twilio/sdk",

@@ -238,6 +238,7 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../publishables/files/vite.config.ts' => base_path('vite.config.ts'),
             __DIR__ . '/../publishables/files/vitest.config.ts' => base_path('vitest.config.ts'),
             __DIR__ . '/../publishables/files/window.d.ts' => base_path('window.d.ts'),
+            __DIR__ . '/../publishables/files/pnpm-workspace.yaml' => base_path('pnpm-workspace.yaml'),
             __DIR__ . '/../publishables/files/HttpKernel.php' => app_path('Http/Kernel.php'),
         ], 'creopse-other-files');
 
