@@ -7,12 +7,9 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
-use Creopse\Creopse\Traits\DetectsLaravelVersion;
 
 class Install extends Command
 {
-    use DetectsLaravelVersion;
-
     /**
      * The name and signature of the console command.
      *
@@ -137,13 +134,11 @@ class Install extends Command
             '--tag' => 'creopse-inertia-middleware',
             '--force' => $force,
         ]);
-        if ($this->isLaravelVersionOrAbove('11.0')) {
-            $this->info('Publishing other middlewares...');
-            $this->call('vendor:publish', [
-                '--tag' => 'creopse-v11-middlewares',
-                '--force' => $force,
-            ]);
-        }
+        $this->info('Publishing other middlewares...');
+        $this->call('vendor:publish', [
+            '--tag' => 'creopse-v11-middlewares',
+            '--force' => $force,
+        ]);
 
         // Step 7: Publish other files (e.g., routes, controllers)
         $this->info('Publishing other files...');

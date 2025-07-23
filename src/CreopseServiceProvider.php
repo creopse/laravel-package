@@ -204,9 +204,11 @@ class CreopseServiceProvider extends ServiceProvider
         ], 'creopse-middlewares');
 
         // Publish v11 middlewares
-        $this->publishes([
-            __DIR__ . '/../publishables/middlewares/v11' => app_path('Http/Middleware'),
-        ], 'creopse-v11-middlewares');
+        if ($this->isLaravelVersionOrAbove('11.0')) {
+            $this->publishes([
+                __DIR__ . '/../publishables/middlewares/v11' => app_path('Http/Middleware'),
+            ], 'creopse-v11-middlewares');
+        }
 
         // Publish inertia middleware
         $this->publishes([
