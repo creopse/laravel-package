@@ -100,6 +100,14 @@ class Install extends Command
             '--tag' => 'creopse-laratrust-config',
             '--force' => $force,
         ]);
+        $this->call('vendor:publish', [
+            '--tag' => 'creopse-cache-config',
+            '--force' => $force,
+        ]);
+        $this->call('vendor:publish', [
+            '--tag' => 'creopse-broadcasting-config',
+            '--force' => $force,
+        ]);
 
         // Step 3: Publish public assets
         $this->info('Publishing public assets...');

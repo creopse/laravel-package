@@ -150,6 +150,14 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../publishables/config/laravel-ffmpeg.php' => config_path('laravel-ffmpeg.php'),
         ], 'creopse-laravel-ffmpeg-config');
 
+        $this->publishes([
+            __DIR__ . '/../publishables/config/cache.php' => config_path('cache.php'),
+        ], 'creopse-cache-config');
+
+        $this->publishes([
+            __DIR__ . '/../publishables/config/broadcasting.php' => config_path('broadcasting.php'),
+        ], 'creopse-broadcasting-config');
+
         // Publish package config
         $this->publishes([
             __DIR__ . '/../publishables/config/creopse.php' => config_path('creopse.php'),
