@@ -4,6 +4,7 @@ namespace Creopse\Creopse;
 
 use Creopse\Creopse\Console\Commands\{Install, MakeSection, MakeWidget, RemoveSection, RemoveWidget, ScheduledCommand};
 use Creopse\Creopse\Database\Seeders\DatabaseSeeder;
+use Creopse\Creopse\Traits\DetectsLaravelVersion;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Seeder;
@@ -15,6 +16,8 @@ use Illuminate\Support\ServiceProvider;
 
 class CreopseServiceProvider extends ServiceProvider
 {
+    use DetectsLaravelVersion;
+
     protected $configFiles = [
         'creopse',
         'auth',
@@ -243,10 +246,25 @@ class CreopseServiceProvider extends ServiceProvider
         ], 'creopse-other-files');
 
         // Publish providers
-        $this->publishes([
-            __DIR__ . '/../publishables/providers/RouteServiceProvider.php' => app_path('Providers/RouteServiceProvider.php'),
-            __DIR__ . '/../publishables/providers/EventServiceProvider.php' => app_path('Providers/EventServiceProvider.php'),
-        ], 'creopse-providers');
+        if ($this->isLaravelVersionOrAbove('11.0')) {
+            $this->publishes([
+                __DIR__ . '/../publishables/providers/v11/AppServiceProvider.php' => app_path('Providers/AppServiceProvider.php'),
+                __DIR__ . '/../publishables/providers/EventServiceProvider.php' => app_path('Providers/EventServiceProvider.php'),
+            ], 'creopse-providers');
+        } else {
+            $this->publishes([
+                __DIR__ . '/../publishables/providers/RouteServiceProvider.php' => app_path('Providers/RouteServiceProvider.php'),
+                __DIR__ . '/../publishables/providers/EventServiceProvider.php' => app_path('Providers/EventServiceProvider.php'),
+            ], 'creopse-providers');
+        }
+
+        // Publish bootstrap files
+        if ($this->isLaravelVersionOrAbove('11.0')) {
+            $this->publishes([
+                __DIR__ . '/../publishables/bootstrap/v11/app.php' => base_path('bootstrap/app.php'),
+                __DIR__ . '/../publishables/bootstrap/v11/providers.php' => base_path('bootstrap/providers.php'),
+            ], 'creopse-bootstrap-files');
+        }
 
         // Publish routes
         $this->publishes([

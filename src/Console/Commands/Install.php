@@ -7,9 +7,12 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use Creopse\Creopse\Traits\DetectsLaravelVersion;
 
 class Install extends Command
 {
+    use DetectsLaravelVersion;
+
     /**
      * The name and signature of the console command.
      *
@@ -175,14 +178,21 @@ class Install extends Command
             '--force' => $force,
         ]);
 
-        // Step 14: Publish admin
+        // Step 14: Publish bootstrap files
+        $this->info('Publishing bootstrap files...');
+        $this->call('vendor:publish', [
+            '--tag' => 'creopse-bootstrap-files',
+            '--force' => $force,
+        ]);
+
+        // Step 15: Publish admin
         $this->info('Publishing creopse admin...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-admin',
             '--force' => $force,
         ]);
 
-        // Step 15: Install pnpm dependencies
+        // Step 16: Install pnpm dependencies
         $this->info('Installing pnpm dependencies...');
         $process = new Process(['pnpm', 'i']);
         $process->setTimeout(900);
@@ -196,7 +206,7 @@ class Install extends Command
         echo $process->getOutput();
 
         try {
-            // Step 16: Cache config
+            // Step 17: Cache config
             $this->info('Caching config...');
             $this->call('config:cache');
         } catch (Exception $e) {
@@ -204,7 +214,7 @@ class Install extends Command
         }
 
         try {
-            // Step 17: Generate app key
+            // Step 18: Generate app key
             $this->info('Generating app key...');
             $this->call('key:generate');
         } catch (Exception $e) {
@@ -212,14 +222,14 @@ class Install extends Command
         }
 
         try {
-            // Step 18: Clear config
+            // Step 19: Clear config
             $this->info('Clearing config...');
             $this->call('config:clear');
         } catch (Exception $e) {
             //
         }
 
-        // Step 19: Update composer dependencies
+        // Step 20: Update composer dependencies
         $this->info('Updating composer dependencies...');
         $process = new Process(['composer', 'update']);
         $process->setTimeout(900);
@@ -232,19 +242,19 @@ class Install extends Command
         // Output the result
         echo $process->getOutput();
 
-        // Step 20: Link storage folder to public folder
+        // Step 21: Link storage folder to public folder
         $this->info('Linking storage folder to public folder...');
         $this->call('storage:link');
 
-        // Step 21: Clear cache
+        // Step 22: Clear cache
         $this->info('Clearing cache...');
         $this->call('cache:clear');
 
-        // Step 22: Run migrations
+        // Step 23: Run migrations
         // $this->info('Running migrations...');
         // $this->call('migrate');
 
-        // Step 23: Run seeders
+        // Step 24: Run seeders
         // $this->info('Running seeders...');
         // $this->call('db:seed');
 
