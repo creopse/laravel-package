@@ -195,8 +195,18 @@ class CreopseServiceProvider extends ServiceProvider
 
         // Publish middlewares
         $this->publishes([
-            __DIR__ . '/../publishables/middlewares' => app_path('Http/Middleware'),
+            __DIR__ . '/../publishables/middlewares/CheckApiKey.php' => app_path('Http/Middleware/CheckApiKey.php'),
+            __DIR__ . '/../publishables/middlewares/EncryptCookies.php' => app_path('Http/Middleware/EncryptCookies.php'),
+            __DIR__ . '/../publishables/middlewares/EnsureEmailIsVerified.php' => app_path('Http/Middleware/EnsureEmailIsVerified.php'),
+            __DIR__ . '/../publishables/middlewares/HandleInertiaRequests.php' => app_path('Http/Middleware/HandleInertiaRequests.php'),
+            __DIR__ . '/../publishables/middlewares/LogSessionHistory.php' => app_path('Http/Middleware/LogSessionHistory.php'),
+            __DIR__ . '/../publishables/middlewares/VerifyCsrfToken.php' => app_path('Http/Middleware/VerifyCsrfToken.php'),
         ], 'creopse-middlewares');
+
+        // Publish v11 middlewares
+        $this->publishes([
+            __DIR__ . '/../publishables/middlewares/v11' => app_path('Http/Middleware'),
+        ], 'creopse-v11-middlewares');
 
         // Publish inertia middleware
         $this->publishes([

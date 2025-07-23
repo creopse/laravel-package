@@ -131,12 +131,19 @@ class Install extends Command
             '--force' => $force,
         ]);
 
-        // Step 6: Publish inertia middleware
+        // Step 6: Publish middlewares
         $this->info('Publishing inertia middleware...');
         $this->call('vendor:publish', [
             '--tag' => 'creopse-inertia-middleware',
             '--force' => $force,
         ]);
+        if ($this->isLaravelVersionOrAbove('11.0')) {
+            $this->info('Publishing other middlewares...');
+            $this->call('vendor:publish', [
+                '--tag' => 'creopse-v11-middlewares',
+                '--force' => $force,
+            ]);
+        }
 
         // Step 7: Publish other files (e.g., routes, controllers)
         $this->info('Publishing other files...');
