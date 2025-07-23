@@ -7,7 +7,7 @@ Welcome to **Creopse**, a powerful and hybrid Content Management System (CMS) bu
 ## 🚀 Features
 
 - **Hybrid CMS**: Combines simplicity and flexibility for managing content.
-- **Built on Laravel**: Fully leverages Laravel 10’s modern features.
+- **Built on Laravel**: Fully leverages Laravel's modern features.
 - **Developer-Friendly**: Easy installation and configuration process.
 
 ---
@@ -16,8 +16,8 @@ Welcome to **Creopse**, a powerful and hybrid Content Management System (CMS) bu
 
 Before starting, ensure your environment meets the following prerequisites:
 
-- **Laravel**: Version 10 is required.
-- **PHP**: Compatible with Laravel 10 (minimum version 8.1).
+- **Laravel**: Version 10 or 11 is required.
+- **PHP**: Compatible with Laravel 10 (minimum version 8.1) and Laravel 11 (minimum version 8.2).
 - **Composer**: To manage dependencies.
 - **pnpm**: Required to manage and build frontend assets.
 
@@ -25,12 +25,18 @@ Before starting, ensure your environment meets the following prerequisites:
 
 ## 🛠️ Installation Guide
 
-### Step 1: Install Laravel 10
+### Step 1: Install Laravel 10 or 11
 
-Start by creating a fresh Laravel 10 project. Run the following command:
+Start by creating a fresh project using Laravel 10 or 11. Run the following command:
 
 ```bash
 composer create-project laravel/laravel:^10.0 project-name
+```
+
+or
+
+```bash
+composer create-project laravel/laravel:^11.0 project-name
 ```
 
 > Replace `project-name` with your desired directory name for the project.
