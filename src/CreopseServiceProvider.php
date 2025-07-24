@@ -247,10 +247,10 @@ class CreopseServiceProvider extends ServiceProvider
         $composerContent = file_get_contents($composerFile);
 
         $editedComposerContent = json_decode($composerContent, true);
-        $editedComposerContent['require']['laravel/framework'] = $this->getLaravelMajorVersion() . '.0';
+        $editedComposerContent['require']['laravel/framework'] = '^' . $this->getLaravelMajorVersion() . '.0';
 
         $tempComposerFile = __DIR__ . '/../publishables/files/composer.temp.json';
-        file_put_contents($tempComposerFile, json_encode($editedComposerContent, JSON_PRETTY_PRINT));
+        file_put_contents($tempComposerFile, json_encode($editedComposerContent, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
         $this->publishes([
             $tempComposerFile => base_path('composer.json'),
@@ -279,7 +279,7 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../publishables/files/HttpKernel.php' => app_path('Http/Kernel.php'),
         ], 'creopse-other-files');
 
-        // Clean up temp file after publishing
+        // Clean up composer temp file after publishing
         register_shutdown_function(function () use ($tempComposerFile) {
             if (file_exists($tempComposerFile)) {
                 unlink($tempComposerFile);
