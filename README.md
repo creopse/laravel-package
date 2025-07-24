@@ -16,8 +16,10 @@ Welcome to **Creopse**, a powerful and hybrid Content Management System (CMS) bu
 
 Before starting, ensure your environment meets the following prerequisites:
 
-- **Laravel**: Version 10 or 11 is required.
-- **PHP**: Compatible with Laravel 10 (minimum version 8.1) and Laravel 11 (minimum version 8.2).
+- **Laravel**: Version 10, 11, or 12 is required.
+- **PHP**:
+  - Laravel 10: minimum version 8.1
+  - Laravel 11 & 12: minimum version 8.2
 - **Composer**: To manage dependencies.
 - **pnpm**: Required to manage and build frontend assets.
 
@@ -25,18 +27,26 @@ Before starting, ensure your environment meets the following prerequisites:
 
 ## 🛠️ Installation Guide
 
-### Step 1: Install Laravel 10 or 11
+### Step 1: Install Laravel
 
-Start by creating a fresh project using Laravel 10 or 11. Run the following command:
+Start by creating a fresh project using Laravel 10, 11, or 12. Run one of the following commands:
+
+**For Laravel 10:**
 
 ```bash
 composer create-project laravel/laravel:^10.0 project-name
 ```
 
-or
+**For Laravel 11:**
 
 ```bash
 composer create-project laravel/laravel:^11.0 project-name
+```
+
+**For Laravel 12:**
+
+```bash
+composer create-project laravel/laravel:^12.0 project-name
 ```
 
 > Replace `project-name` with your desired directory name for the project.
@@ -57,7 +67,7 @@ This will download and install all the necessary files for Creopse.
 
 ### Step 3: Install Creopse Files
 
-Next, publish Creopse’s configuration and files by running the following command:
+Next, publish Creopse's configuration and files by running the following command:
 
 ```bash
 php artisan creopse:install
@@ -116,7 +126,7 @@ Log in using the credentials you configured (or the default credentials if provi
 
 ---
 
-## 🎉 You’re Ready to Go
+## 🎉 You're Ready to Go
 
 Creopse is now fully installed and ready for development. Explore its hybrid CMS capabilities and build amazing applications effortlessly.
 
