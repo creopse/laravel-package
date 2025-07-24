@@ -243,7 +243,17 @@ class CreopseServiceProvider extends ServiceProvider
         ], 'creopse-public');
 
         // Publish other files
+        $composerFile = __DIR__ . '/../publishables/files/composer.json';
+        $composerContent = file_get_contents($composerFile);
+
+        $editedComposerContent = json_decode($composerContent, true);
+        $editedComposerContent['require']['laravel/framework'] = $this->getLaravelMajorVersion() . '.0';
+
+        $tempComposerFile = sys_get_temp_dir() . '/modified-composer.json';
+        file_put_contents($tempComposerFile, json_encode($editedComposerContent, JSON_PRETTY_PRINT));
+
         $this->publishes([
+            $tempComposerFile => base_path('composer.json'),
             __DIR__ . '/../publishables/files/env' => base_path('.env'),
             __DIR__ . '/../publishables/files/.env.example' => base_path('.env.example'),
             __DIR__ . '/../publishables/files/.env.production' => base_path('.env.production'),
@@ -257,7 +267,6 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../publishables/files/.npmrc' => base_path('.npmrc'),
             __DIR__ . '/../publishables/files/.prettierignore' => base_path('.prettierignore'),
             __DIR__ . '/../publishables/files/.prettierrc' => base_path('.prettierrc'),
-            __DIR__ . '/../publishables/files/composer.json' => base_path('composer.json'),
             __DIR__ . '/../publishables/files/package.json' => base_path('package.json'),
             __DIR__ . '/../publishables/files/postcss.config.js' => base_path('postcss.config.js'),
             __DIR__ . '/../publishables/files/tailwind.config.js' => base_path('tailwind.config.js'),
@@ -269,6 +278,13 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../publishables/files/pnpm-workspace.yaml' => base_path('pnpm-workspace.yaml'),
             __DIR__ . '/../publishables/files/HttpKernel.php' => app_path('Http/Kernel.php'),
         ], 'creopse-other-files');
+
+        // Clean up temp file after publishing
+        register_shutdown_function(function () use ($tempComposerFile) {
+            if (file_exists($tempComposerFile)) {
+                unlink($tempComposerFile);
+            }
+        });
 
         // Publish providers
         if ($this->isLaravelVersionOrAbove('11.0')) {
