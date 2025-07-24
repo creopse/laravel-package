@@ -49,7 +49,7 @@
     },
     "dependencies": {
         "@creopse/utils": "^0.0.4",
-        "@creopse/vue": "^0.0.8",
+        "@creopse/vue": "^0.0.9",
         "@inertiajs/core": "^2.0.17",
         "@inertiajs/vue3": "^2.0.17",
         "@vueuse/core": "^13.5.0",
