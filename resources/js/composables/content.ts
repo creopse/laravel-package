@@ -14,6 +14,7 @@ import type {
   SharedProps,
 } from '@creopse/utils'
 import type { ErrorBag, Errors, PageProps } from '@inertiajs/core'
+import cloneDeep from 'lodash.clonedeep'
 
 /**
  * A composable that provides a set of functions and properties for
@@ -270,7 +271,7 @@ export const useContent = () => {
     const menu = page.props?.menus?.find((menu) => menu.name === name)
 
     if (menu) {
-      menu.items = _.cloneDeep(
+      menu.items = cloneDeep(
         menu.items
           ?.filter((item) => !filterByIsActive || item.isActive)
           ?.sort((a, b) => a.position - b.position)
@@ -294,7 +295,7 @@ export const useContent = () => {
     const menu = page.props?.menus?.find((menu) => menu.location?.name === name)
 
     if (menu) {
-      menu.items = _.cloneDeep(
+      menu.items = cloneDeep(
         menu.items
           ?.filter((item) => !filterByIsActive || item.isActive)
           ?.sort((a, b) => a.position - b.position)
