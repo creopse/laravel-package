@@ -1,7 +1,7 @@
 import fr from '@/assets/images/flags/fr.svg'
 import gb from '@/assets/images/flags/gb.svg'
 
-import { API_BASE_URL, LANG_COOKIE } from '@/constants'
+import { API_BASE_URL, LANG_KEY } from '@/constants'
 // @ts-ignore
 import { Ziggy } from '@/ziggy.js'
 import {
@@ -181,7 +181,7 @@ export const useHelper = () => {
     return parsedData
       ? parsedData[lang.toUpperCase()] ||
           parsedData[lang] ||
-          parsedData['fr'] ||
+          parsedData['en'] ||
           ''
       : ''
   }
@@ -336,7 +336,7 @@ export const useHelper = () => {
     reload = true,
     updateUserPrefs = true
   ) => {
-    localStorage.setItem(LANG_COOKIE, val)
+    localStorage.setItem(LANG_KEY, val)
 
     if (page.props.isUserLoggedIn && updateUserPrefs) {
       const userPrefs = (page.props.userData?.preferences ||

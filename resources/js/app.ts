@@ -9,7 +9,7 @@ import { ZiggyVue } from 'ziggy-js'
 import { i18nVue } from 'laravel-vue-i18n'
 import { createInertiaApp, Link } from '@inertiajs/vue3'
 
-import { LANG_COOKIE } from './constants'
+import { LANG_KEY } from './constants'
 
 createInertiaApp({
   title: (title) => title ? `${title} - ${import.meta.env.APP_NAME}` : import.meta.env.APP_NAME,
@@ -59,8 +59,8 @@ createInertiaApp({
       .use(ZiggyVue)
       .use(pinia)
       .use(i18nVue, {
-        lang: localStorage.getItem(LANG_COOKIE) || lang || props.initialPage.props.appLocale || 'fr',
-        fallbackLang: props.initialPage.props.appFallbackLocale || 'fr',
+        lang: localStorage.getItem(LANG_KEY) || lang || props.initialPage.props.appLocale || 'en',
+        fallbackLang: props.initialPage.props.appFallbackLocale || 'en',
         resolve: async (lang: string) => {
           const langs: any = import.meta.glob('../../lang/*.json')
           return await langs[`../../lang/${lang}.json`]()
