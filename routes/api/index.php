@@ -13,6 +13,7 @@
 
 require __DIR__ . '/ads.php';
 require __DIR__ . '/auth.php';
+require __DIR__ . '/lang.php';
 require __DIR__ . '/file.php';
 require __DIR__ . '/stats.php';
 require __DIR__ . '/users.php';
