@@ -3,19 +3,20 @@
 namespace Creopse\Creopse\Console\Commands;
 
 use Exception;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class Install extends Command
+class Install extends CreopseCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'creopse:install {--force=true}';
+    protected $signature = 'creopse:install
+                            {--t|template=vue : Selects the frontend template (vue or react)}
+                            {--no-force : Disable force mode (enabled by default)}';
 
     /**
      * The console command description.
@@ -29,7 +30,13 @@ class Install extends Command
      */
     public function handle()
     {
-        $force = $this->option('force');
+        $force = !$this->option('no-force');
+        $template = strtolower($this->option('template'));
+
+        if (!in_array($template, ['vue', 'react'])) {
+            $this->error("Invalid template: {$template}. Accepted values: vue, react.");
+            return 1;
+        }
 
         $this->info('Starting package installation...');
 
@@ -74,18 +81,18 @@ class Install extends Command
 
                 foreach ($files as $file) {
                     if (!File::delete($file)) {
-                        throw new Exception("Failed to delete file: $file");
+                        throw new Exception("\nFailed to delete file: $file");
                     }
                 }
 
-                echo "All files in the folder $folder have been deleted.";
+                echo "\nAll files in the folder $folder have been deleted.";
             } catch (Exception $e) {
                 echo "Error: " . $e->getMessage();
             }
         }
 
         // Step 2: Publish configuration files
-        $this->info('Publishing configuration files...');
+        $this->info("\nPublishing configuration files...");
         $this->call('vendor:publish', [
             '--tag' => 'creopse-config',
             '--force' => $force,
@@ -121,6 +128,13 @@ class Install extends Command
             '--force' => $force,
         ]);
 
+        if ($template === 'react') {
+            $this->call('vendor:publish', [
+                '--tag' => 'creopse-react-resources',
+                '--force' => $force,
+            ]);
+        }
+
         // Step 5: Publish translations
         $this->info('Publishing translations...');
         $this->call('vendor:publish', [
@@ -146,6 +160,13 @@ class Install extends Command
             '--tag' => 'creopse-other-files',
             '--force' => $force,
         ]);
+
+        if ($template === 'react') {
+            $this->call('vendor:publish', [
+                '--tag' => 'creopse-react-files',
+                '--force' => $force,
+            ]);
+        }
 
         // Step 8: Publish providers
         $this->info('Publishing providers...');

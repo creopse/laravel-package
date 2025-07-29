@@ -4,17 +4,23 @@ namespace Creopse\Creopse\Console\Commands;
 
 use Creopse\Creopse\Helpers\Functions;
 use Creopse\Creopse\Models\Section;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
-class RemoveSection extends Command
+class RemoveSection extends CreopseCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'creopse:remove-section {name : The name of the section}';
+    protected $signature = 'creopse:remove-section {name : The name of the section} {--alias=creopse:delete-section}';
+
+    /**
+     * The console command aliases.
+     *
+     * @var array
+     */
+    protected $aliases = ['creopse:delete-section'];
 
     /**
      * The console command description.
@@ -29,7 +35,8 @@ class RemoveSection extends Command
     public function handle()
     {
         $argName = Functions::strToPascalCase($this->argument('name'));
-        $fileName = $argName . '.vue';
+        $frontendFramework = $this->detectFrontendFramework($this);
+        $fileName = $argName . ($frontendFramework === 'react' ? '.tsx' : '.vue');
         $filePath = base_path('resources/js/components/sections/' . $fileName);
 
         if (File::exists($filePath)) {

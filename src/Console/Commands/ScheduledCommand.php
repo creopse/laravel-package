@@ -2,9 +2,7 @@
 
 namespace Creopse\Creopse\Console\Commands;
 
-use Illuminate\Console\Command;
-
-class ScheduledCommand extends Command
+class ScheduledCommand extends CreopseCommand
 {
     protected $signature = 'creopse:scheduled-command';
     protected $description = 'This command runs as part of the schedule';

@@ -222,20 +222,38 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../resources/js' => resource_path('js'),
         ], 'creopse-resources');
 
+        $this->publishes([
+            __DIR__ . '/../resources_react/views' => resource_path('views'),
+            __DIR__ . '/../resources_react/css' => resource_path('css'),
+            __DIR__ . '/../resources_react/js' => resource_path('js'),
+        ], 'creopse-react-resources');
+
         // Publish views
         $this->publishes([
             __DIR__ . '/../resources/views' => resource_path('views/vendor/creopse'),
         ], 'creopse-views');
+
+        $this->publishes([
+            __DIR__ . '/../resources_react/views' => resource_path('views/vendor/creopse'),
+        ], 'creopse-react-views');
 
         // Publish css
         $this->publishes([
             __DIR__ . '/../resources/css' => resource_path('css/vendor/creopse'),
         ], 'creopse-css');
 
+        $this->publishes([
+            __DIR__ . '/../resources_react/css' => resource_path('css/vendor/creopse'),
+        ], 'creopse-react-css');
+
         // Publish js
         $this->publishes([
             __DIR__ . '/../resources/js' => resource_path('js/vendor/creopse'),
         ], 'creopse-js');
+
+        $this->publishes([
+            __DIR__ . '/../resources_react/js' => resource_path('js/vendor/creopse'),
+        ], 'creopse-react-js');
 
         // Publish public assets
         $this->publishes([
@@ -278,6 +296,20 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../publishables/files/pnpm-workspace.yaml' => base_path('pnpm-workspace.yaml'),
             __DIR__ . '/../publishables/files/HttpKernel.php' => app_path('Http/Kernel.php'),
         ], 'creopse-other-files');
+
+        $this->publishes([
+            __DIR__ . '/../publishables/files/react/.eslintrc' => base_path('.eslintrc'),
+            __DIR__ . '/../publishables/files/react/.prettierignore' => base_path('.prettierignore'),
+            __DIR__ . '/../publishables/files/react/.prettierrc' => base_path('.prettierrc'),
+            __DIR__ . '/../publishables/files/react/package.json' => base_path('package.json'),
+            __DIR__ . '/../publishables/files/react/postcss.config.js' => base_path('postcss.config.js'),
+            __DIR__ . '/../publishables/files/react/tailwind.config.js' => base_path('tailwind.config.js'),
+            __DIR__ . '/../publishables/files/react/tsconfig.json' => base_path('tsconfig.json'),
+            __DIR__ . '/../publishables/files/react/vite-env.d.ts' => base_path('vite-env.d.ts'),
+            __DIR__ . '/../publishables/files/react/vite.config.ts' => base_path('vite.config.ts'),
+            __DIR__ . '/../publishables/files/react/window.d.ts' => base_path('window.d.ts'),
+            __DIR__ . '/../publishables/files/react/pnpm-workspace.yaml' => base_path('pnpm-workspace.yaml'),
+        ], 'creopse-react-files');
 
         // Clean up composer temp file after publishing
         register_shutdown_function(function () use ($tempComposerFile) {
