@@ -122,15 +122,15 @@ class Install extends CreopseCommand
         ]);
 
         // Step 4: Publish resources
-        $this->info('Publishing resources...');
-        $this->call('vendor:publish', [
-            '--tag' => 'creopse-resources',
-            '--force' => $force,
-        ]);
-
         if ($template === 'react') {
             $this->call('vendor:publish', [
                 '--tag' => 'creopse-react-resources',
+                '--force' => $force,
+            ]);
+        } else {
+            $this->info('Publishing resources...');
+            $this->call('vendor:publish', [
+                '--tag' => 'creopse-resources',
                 '--force' => $force,
             ]);
         }

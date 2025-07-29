@@ -1,0 +1,20 @@
+// {{ name }} section
+import React from 'react';
+import styled from 'styled-components'
+
+const StyledDiv = styled.div`
+  // Styles
+`
+
+const {{ name }}: React.FC = () => {
+  const { getSectionRootData } = useContent();
+  const {{ dataVar }} = getSectionRootData('{{ dataId }}');
+
+  return (
+    <section id="{{ id }}">
+      <StyledDiv></StyledDiv>
+    </section>
+  );
+};
+
+export default {{ name }};

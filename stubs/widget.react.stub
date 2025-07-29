@@ -1,0 +1,16 @@
+// {{ name }} widget
+import React from 'react';
+
+interface {{ name }}Props {
+  // Component props
+}
+
+const {{ name }}: React.FC<{{ name }}Props> = () => {
+  return (
+    <section id="{{ id }}">
+      {/* Component content */}
+    </section>
+  );
+};
+
+export default {{ name }};
