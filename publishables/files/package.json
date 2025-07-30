@@ -50,6 +50,7 @@
         "vue-tsc": "^3.0.3"
     },
     "dependencies": {
+        "@creopse/cli": "^0.0.12",
         "@creopse/utils": "^0.0.4",
         "@creopse/vue": "^0.0.9",
         "@inertiajs/core": "^2.0.17",

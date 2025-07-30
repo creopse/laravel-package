@@ -50,6 +50,7 @@
         "vitest": "^3.2.4"
     },
     "dependencies": {
+        "@creopse/cli": "^0.0.12",
         "@creopse/react": "^0.0.2",
         "@creopse/utils": "^0.0.4",
         "@inertiajs/core": "^2.0.17",
