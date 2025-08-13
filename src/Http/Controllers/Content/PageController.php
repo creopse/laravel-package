@@ -5,6 +5,7 @@ namespace Creopse\Creopse\Http\Controllers\Content;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Requests\Content\PageRequest;
+use Creopse\Creopse\Http\Resources\Content\PageBasicResource;
 use Creopse\Creopse\Http\Resources\Content\PageResource;
 use Creopse\Creopse\Models\Page;
 use Illuminate\Http\Request;
@@ -14,8 +15,12 @@ class PageController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->boolean('basic')) {
+            return $this->sendResponse(PageBasicResource::collection(Page::all()));
+        }
+
         return $this->sendResponse(PageResource::collection(Page::all()));
     }
 
