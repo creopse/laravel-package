@@ -1,0 +1,27 @@
+preset: package
+
+namespace: Creopse\Creopse
+user-auth-model: Creopse\Creopse\Models\User
+
+paths:
+  src: src
+  resource: resources
+
+factory:
+  path: database/factories
+
+migration:
+  path: database/migrations
+  prefix: ''
+
+console:
+  namespace: Creopse\Creopse\Console
+
+model:
+  namespace: Creopse\Creopse\Models
+
+provider:
+  namespace: Creopse\Creopse\Providers
+
+testing:
+  namespace: Creopse\Creopse\Tests
