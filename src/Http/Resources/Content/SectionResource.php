@@ -23,6 +23,7 @@ class SectionResource extends JsonResource
             'title' => $this->title,
             'content' => $this->content,
             'dataStructure' => $this->data_structure,
+            'settingsStructure' => $this->settings_structure,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
             'pagesCount' => $this->whenCounted('pages'),

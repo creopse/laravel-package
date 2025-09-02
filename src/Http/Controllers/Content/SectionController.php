@@ -70,6 +70,7 @@ class SectionController extends Controller
             'title' => $request->input('title'),
             'content' => $request->input('content'),
             'data_structure' => $request->input('data_structure'),
+            'settings_structure' => $request->input('settings_structure'),
         ]);
 
         return $this->sendResponse(

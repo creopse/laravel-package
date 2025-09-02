@@ -22,6 +22,7 @@ class Section extends Model
      */
     protected $casts = [
         'data_structure' => Json::class,
+        'settings_structure' => Json::class,
     ];
 
     public function pages()
