@@ -4,16 +4,149 @@ body {
 }
 
 #preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
   display: flex;
   z-index: 9999;
   align-items: center;
   justify-content: center;
-  background-color: whitesmoke;
+  background-color: #f1f5f9;
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
 }
 
-@keyframes rotate {
+.dark-theme #preloader {
+  background-color: #09090b;
+}
+
+/* Fade out container contents first */
+.preloader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+
+.preloader-container.fade-out {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+/* Then hide entire preloader */
+#preloader.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#preloader .preloader-img {
+  width: 180px;
+  height: 180px;
+  background: url('icon.svg') center / contain no-repeat;
+  clip-path: inset(100% 0 0 0);
+  animation: reveal-up 1.8s ease-in-out infinite alternate;
+  will-change: clip-path;
+}
+
+/* Optional loading text */
+.preloader-text {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+  opacity: 0;
+  animation: fade-in-text 2s ease-in-out 0.5s forwards;
+}
+
+.dark-theme .preloader-text {
+  color: #94a3b8;
+}
+
+/* Keyframe animations */
+@keyframes reveal-up {
+  0% {
+    clip-path: inset(100% 0 0 0);
+  }
+  100% {
+    clip-path: inset(0% 0 0 0);
+  }
+}
+
+@keyframes fade-in-text {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Smooth pulse animation as fallback */
+@keyframes pulse-fallback {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Accessibility: Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  #preloader .preloader-img {
+    animation: pulse-fallback 2s ease-in-out infinite;
+    clip-path: inset(0 0 0 0);
+  }
+
+  .preloader-text {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  #preloader {
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  #preloader {
+    background-color: Canvas;
+    color: CanvasText;
+  }
+
+  .preloader-text {
+    color: CanvasText;
+  }
+}
+
+/* Loading spinner alternative for better UX */
+.preloader-spinner {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e2e8f0;
+  border-top: 3px solid #1e9cd7;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-top: 1rem;
+}
+
+.dark-theme .preloader-spinner {
+  border-color: #27272a;
+  border-top-color: #1e9cd7;
+}
+
+@keyframes spin {
   0% {
     transform: rotate(0deg);
   }
@@ -22,7 +155,8 @@ body {
   }
 }
 
-#preloader > .preloader-img {
-  width: 180px;
-  animation: rotate 5s linear infinite;
+/* Performance optimizations */
+#preloader * {
+  backface-visibility: hidden;
+  perspective: 1000px;
 }

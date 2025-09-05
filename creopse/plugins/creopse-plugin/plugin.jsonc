@@ -1,0 +1,110 @@
+// ==============================================
+// Creopse Plugin Configuration File
+// ==============================================
+{
+  // Unique identifier for the plugin. Used internally by the platform.
+  "id": "creopse-plugin",
+
+  // Display name of the plugin shown in the UI.
+  "name": "Creopse Plugin",
+
+  // A brief description of the plugin's purpose or functionality.
+  "description": {
+    "en": "An example plugin for Creopse platform",
+    "fr": "Un exemple de plugin pour la plateforme Creopse"
+  },
+
+  // The current version of the plugin, following semantic versioning.
+  // Auto synced from package.json on build.
+  "version": "0.0.1",
+
+  // Name of the author or organization responsible for the plugin.
+  "author": "Creopse",
+
+  // Licensing information indicating how the plugin may be used.
+  "license": "MIT",
+
+  // The entry file for the module federation setup.
+  // This file exposes the plugin’s components for use by the host application.
+  "entry": "remoteEntry.js",
+
+  // List of page modules exposed by the plugin.
+  // Each page includes its route path, display title, and source module.
+  "pages": [
+    {
+      // Unique name used to reference this page internally.
+      "name": "Home",
+
+      // The URL path where this page will be accessible.
+      "path": "/home",
+
+      // The title of the page shown in navigation or UI.
+      "title": {
+        "en": "Home",
+        "fr": "Accueil"
+      },
+
+      // Path to the Vue component module that renders this page.
+      "module": "./src/pages/Home.vue",
+
+      // Icon used to represent this page in navigation or UI. It should be from https://icones.js.org/.
+      "icon": "carbon:home",
+
+      // Whether this page should be hidden from the navigation menu.
+      "hidden": false
+    },
+
+    {
+      "name": "About",
+
+      "path": "/about",
+
+      "title": {
+        "en": "About",
+        "fr": "A propos"
+      },
+
+      "module": "./src/pages/About.vue",
+
+      "icon": "carbon:information",
+
+      "hidden": false
+    }
+  ],
+
+  // Icon used to represent the plugin in navigation or UI. It should be from https://icones.js.org/.
+  "navIcon": "carbon:3d-mpr-toggle",
+
+  // The default page when the plugin is selected. This should match the "name" of one of the defined pages.
+  "indexPageName": "Home",
+
+  // Dashboard component exposed by the plugin.
+  // This component is typically rendered in the main dashboard view of the platform.
+  "dashboard": {
+    "module": "./src/components/Dashboard.vue"
+  },
+
+  // Settings component exposed by the plugin.
+  // Used to render a configuration UI for the plugin.
+  "settings": {
+    "module": "./src/components/Settings.vue"
+  },
+
+  // Current runtime mode of the plugin. Common values: "development", "production".
+  "mode": "development",
+
+  // Development environment settings.
+  "development": {
+    // Hostname for the development server.
+    "host": "localhost",
+
+    // Port used by the Vite preview server during development.
+    "previewPort": 2160,
+
+    // Port used by the local dev server when serving the plugin.
+    "serverPort": 2161,
+
+    // Whether to use HTTPS for the development server.
+    "ssl": false
+  }
+}

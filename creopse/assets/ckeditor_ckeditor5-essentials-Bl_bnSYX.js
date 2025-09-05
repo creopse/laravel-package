@@ -1,4 +1,0 @@
-import{P as r}from"./ckeditor_ckeditor5-core-Ck1E_gMX.js";import"./ckeditor_ckeditor5-utils-CWV6iAXC.js";import"./ckeditor_ckeditor5-engine-Bp3orBjd.js";import{C as t}from"./ckeditor_ckeditor5-clipboard-CGEmRAGP.js";import{a as i}from"./ckeditor_ckeditor5-typing-A9cCj5t0.js";import"./ckeditor_ckeditor5-widget-ODMfBCu6.js";import"./ckeditor_ckeditor5-ui-0Cf30f_5.js";import"./color-name-B0-kzB5j.js";import"./color-convert-CPcGJsTp.js";import"./vanilla-colorful-CgSCOLsm.js";import{E as o,S as m}from"./ckeditor_ckeditor5-enter-DVV2qjMP.js";import{S as s}from"./ckeditor_ckeditor5-select-all-D8E6e8eV.js";import{U as p}from"./ckeditor_ckeditor5-undo-BcP3ZlbZ.js";/**
- * @license Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
- * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
- */class U extends r{static get requires(){return[t,o,s,m,i,p]}static get pluginName(){return"Essentials"}}export{U as E};
