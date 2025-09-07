@@ -1,3 +1,4 @@
+# Replace command "php artisan" with "vendor/bin/canvas"
 preset: package
 
 namespace: Creopse\Creopse

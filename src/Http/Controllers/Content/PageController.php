@@ -8,7 +8,9 @@ use Creopse\Creopse\Http\Requests\Content\PageRequest;
 use Creopse\Creopse\Http\Resources\Content\PageBasicResource;
 use Creopse\Creopse\Http\Resources\Content\PageResource;
 use Creopse\Creopse\Models\Page;
+use Creopse\Creopse\Models\PageSection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PageController extends Controller
 {
@@ -88,7 +90,7 @@ class PageController extends Controller
      */
     public function update(Request $request, Page $page)
     {
-        $page->update($request->except(['sections', 'sections_ids', 'sections_data', 'dispatch_data']));
+        $page->update($request->except(['sections', 'sections_ids', 'sections_data', 'sections_settings', 'dispatch_data', 'link_ids']));
 
         $attachSections = function ($sectionIds) use ($page) {
             $existingSections = $page->sections()->pluck('section_id')->toArray();
@@ -145,6 +147,27 @@ class PageController extends Controller
             } else {
                 $page->sections_data = $request->input('sections_data');
                 $page->save();
+            }
+        }
+
+        if ($request->has('sections_settings')) {
+            $sectionsSettings = $request->input('sections_settings');
+            $sections = $page->sections()->get();
+
+            foreach ($sections as $section) {
+                if (
+                    isset($sectionsSettings[$section->slug]) &&
+                    is_array($sectionsSettings[$section->slug])
+                ) {
+                    $pivot = PageSection::where('section_id', $section->id)
+                        ->where('page_id', $page->id)
+                        ->first();
+
+                    if ($pivot) {
+                        $pivot->settings = $sectionsSettings[$section->slug];
+                        $pivot->save();
+                    }
+                }
             }
         }
 

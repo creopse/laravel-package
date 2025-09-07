@@ -43,6 +43,9 @@ class SectionResource extends JsonResource
 
                 return null;
             }),
+            'linkId' => $this->whenPivotLoaded('page_section', fn() => $this->pivot->link_id),
+            'data' => $this->whenPivotLoaded('page_section', fn() => $this->pivot->data),
+            'settings' => $this->whenPivotLoaded('page_section', fn() => $this->pivot->settings),
         ];
     }
 }

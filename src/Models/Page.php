@@ -34,7 +34,10 @@ class Page extends Model
 
     public function sections()
     {
-        return $this->belongsToMany(Section::class)->withPivot('data_source_page_id')->withTimestamps();
+        return $this->belongsToMany(Section::class)
+            ->using(PageSection::class)
+            ->withPivot(['data_source_page_id', 'link_id', 'data', 'settings'])
+            ->withTimestamps();
     }
 
     public function permalinks()
