@@ -23,7 +23,6 @@ class PageResource extends JsonResource
             'content' => $this->content,
             'sections' => SectionResource::collection($this->sections->load(['pages:id,title'])),
             'sectionsCount' => $this->whenCounted('sections'),
-            'sectionsData' => Functions::convertKeysToCamelCase($this->sections_data),
             'sectionsOrder' => $this->sections_order,
             'sectionsDisabled' => $this->sections_disabled,
             'createdAt' => $this->created_at,

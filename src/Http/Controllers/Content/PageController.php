@@ -10,7 +10,6 @@ use Creopse\Creopse\Http\Resources\Content\PageResource;
 use Creopse\Creopse\Models\Page;
 use Creopse\Creopse\Models\PageSection;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class PageController extends Controller
 {
@@ -37,7 +36,6 @@ class PageController extends Controller
             'name' => $request->input('name'),
             'title' => $request->input('title'),
             'content' => $request->input('content'),
-            'sections_data' => $request->input('sections_data'),
             'sections_order' => $request->input('sections_order'),
             'sections_disabled' => $request->input('sections_disabled')
         ]);
@@ -123,30 +121,26 @@ class PageController extends Controller
         }
 
         if ($request->has('sections_data')) {
-            if ($request->has('dispatch_data') && $request->input('dispatch_data')) {
-                $sectionsData = $request->input('sections_data');
-                $sections = $page->sections()->get();
+            $sectionsData = $request->input('sections_data');
+            $sections = $page->sections()->get();
 
-                foreach ($sections as $section) {
-                    if (!isset($section->pivot->data_source_page_id) || empty($section->pivot->data_source_page_id)) {
-                        continue;
-                    }
-
-                    $sourcePage = Page::find($section->pivot->data_source_page_id);
-
-                    if (!$sourcePage) {
-                        continue;
-                    }
-
-                    $data = is_array($sourcePage->sections_data) ? $sourcePage->sections_data : [];
-
-                    $data[$section->slug] = $sectionsData[$section->slug];
-                    $sourcePage->sections_data = $data;
-                    $sourcePage->save();
+            foreach ($sections as $section) {
+                if (!isset($section->pivot->data_source_page_id) || empty($section->pivot->data_source_page_id)) {
+                    continue;
                 }
-            } else {
-                $page->sections_data = $request->input('sections_data');
-                $page->save();
+
+                $dataSourcePageSection = PageSection::where('section_id', $section->id)
+                    ->where('page_id', $section->pivot->data_source_page_id)
+                    ->first();
+
+                if (!$dataSourcePageSection) {
+                    continue;
+                }
+
+                $data = $sectionsData[$section->slug];
+
+                $dataSourcePageSection->data = $data;
+                $dataSourcePageSection->save();
             }
         }
 

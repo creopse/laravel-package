@@ -8,9 +8,9 @@ use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Requests\Content\SectionRequest;
 use Creopse\Creopse\Http\Resources\Content\SectionResource;
 use Creopse\Creopse\Models\Page;
+use Creopse\Creopse\Models\PageSection;
 use Creopse\Creopse\Models\Section;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class SectionController extends Controller
 {
@@ -31,19 +31,26 @@ class SectionController extends Controller
         $page = Page::where('slug', $pageSlug)->first();
 
         if ($section && $page) {
-            $sectionPage = DB::table('page_section')
-                ->where('section_id', $section->id)
+            $pageSection = PageSection::where('section_id', $section->id)
                 ->where('page_id', $page->id)
                 ->first();
 
-            if ($sectionPage) {
-                $page = Page::find($sectionPage->data_source_page_id);
-
-                if ($page && $page->sections_data) {
-                    $data = Functions::convertKeysToCamelCase(data_get($page->sections_data, $section->slug));
-
+            if ($pageSection) {
+                if ($page->id == $pageSection->data_source_page_id) {
                     return $this->sendResponse(
-                        $data,
+                        Functions::convertKeysToCamelCase($pageSection->data),
+                        ResponseStatusCode::OK,
+                        'Section data retrieved successfully'
+                    );
+                }
+
+                $dataSourcePageSection = PageSection::where('section_id', $section->id)
+                    ->where('page_id', $pageSection->data_source_page_id)
+                    ->first();
+
+                if ($dataSourcePageSection) {
+                    return $this->sendResponse(
+                        Functions::convertKeysToCamelCase($dataSourcePageSection->data),
                         ResponseStatusCode::OK,
                         'Section data retrieved successfully'
                     );
@@ -111,15 +118,13 @@ class SectionController extends Controller
         $sourcePageId = $request->input('source_page_id');
 
         if ($sourcePageId === null) {
-            DB::table('page_section')
-                ->where('section_id', $section->id)
+            PageSection::where('section_id', $section->id)
                 ->where('page_id', $pageId)
                 ->update(['data_source_page_id' => null]);
         } else {
             Page::findOrFail($pageId);
 
-            DB::table('page_section')
-                ->where('section_id', $section->id)
+            PageSection::where('section_id', $section->id)
                 ->where('page_id', $pageId)
                 ->update(['data_source_page_id' => $sourcePageId]);
         }

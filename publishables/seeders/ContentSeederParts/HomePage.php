@@ -8,8 +8,17 @@ $homePage = Page::firstOrCreate(
     ['name' => 'Home'],
     [
         'title' => '{ "en": "Home", "fr": "Accueil" }',
-        'sections_data' => [
-            "content" => [
+    ]
+);
+
+if (!$homePage->sections()->where('section_id', $contentSection->id)->exists()) {
+    $homePage->sections()->attach(
+        [
+            $contentSection->id,
+        ],
+        [
+            'data_source_page_id' => $homePage->id,
+            'data' => [
                 "index" => [
                     "title" => "{\"fr\":\"Bienvenue sur Creopse\", \"en\":\"Welcome to Creopse\"}",
                     "text" => "{\"fr\":\"Construisez votre site web sur mesure et gérez aisément vos contenus\", \"en\":\"Build your website on demand and manage easily your contents\"}"
@@ -42,17 +51,6 @@ $homePage = Page::firstOrCreate(
                     ],
                 ],
             ],
-        ],
-    ]
-);
-
-if (!$homePage->sections()->where('section_id', $contentSection->id)->exists()) {
-    $homePage->sections()->attach(
-        [
-            $contentSection->id,
-        ],
-        [
-            'data_source_page_id' => $homePage->id,
         ]
     );
 }

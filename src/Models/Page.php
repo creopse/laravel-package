@@ -2,7 +2,6 @@
 
 namespace Creopse\Creopse\Models;
 
-use Creopse\Creopse\Casts\Json;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Sluggable\HasSlug;
@@ -20,7 +19,6 @@ class Page extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'sections_data' => Json::class,
         'sections_order' => 'array',
         'sections_disabled' => 'array',
     ];

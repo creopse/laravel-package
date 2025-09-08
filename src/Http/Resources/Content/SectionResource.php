@@ -4,6 +4,7 @@ namespace Creopse\Creopse\Http\Resources\Content;
 
 use Creopse\Creopse\Helpers\Functions;
 use Creopse\Creopse\Models\Page;
+use Creopse\Creopse\Models\PageSection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -34,18 +35,19 @@ class SectionResource extends JsonResource
             'dataSourcePageTitle' => $this->whenPivotLoaded('page_section', function () {
                 return optional(Page::find($this->pivot->data_source_page_id))->title;
             }),
-            'dataSourcePageSectionsData' => $this->whenPivotLoaded('page_section', function () {
-                $page = Page::find($this->pivot->data_source_page_id);
+            'linkId' => $this->whenPivotLoaded('page_section', fn() => $this->pivot->link_id),
+            'data' => $this->whenPivotLoaded('page_section', function () {
+                $sourcePivot = PageSection::where('section_id', $this->id)
+                    ->where('page_id', $this->pivot->data_source_page_id)
+                    ->first();
 
-                if ($page && $page->sections_data) {
-                    return Functions::convertKeysToCamelCase(data_get($page->sections_data, $this->slug));
+                if ($sourcePivot) {
+                    return Functions::convertKeysToCamelCase($sourcePivot->data);
                 }
 
-                return null;
+                return $this->pivot->data;
             }),
-            'linkId' => $this->whenPivotLoaded('page_section', fn() => $this->pivot->link_id),
-            'data' => $this->whenPivotLoaded('page_section', fn() => $this->pivot->data),
-            'settings' => $this->whenPivotLoaded('page_section', fn() => $this->pivot->settings),
+            'settings' => $this->whenPivotLoaded('page_section', fn() => Functions::convertKeysToCamelCase($this->pivot->settings)),
         ];
     }
 }
