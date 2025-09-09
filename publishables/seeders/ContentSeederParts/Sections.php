@@ -40,7 +40,7 @@ $contentSection = Section::firstOrCreate(
                     [
                         'key' => 'url',
                         'label' => '{ "en": "URL", "fr": "URL" }',
-                        'type' => "url",
+                        'type' => "text",
                         'required' => true,
                         'options' => [],
                     ],

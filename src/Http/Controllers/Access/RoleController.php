@@ -25,7 +25,7 @@ class RoleController extends Controller
     /**
      * Display user resources.
      */
-    public function indexUser(User $user = null)
+    public function indexUser(?User $user = null)
     {
         if ($user) {
             return $this->sendResponse($user->roles()->with('permissions')->get());

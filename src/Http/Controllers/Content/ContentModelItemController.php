@@ -122,7 +122,7 @@ class ContentModelItemController extends Controller
     /**
      * Display the search result for a given query.
      */
-    public function searchItems(Request $request, string $query = '', int $contentModelId = null)
+    public function searchItems(Request $request, string $query = '', ?int $contentModelId = null)
     {
         $items = ContentModelItem::query();
 

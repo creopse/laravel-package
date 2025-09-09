@@ -118,7 +118,7 @@ class ArticleController extends Controller
     /**
      * Display a random listing of the resource.
      */
-    public function indexRandomList(Request $request, int $limit = null)
+    public function indexRandomList(Request $request, ?int $limit = null)
     {
         if (is_null($limit)) {
             return $this->sendResponse(
@@ -167,7 +167,7 @@ class ArticleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function indexHeadlines(Request $request, int $limit = null)
+    public function indexHeadlines(Request $request, ?int $limit = null)
     {
         if (is_null($limit)) {
             return $this->sendResponse(
