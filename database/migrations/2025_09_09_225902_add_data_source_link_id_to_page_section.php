@@ -12,9 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('page_section', function (Blueprint $table) {
-            $table->string('link_id')->unique()->default('default')->after('section_id');
-            $table->json('data')->nullable()->after('link_id');
-            $table->json('settings')->nullable()->after('data');
+            $table->string('data_source_link_id')->unique()->default('default')->after('data_source_page_id');
         });
     }
 
@@ -24,9 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('page_section', function (Blueprint $table) {
-            $table->dropColumn('link_id');
-            $table->dropColumn('data');
-            $table->dropColumn('settings');
+            $table->dropColumn('data_source_link_id');
         });
     }
 };

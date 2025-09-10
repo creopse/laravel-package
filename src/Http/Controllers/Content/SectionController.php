@@ -25,7 +25,7 @@ class SectionController extends Controller
     /**
      * Display a section data.
      */
-    public function getSectionData(String $sectionSlug, String $pageSlug)
+    public function getSectionData(String $sectionSlug, String $pageSlug, String $linkId)
     {
         $section = Section::where('slug', $sectionSlug)->first();
         $page = Page::where('slug', $pageSlug)->first();
@@ -33,6 +33,7 @@ class SectionController extends Controller
         if ($section && $page) {
             $pageSection = PageSection::where('section_id', $section->id)
                 ->where('page_id', $page->id)
+                ->where('link_id', $linkId)
                 ->first();
 
             if ($pageSection) {
@@ -46,6 +47,7 @@ class SectionController extends Controller
 
                 $dataSourcePageSection = PageSection::where('section_id', $section->id)
                     ->where('page_id', $pageSection->data_source_page_id)
+                    ->where('link_id', $pageSection->data_source_link_id)
                     ->first();
 
                 if ($dataSourcePageSection) {
@@ -115,18 +117,28 @@ class SectionController extends Controller
     public function updateDataSourcePage(Request $request, Section $section)
     {
         $pageId = $request->input('page_id');
+        $linkId = $request->input('link_id');
         $sourcePageId = $request->input('source_page_id');
+        $sourceLinkId = $request->input('source_link_id');
 
         if ($sourcePageId === null) {
             PageSection::where('section_id', $section->id)
                 ->where('page_id', $pageId)
-                ->update(['data_source_page_id' => null]);
+                ->where('link_id', $linkId)
+                ->update([
+                    'data_source_page_id' => null,
+                    'data_source_link_id' => 'default'
+                ]);
         } else {
             Page::findOrFail($pageId);
 
             PageSection::where('section_id', $section->id)
                 ->where('page_id', $pageId)
-                ->update(['data_source_page_id' => $sourcePageId]);
+                ->where('link_id', $linkId)
+                ->update([
+                    'data_source_page_id' => $sourcePageId,
+                    'data_source_link_id' => $sourceLinkId
+                ]);
         }
 
         return $this->sendResponse(

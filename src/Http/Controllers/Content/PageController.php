@@ -88,7 +88,7 @@ class PageController extends Controller
      */
     public function update(Request $request, Page $page)
     {
-        $page->update($request->except(['sections', 'sections_ids', 'sections_data', 'sections_settings', 'dispatch_data', 'link_ids']));
+        $page->update($request->except(['sections', 'sections_ids', 'sections_data', 'sections_settings', 'dispatch_data']));
 
         $attachSections = function ($sectionIds) use ($page) {
             $existingSections = $page->sections()->pluck('section_id')->toArray();

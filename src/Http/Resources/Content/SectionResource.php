@@ -31,6 +31,7 @@ class SectionResource extends JsonResource
             'pages' => $this->whenLoaded('pages', function () {
                 return $this->pages;
             }),
+            'dataSourceLinkId' => $this->whenPivotLoaded('page_section', fn() => $this->pivot->data_source_link_id),
             'dataSourcePageId' => $this->whenPivotLoaded('page_section', fn() => $this->pivot->data_source_page_id),
             'dataSourcePageTitle' => $this->whenPivotLoaded('page_section', function () {
                 return optional(Page::find($this->pivot->data_source_page_id))->title;
@@ -39,6 +40,7 @@ class SectionResource extends JsonResource
             'data' => $this->whenPivotLoaded('page_section', function () {
                 $sourcePivot = PageSection::where('section_id', $this->id)
                     ->where('page_id', $this->pivot->data_source_page_id)
+                    ->where('link_id', $this->pivot->data_source_link_id)
                     ->first();
 
                 if ($sourcePivot) {
