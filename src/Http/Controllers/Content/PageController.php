@@ -8,7 +8,6 @@ use Creopse\Creopse\Http\Requests\Content\PageRequest;
 use Creopse\Creopse\Http\Resources\Content\PageBasicResource;
 use Creopse\Creopse\Http\Resources\Content\PageResource;
 use Creopse\Creopse\Models\Page;
-use Creopse\Creopse\Models\PageSection;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
@@ -88,7 +87,7 @@ class PageController extends Controller
      */
     public function update(Request $request, Page $page)
     {
-        $page->update($request->except(['sections', 'sections_ids', 'sections_data', 'sections_settings', 'dispatch_data']));
+        $page->update($request->except(['sections', 'sections_ids']));
 
         $attachSections = function ($sectionIds) use ($page) {
             $existingSections = $page->sections()->pluck('section_id')->toArray();
@@ -118,51 +117,6 @@ class PageController extends Controller
         if ($request->has('sections_ids')) {
             $sectionIds = $request->input('sections_ids');
             $attachSections($sectionIds);
-        }
-
-        if ($request->has('sections_data')) {
-            $sectionsData = $request->input('sections_data');
-            $sections = $page->sections()->get();
-
-            foreach ($sections as $section) {
-                if (!isset($section->pivot->data_source_page_id) || empty($section->pivot->data_source_page_id)) {
-                    continue;
-                }
-
-                $dataSourcePageSection = PageSection::where('section_id', $section->id)
-                    ->where('page_id', $section->pivot->data_source_page_id)
-                    ->first();
-
-                if (!$dataSourcePageSection) {
-                    continue;
-                }
-
-                $data = $sectionsData[$section->slug];
-
-                $dataSourcePageSection->data = $data;
-                $dataSourcePageSection->save();
-            }
-        }
-
-        if ($request->has('sections_settings')) {
-            $sectionsSettings = $request->input('sections_settings');
-            $sections = $page->sections()->get();
-
-            foreach ($sections as $section) {
-                if (
-                    isset($sectionsSettings[$section->slug]) &&
-                    is_array($sectionsSettings[$section->slug])
-                ) {
-                    $pivot = PageSection::where('section_id', $section->id)
-                        ->where('page_id', $page->id)
-                        ->first();
-
-                    if ($pivot) {
-                        $pivot->settings = $sectionsSettings[$section->slug];
-                        $pivot->save();
-                    }
-                }
-            }
         }
 
         return $this->sendResponse(

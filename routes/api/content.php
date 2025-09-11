@@ -48,6 +48,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::put('sections/{section}/data-source-page', [SectionController::class, 'updateDataSourcePage'])->name('sections.update.data-source-page');
 
+    Route::get('sections/{slug}/link/{linkId}/page/{pageId}', [SectionController::class, 'showLinkedSection'])->name('sections.show.linked');
+
     Route::put('permalinks', [PermalinkController::class, 'updateAll'])->name('permalinks.update.all');
 });
 
@@ -69,4 +71,4 @@ Route::apiResource('content-models', ContentModelController::class)->only(['inde
 
 Route::apiResource('content-model/items', ContentModelItemController::class)->only(['index', 'show'])->parameters(['items' => 'contentModelItem']);
 
-Route::get('section-data/{sectionSlug}/source/{pageSlug}', [SectionController::class, 'getSectionData'])->name('section.data');
+Route::get('section-data/{sectionSlug}/source/{pageSlug}/link/{linkId}', [SectionController::class, 'getSectionData'])->name('section.data');

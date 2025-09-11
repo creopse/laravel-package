@@ -98,11 +98,60 @@ class SectionController extends Controller
     }
 
     /**
+     * Get a section linked to a page.
+     */
+    public function showLinkedSection(String $slug, String $linkId, String $pageId)
+    {
+        $section = Section::where('slug', $slug)->with(['pages' => function ($query) use ($pageId, $linkId) {
+            $query->where('pages.id', $pageId)
+                ->where('page_section.link_id', $linkId)
+                ->withPivot([
+                    'link_id',
+                    'data_source_link_id',
+                    'data_source_page_id',
+                    'data',
+                    'settings'
+                ]);
+        }])->first();
+
+        return $this->sendResponse(new SectionResource($section));
+    }
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Section $section)
     {
-        $section->update($request->all());
+        $section->update($request->except(['data_source_page_id', 'link_id', 'data', 'settings']));
+
+        $sectionData = $request->input('data');
+        $sectionLinkId = $request->input('link_id');
+        $sectionSettings = $request->input('settings');
+        $sectionDataSourcePageId = $request->input('data_source_page_id');
+
+        if ($request->has('data')) {
+            $dataSourcePageSection = PageSection::where('section_id', $section->id)
+                ->where('page_id', $sectionDataSourcePageId)
+                ->where('link_id', $sectionLinkId)
+                ->first();
+
+            if ($dataSourcePageSection) {
+                $dataSourcePageSection->data = $sectionData;
+                $dataSourcePageSection->save();
+            }
+        }
+
+        if ($request->has('settings')) {
+            $dataSourcePageSection = PageSection::where('section_id', $section->id)
+                ->where('page_id', $sectionDataSourcePageId)
+                ->where('link_id', $sectionLinkId)
+                ->first();
+
+            if ($dataSourcePageSection && isset($sectionSettings) && is_array($sectionSettings)) {
+                $dataSourcePageSection->settings = $sectionSettings;
+                $dataSourcePageSection->save();
+            }
+        }
 
         return $this->sendResponse(
             new SectionResource($section),
