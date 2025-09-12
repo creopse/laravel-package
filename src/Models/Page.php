@@ -34,7 +34,7 @@ class Page extends Model
     {
         return $this->belongsToMany(Section::class)
             ->using(PageSection::class)
-            ->withPivot(['data_source_page_id', 'data_source_link_id', 'link_id', 'data', 'settings'])
+            ->withPivot(['data_source_page_id', 'data_source_link_id', 'link_id'])
             ->withTimestamps();
     }
 

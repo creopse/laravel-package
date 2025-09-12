@@ -31,25 +31,30 @@ class SectionResource extends JsonResource
             'pages' => $this->whenLoaded('pages', function () {
                 return $this->pages;
             }),
-            'dataSourceLinkId' => $this->whenPivotLoaded('page_section', fn() => $this->pivot->data_source_link_id),
-            'dataSourcePageId' => $this->whenPivotLoaded('page_section', fn() => $this->pivot->data_source_page_id),
-            'dataSourcePageTitle' => $this->whenPivotLoaded('page_section', function () {
-                return optional(Page::find($this->pivot->data_source_page_id))->title;
-            }),
-            'linkId' => $this->whenPivotLoaded('page_section', fn() => $this->pivot->link_id),
-            'data' => $this->whenPivotLoaded('page_section', function () {
-                $sourcePivot = PageSection::where('section_id', $this->id)
-                    ->where('page_id', $this->pivot->data_source_page_id)
-                    ->where('link_id', $this->pivot->data_source_link_id)
-                    ->first();
-
-                if ($sourcePivot) {
-                    return Functions::convertKeysToCamelCase($sourcePivot->data);
-                }
-
-                return $this->pivot->data;
-            }),
-            'settings' => $this->whenPivotLoaded('page_section', fn() => Functions::convertKeysToCamelCase($this->pivot->settings)),
+            'pivot' => $this->whenPivotLoaded('page_section', function () {
+                return [
+                    'dataSourceLinkId' => $this->pivot->data_source_link_id,
+                    'dataSourcePageId' => $this->pivot->data_source_page_id,
+                    'dataSourcePageTitle' => optional(Page::find($this->pivot->data_source_page_id))->title,
+                    'linkId' => $this->pivot->link_id,
+                    'data' => $this->getPivotData(),
+                    'settings' => Functions::convertKeysToCamelCase($this->pivot->settings),
+                ];
+            })
         ];
+    }
+
+    private function getPivotData()
+    {
+        $sourcePivot = PageSection::where('section_id', $this->id)
+            ->where('page_id', $this->pivot->data_source_page_id)
+            ->where('link_id', $this->pivot->data_source_link_id)
+            ->first();
+
+        if ($sourcePivot) {
+            return Functions::convertKeysToCamelCase($sourcePivot->data);
+        }
+
+        return Functions::convertKeysToCamelCase($this->pivot->data);
     }
 }

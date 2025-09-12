@@ -29,12 +29,14 @@ class SectionBasicResource extends JsonResource
             'pages' => $this->whenLoaded('pages', function () {
                 return $this->pages;
             }),
-            'dataSourceLinkId' => $this->whenPivotLoaded('page_section', fn() => $this->pivot->data_source_link_id),
-            'dataSourcePageId' => $this->whenPivotLoaded('page_section', fn() => $this->pivot->data_source_page_id),
-            'dataSourcePageTitle' => $this->whenPivotLoaded('page_section', function () {
-                return optional(Page::find($this->pivot->data_source_page_id))->title;
+            'pivot' => $this->whenPivotLoaded('page_section', function () {
+                return [
+                    'dataSourceLinkId' => $this->pivot->data_source_link_id,
+                    'dataSourcePageId' => $this->pivot->data_source_page_id,
+                    'dataSourcePageTitle' => optional(Page::find($this->pivot->data_source_page_id))->title,
+                    'linkId' => $this->pivot->link_id,
+                ];
             }),
-            'linkId' => $this->whenPivotLoaded('page_section', fn() => $this->pivot->link_id),
         ];
     }
 }
