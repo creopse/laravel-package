@@ -48,6 +48,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::put('sections/{section}/data-source-page', [SectionController::class, 'updateDataSourcePage'])->name('sections.update.data-source-page');
 
+    Route::put('sections/{section}/duplicate', [SectionController::class, 'duplicateSection'])->name('sections.update.duplicate');
+
     Route::get('sections/{slug}/link/{linkId}/page/{pageId}', [SectionController::class, 'showLinkedSection'])->name('sections.show.linked');
 
     Route::put('permalinks', [PermalinkController::class, 'updateAll'])->name('permalinks.update.all');

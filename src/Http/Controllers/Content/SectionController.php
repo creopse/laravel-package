@@ -199,6 +199,52 @@ class SectionController extends Controller
     }
 
     /**
+     * Duplicate section on page.
+     */
+    public function duplicateSection(Request $request, Section $section)
+    {
+        $pageId = $request->input('page_id');
+        $linkId = $request->input('link_id');
+
+        $pageSection = PageSection::where('section_id', $section->id)
+            ->where('page_id', $pageId)
+            ->where('link_id', $linkId)
+            ->first();
+
+        if (!$pageSection) {
+            return $this->sendResponse(
+                null,
+                ResponseStatusCode::NOT_FOUND,
+                'Page section not found'
+            );
+        }
+
+        $newLinkId = 'lnk_' . uniqid();
+
+        while (PageSection::where('section_id', $section->id)
+            ->where('page_id', $pageId)
+            ->where('link_id', $newLinkId)
+            ->exists()
+        ) {
+            $newLinkId = 'lnk_' . uniqid();
+        }
+
+        $section->pages()->attach($pageId, [
+            'data' => $pageSection->data,
+            'settings' => $pageSection->settings,
+            'data_source_page_id' => $pageSection->data_source_page_id == $pageId ? $pageId : $pageSection->data_source_page_id,
+            'data_source_link_id' => $pageSection->data_source_link_id == $linkId ? $newLinkId : $pageSection->data_source_link_id,
+            'link_id' => $newLinkId,
+        ]);
+
+        return $this->sendResponse(
+            ['new_link_id' => $newLinkId],
+            ResponseStatusCode::OK,
+            'Section duplicated successfully'
+        );
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Section $section)
