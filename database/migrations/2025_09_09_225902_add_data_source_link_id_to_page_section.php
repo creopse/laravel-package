@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('page_section', function (Blueprint $table) {
-            $table->string('data_source_link_id')->unique()->default('default')->after('data_source_page_id');
+            $table->string('data_source_link_id')->default('default')->after('data_source_page_id');
         });
     }
 

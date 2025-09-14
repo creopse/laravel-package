@@ -22,6 +22,15 @@ class PageSection extends Pivot
         'settings' => Json::class,
     ];
 
+    protected function setKeysForSaveQuery($query)
+    {
+        $query->where('section_id', $this->getAttribute('section_id'))
+            ->where('page_id', $this->getAttribute('page_id'))
+            ->where('link_id', $this->getAttribute('link_id'));
+
+        return $query;
+    }
+
     public function dataSourcePage()
     {
         return $this->belongsTo(Page::class, 'data_source_page_id');

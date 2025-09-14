@@ -8,6 +8,7 @@ use Creopse\Creopse\Http\Requests\Content\PageRequest;
 use Creopse\Creopse\Http\Resources\Content\PageBasicResource;
 use Creopse\Creopse\Http\Resources\Content\PageResource;
 use Creopse\Creopse\Models\Page;
+use Creopse\Creopse\Models\PageSection;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
@@ -87,7 +88,7 @@ class PageController extends Controller
      */
     public function update(Request $request, Page $page)
     {
-        $page->update($request->except(['sections', 'sections_ids']));
+        $page->update($request->except(['sections', 'sections_ids', 'removed_sections_ids']));
 
         $attachSections = function ($sectionIds) use ($page) {
             $existingSections = $page->sections()->pluck('section_id')->toArray();
@@ -117,6 +118,17 @@ class PageController extends Controller
         if ($request->has('sections_ids')) {
             $sectionIds = $request->input('sections_ids');
             $attachSections($sectionIds);
+        }
+
+        if ($request->has('removed_sections_ids')) {
+            $removedSectionsIds = $request->input('removed_sections_ids');
+
+            foreach ($removedSectionsIds as $sectionId) {
+                PageSection::where('page_id', $page->id)
+                    ->where('section_id', $sectionId['id'])
+                    ->where('link_id', $sectionId['link_id'])
+                    ->delete();
+            }
         }
 
         return $this->sendResponse(
