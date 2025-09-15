@@ -39,6 +39,8 @@ class SectionResource extends JsonResource
                     'linkId' => $this->pivot->link_id,
                     'data' => $this->getPivotData(),
                     'settings' => Functions::convertKeysToCamelCase($this->pivot->settings),
+                    'createdAt' => $this->pivot->created_at,
+                    'updatedAt' => $this->pivot->updated_at
                 ];
             })
         ];
