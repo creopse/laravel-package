@@ -1,14 +1,15 @@
 // {{ name }} section
 import React from 'react';
 import styled from 'styled-components'
+import type { SectionProps } from '@creopse/utils'
 
 const StyledDiv = styled.div`
   // Styles
 `
 
-const {{ name }}: React.FC = () => {
+const {{ name }}: React.FC<SectionProps> = (props) => {
   const { getSectionRootData } = useContent();
-  const {{ dataVar }} = getSectionRootData('{{ dataId }}');
+  const {{ dataVar }} = getSectionRootData(props.sectionKey);
 
   return (
     <section id="{{ id }}">
