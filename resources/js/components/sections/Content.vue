@@ -1,11 +1,15 @@
 <script lang="ts" setup>
+  import type { SectionProps } from '@creopse/utils'
+
+  const props = defineProps<SectionProps>()
+
   const { tr, rHtml } = useHelper()
 
   const { getSectionRootData, getSectionData } = useContent()
 
-  const contentData = getSectionRootData('content')
-  const headlinks = getSectionData('content')?.headlinks ?? []
-  const features = getSectionData('content')?.features ?? []
+  const contentData = getSectionRootData(props.sectionKey)
+  const headlinks = getSectionData(props.sectionKey)?.headlinks ?? []
+  const features = getSectionData(props.sectionKey)?.features ?? []
 </script>
 
 <template>
@@ -51,7 +55,9 @@
             v-for="(feature, i) in features"
             :key="i"
             class="tw:bg-white tw:rounded-lg tw:shadow-md tw:p-6 tw:hover:shadow-lg tw:transition-shadow tw:text-center">
-            <i class="tw:text-[#1E9CD7] tw:inline-block" v-html="feature.icon"></i>
+            <i
+              class="tw:text-[#1E9CD7] tw:inline-block"
+              v-html="feature.icon"></i>
             <h2 class="tw:text-xl tw:font-semibold tw:mb-4 tw:text-gray-900">
               {{ tr(feature.title) }}
             </h2>

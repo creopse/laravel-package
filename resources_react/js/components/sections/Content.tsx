@@ -1,3 +1,4 @@
+import type { SectionProps } from '@creopse/utils'
 import { Icon } from '@iconify/react'
 import React from 'react'
 import styled from 'styled-components'
@@ -8,13 +9,13 @@ const StyledDiv = styled.div`
   }
 `
 
-const Content: React.FC = () => {
+const Content: React.FC<SectionProps> = (props) => {
   const { tr, rHtml } = useHelper()
   const { getSectionRootData, getSectionData } = useContent()
 
-  const contentData = getSectionRootData('content')
-  const headlinks = getSectionData('content')?.headlinks ?? []
-  const features = getSectionData('content')?.features ?? []
+  const contentData = getSectionRootData(props.sectionKey)
+  const headlinks = getSectionData(props.sectionKey)?.headlinks ?? []
+  const features = getSectionData(props.sectionKey)?.features ?? []
 
   return (
     <StyledDiv>

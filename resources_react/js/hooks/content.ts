@@ -46,14 +46,19 @@ export const useContent = () => {
    * Retrieve the data of a section, given its slug.
    * It returns `null` if the section is not found.
    *
-   * @param {string} slug - The slug of the section.
+   * @param {string} key - The key of the section.
    * @returns {object | any | null} - The data of the section, or `null`.
    */
-  const getSectionData = (slug: string): object | any | null => {
-    return page.props.pageData?.sections?.find((section) => section.slug === slug)?.dataSourcePageSectionsData || null
+  const getSectionData = (key?: string): object | any | null => {
+    if (!key) return null
+
+    const keyParts = key.split('__')
+    const slug = keyParts.length ? keyParts[0] : ''
+    const linkId = keyParts.length > 1 ? keyParts[1] : ''
+    return page.props.pageData?.sections?.find((section) => section.slug == slug && section.pivot?.linkId == linkId)?.pivot?.data || null
   }
 
-  const getSectionRootData = (slug: string) => getSectionData(slug)?.index
+  const getSectionRootData = (key?: string) => getSectionData(key)?.index
 
   /**
    * Returns the ordered list of sections that should be displayed on the page,
