@@ -57,7 +57,7 @@
         "symfony/http-client": "^6.4",
         "symfony/mailgun-mailer": "^6.4",
         "symfony/postmark-mailer": "^6.4",
-        "tightenco/ziggy": "^2.1",
+        "tightenco/ziggy": "2.5.3",
         "twilio/sdk": "^7.16",
         "pbmedia/laravel-ffmpeg": "^8.7",
         "arkn/laravel-convert-case-middleware": "^1.1"
