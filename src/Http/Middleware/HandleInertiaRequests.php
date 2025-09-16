@@ -4,7 +4,7 @@ namespace Creopse\Creopse\Http\Middleware;
 
 use Creopse\Creopse\Enums\ContentType;
 use Creopse\Creopse\Helpers\Functions;
-use Creopse\Creopse\Http\Resources\Content\{PageResource, ContentModelResource, MenuItemGroupResource, MenuLocationResource, MenuResource, SectionResource};
+use Creopse\Creopse\Http\Resources\Content\{PageDataResource, ContentModelResource, MenuItemGroupResource, MenuLocationResource, MenuResource, SectionResource};
 use Creopse\Creopse\Http\Resources\{UserResource, Ads\AdResource, Ads\AdIdentifierResource};
 use Creopse\Creopse\Models\{AppInformation, AdIdentifier, Ad, ContentModel, Menu, MenuItem, MenuItemGroup, MenuLocation, Permalink, VideoSetting};
 use Illuminate\Http\Request;
@@ -50,14 +50,14 @@ class HandleInertiaRequests extends Middleware
         $menuItem = MenuItem::with('page')->where('path', $currentPath)->first();
 
         if ($menuItem) {
-            $pageData = $menuItem->page ? new PageResource($menuItem->page) : null;
+            $pageData = $menuItem->page ? new PageDataResource($menuItem->page) : null;
             $sectionData = $menuItem->section ? new SectionResource($menuItem->section) : null;
         } else {
             $prefix = rtrim($currentPath, '/{id}');
 
             $permalink = Permalink::with('page')->where('path_prefix', $prefix)->first();
 
-            $pageData = $permalink && $permalink->page ? new PageResource($permalink->page) : null;
+            $pageData = $permalink && $permalink->page ? new PageDataResource($permalink->page) : null;
         }
 
         // Load extra information

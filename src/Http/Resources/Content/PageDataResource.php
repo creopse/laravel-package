@@ -6,7 +6,7 @@ use Creopse\Creopse\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PageResource extends JsonResource
+class PageDataResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -21,7 +21,7 @@ class PageResource extends JsonResource
             'name' => $this->name,
             'title' => $this->title,
             'content' => $this->content,
-            'sections' => SectionBasicResource::collection($this->sections->load([
+            'sections' => SectionResource::collection($this->sections->load([
                 'pages' => function ($query) {
                     $query->select('pages.id', 'pages.title')->withPivot('link_id');
                 }

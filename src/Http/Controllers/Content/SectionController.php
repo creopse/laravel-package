@@ -115,7 +115,7 @@ class SectionController extends Controller
                 ]);
         }])->first();
 
-        return $this->sendResponse(new SectionResource($section));
+        return $this->sendResponse($section);
     }
 
     /**
