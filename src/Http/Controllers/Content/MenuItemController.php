@@ -132,7 +132,7 @@ class MenuItemController extends Controller
             'icon' => $request->input('icon'),
             'menu_id' => $request->input('menu_id'),
             'page_id' => $request->input('page_id'),
-            'section_id' => $request->input('section_id'),
+            'section_key' => $request->input('section_key'),
             'menu_item_group_id' => $request->input('menu_item_group_id'),
             'content_type' => $request->input('content_type'),
             'content_id' => $request->input('content_id'),

@@ -33,11 +33,6 @@ class MenuItem extends Model
         return $this->belongsTo(Page::class, 'page_id');
     }
 
-    public function section()
-    {
-        return $this->belongsTo(Section::class, 'section_id');
-    }
-
     public function group()
     {
         return $this->belongsTo(MenuItemGroup::class, 'menu_item_group_id');

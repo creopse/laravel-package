@@ -51,7 +51,19 @@ class HandleInertiaRequests extends Middleware
 
         if ($menuItem) {
             $pageData = $menuItem->page ? new PageDataResource($menuItem->page) : null;
-            $sectionData = $menuItem->section ? new SectionResource($menuItem->section) : null;
+
+            if ($menuItem->section_key && $pageData) {
+                $keyParts = explode('__', $menuItem->section_key);
+                $slug = $keyParts[0];
+                $linkId = $keyParts[1] ?? null;
+
+                $section = $pageData->sections
+                    ->where('slug', $slug)
+                    ->where('pivot.link_id', $linkId)
+                    ->first();
+
+                $sectionData = $section ? new SectionResource($section) : null;
+            }
         } else {
             $prefix = rtrim($currentPath, '/{id}');
 
