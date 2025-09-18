@@ -245,6 +245,43 @@ class SectionController extends Controller
     }
 
     /**
+     * Copy data of section.
+     */
+    public function copySectionData(Request $request, Section $section)
+    {
+        $fromPageId = $request->input('from_page_id');
+        $fromLinkId = $request->input('from_link_id');
+        $toPageId = $request->input('to_page_id');
+        $toLinkId = $request->input('to_link_id');
+
+        $fromPageSection = PageSection::where('section_id', $section->id)
+            ->where('page_id', $fromPageId)
+            ->where('link_id', $fromLinkId)
+            ->first();
+
+        if (!$fromPageSection) {
+            return $this->sendResponse(
+                null,
+                ResponseStatusCode::NOT_FOUND,
+                'Page section not found'
+            );
+        }
+
+        PageSection::where('section_id', $section->id)
+            ->where('page_id', $toPageId)
+            ->where('link_id', $toLinkId)
+            ->update([
+                'data' => $fromPageSection->data,
+            ]);
+
+        return $this->sendResponse(
+            null,
+            ResponseStatusCode::OK,
+            'Section data copied successfully'
+        );
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Section $section)

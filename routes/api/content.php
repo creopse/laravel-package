@@ -50,6 +50,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::put('sections/{section}/duplicate', [SectionController::class, 'duplicateSection'])->name('sections.update.duplicate');
 
+    Route::put('sections/{section}/copy-data', [SectionController::class, 'copySectionData'])->name('sections.update.copy-data');
+
     Route::get('sections/{slug}/link/{linkId}/page/{pageId}', [SectionController::class, 'showLinkedSection'])->name('sections.show.linked');
 
     Route::put('permalinks', [PermalinkController::class, 'updateAll'])->name('permalinks.update.all');
