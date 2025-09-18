@@ -37,14 +37,6 @@ class SectionController extends Controller
                 ->first();
 
             if ($pageSection) {
-                if ($page->id == $pageSection->data_source_page_id) {
-                    return $this->sendResponse(
-                        Functions::convertKeysToCamelCase($pageSection->data),
-                        ResponseStatusCode::OK,
-                        'Section data retrieved successfully'
-                    );
-                }
-
                 $dataSourcePageSection = PageSection::where('section_id', $section->id)
                     ->where('page_id', $pageSection->data_source_page_id)
                     ->where('link_id', $pageSection->data_source_link_id)

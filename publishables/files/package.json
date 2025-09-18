@@ -51,8 +51,8 @@
     },
     "dependencies": {
         "@creopse/cli": "^0.0.12",
-        "@creopse/utils": "^0.0.6",
-        "@creopse/vue": "^0.0.11",
+        "@creopse/utils": "^0.0.7",
+        "@creopse/vue": "^0.0.12",
         "@inertiajs/core": "^2.1.6",
         "@inertiajs/vue3": "^2.1.6",
         "@vueuse/core": "^13.9.0",

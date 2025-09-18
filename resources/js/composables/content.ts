@@ -68,6 +68,61 @@ export const useContent = () => {
   const getSectionRootData = (key?: string) => getSectionData(key)?.index
 
   /**
+   * Retrieve the settings of a section, given its slug.
+   * It returns `null` if the section is not found.
+   *
+   * @param {string} key - The key of the section.
+   * @returns {object | any | null} - The data of the section, or `null`.
+   */
+  const getSectionSettings = (
+    key: string | null | undefined
+  ): object | any | null => {
+    if (!key) return null
+
+    const keyParts = key.split('__')
+    const slug = keyParts.length ? keyParts[0] : ''
+    const linkId = keyParts.length > 1 ? keyParts[1] : ''
+    return (
+      page.props.pageData?.sections?.find(
+        (section) => section.slug == slug && section.pivot?.linkId == linkId
+      )?.pivot?.settings || null
+    )
+  }
+
+  /**
+   * Retrieves the settings of a section, given its slug and group.
+   * It returns `null` if the section or group is not found.
+   *
+   * @param {string} key - The key of the section.
+   * @param {string} group - The group of settings to retrieve.
+   * @returns {object | any | null} - The data of the section, or `null`.
+   */
+  const getSectionSettingsGroup = (
+    key: string | null | undefined,
+    group: string
+  ): object | any | null => {
+    const settings = getSectionSettings(key)
+    return settings?.[group]
+  }
+
+  /**
+   * Retrieves a specific setting of a section, given its slug, group, and name.
+   *
+   * @param {string} key - The key of the section.
+   * @param {string} group - The group of settings to retrieve.
+   * @param {string} name - The name of the setting to retrieve.
+   * @returns {object | any | null} - The setting value, or `null`.
+   */
+  const getSectionSetting = (
+    key: string | null | undefined,
+    group: string,
+    name: string
+  ): object | any | null => {
+    const settings = getSectionSettingsGroup(key, group)
+    return settings?.[name]
+  }
+
+  /**
    * Returns the ordered list of sections that should be displayed on the page,
    * based on the `sectionsOrder` property of the page data.
    *
@@ -115,11 +170,16 @@ export const useContent = () => {
    *
    * @param {string} sectionSlug - The slug of the section.
    * @param {string} pageSlug - The slug of the page.
+   * @param {string} linkId - The link ID of the section.
    * @returns {Promise<object | any | null>} - The data of the section, or `null` if the fetch fails or the data is empty.
    */
-  const getAnySectionData = async (sectionSlug: string, pageSlug: string) => {
+  const getAnySectionData = async (
+    sectionSlug: string,
+    pageSlug: string,
+    linkId: string = 'default'
+  ) => {
     const task = await request({
-      url: `section-data/${sectionSlug}/source/${pageSlug}`,
+      url: `section-data/${sectionSlug}/source/${pageSlug}/link/${linkId}`,
     })
 
     if (task.success && task.result) {
@@ -582,6 +642,9 @@ export const useContent = () => {
     getMenuGroupedItems,
     getMenuUngroupedItems,
     getSectionData,
+    getSectionSettings,
+    getSectionSettingsGroup,
+    getSectionSetting,
     getAnySectionData,
     getSectionsInOrder,
     getFinalPageSections,
