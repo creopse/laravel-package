@@ -1,7 +1,7 @@
 import { ResponseErrorCode } from '@creopse/utils'
 
 /**
- * A composable that exposes functions to subscribe the user to the newsletter using
+ * A hook that exposes functions to subscribe the user to the newsletter using
  * email or phone.
  *
  * @returns An object containing the subscribeEmail, subscribePhone, and isLoading

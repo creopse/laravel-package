@@ -1,5 +1,5 @@
 /**
- * This composable is used to manage user authentication.
+ * This hook is used to manage user authentication.
  *
  *   - `reloadUserData`: Reloads the user data from the API.
  *   - `logout`: Logs out the user and redirects to the login page.

@@ -139,7 +139,9 @@ export const useContent = () => {
     if (Array.isArray(sections) && Array.isArray(sectionsOrder)) {
       for (const section of sectionsOrder) {
         if (section) {
-          const item = sections.find((value) => value.slug === section)
+          const item = sections.find(
+            (value) => `${value.slug}__${value.pivot?.linkId}` === section
+          )
           if (item) {
             sectionsOrdered.push(item)
           }
@@ -161,7 +163,9 @@ export const useContent = () => {
     const sectionsDisabled = pageData?.sectionsDisabled
 
     return sections.filter((section) => {
-      return !sectionsDisabled?.includes(section.slug)
+      return !sectionsDisabled?.includes(
+        `${section.slug}__${section.pivot?.linkId}`
+      )
     })
   }
 

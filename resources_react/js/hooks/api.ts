@@ -12,7 +12,7 @@ interface Payload {
 }
 
 /**
- * This composable is used to make API requests.
+ * This hook is used to make API requests.
  *
  * @function useApi
  * @returns {Object} An object containing the following methods:

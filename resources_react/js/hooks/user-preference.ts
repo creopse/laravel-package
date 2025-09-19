@@ -1,7 +1,7 @@
 import { Bool, type UserPrefs } from '@creopse/utils'
 
 /**
- * A composable that exposes the default user preferences.
+ * A hook that exposes the default user preferences.
  *
  * @returns An object containing the `defaultPrefs` property, which is a reactive
  * ref to the default user preferences.
