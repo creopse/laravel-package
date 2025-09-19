@@ -160,6 +160,10 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../publishables/config/broadcasting.php' => config_path('broadcasting.php'),
         ], 'creopse-broadcasting-config');
 
+        $this->publishes([
+            __DIR__ . '/../publishables/config/database.php' => config_path('database.php'),
+        ], 'creopse-database-config');
+
         // Publish package config
         $this->publishes([
             __DIR__ . '/../publishables/config/creopse.php' => config_path('creopse.php'),

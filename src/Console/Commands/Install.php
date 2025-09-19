@@ -113,6 +113,10 @@ class Install extends CreopseCommand
             '--tag' => 'creopse-broadcasting-config',
             '--force' => $force,
         ]);
+        $this->call('vendor:publish', [
+            '--tag' => 'creopse-database-config',
+            '--force' => $force,
+        ]);
 
         // Step 3: Publish public assets
         $this->info('Publishing public assets...');
