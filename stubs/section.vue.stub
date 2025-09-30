@@ -4,9 +4,10 @@
 
   const props = defineProps<SectionProps>()
 
-  const { getSectionRootData } = useContent()
+  const { getSectionRootData, getSectionSettings } = useContent()
 
   const {{ dataVar }} = getSectionRootData(props.sectionKey)
+  const {{ settingsVar }} = getSectionSettings(props.sectionKey)
 </script>
 
 <template>

@@ -8,8 +8,10 @@ const StyledDiv = styled.div`
 `
 
 const {{ name }}: React.FC<SectionProps> = (props) => {
-  const { getSectionRootData } = useContent();
+  const { getSectionRootData, getSectionSettings } = useContent();
+
   const {{ dataVar }} = getSectionRootData(props.sectionKey);
+  const {{ settingsVar }} = getSectionSettings(props.sectionKey);
 
   return (
     <section id="{{ id }}">

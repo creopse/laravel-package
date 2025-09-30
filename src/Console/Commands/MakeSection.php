@@ -54,6 +54,7 @@ class MakeSection extends CreopseCommand
             $stub = File::get($stubPath);
             $stub = str_replace('{{ name }}', $argName, $stub);
             $stub = str_replace('{{ id }}', Str::kebab($argName) . '-section', $stub);
+            $stub = str_replace('{{ settingsVar }}', Str::camel($argName) . 'Settings', $stub);
             $stub = str_replace('{{ dataVar }}', Str::camel($argName) . 'Data', $stub);
             $stub = str_replace('{{ dataId }}', strtolower(Str::camel($argName)), $stub);
 
