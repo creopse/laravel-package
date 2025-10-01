@@ -17,11 +17,16 @@ class VideoItem extends Model
 
     protected $guarded = [];
 
-    protected $with = ['publisher'];
+    protected $with = ['publisher', 'categories:id,name,slug'];
 
     protected $casts = [
         'visible' => 'boolean',
     ];
+
+    public function categories()
+    {
+        return $this->belongsToMany(VideoCategory::class);
+    }
 
     public function publisher()
     {

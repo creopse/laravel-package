@@ -1,5 +1,6 @@
 <?php
 
+use Creopse\Creopse\Http\Controllers\Content\VideoCategoryController;
 use Creopse\Creopse\Http\Controllers\Settings\VideoSettingController;
 use Creopse\Creopse\Http\Controllers\Content\VideoItemController;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,18 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::put('/', [VideoSettingController::class, 'update'])->name('video-settings.update');
     });
+
+    // Video Categories
+    Route::put('video-categories/position', [VideoCategoryController::class, 'updatePosition'])->name('video-categories.update.position');
+    Route::apiResource('video-categories', VideoCategoryController::class)->except(['index', 'show']);
+    Route::delete('video-categories/force/{videoCategory}', [VideoCategoryController::class, 'forceDestroy'])->name('video-categories.force.destroy')->withTrashed();
+    Route::put('video-categories/restore/{videoCategory}', [VideoCategoryController::class, 'restore'])->name('video-categories.restore')->withTrashed();
 });
 
+// Items
 Route::apiResource('video-items', VideoItemController::class)->only(['index', 'show']);
+
+// Categories
+Route::apiResource('video-categories', VideoCategoryController::class)->only(['index', 'show']);
+Route::get('video-categories/items', [VideoCategoryController::class, 'indexWithItems'])->name('video-categories.items.index');
+Route::get('video-categories/items/{videoCategory?}', [VideoCategoryController::class, 'showWithItems'])->name('video-category.items.index');

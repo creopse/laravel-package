@@ -23,6 +23,7 @@ class VideoItemController extends Controller
     {
         $orderByPublishedAt = $request->query('orderByPublishedAt');
         $displayType = $request->query('displayType');
+        $categories = $request->query('categories');
         $pageSize = $request->query('pageSize');
         $visible = $request->query('visible');
         $source = $request->query('source');
@@ -105,6 +106,12 @@ class VideoItemController extends Controller
                 $videoItems = $videoItems->where('visible', true);
             }
 
+            if ($categories) {
+                $videoItems = $videoItems->whereHas('categories', function ($query) use ($categories) {
+                    $query->whereIn('id', $categories);
+                });
+            }
+
             if (($source && $source == VideoItemSource::YOUTUBE->value) || $orderByPublishedAt) {
                 $videoItems = $videoItems->latest('published_at')->paginate($pageSize);
             } else {
@@ -179,6 +186,10 @@ class VideoItemController extends Controller
                         'publisher_id' => $request->input('publisher_id') ?? $request->user()->id,
                         'published_at' => Carbon::parse($snippet['publishedAt'])->format('Y-m-d H:i:s'),
                     ]);
+
+                    if ($request->has('categories')) {
+                        $videoItem->categories()->sync($request->input('categories'));
+                    }
                 } else {
                     return $this->sendResponse(
                         null,
@@ -224,6 +235,10 @@ class VideoItemController extends Controller
                 'publisher_id' => $request->input('publisher_id') ?? $request->user()->id,
                 'published_at' => $request->input('published_at') ?? Carbon::now()->format('Y-m-d H:i:s'),
             ]);
+
+            if ($request->has('categories')) {
+                $videoItem->categories()->sync($request->input('categories'));
+            }
         }
 
         return $this->sendResponse(
@@ -246,7 +261,11 @@ class VideoItemController extends Controller
      */
     public function update(Request $request, VideoItem $videoItem)
     {
-        $videoItem->update($request->all());
+        $videoItem->update($request->except(['categories']));
+
+        if ($request->has('categories')) {
+            $videoItem->categories()->sync($request->input('categories'));
+        }
 
         return $this->sendResponse(
             new VideoItemResource($videoItem),
