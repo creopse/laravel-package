@@ -60,7 +60,8 @@
         "tightenco/ziggy": "2.5.3",
         "twilio/sdk": "^7.16",
         "pbmedia/laravel-ffmpeg": "^8.7",
-        "arkn/laravel-convert-case-middleware": "^1.1"
+        "arkn/laravel-convert-case-middleware": "^1.1",
+        "phpseclib/phpseclib": "~3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

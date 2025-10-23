@@ -29,6 +29,10 @@ Route::prefix('/auth')->group(function () {
         ->middleware('guest')
         ->name('provider.google');
 
+    Route::post('/apple', [ProviderController::class, 'authWithApple'])
+        ->middleware('guest')
+        ->name('provider.apple');
+
     Route::post('/phone', [ProviderController::class, 'authWithPhone'])
         ->middleware('guest')
         ->name('provider.phone');

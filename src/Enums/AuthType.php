@@ -10,4 +10,5 @@ enum AuthType: int
     case GOOGLE = 3;
     case FACEBOOK = 4;
     case TWITTER = 5;
+    case APPLE = 6;
 }
