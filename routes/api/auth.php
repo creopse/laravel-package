@@ -1,5 +1,6 @@
 <?php
 
+use Creopse\Creopse\Http\Controllers\Auth\AccountController;
 use Creopse\Creopse\Http\Controllers\Auth\EmailChangeController;
 use Creopse\Creopse\Http\Controllers\Auth\EmailVerificationController;
 use Creopse\Creopse\Http\Controllers\Auth\LoginController;
@@ -76,6 +77,10 @@ Route::prefix('/auth')->group(function () {
     Route::get('/logout', LogoutController::class)
         ->middleware('auth:sanctum')
         ->name('logout');
+
+    Route::get('/disable-account', [AccountController::class, 'disableAccount'])
+        ->middleware('auth:sanctum')
+        ->name('disable-account');
 
     Route::name('tokens.')->prefix('/tokens')->group(function () {
         Route::get('/{name}', [TokenController::class, 'index'])
