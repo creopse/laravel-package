@@ -194,9 +194,9 @@ class MediaFileController extends Controller
             $sizes = config('thumbnail_sizes');
 
             try {
-                foreach ($sizes as $sizeName => [$width, $height]) {
+                foreach ($sizes as $sizeName => $dimensions) {
                     $resizedImage = Image::read($file);
-                    $resizedImage->resize($width, $height);
+                    $resizedImage->scaleDown(width: $dimensions['width']);
 
                     $thumbnailPath = "thumbnails/{$sizeName}/" . basename($path);
                     // Storage::put($thumbnailPath, $resizedImage);
@@ -293,9 +293,9 @@ class MediaFileController extends Controller
                 $sizes = config('thumbnail_sizes');
 
                 try {
-                    foreach ($sizes as $sizeName => [$width, $height]) {
+                    foreach ($sizes as $sizeName => $dimensions) {
                         $resizedImage = Image::read($newFile);
-                        $resizedImage->resize($width, $height);
+                        $resizedImage->scaleDown(width: $dimensions['width']);
 
                         $thumbnailPath = "thumbnails/{$sizeName}/" . basename($path);
                         // Storage::put($thumbnailPath, $resizedImage);

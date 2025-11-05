@@ -2,7 +2,7 @@
 
 namespace Creopse\Creopse;
 
-use Creopse\Creopse\Console\Commands\{Install, MakeSection, MakeWidget, RemoveSection, RemoveWidget, ScheduledCommand};
+use Creopse\Creopse\Console\Commands\{Install, MakeSection, MakeWidget, RemoveSection, RemoveWidget, ScheduledCommand, GenerateThumbnails};
 use Creopse\Creopse\Console\Commands\Migrations\MigrateSectionsData;
 use Creopse\Creopse\Database\Seeders\DatabaseSeeder;
 use Creopse\Creopse\Traits\DetectsLaravelVersion;
@@ -116,6 +116,7 @@ class CreopseServiceProvider extends ServiceProvider
                 RemoveWidget::class,
                 ScheduledCommand::class,
                 MigrateSectionsData::class,
+                GenerateThumbnails::class,
             ]);
         }
 

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'small'     => [150, 150],
-    'medium'    => [300, 300],
-    'large'     => [1024, 768],
+    'small'     => ['width' => 300],
+    'medium'    => ['width' => 768],
+    'large'     => ['width' => 1024],
 ];

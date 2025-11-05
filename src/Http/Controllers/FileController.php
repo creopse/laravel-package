@@ -43,8 +43,8 @@ class FileController extends Controller
             $sizes = config('thumbnail_sizes');
 
             try {
-                foreach ($sizes as $sizeName => [$width, $height]) {
-                    $resizedImage = Image::read($file)->resize($width, $height);
+                foreach ($sizes as $sizeName => $dimensions) {
+                    $resizedImage = Image::read($file)->scaleDown(width: $dimensions['width']);
 
                     $thumbnailPath = "thumbnails/{$sizeName}/" . basename($path);
                     // Storage::put($thumbnailPath, $resizedImage);
