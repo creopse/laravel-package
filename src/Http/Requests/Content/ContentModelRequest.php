@@ -28,6 +28,8 @@ class ContentModelRequest extends FormRequest
         return [
             'name' => 'required|string',
             'title' => 'required|string',
+            'intent' => 'required|string',
+            'access_scope' => 'required|string',
         ];
     }
 }

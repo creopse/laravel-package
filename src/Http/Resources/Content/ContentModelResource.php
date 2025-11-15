@@ -24,6 +24,8 @@ class ContentModelResource extends JsonResource
             'description' => $this->description,
             'dataStructure' => $this->data_structure,
             'titleFieldName' => $this->title_field_name,
+            'intent' => $this->intent,
+            'accessScope' => $this->access_scope,
             'hasPermalink' => $this->has_permalink,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,

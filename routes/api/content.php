@@ -75,4 +75,10 @@ Route::apiResource('content-models', ContentModelController::class)->only(['inde
 
 Route::apiResource('content-model/items', ContentModelItemController::class)->only(['index', 'show'])->parameters(['items' => 'contentModelItem']);
 
+Route::post('content-model/user-items', [ContentModelItemController::class, 'storeUserItem']);
+
+Route::put('content-model/user-items/{contentModelItem}', [ContentModelItemController::class, 'updateUserItem']);
+
+Route::delete('content-model/user-items/{contentModelItem}', [ContentModelItemController::class, 'destroyUserItem']);
+
 Route::get('section-data/{sectionSlug}/source/{pageSlug}/link/{linkId}', [SectionController::class, 'getSectionData'])->name('section.data');

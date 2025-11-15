@@ -2,6 +2,8 @@
 
 namespace Creopse\Creopse\Http\Controllers\Content;
 
+use Creopse\Creopse\Enums\ContentModel\AccessScope;
+use Creopse\Creopse\Enums\ContentModel\ItemCreatorType;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Http\Requests\Content\ContentModelItemRequest;
 use Creopse\Creopse\Http\Resources\Content\ContentModelItemResource;
@@ -23,6 +25,8 @@ class ContentModelItemController extends Controller
         $isActive = $request->query('isActive');
         $contentModelId = $request->query('contentModelId');
         $contentModelName = $request->query('contentModelName');
+        $createdByType = $request->query('createdByType');
+        $createdBy = $request->query('createdBy');
 
         if ($pageSize) {
 
@@ -43,6 +47,14 @@ class ContentModelItemController extends Controller
 
             if ($isActive) {
                 $items = $items->where('is_active', $isActive);
+            }
+
+            if ($createdByType) {
+                $items = $items->where('created_by_type', $createdByType);
+            }
+
+            if ($createdBy) {
+                $items = $items->where('created_by', $createdBy);
             }
 
             $items = $items->paginate($pageSize);
@@ -92,12 +104,48 @@ class ContentModelItemController extends Controller
             'content_model_data' => $request->input('content_model_data'),
             'is_active' => $request->input('is_active'),
             'content_model_id' => $request->input('content_model_id'),
+            'created_by_type' => $request->input('created_by_type'),
+            'created_by' => $request->input('created_by'),
         ]);
 
         return $this->sendResponse(
             new ContentModelItemResource($contentModelItem),
             ResponseStatusCode::CREATED,
             'ContentModelItem created successfully'
+        );
+    }
+
+    /**
+     * Store a newly created resource in storage by user.
+     */
+    public function storeUserItem(ContentModelItemRequest $request)
+    {
+        $request->validated();
+
+        $contentModel = ContentModel::where('name', $request->input('content_model_id'))->first();
+
+        if ($contentModel && $contentModel->access_scope == AccessScope::USER_EDITABLE->value) {
+
+            $contentModelItem = ContentModelItem::create([
+                'title' => $request->input('title'),
+                'content_model_data' => $request->input('content_model_data'),
+                'is_active' => false,
+                'content_model_id' => $contentModel->id,
+                'created_by_type' => ItemCreatorType::USER->value,
+                'created_by' => $request->input('created_by'),
+            ]);
+
+            return $this->sendResponse(
+                new ContentModelItemResource($contentModelItem),
+                ResponseStatusCode::CREATED,
+                'ContentModelItem created successfully'
+            );
+        }
+
+        return $this->sendResponse(
+            null,
+            ResponseStatusCode::INTERNAL_SERVER_ERROR,
+            'ContentModelItem cannot be created'
         );
     }
 
@@ -209,6 +257,34 @@ class ContentModelItemController extends Controller
         );
     }
 
+    /**
+     * Update the specified resource in storage by user.
+     */
+    public function updateUserItem(Request $request, ContentModelItem $contentModelItem)
+    {
+        $contentModel = ContentModel::where('id', $contentModelItem->content_model_id)->first();
+
+        if ($contentModel && $contentModel->access_scope == AccessScope::USER_EDITABLE->value) {
+            $contentModelItem->update($request->except(['related_items']));
+
+            if ($request->has('related_items')) {
+                $this->attachRelationships($contentModelItem, $request->input('related_items'));
+            }
+
+            return $this->sendResponse(
+                new ContentModelItemResource($contentModelItem),
+                ResponseStatusCode::OK,
+                'ContentModelItem updated successfully'
+            );
+        }
+
+        return $this->sendResponse(
+            null,
+            ResponseStatusCode::INTERNAL_SERVER_ERROR,
+            'ContentModelItem cannot be updated'
+        );
+    }
+
     public function updateRelatedItems(Request $request, ContentModelItem $contentModelItem)
     {
         $this->attachRelationships($contentModelItem, $request->input('related_items'));
@@ -231,6 +307,31 @@ class ContentModelItemController extends Controller
             null,
             ResponseStatusCode::OK,
             'ContentModelItem deleted successfully'
+        );
+    }
+
+    /**
+     * Remove the specified resource from storage by user.
+     */
+    public function destroyUserItem(ContentModelItem $contentModelItem)
+    {
+        $contentModel = ContentModel::where('id', $contentModelItem->content_model_id)->first();
+
+        if ($contentModel && $contentModel->access_scope == AccessScope::USER_EDITABLE->value) {
+
+            $contentModelItem->delete();
+
+            return $this->sendResponse(
+                null,
+                ResponseStatusCode::OK,
+                'ContentModelItem deleted successfully'
+            );
+        }
+
+        return $this->sendResponse(
+            null,
+            ResponseStatusCode::INTERNAL_SERVER_ERROR,
+            'ContentModelItem cannot be deleted'
         );
     }
 

@@ -20,6 +20,8 @@ class ContentModelController extends Controller
     {
         $pageSize = $request->query('pageSize');
         $query = $request->query('query');
+        $intent = $request->query('intent');
+        $accessScope = $request->query('accessScope');
 
         if ($pageSize) {
 
@@ -30,6 +32,14 @@ class ContentModelController extends Controller
                     $q->where('title', 'like', '%' . $query . '%')
                         ->orWhere('description', 'like', '%' . $query . '%');
                 });
+            }
+
+            if ($intent) {
+                $items = $items->where('intent', $intent);
+            }
+
+            if ($accessScope) {
+                $items = $items->where('access_scope', $accessScope);
             }
 
             $items = $items->paginate($pageSize);
@@ -70,6 +80,8 @@ class ContentModelController extends Controller
             'description' => $request->input('description'),
             'data_structure' => $request->input('data_structure'),
             'title_field_name' => $request->input('title_field_name'),
+            'intent' => $request->input('intent'),
+            'access_scope' => $request->input('access_scope'),
             'has_permalink' => $request->input('has_permalink'),
         ]);
 

@@ -12,7 +12,7 @@ class ContentModelItem extends Model
 
     protected $guarded = [];
 
-    protected $with = ['relatedItems'];
+    protected $with = ['relatedItems', 'createdByUser'];
 
     /**
      * The attributes that should be cast.
@@ -27,6 +27,11 @@ class ContentModelItem extends Model
     public function contentModel()
     {
         return $this->belongsTo(ContentModel::class, 'content_model_id');
+    }
+
+    public function createdByUser()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     // Define the relationship to link items
