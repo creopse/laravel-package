@@ -73,7 +73,8 @@
         "pestphp/pest": "^2.0",
         "pestphp/pest-plugin-laravel": "^2.0",
         "spatie/laravel-ignition": "^2.0",
-        "orchestra/canvas": "^9.2"
+        "orchestra/canvas": "^9.2",
+        "barryvdh/laravel-ide-helper": "^3.6"
     },
     "config": {
         "allow-plugins": {
