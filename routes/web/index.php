@@ -61,6 +61,8 @@ try {
     //
 }
 
+Route::get('/editor-page/s/{slug}', [DynamicPageController::class, 'getEditorPage'])->name('editor-page');
+
 Route::get('/verify-email/{id}/{hash}', [EmailVerificationController::class, 'verifyManually'])
     ->middleware('guest')->name('verification.verify');
 

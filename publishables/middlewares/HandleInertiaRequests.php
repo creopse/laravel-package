@@ -6,7 +6,7 @@ use Creopse\Creopse\Enums\ContentType;
 use Creopse\Creopse\Helpers\Functions;
 use Creopse\Creopse\Http\Resources\Content\{PageDataResource, ContentModelResource, MenuItemGroupResource, MenuLocationResource, MenuResource, SectionResource};
 use Creopse\Creopse\Http\Resources\{UserResource, Ads\AdResource, Ads\AdIdentifierResource};
-use Creopse\Creopse\Models\{AppInformation, AdIdentifier, Ad, ContentModel, Menu, MenuItem, MenuItemGroup, MenuLocation, Permalink, VideoSetting};
+use Creopse\Creopse\Models\{AppInformation, AdIdentifier, Ad, ContentModel, Menu, MenuItem, MenuItemGroup, MenuLocation, Page, Permalink, VideoSetting};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Middleware;
@@ -47,29 +47,35 @@ class HandleInertiaRequests extends Middleware
 
         $currentPath = $request->route()->uri() === '/' ? $request->route()->uri() : '/' . $request->route()->uri();
 
-        $menuItem = MenuItem::with('page')->where('path', $currentPath)->first();
+        if ($currentPath === '/editor-page/s/{slug}' && $request->route('slug')) {
 
-        if ($menuItem) {
-            $pageData = $menuItem->page ? new PageDataResource($menuItem->page) : null;
-
-            if ($menuItem->section_key && $pageData) {
-                $keyParts = explode('__', $menuItem->section_key);
-                $slug = $keyParts[0];
-                $linkId = $keyParts[1] ?? null;
-
-                $section = $pageData->sections
-                    ->where('slug', $slug)
-                    ->where('pivot.link_id', $linkId)
-                    ->first();
-
-                $sectionData = $section ? new SectionResource($section) : null;
-            }
+            $pageData = new PageDataResource(Page::where('slug', $request->route('slug'))->first());
         } else {
-            $prefix = rtrim($currentPath, '/{id}');
 
-            $permalink = Permalink::with('page')->where('path_prefix', $prefix)->first();
+            $menuItem = MenuItem::with('page')->where('path', $currentPath)->first();
 
-            $pageData = $permalink && $permalink->page ? new PageDataResource($permalink->page) : null;
+            if ($menuItem) {
+                $pageData = $menuItem->page ? new PageDataResource($menuItem->page) : null;
+
+                if ($menuItem->section_key && $pageData) {
+                    $keyParts = explode('__', $menuItem->section_key);
+                    $slug = $keyParts[0];
+                    $linkId = $keyParts[1] ?? null;
+
+                    $section = $pageData->sections
+                        ->where('slug', $slug)
+                        ->where('pivot.link_id', $linkId)
+                        ->first();
+
+                    $sectionData = $section ? new SectionResource($section) : null;
+                }
+            } else {
+                $prefix = rtrim($currentPath, '/{id}');
+
+                $permalink = Permalink::with('page')->where('path_prefix', $prefix)->first();
+
+                $pageData = $permalink && $permalink->page ? new PageDataResource($permalink->page) : null;
+            }
         }
 
         // Load extra information
@@ -85,7 +91,7 @@ class HandleInertiaRequests extends Middleware
         $descriptionItem = $appInformation->firstWhere('key', 'description');
         $description = $descriptionItem && $descriptionItem->value ? Functions::trans($descriptionItem->value) : '';
 
-        $title = $menuItem ? (Functions::trans($menuItem->title) . ' - ' . $name) : $name;
+        $title = isset($menuItem) ? (Functions::trans($menuItem->title) . ' - ' . $name) : $name;
 
         $channelIdItem = VideoSetting::where('key', 'youtubeChannelId')->first();
 

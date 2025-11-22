@@ -23,9 +23,37 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class DynamicPageController extends Controller
 {
+    public function getEditorPage(Request $request, String $slug)
+    {
+        $token = $request->query('token');
+
+        $accessToken = PersonalAccessToken::findToken($token);
+
+        if (!$accessToken) {
+            return $this->return404($request);
+        }
+
+        if ($accessToken->expires_at && $accessToken->expires_at->isPast()) {
+            return $this->return404($request);
+        }
+
+        $user = $accessToken->tokenable;
+
+        if (!$accessToken->can('access-api')) {
+            return $this->return404($request);
+        }
+
+        return Inertia::render('Container', [
+            'user' => $user,
+            'pageSlug' => $slug,
+            'editor' => true
+        ]);
+    }
+
     public function getPage(Request $request)
     {
         $currentPath = $request->route()->uri() === '/' ? $request->route()->uri() : '/' . $request->route()->uri();
