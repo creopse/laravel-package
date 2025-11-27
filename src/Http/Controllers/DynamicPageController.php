@@ -71,7 +71,7 @@ class DynamicPageController extends Controller
     {
         $currentPath = $request->route()->uri() === '/' ? $request->route()->uri() : '/' . $request->route()->uri();
 
-        $prefix = rtrim($currentPath, '/{id}');
+        $prefix = str_replace('/{id}', '', $currentPath);
 
         $permalink = Permalink::where('path_prefix', $prefix)->first();
 
