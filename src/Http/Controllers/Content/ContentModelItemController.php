@@ -5,6 +5,7 @@ namespace Creopse\Creopse\Http\Controllers\Content;
 use Creopse\Creopse\Enums\ContentModel\AccessScope;
 use Creopse\Creopse\Enums\ContentModel\ItemCreatorType;
 use Creopse\Creopse\Enums\ResponseStatusCode;
+use Creopse\Creopse\Events\Content\UserEntryEvent;
 use Creopse\Creopse\Http\Requests\Content\ContentModelItemRequest;
 use Creopse\Creopse\Http\Resources\Content\ContentModelItemResource;
 use Creopse\Creopse\Models\ContentModelItem;
@@ -118,10 +119,8 @@ class ContentModelItemController extends Controller
     /**
      * Store a newly created resource in storage by user.
      */
-    public function storeUserItem(ContentModelItemRequest $request)
+    public function storeUserItem(Request $request)
     {
-        $request->validated();
-
         $contentModel = ContentModel::where('name', $request->input('content_model_id'))->first();
 
         if ($contentModel && $contentModel->access_scope == AccessScope::USER_EDITABLE->value) {
@@ -134,6 +133,8 @@ class ContentModelItemController extends Controller
                 'created_by_type' => ItemCreatorType::USER->value,
                 'created_by' => $request->input('created_by'),
             ]);
+
+            event(new UserEntryEvent($contentModel->id));
 
             return $this->sendResponse(
                 new ContentModelItemResource($contentModelItem),

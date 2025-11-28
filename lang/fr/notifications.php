@@ -18,4 +18,9 @@ return [
         'content' => 'Un nouveau commentaire a été écrit par l\'abonné :name. Veuillez le vérifier dans votre compte.',
         'action' => 'Voir le commentaire',
     ],
+    'user_entry_content' => [
+        'title' => 'Un nouvel élément de contenu a été ajouté',
+        'content' => 'Un nouvel élément a été ajouté au contenu ":contentModelTitle" par un utilisateur. Veuillez le vérifier dans votre compte.',
+        'action' => 'Voir le contenu',
+    ],
 ];
