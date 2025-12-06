@@ -57,7 +57,11 @@
 
     @routes
     @viteReactRefresh
-    @vite(['resources/css/app.css','resources/js/app.tsx',"resources/js/pages/{$page['component']}.tsx"])
+    @if(app()->environment('local'))
+        @vite(['resources/css/app.css','resources/js/app.tsx',"resources/js/pages/{$page['component']}.tsx"])
+    @else
+        @vite(['resources/css/app.css','resources/js/app.tsx'])
+    @endif
     @inertiaHead
 </head>
 <body>
