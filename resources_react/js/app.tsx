@@ -1,9 +1,10 @@
 import 'flowbite'
-import './bootstrap'
 
 import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
 
+import { CreopseProvider, type PluginOptions } from '@creopse/react'
+import { ENCRYPTION_KEY, LANG_KEY } from './constants'
 import './i18n'
 
 createInertiaApp({
@@ -30,6 +31,28 @@ createInertiaApp({
     // Create react app instance
     const root = createRoot(el)
 
-    root.render(<App {...props} />)
+    root.render(
+      <CreopseProvider
+        options={
+          {
+            initialProps: props.initialPage.props,
+            router,
+            resolveSections: () => {
+              return import.meta.glob('./components/sections/**/*.tsx', {
+                eager: true,
+              })
+            },
+            config: {
+              debug: import.meta.env.DEV,
+              appUrl: import.meta.env.APP_URL,
+              xApiKey: import.meta.env.APP_X_API_KEY,
+              encryptionKey: ENCRYPTION_KEY,
+              langKey: LANG_KEY,
+            },
+          } as PluginOptions
+        }>
+        <App {...props} />
+      </CreopseProvider>
+    )
   },
 })

@@ -17,10 +17,9 @@
         "laravel-lang/locales": "^2.5",
         "laravel/framework": "^10 || ^11 || ^12",
         "laravel/sanctum": "^3.3 || ^4.0",
-        "laravel/socialite": "^5.12",
+        "laravel/socialite": "5.22",
         "laravel/tinker": "^2.8",
-        "nyholm/psr7": "^1.8",
-        "tightenco/ziggy": "2.5.3"
+        "nyholm/psr7": "^1.8"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.1",

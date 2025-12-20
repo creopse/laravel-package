@@ -9,7 +9,6 @@
 
   const uiStore = useUserInterfaceStore()
 
-  const { pickByTheme } = useHelper()
   const { appPrimaryColor, appSecondaryColor, appAccentColor } = useContent()
 
   const themeOverrides = computed(() => {
@@ -67,13 +66,15 @@
         loadingColor: appSecondaryColor.value,
       },
       Tabs: {
-        colorSegment: pickByTheme('#f2f2f2', 'rgba(0, 0, 0, 1)'),
+        colorSegment: uiStore.isLightTheme ? '#f2f2f2' : 'rgba(0, 0, 0, 1)',
         tabTextColorActiveBar: appSecondaryColor.value,
         tabTextColorHoverBar: appSecondaryColor.value,
         barColor: appSecondaryColor.value,
       },
       Card: {
-        colorEmbedded: pickByTheme('rgb(250, 250, 252)', 'rgb(44, 44, 50)'),
+        colorEmbedded: uiStore.isLightTheme
+          ? 'rgb(250, 250, 252)'
+          : 'rgb(44, 44, 50)',
       },
       LoadingBar: {
         colorLoading: appSecondaryColor.value,
@@ -103,10 +104,9 @@
   watch(
     () => uiStore.isLightTheme,
     () => {
-      document.documentElement.className = `${pickByTheme(
-        'light',
-        'dark'
-      )}-theme`
+      document.documentElement.className = `${
+        uiStore.isLightTheme ? 'light' : 'dark'
+      }-theme`
     },
     { immediate: true }
   )

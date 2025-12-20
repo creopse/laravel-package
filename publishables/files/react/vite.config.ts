@@ -1,6 +1,5 @@
 import React from '@vitejs/plugin-react'
 import Laravel from 'laravel-vite-plugin'
-import path from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
 import Icons from 'unplugin-icons/vite'
 import { defineConfig } from 'vite'
@@ -9,9 +8,7 @@ import Svgr from 'vite-plugin-svgr'
 export default defineConfig({
   envPrefix: 'APP_',
   resolve: {
-    alias: {
-      'ziggy-js': path.resolve('vendor/tightenco/ziggy/dist/index.esm.js'),
-    },
+    alias: {},
   },
   esbuild: {
     jsx: 'automatic',
@@ -61,13 +58,14 @@ export default defineConfig({
         {
           'react-i18next': ['useTranslation'],
           '@inertiajs/react': ['useForm', 'usePage', 'router'],
+          '@creopse/react/hooks': ['useApi', 'useProps', 'useConfig', 'useHelper', 'useContent', 'useNewsletter'],
           axios: [['default', 'axios']],
         },
       ],
 
       // Auto import for module exports under directories
       // by default it only scan one level of modules under the directory
-      dirs: ['./resources/js/stores/**', './resources/js/hooks/**'],
+      dirs: ['./resources/js/stores/**'],
 
       // Include auto-imported packages in Vite's `optimizeDeps` options
       // Recommend to enable

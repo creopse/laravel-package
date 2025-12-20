@@ -1,7 +1,6 @@
 import Vue from '@vitejs/plugin-vue'
 import Laravel from 'laravel-vite-plugin'
 import VueI18n from 'laravel-vue-i18n/vite'
-import path from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import Icons from 'unplugin-icons/vite'
@@ -13,9 +12,7 @@ import SvgLoader from 'vite-svg-loader'
 export default defineConfig({
   envPrefix: 'APP_',
   resolve: {
-    alias: {
-      'ziggy-js': path.resolve('vendor/tightenco/ziggy/dist/index.esm.js'),
-    },
+    alias: {},
   },
   build: {
     rollupOptions: {
@@ -122,13 +119,20 @@ export default defineConfig({
             'isLoaded',
           ],
           '@inertiajs/vue3': ['useForm', 'usePage', 'router'],
-          axios: [['default', 'axios']],
+          '@creopse/vue': [
+            'useApi',
+            'useProps',
+            'useConfig',
+            'useHelper',
+            'useContent',
+            'useNewsletter',
+          ],
         },
       ],
 
       // Auto import for module exports under directories
       // by default it only scan one level of modules under the directory
-      dirs: ['./resources/js/stores/**', './resources/js/composables/**'],
+      dirs: ['./resources/js/stores/**'],
       // Auto import inside Vue template
       // see https://github.com/unjs/unimport/pull/15 and https://github.com/unjs/unimport/pull/72
       vueTemplate: true,

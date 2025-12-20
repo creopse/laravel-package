@@ -1,15 +1,15 @@
-import './bootstrap'
 import 'flowbite'
 
 import App from './App.vue'
 
 import pinia from '@/stores'
 
-import { ZiggyVue } from 'ziggy-js'
-import { i18nVue } from 'laravel-vue-i18n'
-import { createInertiaApp, Link } from '@inertiajs/vue3'
+import creopse from '@creopse/vue'
 
-import { LANG_KEY } from './constants'
+import { i18nVue } from 'laravel-vue-i18n'
+import { router, createInertiaApp, Link } from '@inertiajs/vue3'
+
+import { LANG_KEY, ENCRYPTION_KEY } from './constants'
 
 createInertiaApp({
   title: (title) => title ? `${title} - ${import.meta.env.APP_NAME}` : import.meta.env.APP_NAME,
@@ -56,8 +56,23 @@ createInertiaApp({
     // Create vue app instance
     createApp({ render: () => h(App, props) })
       .use(plugin)
-      .use(ZiggyVue)
       .use(pinia)
+      .use(creopse, {
+        initialProps: props.initialPage.props,
+        router,
+        resolveSections: () => {
+          return import.meta.glob('./components/sections/**/*.vue', {
+            eager: true,
+          })
+        },
+        config: {
+          debug: import.meta.env.DEV,
+          appUrl: import.meta.env.APP_URL,
+          xApiKey: import.meta.env.APP_X_API_KEY,
+          encryptionKey: ENCRYPTION_KEY,
+          langKey: LANG_KEY
+        },
+      })
       .use(i18nVue, {
         lang: localStorage.getItem(LANG_KEY) || lang || props.initialPage.props.appLocale || 'en',
         fallbackLang: props.initialPage.props.appFallbackLocale || 'en',

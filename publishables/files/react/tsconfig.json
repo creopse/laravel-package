@@ -11,8 +11,7 @@
         "noImplicitAny": false,
         "types": ["vitest", "vite/client"],
         "paths": {
-            "@/*": ["./resources/js/*"],
-            "ziggy-js": ["./vendor/tightenco/ziggy"]
+            "@/*": ["./resources/js/*"]
         },
         "baseUrl": ".",
 

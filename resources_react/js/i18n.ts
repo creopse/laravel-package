@@ -2,7 +2,7 @@
 import i18n, { type BackendModule, type ReadCallback } from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { initReactI18next } from 'react-i18next'
-import { API_REQUEST_HEADERS, API_URL } from './constants'
+import { API_REQUEST_HEADERS, API_URL, LANG_KEY } from './constants'
 
 // Types for translation data
 interface TranslationData {
@@ -63,6 +63,8 @@ i18n
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag'],
       caches: ['localStorage'],
+
+      lookupLocalStorage: LANG_KEY,
 
       convertDetectedLanguage: (lng: string) => {
         return lng.split('-')[0]
