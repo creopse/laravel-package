@@ -78,6 +78,9 @@ export default defineConfig({
           if (name === 'Icon') {
             return { name: 'Icon', from: '@iconify/vue' }
           }
+          if (name === 'Image') {
+            return { name: 'Image', from: '@creopse/vue' }
+          }
         },
       ],
       dirs: [
