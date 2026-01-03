@@ -12,9 +12,9 @@ import { router, createInertiaApp, Link } from '@inertiajs/vue3'
 import { LANG_KEY, ENCRYPTION_KEY } from './constants'
 
 createInertiaApp({
-  title: (title) => title ? `${title} - ${import.meta.env.APP_NAME}` : import.meta.env.APP_NAME,
-  resolve: (name) =>
-  {
+  title: (title) =>
+    title ? `${title} - ${import.meta.env.APP_NAME}` : import.meta.env.APP_NAME,
+  resolve: (name) => {
     const pages = import.meta.glob('./pages/**/*.vue', { eager: true })
     const page: any = pages[`./pages/${name}.vue`]
     page.default.layout = App
@@ -25,7 +25,7 @@ createInertiaApp({
     delay: 250,
 
     // The color of the progress bar...
-    color: import.meta.env.APP_SECONDARY_COLOR,
+    color: '#3B82F6',
 
     // Whether to include the default NProgress styles...
     includeCSS: true,
@@ -34,7 +34,6 @@ createInertiaApp({
     showSpinner: false,
   },
   setup({ el, App, props, plugin }) {
-
     // Add naive ui styles meta
     const meta = document.createElement('meta')
     meta.name = 'naive-ui-style'
@@ -42,15 +41,15 @@ createInertiaApp({
 
     // Setup language
     const navigatorLanguage =
-        // @ts-ignore
-        window.navigator.language || window.navigator.userLanguage
+      // @ts-ignore
+      window.navigator.language || window.navigator.userLanguage
 
     let lang = navigatorLanguage.split('-')[0]
 
     const userData: any = props.initialPage.props.userData
 
     if (userData && userData.preferences && userData.preferences.locale) {
-        lang = userData.preferences.locale
+      lang = userData.preferences.locale
     }
 
     // Create vue app instance
@@ -70,11 +69,15 @@ createInertiaApp({
           appUrl: import.meta.env.APP_URL,
           xApiKey: import.meta.env.APP_X_API_KEY,
           encryptionKey: ENCRYPTION_KEY,
-          langKey: LANG_KEY
+          langKey: LANG_KEY,
         },
       })
       .use(i18nVue, {
-        lang: localStorage.getItem(LANG_KEY) || lang || props.initialPage.props.appLocale || 'en',
+        lang:
+          localStorage.getItem(LANG_KEY) ||
+          lang ||
+          props.initialPage.props.appLocale ||
+          'en',
         fallbackLang: props.initialPage.props.appFallbackLocale || 'en',
         resolve: async (lang: string) => {
           const langs: any = import.meta.glob('../../lang/*.json')

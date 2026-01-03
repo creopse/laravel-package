@@ -8,7 +8,8 @@ import { ENCRYPTION_KEY, LANG_KEY } from './constants'
 import './i18n'
 
 createInertiaApp({
-  title: (title) => (title ? `${title} - ${import.meta.env.APP_NAME}` : import.meta.env.APP_NAME),
+  title: (title) =>
+    title ? `${title} - ${import.meta.env.APP_NAME}` : import.meta.env.APP_NAME,
   resolve: (name) => {
     const pages = import.meta.glob('./pages/**/*.tsx', { eager: true })
     const page: any = pages[`./pages/${name}.tsx`]
@@ -19,7 +20,7 @@ createInertiaApp({
     delay: 250,
 
     // The color of the progress bar...
-    color: import.meta.env.APP_SECONDARY_COLOR,
+    color: '#3B82F6',
 
     // Whether to include the default NProgress styles...
     includeCSS: true,
@@ -50,7 +51,8 @@ createInertiaApp({
               langKey: LANG_KEY,
             },
           } as PluginOptions
-        }>
+        }
+      >
         <App {...props} />
       </CreopseProvider>
     )
