@@ -24,8 +24,8 @@ class VideoItemController extends Controller
         $orderByPublishedAt = $request->query('orderByPublishedAt');
         $displayType = $request->query('displayType');
         $categories = $request->query('categories');
+        $isVisible = $request->query('isVisible');
         $pageSize = $request->query('pageSize');
-        $visible = $request->query('visible');
         $source = $request->query('source');
         $query = $request->query('query');
 
@@ -65,7 +65,7 @@ class VideoItemController extends Controller
                             'path' => 'https://www.youtube.com/embed/' . $video['videoId'] . '?autoplay=1&rel=0',
                             'thumbnail' => $video['thumbnail'],
                             'source' => VideoItemSource::YOUTUBE->value,
-                            'visible' => true,
+                            'is_visible' => true,
                             'publisher_id' => $videoItem ? $videoItem->publisher_id : ($request->user() ? $request->user()->id : null),
                             'published_at' => $video['publishedAt'],
                         ]
@@ -102,8 +102,8 @@ class VideoItemController extends Controller
                 $videoItems = $videoItems->where('display_type', $displayType);
             }
 
-            if ($visible) {
-                $videoItems = $videoItems->where('visible', true);
+            if ($isVisible) {
+                $videoItems = $videoItems->where('is_visible', true);
             }
 
             if ($categories) {
@@ -181,7 +181,7 @@ class VideoItemController extends Controller
                         'path' => 'https://www.youtube.com/embed/' . $videoId . '?autoplay=1&rel=0',
                         'thumbnail' => $this->getThumbnail($snippet['thumbnails']),
                         'source' => $request->input('source'),
-                        'visible' => true,
+                        'is_visible' => true,
                         'display_type' => $request->input('display_type'),
                         'publisher_id' => $request->input('publisher_id') ?? $request->user()->id,
                         'published_at' => Carbon::parse($snippet['publishedAt'])->format('Y-m-d H:i:s'),
@@ -230,7 +230,7 @@ class VideoItemController extends Controller
                 'path' => $request->input('path'),
                 'thumbnail' => $request->input('thumbnail'),
                 'source' => $request->input('source'),
-                'visible' => $request->input('visible'),
+                'is_visible' => $request->input('is_visible'),
                 'display_type' => $request->input('display_type'),
                 'publisher_id' => $request->input('publisher_id') ?? $request->user()->id,
                 'published_at' => $request->input('published_at') ?? Carbon::now()->format('Y-m-d H:i:s'),
@@ -306,7 +306,7 @@ class VideoItemController extends Controller
                     'path' => 'https://www.youtube.com/embed/' . $video['videoId'] . '?autoplay=1&rel=0',
                     'thumbnail' => $video['thumbnail'],
                     'source' => VideoItemSource::YOUTUBE->value,
-                    'visible' => true,
+                    'is_visible' => true,
                     'publisher_id' => $videoItem ? $videoItem->publisher_id : ($request->user() ? $request->user()->id : null),
                     'published_at' => $video['publishedAt'],
                 ]

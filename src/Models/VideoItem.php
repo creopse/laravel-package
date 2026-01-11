@@ -20,7 +20,7 @@ class VideoItem extends Model
     protected $with = ['publisher', 'categories:id,name,slug'];
 
     protected $casts = [
-        'visible' => 'boolean',
+        'is_visible' => 'boolean',
     ];
 
     public function categories()

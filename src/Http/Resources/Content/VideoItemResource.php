@@ -26,7 +26,7 @@ class VideoItemResource extends JsonResource
             'thumbnailUrl' => $this->thumbnail_url,
             'source' => $this->source,
             'displayType' => $this->display_type,
-            'visible' => $this->visible,
+            'isVisible' => $this->is_visible,
             'categories' => VideoCategoryResource::collection($this->categories),
             'publisher' => new UserResource(
                 $this->publisher

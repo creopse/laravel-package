@@ -88,7 +88,7 @@ class VideoCategoryController extends Controller
         $videoCategories = $videoCategoryResource->subCategories->pluck('id');
         $videoCategories->push($videoCategory->id);
 
-        $videoItems = VideoItem::where('visible', true)
+        $videoItems = VideoItem::where('is_visible', true)
             ->whereHas('categories', function ($query) use ($videoCategories) {
                 $query->whereIn('id', $videoCategories);
             })
