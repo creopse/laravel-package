@@ -47,7 +47,7 @@ class ContentModelItemController extends Controller
             }
 
             if ($isActive) {
-                $items = $items->where('is_active', $isActive);
+                $items = $items->where('is_active', true);
             }
 
             if ($createdByType) {
