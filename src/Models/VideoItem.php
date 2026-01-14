@@ -21,6 +21,7 @@ class VideoItem extends Model
 
     protected $casts = [
         'is_visible' => 'boolean',
+        'user_metadata' => 'array',
     ];
 
     public function categories()
