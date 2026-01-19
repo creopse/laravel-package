@@ -17,14 +17,6 @@ class TokenController extends Controller
 {
     public function index(Request $request, string $name): JsonResponse
     {
-        if ($name === 'refresh-token' || $name === 'access-token') {
-            return $this->sendResponse(
-                null,
-                ResponseStatusCode::FORBIDDEN,
-                'Access and refresh tokens can not be retrieved'
-            );
-        }
-
         $tokens = $request->user()->tokens()->where('name', $name)->get();
 
         return $this->sendResponse($tokens);

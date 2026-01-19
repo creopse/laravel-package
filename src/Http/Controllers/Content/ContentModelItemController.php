@@ -22,14 +22,14 @@ class ContentModelItemController extends Controller
     public function index(Request $request)
     {
         $pageSize = $request->query('pageSize');
-        $query = $request->query('query');
-        $isActive = $request->query('isActive');
-        $contentModelId = $request->query('contentModelId');
-        $contentModelName = $request->query('contentModelName');
-        $createdByType = $request->query('createdByType');
-        $createdBy = $request->query('createdBy');
 
-        if ($pageSize) {
+        $prepareQuery = function () use ($request) {
+            $query = $request->query('query');
+            $isActive = $request->query('isActive');
+            $contentModelId = $request->query('contentModelId');
+            $contentModelName = $request->query('contentModelName');
+            $createdByType = $request->query('createdByType');
+            $createdBy = $request->query('createdBy');
 
             $items = ContentModelItem::query();
 
@@ -37,7 +37,12 @@ class ContentModelItemController extends Controller
                 $items = $items->where('content_model_id', $contentModelId);
             } else if ($contentModelName) {
                 $contentModel = ContentModel::where('name', $contentModelName)->first();
-                $items = $items->where('content_model_id', $contentModel->id);
+
+                if ($contentModel) {
+                    $items = $items->where('content_model_id', $contentModel->id);
+                } else {
+                    $items = $items->whereRaw('0 = 1');
+                }
             }
 
             if ($query) {
@@ -46,8 +51,8 @@ class ContentModelItemController extends Controller
                 });
             }
 
-            if ($isActive) {
-                $items = $items->where('is_active', true);
+            if (!is_null($isActive)) {
+                $items = $items->where('is_active', filter_var($isActive, FILTER_VALIDATE_BOOLEAN));
             }
 
             if ($createdByType) {
@@ -57,6 +62,13 @@ class ContentModelItemController extends Controller
             if ($createdBy) {
                 $items = $items->where('created_by', $createdBy);
             }
+
+            return $items;
+        };
+
+        $items = $prepareQuery();
+
+        if (is_numeric($pageSize) && (int) $pageSize > 0) {
 
             $items = $items->paginate($pageSize);
 
@@ -77,19 +89,8 @@ class ContentModelItemController extends Controller
             ]);
         }
 
-        $items = [];
-
-        if ($contentModelId) {
-            $items = ContentModelItem::where('content_model_id', $contentModelId)->get();
-        } else if ($contentModelName) {
-            $contentModel = ContentModel::where('name', $contentModelName)->first();
-            $items = ContentModelItem::where('content_model_id', $contentModel->id)->get();
-        } else {
-            $items = ContentModelItem::all();
-        }
-
         return $this->sendResponse(
-            ContentModelItemResource::collection($items)
+            ContentModelItemResource::collection($items->get())
         );
     }
 

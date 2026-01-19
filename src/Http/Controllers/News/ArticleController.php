@@ -83,8 +83,8 @@ class ArticleController extends Controller
                 });
             }
 
-            if ($isHeadline) {
-                $newsArticles = $newsArticles->where('is_headline', true);
+            if (!is_null($isHeadline)) {
+                $newsArticles = $newsArticles->where('is_headline', filter_var($isHeadline, FILTER_VALIDATE_BOOLEAN));
             }
 
             $newsArticles->with(['categories:id,name,slug', 'tags:id,name,slug']);

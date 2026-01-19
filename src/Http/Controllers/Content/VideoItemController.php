@@ -21,7 +21,11 @@ class VideoItemController extends Controller
      */
     public function index(Request $request)
     {
-        $orderByPublishedAt = $request->query('orderByPublishedAt');
+        $orderByPublishedAt = filter_var(
+            $request->query('orderByPublishedAt'),
+            FILTER_VALIDATE_BOOLEAN,
+            FILTER_NULL_ON_FAILURE
+        );
         $displayType = $request->query('displayType');
         $categories = $request->query('categories');
         $isVisible = $request->query('isVisible');
@@ -83,8 +87,7 @@ class VideoItemController extends Controller
             }
         }
 
-        if ($pageSize) {
-
+        $prepareQuery = function () use ($displayType, $categories, $isVisible, $source, $query) {
             $videoItems = VideoItem::query();
 
             if ($query) {
@@ -102,17 +105,28 @@ class VideoItemController extends Controller
                 $videoItems = $videoItems->where('display_type', $displayType);
             }
 
-            if ($isVisible) {
-                $videoItems = $videoItems->where('is_visible', true);
+            if (!is_null($isVisible)) {
+                $videoItems = $videoItems->where('is_visible', filter_var($isVisible, FILTER_VALIDATE_BOOLEAN));
             }
 
             if ($categories) {
+                $categories = is_array($categories)
+                    ? $categories
+                    : explode(',', $categories);
+
                 $videoItems = $videoItems->whereHas('categories', function ($query) use ($categories) {
                     $query->whereIn('id', $categories);
                 });
             }
 
-            if (($source && $source == VideoItemSource::YOUTUBE->value) || $orderByPublishedAt) {
+            return $videoItems;
+        };
+
+        $videoItems = $prepareQuery();
+
+        if (is_numeric($pageSize) && (int) $pageSize > 0) {
+
+            if (($source && $source == VideoItemSource::YOUTUBE->value) || $orderByPublishedAt === true) {
                 $videoItems = $videoItems->latest('published_at')->paginate($pageSize);
             } else {
                 $videoItems = $videoItems->latest()->paginate($pageSize);
@@ -135,7 +149,7 @@ class VideoItemController extends Controller
             ]);
         }
 
-        return $this->sendResponse(VideoItemResource::collection(VideoItem::all()));
+        return $this->sendResponse(VideoItemResource::collection($videoItems->get()));
     }
 
     /**
