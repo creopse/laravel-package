@@ -51,7 +51,7 @@
     },
     "dependencies": {
         "@creopse/cli": "^0.0.12",
-        "@creopse/react": "^0.0.16",
+        "@creopse/react": "^0.0.18",
         "@creopse/utils": "^0.0.12",
         "@inertiajs/core": "^2.1.6",
         "@inertiajs/react": "^2.1.6",

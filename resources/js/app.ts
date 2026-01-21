@@ -68,6 +68,8 @@ createInertiaApp({
           debug: import.meta.env.DEV,
           appUrl: import.meta.env.APP_URL,
           xApiKey: import.meta.env.APP_X_API_KEY,
+          locale: import.meta.env.APP_LOCALE,
+          fallbackLocale: import.meta.env.APP_FALLBACK_LOCALE,
           encryptionKey: ENCRYPTION_KEY,
           langKey: LANG_KEY,
         },
@@ -77,8 +79,10 @@ createInertiaApp({
           localStorage.getItem(LANG_KEY) ||
           lang ||
           props.initialPage.props.appLocale ||
-          'en',
-        fallbackLang: props.initialPage.props.appFallbackLocale || 'en',
+          import.meta.env.APP_LOCALE,
+        fallbackLang:
+          props.initialPage.props.appFallbackLocale ||
+          import.meta.env.APP_FALLBACK_LOCALE,
         resolve: async (lang: string) => {
           const langs: any = import.meta.glob('../../lang/*.json')
           return await langs[`../../lang/${lang}.json`]()

@@ -53,7 +53,7 @@ i18n
   .use(initReactI18next)
   // Initialize i18next
   .init({
-    fallbackLng: 'en',
+    fallbackLng: import.meta.env.APP_FALLBACK_LOCALE,
     debug: import.meta.env.DEV,
 
     // Use only language codes, not full locale tags
