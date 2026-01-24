@@ -8,6 +8,7 @@ use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Enums\UserRole;
 use Creopse\Creopse\Enums\ProfileType;
+use Creopse\Creopse\Enums\TokenAbility;
 use Creopse\Creopse\Events\Auth\ProfileCreatedEvent;
 use Creopse\Creopse\Events\Auth\ProfileUpdatedEvent;
 use Creopse\Creopse\Helpers\Functions;
@@ -16,6 +17,7 @@ use Creopse\Creopse\Models\{User, AdminProfile};
 use Creopse\Creopse\Http\Resources\UserResource;
 use Creopse\Creopse\Events\Auth\UserRegisteredEvent;
 use Creopse\Creopse\Http\Requests\Auth\RegisterRequest;
+use Creopse\Creopse\Traits\DetectsMobileRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +26,8 @@ use Illuminate\Support\Facades\Validator;
 
 class RegistrationController extends Controller
 {
+    use DetectsMobileRequest;
+
     /**
      * Handle an incoming registration request.
      *
@@ -60,10 +64,31 @@ class RegistrationController extends Controller
 
             Auth::login($user);
 
+            if ($this->isMobileRequest($request)) {
+                $deviceName = $request->input('device_name', 'mobile-device');
+                $deviceId = $request->input('device_id');
+
+                $tokenName = $deviceId
+                    ? "{$deviceName} ({$deviceId})"
+                    : $deviceName;
+
+                $token = $user->createToken($tokenName, [TokenAbility::MOBILE])->plainTextToken;
+
+                return $this->sendResponse(
+                    [
+                        'token' => $token,
+                        'user' => new UserResource($user->load(['profile', 'roles', 'permissions'])),
+                    ],
+                    ResponseStatusCode::OK,
+                    'User registered'
+                );
+            }
+
+            $request->session()->regenerate();
+
             return $this->sendResponse(
                 [
-                    'access_token' => Functions::generateAccessToken($user)->plainTextToken,
-                    'user' => new UserResource($user->load(['profile', 'roles', 'permissions']))
+                    'user' => new UserResource($user->load(['profile', 'roles', 'permissions'])),
                 ],
                 ResponseStatusCode::CREATED,
                 'User registered'

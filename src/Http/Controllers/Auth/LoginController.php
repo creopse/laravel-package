@@ -7,17 +7,19 @@ use Creopse\Creopse\Events\Auth\UserLoggedInEvent;
 use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Requests\Auth\LoginRequest;
 use Creopse\Creopse\Http\Resources\UserResource;
-use Creopse\Creopse\Helpers\Functions;
 use Creopse\Creopse\Models\User;
+use Creopse\Creopse\Traits\DetectsMobileRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    use DetectsMobileRequest;
+
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): JsonResponse
+    public function __invoke(LoginRequest $request): JsonResponse
     {
         $credentials = $request->validated();
 
@@ -32,30 +34,55 @@ class LoginController extends Controller
             );
         }
 
-        if (Auth::attempt([
+        if (User::where('email', $credentials['email'])->first()->account_status == AccountStatus::DISABLED->value) {
+
+            // When the user is disabled
+            return $this->sendResponse(
+                null,
+                ResponseStatusCode::FORBIDDEN,
+                'User disabled',
+                ResponseErrorCode::AUTH_USER_DISABLED,
+            );
+        }
+
+        if (!Auth::attempt([
             'email' => $credentials['email'],
             'password' => $credentials['password']
         ], $credentials['remember'] ?? false)) {
-            // When the user is authenticated
-            $user = Auth::user();
 
-            if ($user->account_status == AccountStatus::DISABLED->value) {
-                // When the user is disabled, log them out and return an error
-                Auth::logout();
+            // When the password is wrong
+            return $this->sendResponse(
+                null,
+                ResponseStatusCode::FORBIDDEN,
+                'Wrong password',
+                ResponseErrorCode::AUTH_WRONG_PASSWORD,
+            );
+        }
 
-                return $this->sendResponse(
-                    null,
-                    ResponseStatusCode::FORBIDDEN,
-                    'User disabled',
-                    ResponseErrorCode::AUTH_USER_DISABLED,
-                );
+        // When the user is authenticated
+        $user = Auth::user();
+
+        event(new UserLoggedInEvent($user->id));
+
+        if ($this->isMobileRequest($request)) {
+            $deviceName = $request->input('device_name', 'mobile-device');
+            $deviceId = $request->input('device_id');
+
+            $tokenName = $deviceId
+                ? "{$deviceName} ({$deviceId})"
+                : $deviceName;
+
+            if ($deviceId) {
+                $user->tokens()
+                    ->where('name', 'LIKE', "%({$deviceId})%")
+                    ->delete();
             }
 
-            event(new UserLoggedInEvent($user->id));
+            $token = $user->createToken($tokenName, [TokenAbility::MOBILE])->plainTextToken;
 
             return $this->sendResponse(
                 [
-                    'access_token' => Functions::generateAccessToken($user, $request->header('X-API-KEY') === env('APP_X_API_KEY') ? now()->addMonths(18) : null)->plainTextToken,
+                    'token' => $token,
                     'user' => new UserResource($user->load(['profile', 'roles', 'permissions'])),
                 ],
                 ResponseStatusCode::OK,
@@ -63,12 +90,14 @@ class LoginController extends Controller
             );
         }
 
-        // When the password are incorrect
+        $request->session()->regenerate();
+
         return $this->sendResponse(
-            null,
-            ResponseStatusCode::FORBIDDEN,
-            'Wrong password',
-            ResponseErrorCode::AUTH_WRONG_PASSWORD,
+            [
+                'user' => new UserResource($user->load(['profile', 'roles', 'permissions'])),
+            ],
+            ResponseStatusCode::OK,
+            'Logged in successfully'
         );
     }
 }

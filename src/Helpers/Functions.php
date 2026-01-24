@@ -2,11 +2,9 @@
 
 namespace Creopse\Creopse\Helpers;
 
-use Creopse\Creopse\Enums\TokenAbility;
 use Creopse\Creopse\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Laravel\Sanctum\NewAccessToken;
 use Illuminate\Support\Str;
 
 class Functions
@@ -78,40 +76,6 @@ class Functions
         }
 
         return $uid;
-    }
-
-    /**
-     * generate access token
-     *
-     * @return NewAccessToken
-     */
-    static function generateAccessToken(User $user, $expireAt = null): NewAccessToken
-    {
-        return $user->createToken(
-            'access-token',
-            [TokenAbility::ACCESS_API->value],
-            $expireAt ?? now()->addHours(36)
-        );
-    }
-
-    /**
-     * generate refresh token
-     *
-     * @return NewAccessToken
-     */
-    static function generateRefreshToken(User $user, $longDuration = true): NewAccessToken
-    {
-        $tokens = $user->tokens()->where('name', 'refresh-token')->get();
-
-        foreach ($tokens as $token) {
-            $token->delete();
-        }
-
-        return $user->createToken(
-            'refresh-token',
-            [TokenAbility::ISSUE_ACCESS_TOKEN->value],
-            $longDuration ? now()->addWeeks(3) : now()->addDays(3)
-        );
     }
 
     /**

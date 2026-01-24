@@ -6,6 +6,7 @@ use Creopse\Creopse\Enums\AccountStatus;
 use Creopse\Creopse\Enums\AuthType;
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
+use Creopse\Creopse\Enums\TokenAbility;
 use Creopse\Creopse\Enums\UserRole;
 use Creopse\Creopse\Events\Auth\UserLoggedInEvent;
 use Creopse\Creopse\Events\Auth\UserRegisteredEvent;
@@ -30,6 +31,49 @@ use Illuminate\Support\Facades\Log;
 
 class ProviderController extends Controller
 {
+    private function loginUser(Request $request, User $user, bool $isRegistration): JsonResponse
+    {
+        Auth::login($user);
+
+        event($isRegistration ? new UserRegisteredEvent($user->id) : new UserLoggedInEvent($user->id));
+
+        if ($this->isMobileRequest($request)) {
+            $deviceName = $request->input('device_name', 'mobile-device');
+            $deviceId = $request->input('device_id');
+
+            $tokenName = $deviceId
+                ? "{$deviceName} ({$deviceId})"
+                : $deviceName;
+
+            if ($deviceId) {
+                $user->tokens()
+                    ->where('name', 'LIKE', "%({$deviceId})%")
+                    ->delete();
+            }
+
+            $token = $user->createToken($tokenName, [TokenAbility::MOBILE])->plainTextToken;
+
+            return $this->sendResponse(
+                [
+                    'token' => $token,
+                    'user' => new UserResource($user->load(['profile', 'roles', 'permissions'])),
+                ],
+                $isRegistration ? ResponseStatusCode::CREATED : ResponseStatusCode::OK,
+                $isRegistration ? 'User registered' : 'Logged in successfully'
+            );
+        }
+
+        $request->session()->regenerate();
+
+        return $this->sendResponse(
+            [
+                'user' => new UserResource($user->load(['profile', 'roles', 'permissions'])),
+            ],
+            $isRegistration ? ResponseStatusCode::CREATED : ResponseStatusCode::OK,
+            $isRegistration ? 'User registered' : 'Logged in successfully'
+        );
+    }
+
     /**
      * Handle an incoming google auth request.
      *
@@ -75,18 +119,7 @@ class ProviderController extends Controller
                     );
                 }
 
-                Auth::login($userFound);
-
-                event(new UserLoggedInEvent($userFound->id));
-
-                return $this->sendResponse(
-                    [
-                        'access_token' => Functions::generateAccessToken($userFound)->plainTextToken,
-                        'user' => new UserResource($userFound->load(['profile', 'roles', 'permissions'])),
-                    ],
-                    ResponseStatusCode::OK,
-                    'Logged in successfully'
-                );
+                return $this->loginUser($request, $userFound, false);
             } else {
                 $user = User::create([
                     'firstname' => $payload['given_name'] ?? $payload['name'] ?? '',
@@ -123,18 +156,7 @@ class ProviderController extends Controller
                         //$configUser->addRole(UserRole::USER->value);
                     }
 
-                    event(new UserRegisteredEvent($user->id));
-
-                    Auth::login($user);
-
-                    return $this->sendResponse(
-                        [
-                            'access_token' => Functions::generateAccessToken($user)->plainTextToken,
-                            'user' => new UserResource($user->load(['profile', 'roles', 'permissions'])),
-                        ],
-                        ResponseStatusCode::CREATED,
-                        'User registered'
-                    );
+                    return $this->loginUser($request, $user, true);
                 } else {
                     return $this->sendResponse(
                         null,
@@ -302,13 +324,7 @@ class ProviderController extends Controller
                 );
             }
 
-            Auth::login($user);
-            event(new UserLoggedInEvent($user->id));
-
-            return $this->sendResponse([
-                'access_token' => Functions::generateAccessToken($user)->plainTextToken,
-                'user' => new UserResource($user->load(['profile', 'roles', 'permissions'])),
-            ], ResponseStatusCode::OK, 'Logged in successfully');
+            return $this->loginUser($request, $user, false);
         }
 
         $username = explode('@', $email)[0];
@@ -353,18 +369,7 @@ class ProviderController extends Controller
                 //$configUser->addRole(UserRole::USER->value);
             }
 
-            event(new UserRegisteredEvent($user->id));
-
-            Auth::login($user);
-
-            return $this->sendResponse(
-                [
-                    'access_token' => Functions::generateAccessToken($user)->plainTextToken,
-                    'user' => new UserResource($user->load(['profile', 'roles', 'permissions'])),
-                ],
-                ResponseStatusCode::CREATED,
-                'User registered'
-            );
+            return $this->loginUser($request, $user, true);
         } else {
             return $this->sendResponse(
                 null,
@@ -579,18 +584,7 @@ class ProviderController extends Controller
 
         if ($user->account_status != AccountStatus::DISABLED->value || $user->profile === null) {
 
-            event(new UserLoggedInEvent($user->id));
-
-            Auth::login($user);
-
-            return $this->sendResponse(
-                [
-                    'access_token' => Functions::generateAccessToken($user)->plainTextToken,
-                    'user' => new UserResource($user->load(['profile', 'roles', 'permissions']))
-                ],
-                ResponseStatusCode::OK,
-                'User Logged in',
-            );
+            return $this->loginUser($request, $user, false);
         } else {
 
             return $this->sendResponse(

@@ -28,6 +28,8 @@ class LoginRequest extends FormRequest
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
             'remember' => ['sometimes', 'boolean'],
+            'device_name' => ['sometimes', 'string'],
+            'device_id' => ['sometimes', 'string'],
         ];
     }
 }

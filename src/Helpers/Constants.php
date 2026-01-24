@@ -5,7 +5,7 @@ namespace Creopse\Creopse\Helpers;
 class Constants
 {
     // User session duration in minutes
-    public const USER_SESSION_DURATION = 21;
+    public const USER_SESSION_DURATION = 120;
 
     /**
      * IP Processing api keys

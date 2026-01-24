@@ -65,7 +65,7 @@ class UserCreateComment extends Notification
             ->subject($data['title'])
             ->line($data['title'])
             ->line($data['content'])
-            ->action(__('creopse::notifications.user_create_comment.action'), env('FRONTEND_URL') . '/news-management/comments');
+            ->action(__('creopse::notifications.user_create_comment.action'), env('ADMIN_URL') . '/news-management/comments');
     }
 
     /**

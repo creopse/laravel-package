@@ -40,6 +40,8 @@ class RegisterRequest extends FormRequest
             'account_status' => ['sometimes'],
             'preferences' => ['sometimes', 'array'],
             'avatar' => ['sometimes'],
+            'device_name' => ['sometimes', 'string'],
+            'device_id' => ['sometimes', 'string'],
         ];
     }
 }

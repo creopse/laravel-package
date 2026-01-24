@@ -2,16 +2,10 @@
 
 namespace Creopse\Creopse\Http\Controllers\Auth;
 
-use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
-use Creopse\Creopse\Helpers\Functions;
 use Creopse\Creopse\Http\Controllers\Controller;
-use Creopse\Creopse\Http\Resources\UserResource;
-use Creopse\Creopse\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class TokenController extends Controller
 {
@@ -48,76 +42,6 @@ class TokenController extends Controller
                 null,
                 ResponseStatusCode::NOT_FOUND,
                 'Token not found'
-            );
-        }
-    }
-
-    public function refresh(Request $request): JsonResponse
-    {
-        // For security reasons, the refresh token is taken directly from the database
-        // and is not exposed to the client
-
-        // Validate incoming request data
-        $validator = Validator::make($request->all(), [
-            'user_id' => 'required',
-        ]);
-
-        // If data not valid return error
-        if ($validator->fails()) {
-            return $this->sendResponse(
-                $validator->errors(),
-                ResponseStatusCode::UNPROCESSABLE_ENTITY,
-                'Validation failed',
-                ResponseErrorCode::FORM_INVALID_DATA
-            );
-        }
-
-        $user = User::find($request->input('user_id'));
-
-        if ($user) {
-            // Find the refresh token by name
-            $refreshToken = $user->tokens()->where('name', 'refresh-token')->first();
-
-            if ($refreshToken) {
-                $token = $request->bearerToken() ?? $request->input('expired_access_token') ?? 'token';
-                $expiredAccessToken = PersonalAccessToken::findToken($token);
-
-                if ($expiredAccessToken) {
-
-                    $expiredAccessToken->delete();
-                } else {
-
-                    return $this->sendResponse(
-                        null,
-                        ResponseStatusCode::NOT_FOUND,
-                        'Expired access token not found'
-                    );
-                }
-
-                Functions::generateRefreshToken($user);
-
-                return $this->sendResponse(
-                    [
-                        'access_token' => Functions::generateAccessToken($user)->plainTextToken,
-                        'user' => new UserResource($user->load(['profile', 'roles', 'permissions'])),
-                    ],
-                    ResponseStatusCode::OK,
-                    'New access token generated successfully'
-                );
-            } else {
-                // Refresh token not found
-                return $this->sendResponse(
-                    null,
-                    ResponseStatusCode::NOT_FOUND,
-                    'Refresh token not found'
-                );
-            }
-        } else {
-            // User not found
-            return $this->sendResponse(
-                null,
-                ResponseStatusCode::NOT_FOUND,
-                'User not found'
             );
         }
     }

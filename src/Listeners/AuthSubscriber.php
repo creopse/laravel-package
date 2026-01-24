@@ -10,7 +10,6 @@ use Creopse\Creopse\Events\Auth\UserLoggedOutEvent;
 use Creopse\Creopse\Events\Auth\UserRegisteredEvent;
 use Creopse\Creopse\Events\Auth\ProfileCreatedEvent;
 use Creopse\Creopse\Events\Auth\ProfileUpdatedEvent;
-use Creopse\Creopse\Helpers\Functions;
 use Creopse\Creopse\Notifications\UserAccountActivated;
 use Creopse\Creopse\Notifications\WelcomeUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -50,8 +49,6 @@ class AuthSubscriber implements ShouldQueue
     {
         $user = User::find($event->userId);
         if ($user) {
-            Functions::generateRefreshToken($user);
-
             $user->last_logged_in_at = now();
             $user->save();
         }
@@ -70,8 +67,7 @@ class AuthSubscriber implements ShouldQueue
      */
     public function onUserRegistered(UserRegisteredEvent $event)
     {
-        $user = User::find($event->userId);
-        if ($user) Functions::generateRefreshToken($user);
+        //
     }
 
     /**

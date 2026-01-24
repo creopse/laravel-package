@@ -5,11 +5,15 @@ APP_DEBUG=true
 APP_LOCALE=en
 APP_FALLBACK_LOCALE=en
 APP_URL=https://creopse-example.test
-FRONTEND_URL=http://localhost:4320
+ADMIN_URL=https://admin.creopse-example.test:4320
 
-APP_X_API_KEY=ba65426b-72cb-4c9e-97e7-c9f40585c009
+SANCTUM_STATEFUL_DOMAINS=creopse-example.test,admin.creopse-example.test,admin.creopse-example.test:4320
 
-API_KEYS=ba65426b-72cb-4c9e-97e7-c9f40585c009,c7fec755-9b0f-46e8-bd2b-ca16de3068bb,19f5c512-f685-4d39-862b-5a833bceb9ef
+SESSION_DRIVER=database
+SESSION_LIFETIME=120
+SESSION_DOMAIN=.creopse-example.test
+SESSION_SECURE_COOKIE=true
+SESSION_SAME_SITE=lax
 
 LOG_CHANNEL=stack
 LOG_DEPRECATIONS_CHANNEL=null

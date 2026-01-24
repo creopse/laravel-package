@@ -41,13 +41,12 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \TomLerendu\LaravelConvertCaseMiddleware\ConvertRequestToSnakeCase::class,
             \TomLerendu\LaravelConvertCaseMiddleware\ConvertResponseToCamelCase::class,
             \Creopse\Creopse\Http\Middleware\LogSessionHistory::class,
-            \Creopse\Creopse\Http\Middleware\CheckApiKey::class,
         ],
     ];
 

@@ -2,7 +2,7 @@
 import i18n, { type BackendModule, type ReadCallback } from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { initReactI18next } from 'react-i18next'
-import { API_REQUEST_HEADERS, API_URL, LANG_KEY } from './constants'
+import { API_URL, LANG_KEY } from './constants'
 
 // Types for translation data
 interface TranslationData {
@@ -23,10 +23,10 @@ const laravelBackend: BackendModule = {
 
   read(language: string, namespace: string, callback: ReadCallback): void {
     const headers: {
-      'X-API-Key': string
       Authorization?: string
-    } = API_REQUEST_HEADERS
-    headers['Authorization'] = `Bearer null`
+    } = {
+      Authorization: `Bearer null`,
+    }
 
     axios
       .get<LaravelTranslationResponse>(`${API_URL}/translations/${language}`, {

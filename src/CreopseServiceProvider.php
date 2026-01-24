@@ -26,6 +26,7 @@ class CreopseServiceProvider extends ServiceProvider
         'feed',
         'mail',
         'image',
+        'session',
         'sanctum',
         'logging',
         'services',
@@ -69,12 +70,12 @@ class CreopseServiceProvider extends ServiceProvider
         Route::group([
             'prefix' => 'api',
             'middleware' => [
+                \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
                 'throttle:creopse-api',
                 \Illuminate\Routing\Middleware\SubstituteBindings::class,
                 \TomLerendu\LaravelConvertCaseMiddleware\ConvertRequestToSnakeCase::class,
                 \TomLerendu\LaravelConvertCaseMiddleware\ConvertResponseToCamelCase::class,
                 \Creopse\Creopse\Http\Middleware\LogSessionHistory::class,
-                \Creopse\Creopse\Http\Middleware\CheckApiKey::class,
             ],
         ], function () {
             $this->loadRoutesFrom(__DIR__ . '/../routes/api/index.php');
@@ -202,7 +203,6 @@ class CreopseServiceProvider extends ServiceProvider
 
         // Publish middlewares
         $this->publishes([
-            __DIR__ . '/../publishables/middlewares/CheckApiKey.php' => app_path('Http/Middleware/CheckApiKey.php'),
             __DIR__ . '/../publishables/middlewares/EncryptCookies.php' => app_path('Http/Middleware/EncryptCookies.php'),
             __DIR__ . '/../publishables/middlewares/EnsureEmailIsVerified.php' => app_path('Http/Middleware/EnsureEmailIsVerified.php'),
             __DIR__ . '/../publishables/middlewares/HandleInertiaRequests.php' => app_path('Http/Middleware/HandleInertiaRequests.php'),

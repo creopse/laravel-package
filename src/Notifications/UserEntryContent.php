@@ -65,7 +65,7 @@ class UserEntryContent extends Notification
             ->subject($data['title'])
             ->line($data['title'])
             ->line($data['content'])
-            ->action(__('creopse::notifications.user_entry_content.action'), env('FRONTEND_URL') . '/content-management');
+            ->action(__('creopse::notifications.user_entry_content.action'), env('ADMIN_URL') . '/content-management');
     }
 
     /**

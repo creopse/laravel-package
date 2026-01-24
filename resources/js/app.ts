@@ -67,7 +67,6 @@ createInertiaApp({
         config: {
           debug: import.meta.env.DEV,
           appUrl: import.meta.env.APP_URL,
-          xApiKey: import.meta.env.APP_X_API_KEY,
           locale: import.meta.env.APP_LOCALE,
           fallbackLocale: import.meta.env.APP_FALLBACK_LOCALE,
           encryptionKey: ENCRYPTION_KEY,
