@@ -76,6 +76,7 @@ class CreopseServiceProvider extends ServiceProvider
                 \TomLerendu\LaravelConvertCaseMiddleware\ConvertRequestToSnakeCase::class,
                 \TomLerendu\LaravelConvertCaseMiddleware\ConvertResponseToCamelCase::class,
                 \Creopse\Creopse\Http\Middleware\LogSessionHistory::class,
+                \Creopse\Creopse\Http\Middleware\CaptureSessionMetadata::class,
             ],
         ], function () {
             $this->loadRoutesFrom(__DIR__ . '/../routes/api/index.php');
@@ -91,6 +92,7 @@ class CreopseServiceProvider extends ServiceProvider
                 \App\Http\Middleware\VerifyCsrfToken::class,
                 \Illuminate\Routing\Middleware\SubstituteBindings::class,
                 \Creopse\Creopse\Http\Middleware\LogSessionHistory::class,
+                \Creopse\Creopse\Http\Middleware\CaptureSessionMetadata::class,
                 class_exists('App\Http\Middleware\HandleInertiaRequests') ? \App\Http\Middleware\HandleInertiaRequests::class : \Creopse\Creopse\Http\Middleware\HandleInertiaRequests::class
             ],
         ], function () {
@@ -208,6 +210,7 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../publishables/middlewares/HandleInertiaRequests.php' => app_path('Http/Middleware/HandleInertiaRequests.php'),
             __DIR__ . '/../publishables/middlewares/LogSessionHistory.php' => app_path('Http/Middleware/LogSessionHistory.php'),
             __DIR__ . '/../publishables/middlewares/VerifyCsrfToken.php' => app_path('Http/Middleware/VerifyCsrfToken.php'),
+            __DIR__ . '/../publishables/middlewares/CaptureSessionMetadata.php' => app_path('Http/Middleware/CaptureSessionMetadata.php'),
         ], 'creopse-middlewares');
 
         // Publish v11 middlewares

@@ -28,6 +28,7 @@ require __DIR__ . '/server-status.php';
 require __DIR__ . '/media-files.php';
 require __DIR__ . '/icon-picker.php';
 require __DIR__ . '/app-data.php';
+require __DIR__ . '/sessions.php';
 require __DIR__ . '/videos.php';
 require __DIR__ . '/news.php';
 require __DIR__ . '/sms.php';
