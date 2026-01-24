@@ -26,7 +26,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::put('menu/items/position', [MenuItemController::class, 'updatePosition'])->name('menu.update.items.position');
 
-    Route::apiResource('menu/items', MenuItemController::class)->except(['index', 'show'])->parameters(['items' => 'menuItem']);
+    Route::apiResource('menu/items', MenuItemController::class)->except(['index', 'show'])->parameters(['items' => 'menuItem'])->names('menu.items');
 
     Route::apiResource('menu-locations', MenuLocationController::class)->except(['index', 'show']);
 
@@ -38,7 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('content-models', ContentModelController::class)->except(['index', 'show']);
 
-    Route::apiResource('content-model/items', ContentModelItemController::class)->except(['index', 'show'])->parameters(['items' => 'contentModelItem']);
+    Route::apiResource('content-model/items', ContentModelItemController::class)->except(['index', 'show'])->parameters(['items' => 'contentModelItem'])->names('content-model.items');
 
     Route::post('content-model-items/list', [ContentModelItemController::class, 'showList'])->name('content-model.items.list');
 
@@ -61,7 +61,7 @@ Route::apiResource('pages', PageController::class)->only(['index', 'show']);
 
 Route::apiResource('menus', MenuController::class)->only(['index', 'show']);
 
-Route::apiResource('menu/items', MenuItemController::class)->only(['index', 'show'])->parameters(['items' => 'menuItem']);
+Route::apiResource('menu/items', MenuItemController::class)->only(['index', 'show'])->parameters(['items' => 'menuItem'])->names('menu.items');
 
 Route::apiResource('menu-locations', MenuLocationController::class)->only(['index', 'show']);
 
@@ -73,7 +73,7 @@ Route::apiResource('permalinks', PermalinkController::class)->only(['index', 'sh
 
 Route::apiResource('content-models', ContentModelController::class)->only(['index', 'show']);
 
-Route::apiResource('content-model/items', ContentModelItemController::class)->only(['index', 'show'])->parameters(['items' => 'contentModelItem']);
+Route::apiResource('content-model/items', ContentModelItemController::class)->only(['index', 'show'])->parameters(['items' => 'contentModelItem'])->names('content-model.items');
 
 Route::post('content-model/user-items', [ContentModelItemController::class, 'storeUserItem']);
 
