@@ -19,36 +19,22 @@ use Creopse\Creopse\Models\NewsTag;
 use Creopse\Creopse\Models\Permalink;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class DynamicPageController extends Controller
 {
     public function getEditorPage(Request $request, String $slug)
     {
-        $token = $request->query('token');
-
-        $accessToken = PersonalAccessToken::findToken($token);
-
-        if (!$accessToken) {
-            return $this->return404($request);
-        }
-
-        if ($accessToken->expires_at && $accessToken->expires_at->isPast()) {
-            return $this->return404($request);
-        }
-
-        $user = $accessToken->tokenable;
-
-        if (!$accessToken->can('access-api')) {
+        if (!Auth::check()) {
             return $this->return404($request);
         }
 
         return Inertia::render('Container', [
-            'user' => $user,
+            'user' => $request->user(),
             'pageSlug' => $slug,
             'editor' => true
         ]);
