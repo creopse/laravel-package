@@ -3,14 +3,21 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Creopse\Creopse\Traits\DetectsMobileRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CaptureSessionMetadata
 {
+    use DetectsMobileRequest;
+
     public function handle(Request $request, Closure $next)
     {
         $response = $next($request);
+
+        if ($this->isMobileRequest($request)) {
+            return $response;
+        }
 
         // Capture only for requests authenticated with an active session
         if (

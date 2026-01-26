@@ -5,9 +5,6 @@ import { storage } from '.'
 
 interface AuthState {
   userData: UserModel | null
-  rememberMe: boolean
-  accessToken: string | null
-  accessTokenDate: number | null
   isUserConnected: () => boolean
   getUserData: () => UserModel | null
   resetAuthData: () => void
@@ -19,14 +16,11 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       // State
       userData: null,
-      rememberMe: false,
-      accessToken: null,
-      accessTokenDate: null,
 
       // Getters
       isUserConnected: () => {
         const state = get()
-        return state.accessToken !== null && state.userData !== null
+        return state.userData !== null
       },
       getUserData: () => {
         const state = get()
@@ -37,9 +31,6 @@ export const useAuthStore = create<AuthState>()(
       resetAuthData: () => {
         set({
           userData: null,
-          rememberMe: false,
-          accessToken: null,
-          accessTokenDate: null,
         })
       },
 
@@ -48,6 +39,6 @@ export const useAuthStore = create<AuthState>()(
     {
       name: 'auth',
       storage: createJSONStorage(() => storage),
-    }
-  )
+    },
+  ),
 )
