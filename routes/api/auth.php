@@ -9,6 +9,7 @@ use Creopse\Creopse\Http\Controllers\Auth\PasswordResetController;
 use Creopse\Creopse\Http\Controllers\Auth\ProviderController;
 use Creopse\Creopse\Http\Controllers\Auth\RegistrationController;
 use Creopse\Creopse\Http\Controllers\Auth\TokenController;
+use Creopse\Creopse\Http\Controllers\Auth\UsernameChangeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -57,6 +58,10 @@ Route::prefix('/auth')->group(function () {
     Route::post('/edit-email', EmailChangeController::class)
         ->middleware('auth:sanctum')
         ->name('email.edit');
+
+    Route::post('/edit-username', UsernameChangeController::class)
+        ->middleware('auth:sanctum')
+        ->name('username.edit');
 
     Route::get('/verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])
         ->middleware(['auth:sanctum', 'throttle:6,1'])

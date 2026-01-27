@@ -16,6 +16,7 @@ use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Models\{User, AdminProfile};
 use Creopse\Creopse\Http\Resources\UserResource;
 use Creopse\Creopse\Events\Auth\UserRegisteredEvent;
+use Creopse\Creopse\Helpers\UsernameGenerator;
 use Creopse\Creopse\Http\Requests\Auth\RegisterRequest;
 use Creopse\Creopse\Traits\DetectsMobileRequest;
 use Illuminate\Http\Request;
@@ -37,6 +38,7 @@ class RegistrationController extends Controller
     {
         $validated = $request->validated();
 
+        $validated['username'] = $validated['username'] ?? UsernameGenerator::generate($validated['firstname'], $validated['lastname']);
         $validated['password'] = Hash::make($validated['password']);
         $validated['account_status'] = isset($validated['account_status'])
             ? $validated['account_status']

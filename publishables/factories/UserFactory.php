@@ -29,6 +29,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
+            'username' => fake()->userName(),
             'lastname' => fake()->lastName(),
             'firstname' => fake()->firstName(),
             'email' => fake()->unique()->safeEmail(),
@@ -84,6 +85,16 @@ class UserFactory extends Factory
     {
         return $this->state(fn(array $attributes) => [
             'email' => $email,
+        ]);
+    }
+
+    /**
+     * Indicate the model's username which should be set.
+     */
+    public function withUsername(string $username): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'username' => $username,
         ]);
     }
 

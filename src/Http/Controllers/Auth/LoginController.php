@@ -23,7 +23,9 @@ class LoginController extends Controller
     {
         $credentials = $request->validated();
 
-        if (User::where('email', $credentials['email'])->doesntExist()) {
+        $userFound = User::where('email', $credentials['id'])->orWhere('username', $credentials['id'])->first();
+
+        if (!$userFound) {
 
             // When the user is not found
             return $this->sendResponse(
@@ -34,7 +36,7 @@ class LoginController extends Controller
             );
         }
 
-        if (User::where('email', $credentials['email'])->first()->account_status == AccountStatus::DISABLED->value) {
+        if ($userFound->account_status == AccountStatus::DISABLED->value) {
 
             // When the user is disabled
             return $this->sendResponse(
@@ -46,7 +48,7 @@ class LoginController extends Controller
         }
 
         if (!Auth::attempt([
-            'email' => $credentials['email'],
+            'email' => $userFound->email,
             'password' => $credentials['password']
         ], $credentials['remember'] ?? false)) {
 

@@ -27,6 +27,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/email/{email}', [UserController::class, 'userByEmail'])->name('by-email');
 
         Route::get('/phone/{phone}', [UserController::class, 'userByPhone'])->name('by-phone');
+
+        Route::get('/username/{username}', [UserController::class, 'userByUsername'])->name('by-username');
     });
 
     Route::name('users.')->prefix('/users')->group(function () {

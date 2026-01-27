@@ -11,6 +11,7 @@ use Creopse\Creopse\Enums\UserRole;
 use Creopse\Creopse\Events\Auth\UserLoggedInEvent;
 use Creopse\Creopse\Events\Auth\UserRegisteredEvent;
 use Creopse\Creopse\Helpers\Functions;
+use Creopse\Creopse\Helpers\UsernameGenerator;
 use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Resources\UserResource;
 use Creopse\Creopse\Models\AppInformation;
@@ -122,6 +123,7 @@ class ProviderController extends Controller
                 return $this->loginUser($request, $userFound, false);
             } else {
                 $user = User::create([
+                    'username' => UsernameGenerator::generate($payload['given_name'] ?? $payload['name'] ?? '', $payload['family_name'] ?? ''),
                     'firstname' => $payload['given_name'] ?? $payload['name'] ?? '',
                     'lastname' => $payload['family_name'] ?? '',
                     'avatar' => $payload['picture'],
@@ -338,6 +340,10 @@ class ProviderController extends Controller
         }
 
         $user = User::create([
+            'username' => UsernameGenerator::generate(
+                $request->input('firstname', $firstname ?? $username),
+                $request->input('lastname', $lastname ?? $username)
+            ),
             'firstname' => $request->input('firstname', $firstname ?? $username),
             'lastname' => $request->input('lastname', $lastname ?? $username),
             'email' => $email,
@@ -416,6 +422,7 @@ class ProviderController extends Controller
         if ($userDoesntExist && $request->input('allow_registration')) {
 
             $user = User::create([
+                'username' => UsernameGenerator::generate($request->input('firstname'), $request->input('lastname')),
                 'firstname' => $request->input('firstname'),
                 'lastname' => $request->input('lastname'),
                 'email' => null,

@@ -10,6 +10,7 @@ use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Events\Auth\AccountActivatedEvent;
 use Creopse\Creopse\Events\Auth\UserRegisteredEvent;
 use Creopse\Creopse\Helpers\Functions;
+use Creopse\Creopse\Helpers\UsernameGenerator;
 use Creopse\Creopse\Http\Resources\UserResource;
 use Creopse\Creopse\Mail\CommonMail;
 use Creopse\Creopse\Models\AdminProfile;
@@ -37,7 +38,9 @@ class UserController extends Controller
 
             if ($query) {
                 $users = $users->where('firstname', 'like', '%' . $query . '%')
-                    ->orWhere('lastname', 'like', '%' . $query . '%');
+                    ->orWhere('lastname', 'like', '%' . $query . '%')
+                    ->orWhere('username', 'like', '%' . $query . '%')
+                    ->orWhere('email', 'like', '%' . $query . '%');
             }
 
             $users->with('profile', 'roles', 'permissions');
@@ -72,6 +75,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'username' => 'sometimes|unique:users',
             'lastname' => 'required',
             'firstname' => 'required',
             'email' => 'required|email|unique:users',
@@ -100,6 +104,7 @@ class UserController extends Controller
         $avatar = ($request->input('avatar') ?? null) !== null ? $request->input('avatar') : null;
 
         $user = User::create([
+            'username' => $request->input('username') ?? UsernameGenerator::generate($request->input('firstname'), $request->input('lastname')),
             'lastname' => $request->input('lastname'),
             'firstname' => $request->input('firstname'),
             'email' => $request->input('email'),
@@ -153,6 +158,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'users' => 'required|array',
+            'users.*.username' => 'sometimes|unique:users',
             'users.*.lastname' => 'required',
             'users.*.firstname' => 'required',
             'users.*.email' => [
@@ -189,6 +195,7 @@ class UserController extends Controller
                 }
             } else {
                 $user = User::create([
+                    'username' => $userData['username'] ?? UsernameGenerator::generate($userData['firstname'], $userData['lastname']),
                     'lastname' => $userData['lastname'],
                     'firstname' => $userData['firstname'],
                     'email' => $userData['email'],
@@ -279,6 +286,8 @@ class UserController extends Controller
     {
         $users = User::where('firstname', 'like', '%' . $query . '%')
             ->orWhere('lastname', 'like', '%' . $query . '%')
+            ->orWhere('username', 'like', '%' . $query . '%')
+            ->orWhere('email', 'like', '%' . $query . '%')
             ->get();
 
         return $this->sendResponse(UserResource::collection($users->load(['profile', 'roles', 'permissions'])));
@@ -434,6 +443,18 @@ class UserController extends Controller
     public function userByEmail($email)
     {
         $user = User::whereEmail($email)->first();
+
+        return $this->sendResponse(
+            new UserResource($user->load(['profile', 'roles', 'permissions']))
+        );
+    }
+
+    /**
+     * Display user by username.
+     */
+    public function userByUsername($username)
+    {
+        $user = User::whereUsername($username)->first();
 
         return $this->sendResponse(
             new UserResource($user->load(['profile', 'roles', 'permissions']))
