@@ -385,10 +385,10 @@ class UserController extends Controller
     public function userPermissions(?User $user = null)
     {
         if ($user) {
-            return $this->sendResponse($user->allPermissions());
+            return $this->sendResponse($user->permissions()->get());
         }
 
-        return $this->sendResponse(Auth::user()->allPermissions());
+        return $this->sendResponse(Auth::user()->permissions()->get());
     }
 
     /**

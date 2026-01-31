@@ -30,6 +30,7 @@ class LoginRequest extends FormRequest
             'remember' => ['sometimes', 'boolean'],
             'device_name' => ['sometimes', 'string'],
             'device_id' => ['sometimes', 'string'],
+            'guard' => ['sometimes', 'string', 'in:api,web,admin,mobile'],
         ];
     }
 }

@@ -43,6 +43,7 @@ class RegisterRequest extends FormRequest
             'avatar' => ['sometimes'],
             'device_name' => ['sometimes', 'string'],
             'device_id' => ['sometimes', 'string'],
+            'guard' => ['sometimes', 'string', 'in:api,web,admin,mobile'],
         ];
     }
 }

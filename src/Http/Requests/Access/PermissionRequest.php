@@ -29,6 +29,7 @@ class PermissionRequest extends FormRequest
             'name' => 'required|string',
             'display_name' => 'required|string',
             'description' => 'sometimes|string',
+            'guard_name' => 'required|string',
         ];
     }
 }

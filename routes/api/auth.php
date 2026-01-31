@@ -71,7 +71,7 @@ Route::prefix('/auth')->group(function () {
         ->middleware(['auth:sanctum', 'throttle:6,1'])
         ->name('verification.send.email');
 
-    Route::get('/logout', LogoutController::class)
+    Route::get('/logout/{guard?}', LogoutController::class)
         ->middleware('auth:sanctum')
         ->name('logout');
 

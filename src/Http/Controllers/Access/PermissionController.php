@@ -2,6 +2,7 @@
 
 namespace Creopse\Creopse\Http\Controllers\Access;
 
+use Creopse\Creopse\Enums\AccessGuard;
 use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Models\Permission;
@@ -24,11 +25,9 @@ class PermissionController extends Controller
      */
     public function indexUser(?User $user = null)
     {
-        if ($user) {
-            return $this->sendResponse($user->permissions()->get());
-        }
+        $user = $user ?? Auth::user();
 
-        return $this->sendResponse(Auth::user()->permissions()->get());
+        return $this->sendResponse($user->permissions()->get());
     }
 
     /**
@@ -38,12 +37,15 @@ class PermissionController extends Controller
     {
         $validated = $request->validated();
 
+        $permission = Permission::create([
+            'name' => $validated['name'],
+            'display_name' => $validated['display_name'],
+            'description' => $validated['description'],
+            'guard_name' => $validated['guard_name'] ?? AccessGuard::WEB->value,
+        ]);
+
         return $this->sendResponse(
-            Permission::create([
-                'name' => $validated['name'],
-                'display_name' => $validated['display_name'],
-                'description' => $validated['description'],
-            ]),
+            $permission,
             ResponseStatusCode::CREATED,
             'Permission created successfully'
         );
@@ -65,6 +67,7 @@ class PermissionController extends Controller
         $validated = $request->validated();
 
         $permission->update($validated);
+
         return $this->sendResponse(
             $permission,
             ResponseStatusCode::OK,
@@ -78,6 +81,7 @@ class PermissionController extends Controller
     public function destroy(Permission $permission)
     {
         $permission->delete();
+
         return $this->sendResponse(
             null,
             ResponseStatusCode::OK,

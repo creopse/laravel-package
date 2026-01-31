@@ -17,7 +17,6 @@ class DatabaseSeeder extends Seeder
             AdIdentifiersSeeder::class,
             AppSettingSeeder::class,
             PermalinksSeeder::class,
-            LaratrustSeeder::class,
             ContentSeeder::class,
             UserSeeder::class,
 

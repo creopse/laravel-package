@@ -42,7 +42,7 @@ class UserResource extends JsonResource
                 return $this->roles()->with('permissions')->get();
             }),
             'permissions' => $this->whenLoaded('permissions', function () {
-                return $this->allPermissions();
+                return $this->getAllPermissions();
             }),
             'profile' => $this->whenLoaded('profile', function () {
                 if ($this->hasAdminProfile) {

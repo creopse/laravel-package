@@ -17,12 +17,12 @@ class LogoutController extends Controller
     /**
      * Destroy an authenticated session.
      */
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request, string $guard = 'web'): JsonResponse
     {
         if ($this->isMobileRequest($request)) {
             $request->user()->currentAccessToken()->delete();
         } else {
-            Auth::guard('web')->logout();
+            Auth::guard($guard)->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
         }

@@ -101,6 +101,10 @@ class ProviderController extends Controller
             );
         }
 
+        if ($request->has('guard')) {
+            Auth::shouldUse($request->input('guard'));
+        }
+
         $google = new GoogleClient(['client_id' => $googleConfig['client_id']]);
         $google->addScope('email');
 
@@ -145,17 +149,10 @@ class ProviderController extends Controller
                         $user->refresh();
                     }
 
-                    $configUserModel = app(config('creopse.user_model'));
-                    $configUser = $configUserModel::whereId($user->id)->first();
-
                     if (User::count() === 1) {
-                        $user->addRole(UserRole::SUPER_ADMIN->value);
-
-                        $configUser->addRole(UserRole::SUPER_ADMIN->value);
+                        $user->assignRole(UserRole::SUPER_ADMIN->value);
                     } else {
-                        $user->addRole(UserRole::USER->value);
-
-                        //$configUser->addRole(UserRole::USER->value);
+                        $user->assignRole(UserRole::USER->value);
                     }
 
                     return $this->loginUser($request, $user, true);
@@ -194,6 +191,10 @@ class ProviderController extends Controller
                 'Validation failed',
                 ResponseErrorCode::FORM_INVALID_DATA
             );
+        }
+
+        if ($request->has('guard')) {
+            Auth::shouldUse($request->input('guard'));
         }
 
         $identityToken = $request->input('identity_token');
@@ -362,17 +363,10 @@ class ProviderController extends Controller
             $user->save();
             $user->refresh();
 
-            $configUserModel = app(config('creopse.user_model'));
-            $configUser = $configUserModel::whereId($user->id)->first();
-
             if (User::count() === 1) {
-                $user->addRole(UserRole::SUPER_ADMIN->value);
-
-                $configUser->addRole(UserRole::SUPER_ADMIN->value);
+                $user->assignRole(UserRole::SUPER_ADMIN->value);
             } else {
-                $user->addRole(UserRole::USER->value);
-
-                //$configUser->addRole(UserRole::USER->value);
+                $user->assignRole(UserRole::USER->value);
             }
 
             return $this->loginUser($request, $user, true);
@@ -414,6 +408,10 @@ class ProviderController extends Controller
             );
         }
 
+        if ($request->has('guard')) {
+            Auth::shouldUse($request->input('guard'));
+        }
+
         $phone = str_replace(' ', '', $request->input('phone'));
         $verificationCode = mt_rand(100000, 999999);
 
@@ -436,17 +434,10 @@ class ProviderController extends Controller
                 'preferences' => $request->input('preferences')
             ]);
 
-            $configUserModel = app(config('creopse.user_model'));
-            $configUser = $configUserModel::whereId($user->id)->first();
-
             if (User::count() === 1) {
-                $user->addRole(UserRole::SUPER_ADMIN->value);
-
-                $configUser->addRole(UserRole::SUPER_ADMIN->value);
+                $user->assignRole(UserRole::SUPER_ADMIN->value);
             } else {
-                $user->addRole(UserRole::USER->value);
-
-                //$configUser->addRole(UserRole::USER->value);
+                $user->assignRole(UserRole::USER->value);
             }
 
             event(new UserRegisteredEvent($user->id));
@@ -542,6 +533,10 @@ class ProviderController extends Controller
                 'Validation failed',
                 ResponseErrorCode::FORM_INVALID_DATA
             );
+        }
+
+        if ($request->has('guard')) {
+            Auth::shouldUse($request->input('guard'));
         }
 
         $phone = str_replace(' ', '', $request->input('phone'));

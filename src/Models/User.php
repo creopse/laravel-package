@@ -10,15 +10,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laratrust\Contracts\LaratrustUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
-use Laratrust\Traits\HasRolesAndPermissions;
+use Illuminate\Contracts\Auth\Access\Authorizable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Str;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * Creopse\Creopse\Models\User
@@ -49,9 +49,9 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class User extends Authenticatable implements MustVerifyEmail, CanResetPassword, LaratrustUser, HasLocalePreference
+class User extends Authenticatable implements MustVerifyEmail, CanResetPassword, HasLocalePreference, Authorizable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRolesAndPermissions, SoftDeletes, CanResetPasswordTrait;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, CanResetPasswordTrait, HasRoles;
 
     /**
      * The attributes that are mass assignable.

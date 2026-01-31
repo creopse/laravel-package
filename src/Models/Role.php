@@ -2,9 +2,9 @@
 
 namespace Creopse\Creopse\Models;
 
-use Laratrust\Models\Role as RoleModel;
+use Spatie\Permission\Models\Role as SpatieRole;
 
-class Role extends RoleModel
+class Role extends SpatieRole
 {
     public $guarded = [];
 }

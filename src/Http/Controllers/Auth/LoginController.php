@@ -23,6 +23,10 @@ class LoginController extends Controller
     {
         $credentials = $request->validated();
 
+        if ($request->has('guard')) {
+            Auth::shouldUse($request->input('guard'));
+        }
+
         $userFound = User::where('email', $credentials['id'])->orWhere('username', $credentials['id'])->first();
 
         if (!$userFound) {

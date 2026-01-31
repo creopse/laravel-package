@@ -29,6 +29,9 @@ class RoleRequest extends FormRequest
             'name' => 'required|string',
             'display_name' => 'required|string',
             'description' => 'sometimes|string',
+            'guard_name' => 'required|string',
+            'permissions' => 'sometimes|array',
+            'permissions.*.name' => 'required|string|exists:permissions,name',
         ];
     }
 }

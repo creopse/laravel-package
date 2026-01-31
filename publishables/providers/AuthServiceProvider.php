@@ -3,26 +3,22 @@
 namespace App\Providers;
 
 use Creopse\Creopse\Enums\UserRole;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class AuthServiceProvider extends ServiceProvider
 {
     /**
-     * The path to your application's "home" route.
+     * The model to policy mappings for the application.
+     *
+     * @var array<class-string, class-string>
      */
-    public const HOME = '/home';
-
-    /**
-     * Register any application services.
-     */
-    public function register(): void
-    {
+    protected $policies = [
         //
-    }
+    ];
 
     /**
-     * Bootstrap any application services.
+     * Register any authentication / authorization services.
      */
     public function boot(): void
     {

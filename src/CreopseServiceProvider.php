@@ -31,8 +31,7 @@ class CreopseServiceProvider extends ServiceProvider
         'logging',
         'services',
         'database',
-        'laratrust',
-        'laratrust_seeder',
+        'permission',
         'thumbnail_sizes',
         'laravel-ffmpeg',
     ];
@@ -148,9 +147,8 @@ class CreopseServiceProvider extends ServiceProvider
         ], 'creopse-auth-config');
 
         $this->publishes([
-            __DIR__ . '/../publishables/config/laratrust.php' => config_path('laratrust.php'),
-            __DIR__ . '/../publishables/config/laratrust_seeder.php' => config_path('laratrust_seeder.php'),
-        ], 'creopse-laratrust-config');
+            __DIR__ . '/../publishables/config/permission.php' => config_path('permission.php'),
+        ], 'creopse-permission-config');
 
         $this->publishes([
             __DIR__ . '/../publishables/config/laravel-ffmpeg.php' => config_path('laravel-ffmpeg.php'),
@@ -338,6 +336,7 @@ class CreopseServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../publishables/providers/RouteServiceProvider.php' => app_path('Providers/RouteServiceProvider.php'),
                 __DIR__ . '/../publishables/providers/EventServiceProvider.php' => app_path('Providers/EventServiceProvider.php'),
+                __DIR__ . '/../publishables/providers/AuthServiceProvider.php' => app_path('Providers/AuthServiceProvider.php'),
             ], 'creopse-providers');
         }
 

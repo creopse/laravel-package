@@ -102,7 +102,7 @@ class Install extends CreopseCommand
             '--force' => $force,
         ]);
         $this->call('vendor:publish', [
-            '--tag' => 'creopse-laratrust-config',
+            '--tag' => 'creopse-permission-config',
             '--force' => $force,
         ]);
         $this->call('vendor:publish', [

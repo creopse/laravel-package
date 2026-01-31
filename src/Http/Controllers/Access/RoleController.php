@@ -2,6 +2,7 @@
 
 namespace Creopse\Creopse\Http\Controllers\Access;
 
+use Creopse\Creopse\Enums\AccessGuard;
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Enums\ResponseStatusCode;
@@ -27,11 +28,9 @@ class RoleController extends Controller
      */
     public function indexUser(?User $user = null)
     {
-        if ($user) {
-            return $this->sendResponse($user->roles()->with('permissions')->get());
-        }
+        $user = $user ?? Auth::user();
 
-        return $this->sendResponse(Auth::user()->roles()->with('permissions')->get());
+        return $this->sendResponse($user->roles()->with('permissions')->get());
     }
 
     /**
@@ -45,10 +44,17 @@ class RoleController extends Controller
             'name' => $validated['name'],
             'display_name' => $validated['display_name'],
             'description' => $validated['description'],
+            'guard_name' => $validated['guard_name'] ?? AccessGuard::WEB->value,
         ]);
 
-        if ($request->input('permissions')) {
-            $role->givePermissions($request->input('permissions'));
+        if ($permissions = $validated['permissions']) {
+            $permissionNames = collect($permissions)
+                ->pluck('name')
+                ->filter()
+                ->values()
+                ->toArray();
+
+            $role->givePermissionTo($permissionNames);
         }
 
         return $this->sendResponse(
@@ -69,31 +75,25 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Role $role)
+    public function update(RoleRequest $request, Role $role)
     {
-        // Validate incoming request data
-        $validator = Validator::make($request->all(), [
-            'display_name' => 'required|string',
-            'description' => 'sometimes|string',
-        ]);
-
-        // If data not valid return error
-        if ($validator->fails()) {
-            return $this->sendResponse(
-                $validator->errors(),
-                ResponseStatusCode::UNPROCESSABLE_ENTITY,
-                'Validation failed',
-                ResponseErrorCode::FORM_INVALID_DATA
-            );
-        }
+        $validated = $request->validated();
 
         $role->update([
-            'display_name' => $request->input('display_name'),
-            'description' => $request->input('description'),
+            'name' => $validated['name'],
+            'display_name' => $validated['display_name'],
+            'description' => $validated['description'],
+            'guard_name' => $validated['guard_name'],
         ]);
 
-        if ($request->input('permissions')) {
-            $role->syncPermissions($request->input('permissions'));
+        if ($request->has('permissions')) {
+            $permissionNames = collect($validated['permissions'])
+                ->pluck('name')
+                ->filter()
+                ->values()
+                ->toArray();
+
+            $role->syncPermissions($permissionNames);
         }
 
         return $this->sendResponse(
@@ -109,6 +109,7 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         $role->delete();
+
         return $this->sendResponse(
             null,
             ResponseStatusCode::OK,

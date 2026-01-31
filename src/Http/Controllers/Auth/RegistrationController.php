@@ -38,6 +38,10 @@ class RegistrationController extends Controller
     {
         $validated = $request->validated();
 
+        if ($request->has('guard')) {
+            Auth::shouldUse($request->input('guard'));
+        }
+
         $validated['username'] = $validated['username'] ?? UsernameGenerator::generate($validated['firstname'], $validated['lastname']);
         $validated['password'] = Hash::make($validated['password']);
         $validated['account_status'] = isset($validated['account_status'])
@@ -49,17 +53,10 @@ class RegistrationController extends Controller
         $user = User::create($validated);
 
         if ($user) {
-            $configUserModel = app(config('creopse.user_model'));
-            $configUser = $configUserModel::whereId($user->id)->first();
-
             if (User::count() === 1) {
-                $user->addRole(UserRole::SUPER_ADMIN->value);
-
-                $configUser->addRole(UserRole::SUPER_ADMIN->value);
+                $user->assignRole(UserRole::SUPER_ADMIN->value);
             } else if ($request->input('is_user')) {
-                $user->addRole(UserRole::USER->value);
-
-                $configUser->addRole(UserRole::USER->value);
+                $user->assignRole(UserRole::USER->value);
             }
 
             event(new UserRegisteredEvent($user->id));

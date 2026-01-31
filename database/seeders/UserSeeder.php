@@ -19,11 +19,7 @@ class UserSeeder extends Seeder
         if (!User::where('email', 'admin@gmail.com')->orWhere('username', 'admin')->exists()) {
             $adminProfile = AdminProfile::factory()->create();
             $user = User::factory()->withEmail('admin@gmail.com')->withUsername('admin')->withLocale('fr')->unverified()->create();
-            $user->addRole(UserRole::SUPER_ADMIN->value);
-
-            $configUserModel = app(config('creopse.user_model'));
-            $configUser = $configUserModel::whereId($user->id)->first();
-            $configUser->addRole(UserRole::SUPER_ADMIN->value);
+            $user->assignRole(UserRole::SUPER_ADMIN->value);
 
             $user->profile_id = $adminProfile->id;
             $user->profile_type = ProfileType::ADMIN->value;
