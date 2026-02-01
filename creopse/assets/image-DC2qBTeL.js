@@ -1,0 +1,1 @@
+import{i as a}from"./browser-image-compression-BvBgsnu7.js";async function m(e,{maxSizeMB:t=1,maxWidthOrHeight:s=1920}={}){const r=["jpeg","jpg","png","gif","webp"],o=e.name.split(".").pop(),i={maxSizeMB:t,maxWidthOrHeight:s};let n=e;if(o!=null&&r.includes(o.toLowerCase()))try{n=await a(e,i)}catch{}return n instanceof Blob?new File([n],e.name):n}export{m as c};
