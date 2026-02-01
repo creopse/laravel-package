@@ -2,7 +2,6 @@
 
 namespace Creopse\Creopse\Http\Resources\Content;
 
-use Creopse\Creopse\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -21,7 +20,7 @@ class PageDataResource extends JsonResource
             'name' => $this->name,
             'title' => $this->title,
             'content' => $this->content,
-            'sections' => SectionResource::collection($this->sections->load([
+            'sections' => SectionDataResource::collection($this->sections->load([
                 'pages' => function ($query) {
                     $query->select('pages.id', 'pages.title')->withPivot('link_id');
                 }
@@ -29,18 +28,6 @@ class PageDataResource extends JsonResource
             'sectionsCount' => $this->whenCounted('sections'),
             'sectionsOrder' => $this->sections_order,
             'sectionsDisabled' => $this->sections_disabled,
-            'createdAt' => $this->created_at,
-            'updatedAt' => $this->updated_at,
-            'pivot' => $this->whenPivotLoaded('page_section', function () {
-                return [
-                    'dataSourceLinkId' => $this->pivot->data_source_link_id,
-                    'dataSourcePageId' => $this->pivot->data_source_page_id,
-                    'dataSourcePageTitle' => optional(Page::find($this->pivot->data_source_page_id))->title,
-                    'linkId' => $this->pivot->link_id,
-                    'createdAt' => $this->pivot->created_at,
-                    'updatedAt' => $this->pivot->updated_at
-                ];
-            }),
         ];
     }
 }
