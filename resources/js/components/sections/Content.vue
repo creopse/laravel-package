@@ -55,9 +55,10 @@
             v-for="(feature, i) in features"
             :key="i"
             class="tw:bg-white tw:rounded-lg tw:shadow-md tw:p-6 tw:hover:shadow-lg tw:transition-shadow tw:text-center">
-            <i
+            <ContentIcon
               class="tw:text-[#1E9CD7] tw:inline-block"
-              v-html="feature.icon"></i>
+              :data="feature.icon"
+              size="42" />
             <h2 class="tw:text-xl tw:font-semibold tw:mb-4 tw:text-gray-900">
               {{ tr(feature.title) }}
             </h2>

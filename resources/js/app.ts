@@ -9,6 +9,9 @@ import creopse from '@creopse/vue'
 import { i18nVue } from 'laravel-vue-i18n'
 import { router, createInertiaApp, Link } from '@inertiajs/vue3'
 
+import { Icon } from 'vue3-icon-picker'
+import 'vue3-icon-picker/dist/style.css'
+
 import { LANG_KEY, ENCRYPTION_KEY } from './constants'
 
 createInertiaApp({
@@ -87,6 +90,7 @@ createInertiaApp({
           return await langs[`../../lang/${lang}.json`]()
         },
       })
+      .component('ContentIcon', Icon)
       .component('Link', Link)
       .mount(el)
   },

@@ -59,6 +59,7 @@
         "localforage": "^1.10.0",
         "pinia": "^2.3.1",
         "pinia-persistence-plugin": "^0.0.7",
+        "vue3-icon-picker": "^0.3.3",
         "vue": "^3.5.21"
     }
 }
