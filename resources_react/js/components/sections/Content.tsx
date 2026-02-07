@@ -1,13 +1,10 @@
+import { Icon as ContentIcon } from '@arkn/react-icon-picker'
 import type { SectionProps } from '@creopse/utils'
 import { Icon } from '@iconify/react'
 import React from 'react'
 import styled from 'styled-components'
 
-const StyledDiv = styled.div`
-  i > svg {
-    height: 48px;
-  }
-`
+const StyledDiv = styled.div``
 
 const Content: React.FC<SectionProps> = (props) => {
   const { tr, rHtml } = useHelper()
@@ -50,7 +47,7 @@ const Content: React.FC<SectionProps> = (props) => {
             <div className="tw:mx-auto tw:grid tw:max-w-5xl tw:grid-cols-1 tw:gap-8 tw:md:grid-cols-2 tw:lg:grid-cols-3">
               {features.map((feature: { icon: any; title: any; text: string | null | undefined }, i: React.Key | null | undefined) => (
                 <div key={i} className="tw:rounded-lg tw:bg-white tw:p-6 tw:text-center tw:shadow-md tw:transition-shadow tw:hover:shadow-lg">
-                  <i className="tw:inline-block tw:text-[#1E9CD7]" dangerouslySetInnerHTML={{ __html: feature.icon }} />
+                  <ContentIcon color={'#1E9CD7'} data={feature.icon} size={42} />
                   <h2 className="tw:mb-4 tw:text-xl tw:font-semibold tw:text-gray-900">{tr(feature.title)}</h2>
                   <p className="tw:mb-4 tw:text-gray-600" dangerouslySetInnerHTML={{ __html: rHtml(feature.text) }} />
                 </div>

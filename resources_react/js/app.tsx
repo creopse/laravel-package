@@ -7,6 +7,8 @@ import { CreopseProvider, type PluginOptions } from '@creopse/react'
 import { ENCRYPTION_KEY, LANG_KEY } from './constants'
 import './i18n'
 
+import '@arkn/react-icon-picker/dist/style.css'
+
 createInertiaApp({
   title: (title) =>
     title ? `${title} - ${import.meta.env.APP_NAME}` : import.meta.env.APP_NAME,

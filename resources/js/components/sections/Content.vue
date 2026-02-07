@@ -58,7 +58,7 @@
             <ContentIcon
               class="tw:text-[#1E9CD7] tw:inline-block"
               :data="feature.icon"
-              size="42" />
+              :size="42" />
             <h2 class="tw:text-xl tw:font-semibold tw:mb-4 tw:text-gray-900">
               {{ tr(feature.title) }}
             </h2>
@@ -72,8 +72,4 @@
   </div>
 </template>
 
-<style scoped>
-  :deep(i > svg) {
-    height: 48px;
-  }
-</style>
+<style scoped></style>
