@@ -52,6 +52,10 @@ class ServerController extends Controller
         $envPath = base_path('.env');
         $backupPath = base_path('.env.backup');
 
+        // Path to config.jsonc
+        $configJsonPath = public_path('creopse/config.jsonc');
+        $configJsonBackupPath = public_path('creopse/config.jsonc.backup');
+
         try {
             if (!File::exists($envPath)) {
                 $templatePath = base_path('.env.template') ?: base_path('.env.example');
@@ -61,6 +65,10 @@ class ServerController extends Controller
                 File::copy($templatePath, $envPath);
             } else {
                 File::copy($envPath, $backupPath);
+            }
+
+            if (File::exists($configJsonPath)) {
+                File::copy($configJsonPath, $configJsonBackupPath);
             }
 
             // Parse URLs to extract domains and ports
@@ -89,12 +97,18 @@ class ServerController extends Controller
                 'SESSION_DOMAIN' => $sessionDomain,
             ]);
 
+            // Update config.jsonc with API base URL
+            $this->updateConfigJsonc($configJsonPath, $request->input('app_url'));
+
             // Clear config cache
             Artisan::call('config:clear');
 
             // Clean up backup
             if (File::exists($backupPath)) {
                 File::delete($backupPath);
+            }
+            if (File::exists($configJsonBackupPath)) {
+                File::delete($configJsonBackupPath);
             }
 
             return $this->sendResponse(
@@ -112,8 +126,12 @@ class ServerController extends Controller
             if (File::exists($backupPath)) {
                 File::copy($backupPath, $envPath);
                 File::delete($backupPath);
-                Artisan::call('config:clear');
             }
+            if (File::exists($configJsonBackupPath)) {
+                File::copy($configJsonBackupPath, $configJsonPath);
+                File::delete($configJsonBackupPath);
+            }
+            Artisan::call('config:clear');
 
             return $this->sendResponse(
                 null,
@@ -121,6 +139,56 @@ class ServerController extends Controller
                 'Could not update server configuration. Error: ' . $e->getMessage()
             );
         }
+    }
+
+    /**
+     * Update config.jsonc file with new API base URL (preserves comments)
+     */
+    private function updateConfigJsonc(string $configPath, string $apiBaseUrl): void
+    {
+        if (!File::exists($configPath)) {
+            // Create default config.jsonc if it doesn't exist
+            $defaultConfig = <<<JSONC
+{
+    // API Configuration
+    "apiBaseUrl": "$apiBaseUrl"
+}
+JSONC;
+            File::put($configPath, $defaultConfig);
+            return;
+        }
+
+        $content = File::get($configPath);
+
+        // Pattern to match "apiBaseUrl": "any value"
+        // Handles optional whitespace and preserves indentation
+        $pattern = '/("apiBaseUrl"\s*:\s*)"[^"]*"/';
+        $replacement = '$1"' . addslashes($apiBaseUrl) . '"';
+
+        if (preg_match($pattern, $content)) {
+            // Update existing value
+            $newContent = preg_replace($pattern, $replacement, $content);
+        } else {
+            // apiBaseUrl doesn't exist, we need to add it
+            // Try to add it after the opening brace
+            if (preg_match('/\{/', $content)) {
+                $newContent = preg_replace(
+                    '/(\{)\s*/',
+                    "$1\n    \"apiBaseUrl\": \"" . addslashes($apiBaseUrl) . "\",\n",
+                    $content,
+                    1
+                );
+            } else {
+                // Malformed JSON, recreate it
+                $newContent = <<<JSONC
+{
+    "apiBaseUrl": "$apiBaseUrl"
+}
+JSONC;
+            }
+        }
+
+        File::put($configPath, $newContent);
     }
 
     /**
