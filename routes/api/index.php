@@ -20,6 +20,7 @@ require __DIR__ . '/users.php';
 require __DIR__ . '/email.php';
 require __DIR__ . '/access.php';
 require __DIR__ . '/server.php';
+require __DIR__ . '/install.php';
 require __DIR__ . '/plugins.php';
 require __DIR__ . '/content.php';
 require __DIR__ . '/database.php';
