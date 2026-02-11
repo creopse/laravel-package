@@ -14,4 +14,5 @@ Route::name('install.')
     ->withoutMiddleware(config('installer.excluded_middleware'))
     ->group(function () {
         Route::post('/finalize', [InstallController::class, 'finalize'])->name('finalize');
+        Route::post('/create-admin', [InstallController::class, 'createAdmin'])->name('create-admin');
     });
