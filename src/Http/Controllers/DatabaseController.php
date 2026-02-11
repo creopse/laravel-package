@@ -2,6 +2,7 @@
 
 namespace Creopse\Creopse\Http\Controllers;
 
+use Creopse\Creopse\Database\Seeders\AltDatabaseSeeder;
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Illuminate\Http\JsonResponse;
@@ -44,7 +45,7 @@ class DatabaseController extends Controller
             'host' => 'required|string|max:255',
             'port' => 'required|integer|between:1,65535',
             'username' => 'required|string|max:32',
-            'password' => 'required|string',
+            'password' => 'sometimes',
             'dbname' => 'required|string|max:64|regex:/^[a-zA-Z0-9_]+$/',
         ]);
 
@@ -104,7 +105,7 @@ class DatabaseController extends Controller
             'host' => 'required|string|max:255',
             'port' => 'required|integer|between:1,65535',
             'username' => 'required|string|max:32',
-            'password' => 'required|string',
+            'password' => 'sometimes',
             'dbname' => 'required|string|max:64|regex:/^[a-zA-Z0-9_]+$/',
         ]);
 
@@ -166,7 +167,7 @@ class DatabaseController extends Controller
             }
 
             $this->updateEnvironmentFile($envPath, [
-                'DB_HOST' => $request->input('host'),
+                'DB_HOST' => $request->input('host') === 'localhost' ? '127.0.0.1' : $request->input('host'),
                 'DB_PORT' => $request->input('port'),
                 'DB_DATABASE' => $request->input('dbname'),
                 'DB_USERNAME' => $request->input('username'),
@@ -243,7 +244,7 @@ class DatabaseController extends Controller
             // Check connection works
             DB::connection()->getPdo();
 
-            Artisan::call('db:seed', ['--force' => true]);
+            Artisan::call('db:seed', ['--class' => AltDatabaseSeeder::class, '--force' => true]);
 
             $output = Artisan::output();
 
