@@ -79,11 +79,24 @@ class DatabaseController extends Controller
             );
             $exists = $result->rowCount() > 0;
 
+            // Count tables in database if it exists
+            $tableCount = 0;
+            if ($exists) {
+                $tablesResult = $connection->executeQuery(
+                    'SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ?',
+                    [$request->input('dbname')]
+                );
+                $tableCount = (int) $tablesResult->fetchOne();
+            }
+
             return $this->sendResponse(
-                ['database_exists' => $exists],
+                [
+                    'database_exists' => $exists,
+                    'table_count' => $tableCount,
+                ],
                 ResponseStatusCode::OK,
                 $exists
-                    ? "Connection successful. Database '{$request->input('dbname')}' already exists."
+                    ? "Connection successful. Database '{$request->input('dbname')}' already exists with {$tableCount} table(s)."
                     : 'Connection successful. Ready to create database.'
             );
         } catch (\Exception $e) {
@@ -123,27 +136,34 @@ class DatabaseController extends Controller
         $envPath = base_path('.env');
         $backupPath = base_path('.env.backup');
 
+        // Database parameters
+        $host = $request->input('host') === 'localhost' ? '127.0.0.1' : $request->input('host');
+        $port = $request->input('port');
+        $username = $request->input('username');
+        $password = $request->input('password');
+        $dbname = $request->input('dbname');
+
         try {
             // 1. Create connection and database
             $connection = DriverManager::getConnection([
                 'driver' => 'pdo_mysql',
-                'host' => $request->input('host') === 'localhost' ? '127.0.0.1' : $request->input('host'),
-                'port' => $request->input('port'),
-                'user' => $request->input('username'),
-                'password' => $request->input('password'),
+                'host' => $host,
+                'port' => $port,
+                'user' => $username,
+                'password' => $password,
                 'charset' => 'utf8mb4',
             ]);
 
             // Check if database already exists
             $result = $connection->executeQuery(
                 'SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?',
-                [$request->input('dbname')]
+                [$dbname]
             );
 
             if ($result->rowCount() === 0) {
                 // Database doesn't exist, create it
                 $connection->executeStatement(
-                    'CREATE DATABASE `' . $request->input('dbname') . '` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci'
+                    'CREATE DATABASE `' . $dbname . '` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci'
                 );
             }
         } catch (\Exception $e) {
@@ -167,17 +187,25 @@ class DatabaseController extends Controller
             }
 
             $this->updateEnvironmentFile($envPath, [
-                'DB_HOST' => $request->input('host') === 'localhost' ? '127.0.0.1' : $request->input('host'),
-                'DB_PORT' => $request->input('port'),
-                'DB_DATABASE' => $request->input('dbname'),
-                'DB_USERNAME' => $request->input('username'),
-                'DB_PASSWORD' => $request->input('password'),
+                'DB_HOST' => $host,
+                'DB_PORT' => $port,
+                'DB_DATABASE' => $dbname,
+                'DB_USERNAME' => $username,
+                'DB_PASSWORD' => $password,
             ]);
 
             // 3. Clear config cache so Laravel picks up new params
             Artisan::call('config:clear');
 
             // 4. Test the new connection
+            config([
+                'database.connections.mysql.host'     => $host,
+                'database.connections.mysql.port'     => $port,
+                'database.connections.mysql.database' => $dbname,
+                'database.connections.mysql.username' => $username,
+                'database.connections.mysql.password' => $password,
+            ]);
+
             DB::purge('mysql');
             DB::reconnect('mysql');
             DB::connection()->getPdo();
