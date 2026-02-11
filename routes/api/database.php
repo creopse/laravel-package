@@ -10,13 +10,16 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::name('database.')->prefix('/database')->group(function () {
-    Route::get('/', [DatabaseController::class, 'check'])->name('check');
-    Route::post('/test', [DatabaseController::class, 'test'])->name('test');
-    Route::post('/create', [DatabaseController::class, 'create'])->name('create');
-    Route::get('/migrate', [DatabaseController::class, 'migrate'])->name('migrate');
-    Route::get('/seed', [DatabaseController::class, 'seed'])->name('seed');
-});
+Route::name('database.')
+    ->prefix('/database')
+    ->withoutMiddleware(config('installer.excluded_middleware'))
+    ->group(function () {
+        Route::get('/', [DatabaseController::class, 'check'])->name('check');
+        Route::post('/test', [DatabaseController::class, 'test'])->name('test');
+        Route::post('/create', [DatabaseController::class, 'create'])->name('create');
+        Route::get('/migrate', [DatabaseController::class, 'migrate'])->name('migrate');
+        Route::get('/seed', [DatabaseController::class, 'seed'])->name('seed');
+    });
 
 Route::apiResource('data-changes', DataChangeController::class);
 Route::get('data-changes/table/{tableName}', [DataChangeController::class, 'showByTableName'])->name('data-changes.show.by-table-name');

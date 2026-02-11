@@ -16,7 +16,7 @@ class InstallController extends Controller
     public function finalize(Request $request): JsonResponse
     {
         try {
-            $installLockPath = public_path('creopse/install.lock');
+            $installLockPath = public_path(config('installer.lock_file_path'));
 
             // Check that all required steps are completed
             if (!File::exists(base_path('.env'))) {

@@ -35,6 +35,7 @@ class CreopseServiceProvider extends ServiceProvider
         'permission',
         'thumbnail_sizes',
         'laravel-ffmpeg',
+        'installer',
     ];
 
     public function boot()

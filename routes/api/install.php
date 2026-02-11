@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::name('install.')->prefix('/install')->group(function () {
-    Route::post('/finalize', [InstallController::class, 'finalize'])->name('finalize');
-});
+Route::name('install.')
+    ->prefix('/install')
+    ->withoutMiddleware(config('installer.excluded_middleware'))
+    ->group(function () {
+        Route::post('/finalize', [InstallController::class, 'finalize'])->name('finalize');
+    });

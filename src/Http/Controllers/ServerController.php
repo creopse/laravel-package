@@ -17,7 +17,7 @@ class ServerController extends Controller
      */
     public function check(): JsonResponse
     {
-        $installLockExists = File::exists(public_path('creopse/install.lock'));
+        $installLockExists = File::exists(public_path(config('installer.lock_file_path')));
 
         return $this->sendResponse(
             [

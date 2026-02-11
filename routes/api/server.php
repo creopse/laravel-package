@@ -9,8 +9,13 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', [ServerController::class, 'check'])->name('root');
+$excludedMiddleware = config('installer.excluded_middleware');
 
-Route::name('server.')->prefix('/server')->group(function () {
-    Route::post('/configure', [ServerController::class, 'configure'])->name('configure');
-});
+Route::get('/', [ServerController::class, 'check'])->withoutMiddleware($excludedMiddleware)->name('root');
+
+Route::name('server.')
+    ->prefix('/server')
+    ->withoutMiddleware($excludedMiddleware)
+    ->group(function () {
+        Route::post('/configure', [ServerController::class, 'configure'])->name('configure');
+    });
