@@ -4,7 +4,7 @@ import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
 
 import { CreopseProvider, type PluginOptions } from '@creopse/react'
-import { ENCRYPTION_KEY, LANG_KEY } from './constants'
+import { LANG_KEY } from './constants'
 import './i18n'
 
 import '@arkn/react-icon-picker/dist/style.css'
@@ -50,7 +50,7 @@ createInertiaApp({
               appUrl: import.meta.env.APP_URL,
               locale: import.meta.env.APP_LOCALE,
               fallbackLocale: import.meta.env.APP_FALLBACK_LOCALE,
-              encryptionKey: ENCRYPTION_KEY,
+              useUserLocaleAsFallback: true,
               langKey: LANG_KEY,
             },
           } as PluginOptions

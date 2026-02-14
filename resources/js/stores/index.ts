@@ -1,4 +1,4 @@
-import { ENCRYPTION_KEY } from '@/constants'
+import { STORE_ENCRYPTION_KEY } from '@/constants'
 import CryptoJS from 'crypto-js'
 import { createPinia } from 'pinia'
 import { persistencePlugin } from 'pinia-persistence-plugin'
@@ -21,9 +21,10 @@ export default createPinia().use(
             try {
               const encrypted = localStorage.getItem(key)
               if (encrypted)
-                return CryptoJS.AES.decrypt(encrypted, ENCRYPTION_KEY).toString(
-                  CryptoJS.enc.Utf8
-                )
+                return CryptoJS.AES.decrypt(
+                  encrypted,
+                  STORE_ENCRYPTION_KEY,
+                ).toString(CryptoJS.enc.Utf8)
               else return encrypted
             } catch (error) {
               console.log(error)
@@ -33,7 +34,7 @@ export default createPinia().use(
             try {
               const encrypted = CryptoJS.AES.encrypt(
                 value,
-                ENCRYPTION_KEY
+                STORE_ENCRYPTION_KEY,
               ).toString()
               return localStorage.setItem(key, encrypted)
             } catch (error) {

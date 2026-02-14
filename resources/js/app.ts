@@ -12,7 +12,7 @@ import { router, createInertiaApp, Link } from '@inertiajs/vue3'
 import { Icon } from 'vue3-icon-picker'
 import 'vue3-icon-picker/dist/style.css'
 
-import { LANG_KEY, ENCRYPTION_KEY } from './constants'
+import { LANG_KEY } from './constants'
 
 createInertiaApp({
   title: (title) =>
@@ -47,12 +47,12 @@ createInertiaApp({
       // @ts-ignore
       window.navigator.language || window.navigator.userLanguage
 
-    let lang = navigatorLanguage.split('-')[0]
+    let userLanguage = navigatorLanguage.split('-')[0]
 
     const userData: any = props.initialPage.props.userData
 
     if (userData && userData.preferences && userData.preferences.locale) {
-      lang = userData.preferences.locale
+      userLanguage = userData.preferences.locale
     }
 
     // Create vue app instance
@@ -72,14 +72,14 @@ createInertiaApp({
           appUrl: import.meta.env.APP_URL,
           locale: import.meta.env.APP_LOCALE,
           fallbackLocale: import.meta.env.APP_FALLBACK_LOCALE,
-          encryptionKey: ENCRYPTION_KEY,
+          useUserLocaleAsFallback: true,
           langKey: LANG_KEY,
         },
       })
       .use(i18nVue, {
         lang:
           localStorage.getItem(LANG_KEY) ||
-          lang ||
+          userLanguage ||
           props.initialPage.props.appLocale ||
           import.meta.env.APP_LOCALE,
         fallbackLang:
