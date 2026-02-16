@@ -23,6 +23,19 @@ use Illuminate\Support\Facades\Schema;
 |
 */
 
+$creopseRouteExcludedMiddleware = [
+    \App\Http\Middleware\EncryptCookies::class,
+    \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+    \Illuminate\Session\Middleware\StartSession::class,
+    \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+    \App\Http\Middleware\VerifyCsrfToken::class,
+    \Illuminate\Routing\Middleware\SubstituteBindings::class,
+    \Creopse\Creopse\Http\Middleware\LogSessionHistory::class,
+    \Creopse\Creopse\Http\Middleware\CaptureSessionMetadata::class,
+    \App\Http\Middleware\HandleInertiaRequests::class,
+    \Creopse\Creopse\Http\Middleware\HandleInertiaRequests::class
+];
+
 try {
     DB::connection()->getPdo();
     if (Schema::hasTable('menus')) {
@@ -55,10 +68,12 @@ try {
 
         Route::get('/' . $basePath . '/{any?}', function () {
             return file_get_contents(public_path('creopse/index.html'));
-        })->where('any', '.*');
+        })->withoutMiddleware($creopseRouteExcludedMiddleware)->where('any', '.*');
     }
-} catch (Exception $e) {
-    //
+} catch (\Exception $e) {
+    Route::get('/creopse/{any?}', function () {
+        return file_get_contents(public_path('creopse/index.html'));
+    })->withoutMiddleware($creopseRouteExcludedMiddleware)->where('any', '.*');
 }
 
 Route::get('/editor-page/s/{slug}', [DynamicPageController::class, 'getEditorPage'])
