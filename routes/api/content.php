@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::put('pages/position', [PageController::class, 'updatePosition'])->name('pages.update.position');
+
     Route::apiResource('pages', PageController::class)->except(['index', 'show']);
 
     Route::apiResource('menus', MenuController::class)->except(['index', 'show']);

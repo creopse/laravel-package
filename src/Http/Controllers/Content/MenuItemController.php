@@ -85,7 +85,7 @@ class MenuItemController extends Controller
             $menu = Menu::where('name', $menuName)->first();
             $items = MenuItem::where('menu_id', $menu->id)->orderBy('position')->get();
         } else {
-            $items = MenuItem::orderBy('position')->get();;
+            $items = MenuItem::orderBy('position')->get();
         }
 
         $items->transform(function ($item) {

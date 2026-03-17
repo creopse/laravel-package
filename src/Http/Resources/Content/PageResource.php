@@ -20,6 +20,7 @@ class PageResource extends JsonResource
             'slug' => $this->slug,
             'name' => $this->name,
             'title' => $this->title,
+            'position' => $this->position,
             'content' => $this->content,
             'sections' => SectionBasicResource::collection($this->sections->load([
                 'pages' => function ($query) {

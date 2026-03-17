@@ -19,10 +19,10 @@ class PageController extends Controller
     public function index(Request $request)
     {
         if ($request->boolean('basic')) {
-            return $this->sendResponse(PageBasicResource::collection(Page::all()));
+            return $this->sendResponse(PageBasicResource::collection(Page::orderBy('position')->get()));
         }
 
-        return $this->sendResponse(PageResource::collection(Page::all()));
+        return $this->sendResponse(PageResource::collection(Page::orderBy('position')->get()));
     }
 
     /**
@@ -36,6 +36,7 @@ class PageController extends Controller
             'name' => $request->input('name'),
             'title' => $request->input('title'),
             'content' => $request->input('content'),
+            'position' => $request->input('position'),
             'sections_order' => $request->input('sections_order'),
             'sections_disabled' => $request->input('sections_disabled')
         ]);
@@ -135,6 +136,26 @@ class PageController extends Controller
             new PageResource($page),
             ResponseStatusCode::OK,
             'Page updated successfully'
+        );
+    }
+
+    /**
+     * Update the position of a page.
+     */
+    public function updatePosition(Request $request)
+    {
+        $items = $request->input('items');
+
+        foreach ($items as $index => $item) {
+            Page::where('id', $item['id'])->update([
+                'position' => $index,
+            ]);
+        }
+
+        return $this->sendResponse(
+            null,
+            ResponseStatusCode::OK,
+            'Page position updated successfully'
         );
     }
 

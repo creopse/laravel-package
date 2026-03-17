@@ -19,6 +19,7 @@ class PageBasicResource extends JsonResource
             'slug' => $this->slug,
             'name' => $this->name,
             'title' => $this->title,
+            'position' => $this->position,
             'content' => $this->content,
             'sectionsCount' => $this->whenCounted('sections'),
             'createdAt' => $this->created_at,

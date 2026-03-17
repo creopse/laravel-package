@@ -19,6 +19,7 @@ class PageDataResource extends JsonResource
             'slug' => $this->slug,
             'name' => $this->name,
             'title' => $this->title,
+            'position' => $this->position,
             'content' => $this->content,
             'sections' => SectionDataResource::collection($this->sections->load([
                 'pages' => function ($query) {
