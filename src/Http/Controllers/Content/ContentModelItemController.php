@@ -30,6 +30,7 @@ class ContentModelItemController extends Controller
             $contentModelName = $request->query('contentModelName');
             $createdByType = $request->query('createdByType');
             $createdBy = $request->query('createdBy');
+            $dataFilters = $request->query('dataFilters', []);
 
             $items = ContentModelItem::query();
 
@@ -47,7 +48,8 @@ class ContentModelItemController extends Controller
 
             if ($query) {
                 $items = $items->where(function ($q) use ($query) {
-                    $q->where('title', 'like', '%' . $query . '%');
+                    $q->where('title', 'like', '%' . $query . '%')
+                        ->orWhere('content_model_data', 'like', '%' . $query . '%');
                 });
             }
 
@@ -62,6 +64,26 @@ class ContentModelItemController extends Controller
             if ($createdBy) {
                 $items = $items->where('created_by', $createdBy);
             }
+
+            $allowedOperators = ['=', '!=', '>', '>=', '<', '<=', 'like'];
+
+            $items = $items->where(function ($q) use ($dataFilters, $allowedOperators) {
+                foreach ($dataFilters as $filter) {
+                    $key      = $filter['key'] ?? null;
+                    $value    = $filter['value'] ?? null;
+                    $operator = $filter['operator'] ?? '=';
+
+                    if (
+                        $key &&
+                        !is_null($value) &&
+                        preg_match('/^[a-zA-Z0-9_]+$/', $key) &&
+                        in_array($operator, $allowedOperators)
+                    ) {
+                        $value = $operator === 'like' ? "%{$value}%" : $value;
+                        $q->where("content_model_data->index->{$key}", $operator, $value);
+                    }
+                }
+            });
 
             return $items;
         };

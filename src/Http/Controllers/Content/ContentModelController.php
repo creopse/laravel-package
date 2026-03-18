@@ -87,7 +87,7 @@ class ContentModelController extends Controller
 
         if ($request->has('has_permalink') && $request->input('has_permalink')) {
             Permalink::create([
-                'path_prefix' => rtrim($contentModel->slug, '/'),
+                'path_prefix' => '/' . rtrim($contentModel->slug, '/'),
                 'content_type' => PermalinkContentType::CONTENT_MODEL->value,
                 'content_param' => 'id',
                 'content_id' => $contentModel->id,
@@ -123,7 +123,7 @@ class ContentModelController extends Controller
         if ($request->has('has_permalink') && $request->input('has_permalink')) {
             if (!$permalink) {
                 Permalink::create([
-                    'path_prefix' => rtrim($contentModel->slug, '/'),
+                    'path_prefix' => '/' . rtrim($contentModel->slug, '/'),
                     'content_type' => PermalinkContentType::CONTENT_MODEL->value,
                     'content_param' => 'id',
                     'content_id' => $contentModel->id,

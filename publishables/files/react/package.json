@@ -52,8 +52,8 @@
     "dependencies": {
         "@arkn/react-icon-picker": "^0.0.2",
         "@creopse/cli": "^0.0.12",
-        "@creopse/react": "^0.0.24",
-        "@creopse/utils": "^0.0.13",
+        "@creopse/react": "^0.0.25",
+        "@creopse/utils": "^0.0.14",
         "@inertiajs/core": "^2.1.6",
         "@inertiajs/react": "^2.1.6",
         "axios": "^1.13.2",

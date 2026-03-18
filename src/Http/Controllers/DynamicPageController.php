@@ -159,7 +159,11 @@ class DynamicPageController extends Controller
                     break;
 
                 case PermalinkContentType::CONTENT_MODEL->value:
-                    $contentModelItem = ContentModelItem::where($permalink->content_param, $id)->first();
+                    $query = ContentModelItem::where('is_active', true);
+
+                    $contentModelItem = $permalink->content_param === 'id'
+                        ? $query->where($permalink->content_param, $id)->first()
+                        : $query->where("content_model_data->index->{$permalink->content_param}", $id)->first();
 
                     if ($contentModelItem) {
                         return Inertia::render('Container', [

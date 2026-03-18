@@ -124,7 +124,9 @@ export default defineConfig({
           '@inertiajs/vue3': ['useForm', 'usePage', 'router'],
           '@creopse/vue': [
             'useApi',
+            'useNews',
             'useProps',
+            'useVideo',
             'useConfig',
             'useHelper',
             'useContent',
