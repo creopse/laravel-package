@@ -35,6 +35,7 @@ class SectionBasicResource extends JsonResource
                     'dataSourcePageId' => $this->pivot->data_source_page_id,
                     'dataSourcePageTitle' => optional(Page::find($this->pivot->data_source_page_id))->title,
                     'linkId' => $this->pivot->link_id,
+                    'linkTitle' => $this->pivot->link_title,
                     'createdAt' => $this->pivot->created_at,
                     'updatedAt' => $this->pivot->updated_at
                 ];

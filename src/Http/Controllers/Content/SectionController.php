@@ -100,6 +100,7 @@ class SectionController extends Controller
                 ->using(PageSection::class)
                 ->withPivot([
                     'link_id',
+                    'link_title',
                     'data_source_link_id',
                     'data_source_page_id',
                     'data',
@@ -115,7 +116,7 @@ class SectionController extends Controller
      */
     public function update(Request $request, Section $section)
     {
-        $section->update($request->except(['data_source_page_id', 'data_source_link_id', 'data', 'settings']));
+        $section->update($request->except(['data_source_page_id', 'data_source_link_id', 'data', 'settings', 'link_title', 'link_id', 'page_id']));
 
         $sectionData = $request->input('data');
         $sectionLinkId = $request->input('data_source_link_id');
@@ -143,6 +144,18 @@ class SectionController extends Controller
             if ($dataSourcePageSection && isset($sectionSettings) && is_array($sectionSettings)) {
                 $dataSourcePageSection->settings = $sectionSettings;
                 $dataSourcePageSection->save();
+            }
+        }
+
+        if ($request->has('link_title') && $request->has('link_id') && $request->has('page_id')) {
+            $pageSection = PageSection::where('section_id', $section->id)
+                ->where('page_id', $request->input('page_id'))
+                ->where('link_id', $request->input('link_id'))
+                ->first();
+
+            if ($pageSection) {
+                $pageSection->link_title = $request->input('link_title');
+                $pageSection->save();
             }
         }
 
@@ -227,6 +240,7 @@ class SectionController extends Controller
             'data_source_page_id' => $pageSection->data_source_page_id == $pageId ? $pageId : $pageSection->data_source_page_id,
             'data_source_link_id' => $pageSection->data_source_link_id == $linkId ? $newLinkId : $pageSection->data_source_link_id,
             'link_id' => $newLinkId,
+            'link_title' => $pageSection->link_title
         ]);
 
         return $this->sendResponse(

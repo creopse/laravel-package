@@ -34,6 +34,7 @@ class SectionDataResource extends JsonResource
                     'dataSourcePageId' => $this->pivot->data_source_page_id,
                     'dataSourcePageTitle' => optional(Page::find($this->pivot->data_source_page_id))->title,
                     'linkId' => $this->pivot->link_id,
+                    'linkTitle' => $this->pivot->link_title,
                     'data' => $sourcePivot ? Functions::convertKeysToCamelCase($sourcePivot->data) : Functions::convertKeysToCamelCase($this->pivot->data),
                     'settings' => $sourcePivot ? Functions::convertKeysToCamelCase($sourcePivot->settings) : Functions::convertKeysToCamelCase($this->pivot->settings),
                     'createdAt' => $this->pivot->created_at,
