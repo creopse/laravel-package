@@ -32,6 +32,7 @@ $creopseRouteExcludedMiddleware = [
     \Illuminate\Routing\Middleware\SubstituteBindings::class,
     \Creopse\Creopse\Http\Middleware\LogSessionHistory::class,
     \Creopse\Creopse\Http\Middleware\CaptureSessionMetadata::class,
+    \Creopse\Creopse\Http\Middleware\CompressResponse::class,
     \App\Http\Middleware\HandleInertiaRequests::class,
     \Creopse\Creopse\Http\Middleware\HandleInertiaRequests::class
 ];

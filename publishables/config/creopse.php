@@ -72,4 +72,47 @@ return [
     */
     'rate_limit_by' => 'ip', // or 'user'
 
+    /*
+    |--------------------------------------------------------------------------
+    | Response Compression
+    |--------------------------------------------------------------------------
+    |
+    | Controls automatic HTTP response compression. When enabled, the middleware
+    | negotiates the best available algorithm (Brotli > Gzip > Deflate) based
+    | on the client's Accept-Encoding header.
+    |
+    | Brotli requires the ext-brotli PECL extension and HTTPS.
+    | Gzip and Deflate require ext-zlib (bundled with PHP by default).
+    |
+    */
+    'compression' => [
+
+        /*
+        | Enable or disable response compression entirely.
+        | Set to false if compression is already handled upstream (Nginx, Caddy, CloudFront...).
+        */
+        'enabled' => env('CREOPSE_COMPRESSION', true),
+
+        /*
+        | Compression level applied to all algorithms.
+        |
+        | Gzip / Deflate : 0 (no compression) → 9 (maximum)
+        | Brotli         : 0 (no compression) → 11 (maximum)
+        |
+        | Level 5 is the recommended sweet spot for real-time PHP responses.
+        | Higher levels yield diminishing returns and increase CPU overhead.
+        */
+        'level' => env('CREOPSE_COMPRESSION_LEVEL', 5),
+
+        /*
+        | Minimum response size in bytes required to trigger compression.
+        |
+        | Compressing small payloads is counterproductive — the compression
+        | headers alone can outweigh the size reduction.
+        | Default: 1024 bytes (1 KB).
+        */
+        'min_length' => env('CREOPSE_COMPRESSION_MIN_LENGTH', 1024),
+
+    ],
+
 ];
