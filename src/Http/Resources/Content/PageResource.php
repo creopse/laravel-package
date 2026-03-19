@@ -36,7 +36,9 @@ class PageResource extends JsonResource
                 return [
                     'dataSourceLinkId' => $this->pivot->data_source_link_id,
                     'dataSourcePageId' => $this->pivot->data_source_page_id,
-                    'dataSourcePageTitle' => optional(Page::find($this->pivot->data_source_page_id))->title,
+                    'dataSourcePageTitle' => $this->relationLoaded('pages')
+                        ? $this->pages->firstWhere('id', $this->pivot->data_source_page_id)?->title
+                        : optional(Page::find($this->pivot->data_source_page_id))->title,
                     'linkId' => $this->pivot->link_id,
                     'linkTitle' => $this->pivot->link_title,
                     'createdAt' => $this->pivot->created_at,
