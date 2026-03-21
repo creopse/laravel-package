@@ -4,9 +4,10 @@ namespace Creopse\Creopse\Http\Middleware;
 
 use Creopse\Creopse\Enums\ContentType;
 use Creopse\Creopse\Helpers\Functions;
-use Creopse\Creopse\Http\Resources\Content\{PageDataResource, ContentModelResource, MenuItemGroupResource, MenuLocationResource, MenuResource, SectionResource};
+use Creopse\Creopse\Http\Resources\Content\{PageDataResource, ContentModelResource, MenuItemGroupResource, MenuLocationResource, MenuResource, PermalinkResource, SectionResource};
 use Creopse\Creopse\Http\Resources\{UserResource, Ads\AdResource, Ads\AdIdentifierResource};
 use Creopse\Creopse\Models\{AppInformation, AdIdentifier, Ad, ContentModel, Menu, MenuItem, MenuItemGroup, MenuLocation, Page, Permalink, VideoSetting};
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Middleware;
@@ -146,6 +147,15 @@ class HandleInertiaRequests extends Middleware
             'contentModels' => ContentModelResource::collection(
                 ContentModel::all()
             ),
+
+            'permalinks' => PermalinkResource::collection(
+                Permalink::with(['content' => function (MorphTo $morphTo) {
+                    $morphTo->constrain([
+                        ContentModel::class => fn($q) => $q->select(['id', 'slug', 'name', 'title']),
+                    ]);
+                }])->get()
+            ),
+
             'youtubeChannelId' => $channelIdItem ? $channelIdItem->value : null,
         ]);
     }

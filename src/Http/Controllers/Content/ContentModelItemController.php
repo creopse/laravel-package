@@ -24,13 +24,13 @@ class ContentModelItemController extends Controller
         $pageSize = $request->query('pageSize');
 
         $prepareQuery = function () use ($request) {
-            $query = $request->query('query');
-            $isActive = $request->query('isActive');
-            $contentModelId = $request->query('contentModelId');
+            $query            = $request->query('query');
+            $isActive         = $request->query('isActive');
+            $contentModelId   = $request->query('contentModelId');
             $contentModelName = $request->query('contentModelName');
-            $createdByType = $request->query('createdByType');
-            $createdBy = $request->query('createdBy');
-            $dataFilters = $request->query('dataFilters', []);
+            $createdByType    = $request->query('createdByType');
+            $createdBy        = $request->query('createdBy');
+            $dataFilters      = $request->query('dataFilters', []);
 
             $items = ContentModelItem::query();
 
@@ -65,12 +65,15 @@ class ContentModelItemController extends Controller
                 $items = $items->where('created_by', $createdBy);
             }
 
-            $allowedOperators = ['=', '!=', '>', '>=', '<', '<=', 'like'];
+            // Allowed scalar operators for content_model_data->index fields.
+            // NOTE: 'json_contains' targets JSON objects/arrays and is only supported
+            // on MySQL/MariaDB via JSON_CONTAINS(). It will NOT work on PostgreSQL or SQLite.
+            $allowedOperators = ['=', '!=', '>', '>=', '<', '<=', 'like', 'json_contains'];
 
             $items = $items->where(function ($q) use ($dataFilters, $allowedOperators) {
                 foreach ($dataFilters as $filter) {
-                    $key      = $filter['key'] ?? null;
-                    $value    = $filter['value'] ?? null;
+                    $key      = $filter['key']      ?? null;
+                    $value    = $filter['value']    ?? null;
                     $operator = $filter['operator'] ?? '=';
 
                     if (
@@ -79,8 +82,17 @@ class ContentModelItemController extends Controller
                         preg_match('/^[a-zA-Z0-9_]+$/', $key) &&
                         in_array($operator, $allowedOperators)
                     ) {
-                        $value = $operator === 'like' ? "%{$value}%" : $value;
-                        $q->where("content_model_data->index->{$key}", $operator, $value);
+                        if ($operator === 'json_contains') {
+                            // JSON_CONTAINS checks if a value exists inside a JSON object or array.
+                            // json_encode() ensures proper casting of both integers and strings.
+                            $q->whereRaw(
+                                "JSON_CONTAINS(JSON_EXTRACT(content_model_data, '$.index.{$key}'), ?)",
+                                [json_encode($value)]
+                            );
+                        } else {
+                            $value = $operator === 'like' ? "%{$value}%" : $value;
+                            $q->where("content_model_data->index->{$key}", $operator, $value);
+                        }
                     }
                 }
             });
@@ -96,17 +108,17 @@ class ContentModelItemController extends Controller
 
             return $this->sendResponse([
                 'items' => ContentModelItemResource::collection($items),
-                'meta' => [
+                'meta'  => [
                     'links' => [
                         'first' => $items->url(1),
-                        'last' => $items->url($items->lastPage()),
-                        'prev' => $items->previousPageUrl(),
-                        'next' => $items->nextPageUrl(),
+                        'last'  => $items->url($items->lastPage()),
+                        'prev'  => $items->previousPageUrl(),
+                        'next'  => $items->nextPageUrl(),
                     ],
                     'currentPage' => $items->currentPage(),
-                    'perPage' => $items->perPage(),
-                    'total' => $items->total(),
-                    'lastPage' => $items->lastPage(),
+                    'perPage'     => $items->perPage(),
+                    'total'       => $items->total(),
+                    'lastPage'    => $items->lastPage(),
                 ],
             ]);
         }
