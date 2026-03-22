@@ -84,10 +84,11 @@ class ContentModelItemController extends Controller
                     ) {
                         if ($operator === 'json_contains') {
                             // JSON_CONTAINS checks if a value exists inside a JSON object or array.
-                            // json_encode() ensures proper casting of both integers and strings.
+                            // '.*' extracts all values from the object to allow value-based search.
+                            // json_encode() ensures proper type casting (int vs string).
                             $q->whereRaw(
-                                "JSON_CONTAINS(JSON_EXTRACT(content_model_data, '$.index.{$key}'), ?)",
-                                [json_encode($value)]
+                                "JSON_CONTAINS(JSON_EXTRACT(content_model_data, '$.index.{$key}.*'), ?)",
+                                [json_encode(is_numeric($value) ? (int) $value : $value)]
                             );
                         } else {
                             $value = $operator === 'like' ? "%{$value}%" : $value;

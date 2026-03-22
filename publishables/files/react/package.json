@@ -52,7 +52,7 @@
     "dependencies": {
         "@arkn/react-icon-picker": "^0.0.2",
         "@creopse/cli": "^0.0.12",
-        "@creopse/react": "^0.0.26",
+        "@creopse/react": "^0.0.27",
         "@creopse/utils": "^0.0.15",
         "@inertiajs/core": "^2.1.6",
         "@inertiajs/react": "^2.1.6",
