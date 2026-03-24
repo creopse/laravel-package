@@ -28,12 +28,6 @@
     <!-- Put your styles here -->
     <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}" />
 
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin="" />
-
     <!-- Inline script to detect system dark mode preference and apply it immediately -->
     <script>
         (function() {
