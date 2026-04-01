@@ -40,6 +40,7 @@ class PluginController extends Controller
             $data['active']      = $this->isActive($pluginId);
             $data['hasBackend']  = true;
             $data['hasFrontend'] = is_dir(public_path("creopse/plugins/$pluginId"));
+            $data                = $this->mergeDevManifest($data);
 
             $pluginsData[] = $data;
         }
@@ -65,6 +66,7 @@ class PluginController extends Controller
         $data['active']      = $this->isActive($pluginId);
         $data['hasBackend']  = true;
         $data['hasFrontend'] = is_dir(public_path("creopse/plugins/$pluginId"));
+        $data                = $this->mergeDevManifest($data);
 
         return $this->sendResponse($data);
     }
@@ -293,6 +295,38 @@ class PluginController extends Controller
         $this->deactivate($pluginId);
 
         return $this->sendResponse(['status' => 'disabled', 'id' => $pluginId]);
+    }
+
+    // -------------------------------------------------------------------------
+    // Dev manifest helpers
+    // -------------------------------------------------------------------------
+
+    /**
+     * Fetch and merge frontend manifest from dev server if frontend_dev_url is set.
+     * Backend fields take precedence — only frontend-specific fields are merged in.
+     * Silently skips if the dev server is unreachable or returns invalid data.
+     */
+    protected function mergeDevManifest(array $data): array
+    {
+        if (empty($data['frontend_dev_url'])) return $data;
+
+        try {
+            $response = \Http::timeout(2)->get($data['frontend_dev_url'] . '/manifest.jsonc');
+
+            if (!$response->successful()) return $data;
+
+            $stripped = preg_replace('~//[^\n]*|/\*.*?\*/~s', '', $response->body());
+            $frontend = json_decode($stripped, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) return $data;
+
+            // Merge only fields absent from the backend manifest
+            $data = array_merge(array_diff_key($frontend, $data), $data);
+        } catch (\Throwable) {
+            // Dev server unreachable — return backend data as-is
+        }
+
+        return $data;
     }
 
     // -------------------------------------------------------------------------
