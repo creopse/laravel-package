@@ -17,6 +17,7 @@ enum PermissionList: string
 
         // Settings Module
     case VIEW_ABOUT = 'view-about';
+    case MANAGE_PLUGINS = 'manage-plugins';
     case MANAGE_APP_SETTINGS = 'manage-app-settings';
 
         // Users Module
@@ -62,6 +63,7 @@ enum PermissionList: string
             self::MANAGE_NOTIFICATIONS => '{"fr": "Gérer les notifications", "en": "Manage notifications"}',
 
             self::VIEW_ABOUT => '{"fr": "Voir la page À propos", "en": "View about page"}',
+            self::MANAGE_PLUGINS => '{"fr": "Gérer les extensions", "en": "Manage plugins"}',
             self::MANAGE_APP_SETTINGS => '{"fr": "Gérer les paramètres de l\'application", "en": "Manage app settings"}',
 
             self::VIEW_USERS => '{"fr": "Voir les utilisateurs", "en": "View users"}',
@@ -104,6 +106,7 @@ enum PermissionList: string
             self::MANAGE_NOTIFICATIONS => '{"fr": "Créer, modifier et supprimer les notifications", "en": "Create, edit and delete notifications"}',
 
             self::VIEW_ABOUT => '{"fr": "Accéder à la page À propos", "en": "Access about page"}',
+            self::MANAGE_PLUGINS => '{"fr": "Modifier les extensions", "en": "Modify plugins"}',
             self::MANAGE_APP_SETTINGS => '{"fr": "Modifier les paramètres globaux de l\'application", "en": "Modify global application settings"}',
 
             self::VIEW_USERS => '{"fr": "Consulter la liste des utilisateurs", "en": "View users list"}',
@@ -146,6 +149,7 @@ enum PermissionList: string
             self::MANAGE_NOTIFICATIONS => 'notifications',
 
             self::VIEW_ABOUT,
+            self::MANAGE_PLUGINS,
             self::MANAGE_APP_SETTINGS => 'settings',
 
             self::VIEW_USERS,

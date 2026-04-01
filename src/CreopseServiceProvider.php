@@ -82,6 +82,7 @@ class CreopseServiceProvider extends ServiceProvider
             ],
         ], function () {
             $this->loadRoutesFrom(__DIR__ . '/../routes/api/index.php');
+            $this->app->make(PluginManager::class)->bootAll();
         });
 
         // Load web routes
@@ -399,6 +400,12 @@ class CreopseServiceProvider extends ServiceProvider
         $this->app->bind('creopse.storage', function () {
             return __DIR__ . '/../storage';
         });
+
+        // Discover all plugins
+        $this->app->singleton(PluginManager::class, fn($app) => new PluginManager($app));
+
+        $manager = $this->app->make(PluginManager::class);
+        $manager->discoverAll();
 
         // Disable JSON Resource wrapping
         JsonResource::withoutWrapping();

@@ -4,6 +4,8 @@
 /public/hot
 /public/storage
 /public/creopse
+/storage/plugins
+/storage/tmp
 /storage/*.key
 /vendor
 .env
