@@ -1,151 +1,233 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
-    <title>Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>IP Geolocation — Test</title>
     <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, sans-serif;
+            font-size: 14px;
+            background: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 32px 16px;
+        }
+
         section {
-            width: 500px;
-            margin: 0 auto;
-            text-align: center;
-            margin-bottom: 25px;
+            max-width: 480px;
+            margin: 0 auto 32px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 24px;
         }
 
-        input {
-            margin-top: 15px;
-            margin-bottom: 15px;
-            line-height: 30px;
-            border: 0.5px solid silver;
-            border-radius: 3px;
-            text-align: center;
-            width: 250px;
+        h2 {
+            margin: 0 0 20px;
+            font-size: 16px;
         }
 
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #555;
+        }
+
+        input[type="text"],
         select {
-            margin-bottom: 25px;
-            height: 30px;
+            display: block;
+            width: 100%;
+            padding: 8px 10px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
         }
 
-        input:hover {
-            border: 1px solid silver;
+        input[type="text"]:focus,
+        select:focus {
+            outline: 2px solid #0070f3;
+            border-color: transparent;
         }
 
         button {
-            width: 250px;
-            line-height: 20px;
+            width: 100%;
+            padding: 10px;
+            background: #0070f3;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #005bb5;
+        }
+
+        button:disabled {
+            background: #999;
+            cursor: not-allowed;
         }
 
         #result {
-            width: 1000px;
-        }
-
-        table {
+            max-width: 760px;
             margin: 0 auto;
         }
 
-        table,
-        tr,
-        td,
-        th {
-            border: 1px solid gray;
+        #result-message {
+            padding: 12px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        #result-message.error {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #900;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            overflow: hidden;
         }
 
         th,
         td {
-            padding: 5px;
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
         }
 
         th {
-            background-color: whitesmoke;
+            background: #f8f8f8;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #555;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
         }
     </style>
 </head>
 
 <body>
     <section>
-        <form action="#" id="ip-geolocation-form">
-            <input type="text" placeholder="Adresse IP" name="ip-address" id="ip-address">
-            <br>
-            <label for="source">Source : </label>
-            <select name="source" id="source">
-                <option value="auto" selected>Automatique</option>
-                <option value="geoplugin">GeoPlugin</option>
-                <option value="ipinfo">IpInfo</option>
-                <option value="ipdata">IpData</option>
-            </select>
-            <br>
-            <button type="submit">Lancer</button>
-        </form>
+        <h2>IP Geolocation</h2>
+
+        <label for="ip-address">IP Address</label>
+        <input type="text" placeholder="e.g. 8.8.8.8" id="ip-address" autocomplete="off">
+
+        <label for="source">Source</label>
+        <select id="source">
+            <option value="auto"      selected>Auto (fallback chain)</option>
+            <option value="geoplugin">GeoPlugin</option>
+            <option value="ipapicom" >ip-api.com</option>
+            <option value="ipapicoapi">ipapi.co</option>
+            <option value="ipinfo"   >IpInfo</option>
+            <option value="ipdata"   >IpData</option>
+        </select>
+
+        <button id="btn-lookup">Look up</button>
     </section>
+
     <section id="result"></section>
-    <script type="text/javascript">
-        (function() {
 
-            var form = document.getElementById('ip-geolocation-form');
+    <script>
+        (function () {
+            var btn    = document.getElementById('btn-lookup');
+            var result = document.getElementById('result');
 
-            form.addEventListener("submit", function(e) {
-                e.preventDefault();
+            btn.addEventListener('click', function () {
+                var ip     = document.getElementById('ip-address').value.trim();
+                var source = document.getElementById('source').value;
 
-                var xmlhttp = new XMLHttpRequest();
+                if (!ip) {
+                    showError('Please enter an IP address.');
+                    return;
+                }
 
-                xmlhttp.onreadystatechange = function() {
-                    if (xmlhttp.readyState == XMLHttpRequest.DONE) {
-                        if (xmlhttp.status == 200) {
+                btn.disabled    = true;
+                btn.textContent = 'Loading…';
+                result.innerHTML = '';
 
-                            var resultContainer = document.getElementById("result");
+                var xhr = new XMLHttpRequest();
 
-                            try {
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState !== XMLHttpRequest.DONE) return;
 
-                                const parsed = JSON.parse(xmlhttp.responseText);
+                    btn.disabled    = false;
+                    btn.textContent = 'Look up';
 
-                                if (typeof parsed === 'string') {
+                    if (xhr.status === 200) {
+                        try {
+                            var parsed = JSON.parse(xhr.responseText);
 
-                                    resultContainer.innerHTML = parsed;
-
-                                } else {
-
-                                    const keys = Object.keys(parsed);
-
-                                    const header = `<thead><tr>` + keys.map(key => `<th>${key}</th>`).join('') + `</thead></tr>`;
-
-                                    const body = `<tbody><tr>${Object.values(parsed).map(cell => `<td>${cell}</td>`).join('')}</tr>`;
-
-                                    const table = `<table>${header}${body}</table>`;
-
-                                    resultContainer.innerHTML = table;
-
-                                }
-
-                            } catch (e) {
-
-                                resultContainer.innerHTML = xmlhttp.responseText;
-
+                            if (typeof parsed === 'string') {
+                                showError(parsed);
+                                return;
                             }
 
-                        } else if (xmlhttp.status == 400) {
-                            console.log('There was an error 400');
-                        } else {
-                            console.log('something else other than 200 was returned');
-                            console.log(xmlhttp);
+                            var keys   = Object.keys(parsed);
+                            var header = '<thead><tr>' + keys.map(function (k) { return '<th>' + escapeHtml(k) + '</th>'; }).join('') + '</tr></thead>';
+                            var body   = '<tbody><tr>' + Object.values(parsed).map(function (v) { return '<td>' + escapeHtml(String(v ?? '')) + '</td>'; }).join('') + '</tr></tbody>';
+
+                            result.innerHTML = '<table>' + header + body + '</table>';
+                        } catch (e) {
+                            result.innerHTML = '<pre>' + escapeHtml(xhr.responseText) + '</pre>';
                         }
+                    } else {
+                        showError('Request failed (HTTP ' + xhr.status + ').');
                     }
                 };
 
-                xmlhttp.open(
-                    "GET",
-                    window.location.protocol + '//' + window.location.hostname + "/server/ip/location/" +
-                    document.getElementById("ip-address").value + "/" +
-                    document.getElementById("source").value,
-                    true
-                );
-                xmlhttp.setRequestHeader("X-API-Key", "d850078e-5d69-4ee6-a9b6-c9a602ce7ee9");
-                xmlhttp.send();
+                var url = window.location.protocol + '//' + window.location.hostname
+                    + '/server/ip/location/' + encodeURIComponent(ip) + '/' + encodeURIComponent(source);
+
+                xhr.open('GET', url, true);
+
+                // Set the API key from the page's meta tag or a JS variable
+                // defined by your server-side template — never hardcode it here.
+                var apiKey = (typeof CREOPSE_API_KEY !== 'undefined') ? CREOPSE_API_KEY : '';
+                if (apiKey) {
+                    xhr.setRequestHeader('X-API-Key', apiKey);
+                }
+
+                xhr.send();
             });
 
+            function showError(msg) {
+                result.innerHTML = '<p id="result-message" class="error">' + escapeHtml(msg) + '</p>';
+            }
+
+            function escapeHtml(str) {
+                return str
+                    .replace(/&/g,  '&amp;')
+                    .replace(/</g,  '&lt;')
+                    .replace(/>/g,  '&gt;')
+                    .replace(/"/g,  '&quot;')
+                    .replace(/'/g,  '&#039;');
+            }
         })();
     </script>
 </body>

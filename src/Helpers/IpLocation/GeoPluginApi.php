@@ -4,58 +4,59 @@ namespace Creopse\Creopse\Helpers\IpLocation;
 
 /**
  * GeoPluginApi
+ *
+ * Driver for geoplugin.net.
+ *
+ * We intentionally use the JSON endpoint (json.gp) instead of the PHP
+ * serialized endpoint (php.gp). Both return identical data, but the JSON
+ * variant lets us use json_decode() and avoids the security risks of
+ * deserializing untrusted PHP data from an external HTTP source.
+ *
+ * Reference: https://www.geoplugin.com/webservices/json
+ *
+ * Free to use — attribution required (Creative Commons BY-SA 3.0).
+ * No API key needed.
  */
 class GeoPluginApi
 {
-    //the geoPlugin server
-    var $host = 'http://www.geoplugin.net/php.gp?ip={IP}&base_currency={CURRENCY}&lang={LANG}';
+    // JSON endpoint — safer than the PHP-serialized php.gp endpoint
+    var $host = 'http://www.geoplugin.net/json.gp?ip={IP}&base_currency={CURRENCY}&lang={LANG}';
 
-    //the default base currency
+    // Default base currency
     var $currency = 'USD';
 
-    //the default language
+    // Default response language
+    // Supported: de, en, es, fr, ja, pt-BR, ru, zh-CN
     var $lang = 'en';
-    /*
-	supported languages:
-	de
-	en
-	es
-	fr
-	ja
-	pt-BR
-	ru
-	zh-CN
-	*/
 
-    //initiate the geoPlugin vars
-    var $ip = null;
-    var $city = null;
-    var $region = null;
-    var $regionCode = null;
-    var $regionName = null;
-    var $dmaCode = null;
-    var $countryCode = null;
-    var $countryName = null;
-    var $inEU = null;
-    var $continentCode = null;
-    var $continentName = null;
-    var $latitude = null;
-    var $longitude = null;
-    var $locationAccuracyRadius = null;
-    var $timezone = null;
-    var $currencyCode = null;
-    var $currencySymbol = null;
-    var $currencyConverter = null;
+    var $ip                      = null;
+    var $city                    = null;
+    var $region                  = null;
+    var $regionCode              = null;
+    var $regionName              = null;
+    var $dmaCode                 = null;
+    var $countryCode             = null;
+    var $countryName             = null;
+    var $inEU                    = null;
+    var $continentCode           = null;
+    var $continentName           = null;
+    var $latitude                = null;
+    var $longitude               = null;
+    var $locationAccuracyRadius  = null;
+    var $timezone                = null;
+    var $currencyCode            = null;
+    var $currencySymbol          = null;
+    var $currencyConverter       = null;
 
     function __construct() {}
 
     /**
-     * locate
+     * Locate a given IP address.
      *
-     * @param  mixed $ip
+     * @param  string|null $ip
      * @return void
      */
-    function locate($ip = null)
+    public function locate($ip = null)
     {
         global $_SERVER;
 
@@ -63,115 +64,146 @@ class GeoPluginApi
             $ip = $_SERVER['REMOTE_ADDR'];
         }
 
-        $host = str_replace('{IP}', $ip, $this->host);
-        $host = str_replace('{CURRENCY}', $this->currency, $host);
-        $host = str_replace('{LANG}', $this->lang, $host);
+        $url = str_replace('{IP}',       urlencode($ip),       $this->host);
+        $url = str_replace('{CURRENCY}', urlencode($this->currency), $url);
+        $url = str_replace('{LANG}',     urlencode($this->lang),     $url);
 
-        $data = array();
+        $response = $this->fetch($url);
 
-        $response = $this->fetch($host);
-
-        if (isset($response)) {
-
-            $data = unserialize($response);
-
-            //set the geoPlugin vars
-            $this->ip = $ip;
-            $this->city = $data ? $data['geoplugin_city'] : '';
-            $this->region = $data ? $data['geoplugin_region'] : '';
-            $this->regionCode = $data ? $data['geoplugin_regionCode'] : '';
-            $this->regionName = $data ? $data['geoplugin_regionName'] : '';
-            $this->dmaCode = $data ? $data['geoplugin_dmaCode'] : '';
-            $this->countryCode = $data ? $data['geoplugin_countryCode'] : '';
-            $this->countryName = $data ? $data['geoplugin_countryName'] : '';
-            $this->inEU = $data ? $data['geoplugin_inEU'] : '';
-            $this->continentCode = $data ? $data['geoplugin_continentCode'] : '';
-            $this->continentName = $data ? $data['geoplugin_continentName'] : '';
-            $this->latitude = $data ? $data['geoplugin_latitude'] : '';
-            $this->longitude = $data ? $data['geoplugin_longitude'] : '';
-            $this->locationAccuracyRadius = $data ? $data['geoplugin_locationAccuracyRadius'] : '';
-            $this->timezone = $data ? $data['geoplugin_timezone'] : '';
-            $this->currencyCode = $data ? $data['geoplugin_currencyCode'] : '';
-            $this->currencySymbol = $data ? $data['geoplugin_currencySymbol'] : '';
-            $this->currencyConverter = $data ? $data['geoplugin_currencyConverter'] : '';
-        }
-    }
-
-    /**
-     * fetch
-     *
-     * @param  mixed $host
-     * @return string|bool
-     */
-    function fetch($host)
-    {
-        if (function_exists('curl_init')) {
-
-            //use cURL to fetch data
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $host);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_USERAGENT, 'geoPlugin PHP Class v1.1');
-            $response = curl_exec($ch);
-            curl_close($ch);
-        } else if (ini_get('allow_url_fopen')) {
-
-            //fall back to fopen()
-            $response = file_get_contents($host, 'r');
-        } else {
-
-            trigger_error('geoPlugin class Error: Cannot retrieve data. Either compile PHP with cURL support or enable allow_url_fopen in php.ini ', E_USER_ERROR);
+        if (empty($response)) {
             return;
         }
 
-        return $response;
+        $data = json_decode($response, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE || empty($data)) {
+            return;
+        }
+
+        $this->ip                     = $ip;
+        $this->city                   = $data['geoplugin_city']                   ?? '';
+        $this->region                 = $data['geoplugin_region']                 ?? '';
+        $this->regionCode             = $data['geoplugin_regionCode']             ?? '';
+        $this->regionName             = $data['geoplugin_regionName']             ?? '';
+        $this->dmaCode                = $data['geoplugin_dmaCode']                ?? '';
+        $this->countryCode            = $data['geoplugin_countryCode']            ?? '';
+        $this->countryName            = $data['geoplugin_countryName']            ?? '';
+        $this->inEU                   = $data['geoplugin_inEU']                   ?? '';
+        $this->continentCode          = $data['geoplugin_continentCode']          ?? '';
+        $this->continentName          = $data['geoplugin_continentName']          ?? '';
+        $this->latitude               = $data['geoplugin_latitude']               ?? '';
+        $this->longitude              = $data['geoplugin_longitude']              ?? '';
+        $this->locationAccuracyRadius = $data['geoplugin_locationAccuracyRadius'] ?? '';
+        $this->timezone               = $data['geoplugin_timezone']               ?? '';
+        $this->currencyCode           = $data['geoplugin_currencyCode']           ?? '';
+        $this->currencySymbol         = $data['geoplugin_currencySymbol']         ?? '';
+        $this->currencyConverter      = $data['geoplugin_currencyConverter']      ?? '';
     }
 
     /**
-     * convert
+     * Perform an HTTP GET request.
      *
-     * @param  mixed $amount
-     * @param  mixed $float
-     * @param  mixed $symbol
-     * @return float
+     * @param  string $url
+     * @return string|null
      */
-    function convert($amount, $float = 2, $symbol = true)
+    private function fetch($url)
     {
-        //easily convert amounts to geolocated currency.
-        if (!is_numeric($this->currencyConverter) || $this->currencyConverter == 0) {
-            trigger_error('geoPlugin class Notice: currencyConverter has no value.', E_USER_NOTICE);
-            return $amount;
+        if (function_exists('curl_init')) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_USERAGENT, 'Espoerc/GeoPlugin-Driver');
+            $response = curl_exec($ch);
+            $error    = curl_errno($ch);
+            curl_close($ch);
+
+            if ($error || $response === false) {
+                return null;
+            }
+
+            return $response;
         }
-        if (!is_numeric($amount)) {
-            trigger_error('geoPlugin class Warning: The amount passed to geoPlugin::convert is not numeric.', E_USER_WARNING);
-            return $amount;
+
+        if (ini_get('allow_url_fopen')) {
+            $response = @file_get_contents($url);
+            return $response !== false ? $response : null;
         }
-        if ($symbol === true) {
-            return $this->currencySymbol . round(($amount * $this->currencyConverter), $float);
-        } else {
-            return round(($amount * $this->currencyConverter), $float);
-        }
+
+        trigger_error(
+            'GeoPluginApi: cannot fetch data. Compile PHP with cURL or enable allow_url_fopen.',
+            E_USER_WARNING
+        );
+
+        return null;
     }
 
     /**
-     * nearby
+     * Convert an amount to the visitor's local currency.
      *
-     * @param  mixed $radius
-     * @param  mixed $limit
-     * @return mixed
+     * @param  float  $amount
+     * @param  int    $decimals
+     * @param  bool   $symbol   Prepend the currency symbol
+     * @return float|string
      */
-    function nearby($radius = 10, $limit = null)
+    public function convert($amount, $decimals = 2, $symbol = true)
+    {
+        if (!is_numeric($this->currencyConverter) || $this->currencyConverter == 0) {
+            trigger_error(
+                'GeoPluginApi::convert — currencyConverter has no value.',
+                E_USER_NOTICE
+            );
+            return $amount;
+        }
+
+        if (!is_numeric($amount)) {
+            trigger_error(
+                'GeoPluginApi::convert — amount is not numeric.',
+                E_USER_WARNING
+            );
+            return $amount;
+        }
+
+        $converted = round($amount * $this->currencyConverter, $decimals);
+
+        return $symbol ? $this->currencySymbol . $converted : $converted;
+    }
+
+    /**
+     * Return nearby populated places.
+     *
+     * @param  int      $radius  Search radius in km
+     * @param  int|null $limit
+     * @return array
+     */
+    public function nearby($radius = 10, $limit = null)
     {
         if (!is_numeric($this->latitude) || !is_numeric($this->longitude)) {
-            trigger_error('geoPlugin class Warning: Incorrect latitude or longitude values.', E_USER_NOTICE);
-            return array(array());
+            trigger_error(
+                'GeoPluginApi::nearby — invalid latitude or longitude.',
+                E_USER_NOTICE
+            );
+            return [];
         }
 
-        $host = "http://www.geoplugin.net/extras/nearby.gp?lat=" . $this->latitude . "&long=" . $this->longitude . "&radius={$radius}";
+        $url = 'http://www.geoplugin.net/extras/nearby.gp'
+            . '?lat='    . urlencode($this->latitude)
+            . '&long='   . urlencode($this->longitude)
+            . '&radius=' . urlencode($radius)
+            . '&format=json';
 
-        if (is_numeric($limit))
-            $host .= "&limit={$limit}";
+        if (is_numeric($limit)) {
+            $url .= '&limit=' . (int) $limit;
+        }
 
-        return unserialize($this->fetch($host));
+        $response = $this->fetch($url);
+
+        if (empty($response)) {
+            return [];
+        }
+
+        $data = json_decode($response, true);
+
+        return (json_last_error() === JSON_ERROR_NONE && is_array($data)) ? $data : [];
     }
 }
