@@ -3,6 +3,7 @@
 namespace Creopse\Creopse;
 
 use Creopse\Creopse\Console\Commands\{Install, MakeSection, MakeWidget, RemoveSection, RemoveWidget, ScheduledCommand, GenerateThumbnails};
+use Creopse\Creopse\Console\Commands\Plugins\{PluginMakeController, PluginMakeJob, PluginMakeListener, PluginMakeMigration, PluginMakeModel, PluginMakeRequest, PluginMakeEvent, PluginMakeSeeder};
 use Creopse\Creopse\Console\Commands\Migrations\MigrateSectionsData;
 use Creopse\Creopse\Console\Commands\Migrations\MigrateSectionsDataIcon;
 use Creopse\Creopse\Database\Seeders\DatabaseSeeder;
@@ -125,6 +126,15 @@ class CreopseServiceProvider extends ServiceProvider
                 GenerateThumbnails::class,
                 MigrateSectionsData::class,
                 MigrateSectionsDataIcon::class,
+                // Plugin commands
+                PluginMakeModel::class,
+                PluginMakeMigration::class,
+                PluginMakeController::class,
+                PluginMakeRequest::class,
+                PluginMakeEvent::class,
+                PluginMakeListener::class,
+                PluginMakeJob::class,
+                PluginMakeSeeder::class,
             ]);
         }
 
