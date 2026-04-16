@@ -14,7 +14,7 @@ class MakeSection extends CreopseCommand
      *
      * @var string
      */
-    protected $signature = 'creopse:make-section {name : The name of the section} {--alias=creopse:add-section}';
+    protected $signature = 'creopse:make-section {name* : The name(s) of the section(s)} {--alias=creopse:add-section}';
 
     /**
      * The console command aliases.
@@ -28,58 +28,85 @@ class MakeSection extends CreopseCommand
      *
      * @var string
      */
-    protected $description = 'Add a new section vue component to resources/js/components/sections directory.';
+    protected $description = 'Add one or more section vue components to resources/js/components/sections directory.';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $argName = Functions::strToPascalCase($this->argument('name'));
         $frontendFramework = $this->detectFrontendFramework($this);
+
+        foreach ($this->argument('name') as $name) {
+            $this->processSection($name, $frontendFramework);
+        }
+
+        $this->info('Section creation process completed.');
+    }
+
+    /**
+     * Process a single section: create the component file and the database entry.
+     */
+    private function processSection(string $name, string $frontendFramework): void
+    {
+        $argName = Functions::strToPascalCase($name);
+
+        $this->createComponentFile($argName, $frontendFramework);
+        $this->createDatabaseEntry($argName, $name);
+    }
+
+    /**
+     * Create the section component file from the appropriate stub.
+     */
+    private function createComponentFile(string $argName, string $frontendFramework): void
+    {
         $fileName = $argName . ($frontendFramework === 'react' ? '.tsx' : '.vue');
         $filePath = base_path('resources/js/components/sections/' . $fileName);
 
         if (File::exists($filePath)) {
-            $this->warn('Section component already exists!');
-        } else {
-            $stubFile = $frontendFramework === 'react' ? 'section.react.stub' : 'section.vue.stub';
-            $stubPath = app('creopse.base_path') . '/stubs/' . $stubFile;
-
-            if (!File::exists($stubPath)) {
-                $this->error("Stub file not found for {$frontendFramework}: {$stubPath}");
-                return;
-            }
-
-            $stub = File::get($stubPath);
-            $stub = str_replace('{{ name }}', $argName, $stub);
-            $stub = str_replace('{{ id }}', Str::kebab($argName) . '-section', $stub);
-            $stub = str_replace('{{ settingsVar }}', Str::camel($argName) . 'Settings', $stub);
-            $stub = str_replace('{{ dataVar }}', Str::camel($argName) . 'Data', $stub);
-            $stub = str_replace('{{ dataId }}', strtolower(Str::camel($argName)), $stub);
-
-            File::put($filePath, $stub);
-
-            if (File::exists($filePath)) {
-                $this->info("Component file '$fileName' created successfully.");
-            } else {
-                $this->warn("Component file '$fileName' could not be created.");
-            }
+            $this->warn("[$argName] Component file '$fileName' already exists, skipping.");
+            return;
         }
 
-        $section = Section::where('name', $argName)->first();
+        $stubFile = $frontendFramework === 'react' ? 'section.react.stub' : 'section.vue.stub';
+        $stubPath = app('creopse.base_path') . '/stubs/' . $stubFile;
 
-        if ($section) {
-            $this->warn("Section '$argName' already exists in the database.");
-        } else {
-            Section::create([
-                'name' => $argName,
-                'title' => '{ "en": "' . $this->argument('name') . '", "fr": "' . $this->argument('name') . '" }',
-            ]);
-
-            $this->info("Section '$argName' added to the database successfully.");
+        if (!File::exists($stubPath)) {
+            $this->error("[$argName] Stub file not found for {$frontendFramework}: {$stubPath}");
+            return;
         }
 
-        $this->info('Section creation process completed.');
+        $stub = File::get($stubPath);
+        $stub = str_replace('{{ name }}', $argName, $stub);
+        $stub = str_replace('{{ id }}', Str::kebab($argName) . '-section', $stub);
+        $stub = str_replace('{{ settingsVar }}', Str::camel($argName) . 'Settings', $stub);
+        $stub = str_replace('{{ dataVar }}', Str::camel($argName) . 'Data', $stub);
+        $stub = str_replace('{{ dataId }}', strtolower(Str::camel($argName)), $stub);
+
+        File::put($filePath, $stub);
+
+        if (File::exists($filePath)) {
+            $this->info("[$argName] Component file '$fileName' created successfully.");
+        } else {
+            $this->warn("[$argName] Component file '$fileName' could not be created.");
+        }
+    }
+
+    /**
+     * Create the section database entry if it does not already exist.
+     */
+    private function createDatabaseEntry(string $argName, string $originalName): void
+    {
+        if (Section::where('name', $argName)->exists()) {
+            $this->warn("[$argName] Section already exists in the database, skipping.");
+            return;
+        }
+
+        Section::create([
+            'name'  => $argName,
+            'title' => '{ "en": "' . $originalName . '", "fr": "' . $originalName . '" }',
+        ]);
+
+        $this->info("[$argName] Section added to the database successfully.");
     }
 }

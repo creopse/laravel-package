@@ -13,7 +13,7 @@ class MakeWidget extends CreopseCommand
      *
      * @var string
      */
-    protected $signature = 'creopse:make-widget {name : The name of the widget} {--alias=creopse:add-widget}';
+    protected $signature = 'creopse:make-widget {name* : The name(s) of the widget(s)} {--alias=creopse:add-widget}';
 
     /**
      * The console command aliases.
@@ -27,20 +27,34 @@ class MakeWidget extends CreopseCommand
      *
      * @var string
      */
-    protected $description = 'Add a new widget vue component to resources/js/components/widgets directory.';
+    protected $description = 'Add one or more widget components to resources/js/components/widgets directory.';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $argName = Functions::strToPascalCase($this->argument('name'));
         $frontendFramework = $this->detectFrontendFramework($this);
+
+        foreach ($this->argument('name') as $name) {
+            $this->processWidget($name, $frontendFramework);
+        }
+
+        $this->info('Widget creation process completed.');
+    }
+
+    /**
+     * Process a single widget: create the component file.
+     */
+    private function processWidget(string $name, string $frontendFramework): void
+    {
+        $argName = Functions::strToPascalCase($name);
+
         $fileName = $argName . ($frontendFramework === 'react' ? '.tsx' : '.vue');
         $filePath = base_path('resources/js/components/widgets/' . $fileName);
 
         if (File::exists($filePath)) {
-            $this->error('Widget component already exists!');
+            $this->warn("[$argName] Widget component '$fileName' already exists, skipping.");
             return;
         }
 
@@ -48,7 +62,7 @@ class MakeWidget extends CreopseCommand
         $stubPath = app('creopse.base_path') . '/stubs/' . $stubFile;
 
         if (!File::exists($stubPath)) {
-            $this->error("Stub file not found for {$frontendFramework}: {$stubPath}");
+            $this->error("[$argName] Stub file not found for {$frontendFramework}: {$stubPath}");
             return;
         }
 
@@ -59,9 +73,9 @@ class MakeWidget extends CreopseCommand
         File::put($filePath, $stub);
 
         if (File::exists($filePath)) {
-            $this->info("Widget component file '$fileName' created successfully.");
+            $this->info("[$argName] Widget component '$fileName' created successfully.");
         } else {
-            $this->warn("Widget component file '$fileName' could not be created.");
+            $this->warn("[$argName] Widget component '$fileName' could not be created.");
         }
     }
 }

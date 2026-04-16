@@ -12,7 +12,7 @@ class RemoveWidget extends CreopseCommand
      *
      * @var string
      */
-    protected $signature = 'creopse:remove-widget {name : The name of the widget} {--alias=creopse:delete-widget}';
+    protected $signature = 'creopse:remove-widget {name* : The name(s) of the widget(s)} {--alias=creopse:delete-widget}';
 
     /**
      * The console command aliases.
@@ -26,15 +26,29 @@ class RemoveWidget extends CreopseCommand
      *
      * @var string
      */
-    protected $description = 'Remove an widget vue component.';
+    protected $description = 'Remove one or more widget components.';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $argName = Functions::strToPascalCase($this->argument('name'));
         $frontendFramework = $this->detectFrontendFramework($this);
+
+        foreach ($this->argument('name') as $name) {
+            $this->processWidget($name, $frontendFramework);
+        }
+
+        $this->info('Widget removal process completed.');
+    }
+
+    /**
+     * Process a single widget: delete the component file.
+     */
+    private function processWidget(string $name, string $frontendFramework): void
+    {
+        $argName = Functions::strToPascalCase($name);
+
         $fileName = $argName . ($frontendFramework === 'react' ? '.tsx' : '.vue');
         $filePath = base_path('resources/js/components/widgets/' . $fileName);
 
@@ -44,7 +58,5 @@ class RemoveWidget extends CreopseCommand
         } else {
             $this->warn("Component file '$fileName' does not exist.");
         }
-
-        $this->info('Widget removal process completed.');
     }
 }
