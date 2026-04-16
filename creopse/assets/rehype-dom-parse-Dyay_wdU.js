@@ -1,0 +1,1 @@
+import{f as o}from"./hast-util-from-dom-BIRUBPKj.js";function f(t){const e=this,n={...e.data("settings"),...t};e.parser=r;function r(s){const a=n.fragment===!1?c:m;return o(a(s))}}function c(t){return new DOMParser().parseFromString(t,"text/html")}function m(t){const e=document.createElement("template");return e.innerHTML=t,e.content}export{f as p};
