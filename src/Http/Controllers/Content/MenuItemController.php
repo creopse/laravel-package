@@ -130,10 +130,12 @@ class MenuItemController extends Controller
             'is_visible' => $request->input('is_visible'),
             'color' => $request->input('color'),
             'icon' => $request->input('icon'),
+            'image' => $request->input('image'),
             'menu_id' => $request->input('menu_id'),
             'page_id' => $request->input('page_id'),
             'section_key' => $request->input('section_key'),
             'menu_item_group_id' => $request->input('menu_item_group_id'),
+            'menu_item_type_id' => $request->input('menu_item_type_id'),
             'content_type' => $request->input('content_type'),
             'content_id' => $request->input('content_id'),
         ]);

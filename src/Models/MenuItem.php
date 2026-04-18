@@ -4,6 +4,8 @@ namespace Creopse\Creopse\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class MenuItem extends Model
 {
@@ -11,7 +13,7 @@ class MenuItem extends Model
 
     protected $guarded = [];
 
-    protected $with = ['group'];
+    protected $with = ['group', 'type'];
 
     /**
      * The attributes that should be cast.
@@ -23,6 +25,18 @@ class MenuItem extends Model
         'is_visible' => 'boolean',
     ];
 
+    /**
+     * Get image url from menu item image path.
+     */
+    public function getImageUrlAttribute()
+    {
+        if ($this->image) {
+            return Str::isUrl($this->image, ['http', 'https']) ? $this->image : Storage::disk('public')->url($this->image);
+        }
+
+        return null;
+    }
+
     public function menu()
     {
         return $this->belongsTo(Menu::class, 'menu_id');
@@ -31,6 +45,11 @@ class MenuItem extends Model
     public function page()
     {
         return $this->belongsTo(Page::class, 'page_id');
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(MenuItemType::class, 'menu_item_type_id');
     }
 
     public function group()

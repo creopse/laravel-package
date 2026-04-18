@@ -8,6 +8,7 @@ use Creopse\Creopse\Http\Controllers\Content\{
     MenuController,
     MenuItemController,
     MenuItemGroupController,
+    MenuItemTypeController,
     MenuLocationController,
     PermalinkController,
 };
@@ -33,6 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('menu-locations', MenuLocationController::class)->except(['index', 'show']);
 
     Route::apiResource('menu-item-groups', MenuItemGroupController::class)->except(['index', 'show']);
+
+    Route::apiResource('menu-item-types', MenuItemTypeController::class)->except(['index', 'show']);
 
     Route::apiResource('sections', SectionController::class)->except(['index', 'show']);
 
@@ -68,6 +71,8 @@ Route::apiResource('menu/items', MenuItemController::class)->only(['index', 'sho
 Route::apiResource('menu-locations', MenuLocationController::class)->only(['index', 'show']);
 
 Route::apiResource('menu-item-groups', MenuItemGroupController::class)->only(['index', 'show']);
+
+Route::apiResource('menu-item-types', MenuItemTypeController::class)->only(['index', 'show']);
 
 Route::apiResource('sections', SectionController::class)->only(['index', 'show']);
 
