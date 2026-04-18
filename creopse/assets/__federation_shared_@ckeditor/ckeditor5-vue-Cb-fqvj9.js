@@ -1,0 +1,1 @@
+import{_ as t,C,u as i}from"../ckeditor_ckeditor5-vue-B0QwtcEH.js";import{l as e}from"../ckeditor_ckeditor5-integrations-common-Bz1Gquc2.js";import"../lodash-es-DCTpQg3n.js";export{t as Ckeditor,C as CkeditorPlugin,e as loadCKEditorCloud,i as useCKEditorCloud};
