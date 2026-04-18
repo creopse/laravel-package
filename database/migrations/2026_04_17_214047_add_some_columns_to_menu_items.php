@@ -25,6 +25,7 @@ return new class extends Migration
     {
         Schema::table('menu_items', function (Blueprint $table) {
             $table->dropColumn('image');
+            $table->dropForeign(['menu_item_type_id']);
             $table->dropColumn('menu_item_type_id');
         });
     }
