@@ -36,7 +36,7 @@ class PageController extends Controller
             'name' => $request->input('name'),
             'title' => $request->input('title'),
             'content' => $request->input('content'),
-            'position' => $request->input('position'),
+            'position' => $request->input('position', 0),
             'sections_order' => $request->input('sections_order'),
             'sections_disabled' => $request->input('sections_disabled')
         ]);
