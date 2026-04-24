@@ -11,6 +11,10 @@ class Menu extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'data' => 'array',
+    ];
+
     protected $with = ['location'];
 
     public function items()

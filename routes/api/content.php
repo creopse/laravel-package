@@ -10,6 +10,7 @@ use Creopse\Creopse\Http\Controllers\Content\{
     MenuItemGroupController,
     MenuItemTypeController,
     MenuLocationController,
+    MenuSettingController,
     PermalinkController,
 };
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('menu/items/position', [MenuItemController::class, 'updatePosition'])->name('menu.update.items.position');
 
     Route::apiResource('menu/items', MenuItemController::class)->except(['index', 'show'])->parameters(['items' => 'menuItem'])->names('menu.items');
+
+    Route::apiResource('menu-settings', MenuSettingController::class)->except(['index', 'show']);
 
     Route::apiResource('menu-locations', MenuLocationController::class)->except(['index', 'show']);
 
@@ -67,6 +70,8 @@ Route::apiResource('pages', PageController::class)->only(['index', 'show']);
 Route::apiResource('menus', MenuController::class)->only(['index', 'show']);
 
 Route::apiResource('menu/items', MenuItemController::class)->only(['index', 'show'])->parameters(['items' => 'menuItem'])->names('menu.items');
+
+Route::apiResource('menu-settings', MenuSettingController::class)->only(['index', 'show']);
 
 Route::apiResource('menu-locations', MenuLocationController::class)->only(['index', 'show']);
 

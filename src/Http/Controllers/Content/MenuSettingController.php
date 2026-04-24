@@ -3,13 +3,13 @@
 namespace Creopse\Creopse\Http\Controllers\Content;
 
 use Creopse\Creopse\Enums\ResponseStatusCode;
-use Creopse\Creopse\Http\Requests\Content\MenuRequest;
-use Creopse\Creopse\Http\Resources\Content\MenuResource;
-use Creopse\Creopse\Models\Menu;
+use Creopse\Creopse\Http\Requests\Content\MenuSettingRequest;
+use Creopse\Creopse\Http\Resources\Content\MenuSettingResource;
+use Creopse\Creopse\Models\MenuSetting;
 use Illuminate\Http\Request;
 use Creopse\Creopse\Http\Controllers\Controller;
 
-class MenuController extends Controller
+class MenuSettingController extends Controller
 {
     /**
      * Display a paginated listing of the resource with search query.
@@ -21,11 +21,11 @@ class MenuController extends Controller
 
         if ($pageSize) {
 
-            $items = Menu::query();
+            $items = MenuSetting::query();
 
             if ($query) {
                 $items = $items->where(function ($q) use ($query) {
-                    $q->where('title', 'like', '%' . $query . '%')
+                    $q->where('key', 'like', '%' . $query . '%')
                         ->orWhere('description', 'like', '%' . $query . '%');
                 });
             }
@@ -33,7 +33,7 @@ class MenuController extends Controller
             $items = $items->paginate($pageSize);
 
             return $this->sendResponse([
-                'items' => MenuResource::collection($items),
+                'items' => MenuSettingResource::collection($items),
                 'meta' => [
                     'links' => [
                         'first' => $items->url(1),
@@ -50,116 +50,91 @@ class MenuController extends Controller
         }
 
         return $this->sendResponse(
-            MenuResource::collection(Menu::all())
+            MenuSettingResource::collection(MenuSetting::all())
         );
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(MenuRequest $request)
+    public function store(MenuSettingRequest $request)
     {
         $request->validated();
 
-        $menu = Menu::create([
-            'name' => $request->input('name'),
-            'title' => $request->input('title'),
+        $menuSetting = MenuSetting::create([
+            'key' => $request->input('key'),
+            'default_value' => $request->input('default_value'),
             'description' => $request->input('description'),
-            'data' => $request->input('data'),
         ]);
 
-        if ($request->has('menu_location_id')) {
-            $menuLocationId = $request->input('menu_location_id');
-
-            $existingMenu = Menu::where('menu_location_id', $menuLocationId)->first();
-
-            if ($existingMenu && $existingMenu->id !== $menu->id) {
-                $existingMenu->update(['menu_location_id' => null]);
-            }
-
-            $menu->update(['menu_location_id' => $menuLocationId]);
-        }
-
         return $this->sendResponse(
-            new MenuResource($menu),
+            new MenuSettingResource($menuSetting),
             ResponseStatusCode::CREATED,
-            'Menu created successfully'
+            'MenuSetting created successfully'
         );
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Menu $menu)
+    public function show(MenuSetting $menuSetting)
     {
-        return $this->sendResponse(new MenuResource($menu));
+        return $this->sendResponse(new MenuSettingResource($menuSetting));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Menu $menu)
+    public function update(Request $request, MenuSetting $menuSetting)
     {
-        $menu->update($request->except(['menu_location_id']));
-
-        if ($request->has('menu_location_id')) {
-            $menuLocationId = $request->input('menu_location_id');
-
-            $existingMenu = Menu::where('menu_location_id', $menuLocationId)->first();
-
-            if ($existingMenu && $existingMenu->id !== $menu->id) {
-                $existingMenu->update(['menu_location_id' => null]);
-            }
-
-            $menu->update(['menu_location_id' => $menuLocationId]);
-        }
+        $menuSetting->update($request->all());
 
         return $this->sendResponse(
-            new MenuResource($menu),
+            new MenuSettingResource($menuSetting),
             ResponseStatusCode::OK,
-            'Menu updated successfully'
+            'MenuSetting updated successfully'
         );
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Menu $menu)
+    public function destroy(MenuSetting $menuSetting)
     {
-        $menu->delete();
+        $menuSetting->delete();
 
         return $this->sendResponse(
             null,
             ResponseStatusCode::OK,
-            'Menu deleted successfully'
+            'MenuSetting deleted successfully'
         );
     }
 
     /**
      * Remove permanently the specified resource from storage.
      */
-    public function forceDestroy(Menu $menu)
+    public function forceDestroy(MenuSetting $menuSetting)
     {
-        $menu->forceDelete();
+        $menuSetting->forceDelete();
 
         return $this->sendResponse(
             null,
             ResponseStatusCode::OK,
-            'Menu deleted permanently successfully'
+            'MenuSetting deleted permanently successfully'
         );
     }
 
     /**
      * Restore the specified resource from storage.
      */
-    public function restore(Menu $menu)
+    public function restore(MenuSetting $menuSetting)
     {
-        $menu->restore();
+        $menuSetting->restore();
 
         return $this->sendResponse(
-            new MenuResource($menu),
+            new MenuSettingResource($menuSetting),
             ResponseStatusCode::OK,
-            'Menu restored successfully'
+            'MenuSetting restored successfully'
         );
     }
 }
