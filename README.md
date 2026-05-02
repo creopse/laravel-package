@@ -16,10 +16,11 @@ Welcome to **Creopse**, a powerful and hybrid Content Management System (CMS) bu
 
 Before starting, ensure your environment meets the following prerequisites:
 
-- **Laravel**: Version 10, 11, or 12 is required.
+- **Laravel**: Version 10, 11, 12, or 13 is required.
 - **PHP**:
   - Laravel 10: minimum version 8.1
   - Laravel 11 & 12: minimum version 8.2
+  - Laravel 13: minimum version 8.3
 - **Composer**: To manage dependencies.
 - **pnpm**: Required to manage and build frontend assets.
 
@@ -29,7 +30,7 @@ Before starting, ensure your environment meets the following prerequisites:
 
 ### Step 1: Install Laravel
 
-Start by creating a fresh project using Laravel 10, 11, or 12. Run one of the following commands:
+Start by creating a fresh project using Laravel 10, 11, 12, or 13. Run one of the following commands:
 
 **For Laravel 10:**
 
@@ -47,6 +48,12 @@ composer create-project laravel/laravel:^11.0 project-name
 
 ```bash
 composer create-project laravel/laravel:^12.0 project-name
+```
+
+**For Laravel 13:**
+
+```bash
+composer create-project laravel/laravel:^13.0 project-name
 ```
 
 > Replace `project-name` with your desired directory name for the project.

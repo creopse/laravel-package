@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 
 class CreopseServiceProvider extends ServiceProvider
@@ -39,7 +40,7 @@ class CreopseServiceProvider extends ServiceProvider
         'installer',
     ];
 
-    public function boot()
+    public function boot(Router $router)
     {
         // Hook into the application's scheduler
         $this->app->booted(function () {
@@ -54,9 +55,9 @@ class CreopseServiceProvider extends ServiceProvider
         });
 
         // Register middleware aliases
-        $this->app['router']->aliasMiddleware('verified', \Creopse\Creopse\Http\Middleware\EnsureEmailIsVerified::class);
-        $this->app['router']->aliasMiddleware('abilities', \Laravel\Sanctum\Http\Middleware\CheckAbilities::class);
-        $this->app['router']->aliasMiddleware('ability', \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class);
+        $router->aliasMiddleware('verified', \Creopse\Creopse\Http\Middleware\EnsureEmailIsVerified::class);
+        $router->aliasMiddleware('abilities', \Laravel\Sanctum\Http\Middleware\CheckAbilities::class);
+        $router->aliasMiddleware('ability', \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class);
 
         // Configure Rate Limiting
         RateLimiter::for('creopse-api', function (Request $request) {
@@ -112,7 +113,7 @@ class CreopseServiceProvider extends ServiceProvider
 
         // Load translations
         $this->loadTranslationsFrom(__DIR__ . '/../lang', 'creopse');
-        $this->loadJsonTranslationsFrom(__DIR__ . '/../lang', 'creopse');
+        $this->loadJsonTranslationsFrom(__DIR__ . '/../lang');
 
         // Load commands
         if ($this->app->runningInConsole()) {
