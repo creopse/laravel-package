@@ -28,126 +28,162 @@ Before starting, ensure your environment meets the following prerequisites:
 
 ## 🛠️ Installation Guide
 
-### Step 1: Install Laravel
+### 1. Install Laravel
 
-Start by creating a fresh project using Laravel 10, 11, 12, or 13. Run one of the following commands:
+Create a new Laravel project:
 
-**For Laravel 10:**
+**Laravel 10:**
 
 ```bash
 composer create-project laravel/laravel:^10.0 project-name
 ```
 
-**For Laravel 11:**
+**Laravel 11:**
 
 ```bash
 composer create-project laravel/laravel:^11.0 project-name
 ```
 
-**For Laravel 12:**
+**Laravel 12:**
 
 ```bash
 composer create-project laravel/laravel:^12.0 project-name
 ```
 
-**For Laravel 13:**
+**Laravel 13:**
 
 ```bash
 composer create-project laravel/laravel:^13.0 project-name
 ```
 
-> Replace `project-name` with your desired directory name for the project.
-
 ---
 
-### Step 2: Add Creopse to Your Project
+### 2. Add Creopse to your project
 
-Add the Creopse package to your Laravel project using Composer:
+Add the Creopse package via Composer:
 
 ```bash
 composer require creopse/creopse
 ```
 
-This will download and install all the necessary files for Creopse.
-
 ---
 
-### Step 3: Install Creopse Files
+### 3. Install Creopse files
 
-To set up Creopse in your project, run the following command to publish its configuration and required files:
+Run the install command to publish the configuration files and initialize the frontend
+structure of your project.
 
-#### If you have the [Creopse CLI](https://github.com/creopse/cli) installed globally
+#### If [Creopse CLI](https://github.com/creopse/cli) is installed globally
 
 ```bash
 creopse install
 ```
 
-#### Otherwise, use the Laravel Artisan command
+#### Otherwise, via Artisan
 
-- For a **Vue** frontend:
+For a **Vue** frontend:
 
 ```bash
 php artisan creopse:install -t vue
 ```
 
-- For a **React** frontend:
+For a **React** frontend:
 
 ```bash
 php artisan creopse:install -t react
 ```
 
-This will:
-
-- Publish necessary configuration files.
-- Set up essential Creopse directories and resources for vue or react frontend.
-
----
-
-### Step 4: Configure Your Database
-
-1. Open the `.env` file in the root of your project.
-2. Update the database credentials to match your setup:
-
-    ```bash
-    DB_CONNECTION=mysql
-    DB_HOST=127.0.0.1
-    DB_PORT=3306
-    DB_DATABASE=your_database_name
-    DB_USERNAME=your_username
-    DB_PASSWORD=your_password
-    ```
-
-3. Run the database migrations and seed the data by executing:
-
-    ```bash
-    php artisan migrate --seed
-    ```
-
-    This will create the required tables and populate them with initial data.
+> [!NOTE]
+> This command also generates an `install.lock` file in `public/creopse`,
+> which activates the configuration wizard on first access to `/creopse/`.
 
 ---
 
-### Step 5: Start the Development Server
+### 4. Start the development server
 
-To compile frontend assets and start the development server, run:
+Regardless of the configuration approach chosen (automatic or manual below),
+this step is required to compile assets and start rendering the site:
 
 ```bash
 pnpm dev
 ```
 
-This will start your development environment and prepare your application for use.
-
 ---
 
-### Step 6: Access the Admin Panel
+### 5. Configuration
 
-Once the setup is complete, you can access the **Creopse Admin Panel** by navigating to the following URL in your browser:
+Two approaches are available. **Choose one or the other**, not both.
 
-`http://your-domain/creopse/login`
+#### Option A — Automatic configuration (recommended)
 
-Log in using the credentials you configured (or the default credentials if provided during installation).
+Navigate to the administration interface:
 
----
+```text
+http://your-domain/creopse/
+```
+
+The wizard will guide you through configuring:
+
+- The server URL.
+- The database connection.
+- The administrator account.
+
+Once configuration is complete, the `install.lock` file is deleted automatically.
+
+#### Option B — Manual configuration
+
+**5.1. Configure the database**
+
+Update your `.env` file:
+
+```bash
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database_name
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+Then run the migrations and seeders:
+
+```bash
+php artisan migrate --seed
+```
+
+**5.2. Delete the `install.lock` file**
+
+Delete `public/creopse/install.lock` to unlock access to the administration interface.
+As long as this file is present, any visit to `/creopse/` is redirected to the
+installation wizard.
+
+```bash
+rm public/creopse/install.lock
+```
+
+**5.3. Update `public/creopse/config.jsonc`**
+
+Set the `apiBaseUrl` value to match your backend URL:
+
+```jsonc
+{
+  "apiBaseUrl": "https://your-domain"
+}
+```
+
+**5.4. Access the administration interface**
+
+```text
+http://your-domain/creopse/
+```
+
+Log in with the default credentials:
+
+- **Username**: `admin`
+- **Password**: `admin`
+
+> [!WARNING]
+> Change these credentials immediately after your first login.
 
 ## 🎉 You're Ready to Go
 
