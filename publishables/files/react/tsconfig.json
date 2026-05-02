@@ -1,33 +1,32 @@
 {
-    "compilerOptions": {
-        "target": "ESNext",
-        "useDefineForClassFields": true,
-        "lib": ["ESNext", "DOM", "DOM.Iterable"],
-        "module": "ESNext",
-        "skipLibCheck": true,
-        "noEmit": true,
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "noEmit": true,
 
-        "allowJs": true,
-        "noImplicitAny": false,
-        "types": ["vitest", "vite/client"],
-        "paths": {
-            "@/*": ["./resources/js/*"]
-        },
-        "baseUrl": ".",
-
-        /* Bundler mode */
-        "moduleResolution": "bundler",
-        "verbatimModuleSyntax": true,
-        "moduleDetection": "force",
-        "jsx": "react-jsx",
-
-        /* Linting */
-        "strict": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "erasableSyntaxOnly": true,
-        "noFallthroughCasesInSwitch": true,
-        "noUncheckedSideEffectImports": true
+    "allowJs": true,
+    "noImplicitAny": false,
+    "types": ["vitest", "vite/client"],
+    "paths": {
+      "@/*": ["./resources/js/*"]
     },
-    "include": ["resources/**/*.ts", "resources/**/*.d.ts", "resources/**/*.tsx", "./*.config.ts", "./*.d.ts", "resources/js/App.temp"]
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["resources/**/*.ts", "resources/**/*.d.ts", "resources/**/*.tsx", "./*.config.ts", "./*.d.ts", "resources/js/App.temp"]
 }

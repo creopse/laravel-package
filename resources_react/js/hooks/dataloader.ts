@@ -7,21 +7,22 @@
  * is a function that will be called when the component is mounted.
  */
 export const useDataloader = () => {
-  const { reloadUserData } = useAuth()
   const { loadTags, loadCategories } = useNews()
+  const { setTags, setCategories } = useNewsStore()
 
-  const initialize = useCallback(async () => {
-    loadTags()
-    loadCategories()
-    reloadUserData()
-  }, [loadTags, loadCategories, reloadUserData])
+  const initializeData = useCallback(async () => {
+    const [tags, categories] = await Promise.all([loadTags(), loadCategories()])
+
+    setTags(tags)
+    setCategories(categories)
+  }, [loadTags, loadCategories, setTags, setCategories])
 
   // Auto-initialize on mount
   useEffect(() => {
-    initialize()
-  }, [initialize])
+    initializeData()
+  }, [initializeData])
 
   return {
-    initialize,
+    initializeData,
   }
 }

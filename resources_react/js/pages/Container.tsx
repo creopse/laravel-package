@@ -1,15 +1,14 @@
-import AppHead from '@/components/sections/AppHead'
-import Page from '@/layouts/Page'
 import { RootContainer } from '@creopse/react'
 import React from 'react'
 
 const Container: React.FC = () => {
-  return (
-    <Page>
-      <AppHead />
-      <RootContainer />
-    </Page>
-  )
+  const { initializeData } = useDataloader()
+
+  useEffect(() => {
+    initializeData()
+  }, [initializeData])
+
+  return <RootContainer />
 }
 
 export default Container

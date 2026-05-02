@@ -58,14 +58,14 @@ export default defineConfig({
         {
           'react-i18next': ['useTranslation'],
           '@inertiajs/react': ['useForm', 'usePage', 'router'],
-          '@creopse/react/hooks': ['useApi', 'useNews', 'useProps', 'useVideo', 'useConfig', 'useHelper', 'useContent', 'useNewsletter'],
+          '@creopse/react/hooks': ['useApi', 'useConfig', 'useContent', 'useHelper', 'useNews', 'useNewsletter', 'useProps', 'useVideo'],
           axios: [['default', 'axios']],
         },
       ],
 
       // Auto import for module exports under directories
       // by default it only scan one level of modules under the directory
-      dirs: ['./resources/js/stores/**'],
+      dirs: ['./resources/js/stores/**', './resources/js/hooks/**'],
 
       // Include auto-imported packages in Vite's `optimizeDeps` options
       // Recommend to enable

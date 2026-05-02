@@ -3,8 +3,5 @@
 </script>
 
 <template>
-  <Page>
-    <AppHead />
-    <RootContainer />
-  </Page>
+  <RootContainer />
 </template>

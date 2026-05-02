@@ -1,5 +1,3 @@
-import 'flowbite'
-
 import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
 
@@ -10,8 +8,7 @@ import './i18n'
 import '@arkn/react-icon-picker/dist/style.css'
 
 createInertiaApp({
-  title: (title) =>
-    title ? `${title} - ${import.meta.env.APP_NAME}` : import.meta.env.APP_NAME,
+  title: (title) => (title ? `${title} - ${import.meta.env.APP_NAME}` : import.meta.env.APP_NAME),
   resolve: (name) => {
     const pages = import.meta.glob('./pages/**/*.tsx', { eager: true })
     const page: any = pages[`./pages/${name}.tsx`]
@@ -54,10 +51,9 @@ createInertiaApp({
               langKey: LANG_KEY,
             },
           } as PluginOptions
-        }
-      >
+        }>
         <App {...props} />
-      </CreopseProvider>,
+      </CreopseProvider>
     )
   },
 })

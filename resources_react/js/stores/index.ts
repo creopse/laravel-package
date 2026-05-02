@@ -6,10 +6,7 @@ export const storage: StateStorage = {
   getItem: (key: string) => {
     try {
       const encrypted = localStorage.getItem(key)
-      if (encrypted)
-        return CryptoJS.AES.decrypt(encrypted, STORE_ENCRYPTION_KEY).toString(
-          CryptoJS.enc.Utf8,
-        )
+      if (encrypted) return CryptoJS.AES.decrypt(encrypted, STORE_ENCRYPTION_KEY).toString(CryptoJS.enc.Utf8)
       else return encrypted
     } catch (error) {
       console.log(error)
@@ -19,10 +16,7 @@ export const storage: StateStorage = {
   },
   setItem: (key: string, value: any) => {
     try {
-      const encrypted = CryptoJS.AES.encrypt(
-        value,
-        STORE_ENCRYPTION_KEY,
-      ).toString()
+      const encrypted = CryptoJS.AES.encrypt(value, STORE_ENCRYPTION_KEY).toString()
       return localStorage.setItem(key, encrypted)
     } catch (error) {
       console.log(error)

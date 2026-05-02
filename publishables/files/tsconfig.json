@@ -4,11 +4,10 @@
     "strict": true,
     "allowJs": true,
     "noImplicitAny": false,
-    "types": ["vitest", "vite/client", "naive-ui/volar"],
+    "types": ["vitest", "vite/client"],
     "paths": {
-      "@/*": ["resources/js/*"]
-    },
-    "baseUrl": "."
+      "@/*": ["./resources/js/*"]
+    }
   },
   "include": [
     "resources/**/*.ts",

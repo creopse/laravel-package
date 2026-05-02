@@ -4,15 +4,9 @@ module.exports = {
     preflight: false,
   },
   darkMode: 'class',
-  content: [
-    './resources/**/*.blade.php',
-    './resources/**/*.js',
-    './resources/**/*.ts',
-    './resources/**/*.tsx',
-    './node_modules/flowbite/**/*.js',
-  ],
+  content: ['./resources/**/*.blade.php', './resources/**/*.js', './resources/**/*.ts', './resources/**/*.tsx'],
   theme: {
     extend: {},
   },
-  plugins: [require('flowbite/plugin')],
+  plugins: [],
 }

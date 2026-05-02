@@ -4,7 +4,6 @@ import VueI18n from 'laravel-vue-i18n/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import Icons from 'unplugin-icons/vite'
-import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import SvgLoader from 'vite-svg-loader'
@@ -72,7 +71,6 @@ export default defineConfig({
       extensions: ['vue', 'md'],
       include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
       resolvers: [
-        NaiveUiResolver(),
         IconsResolver(),
         (name) => {
           if (name === 'Icon') {
@@ -86,7 +84,6 @@ export default defineConfig({
       dirs: [
         'resources/js/components/sections',
         'resources/js/components/widgets',
-        'resources/js/layouts',
       ],
     }),
     AutoImport({
@@ -105,13 +102,6 @@ export default defineConfig({
         'pinia',
         // custom
         {
-          'naive-ui': [
-            'useModal',
-            'useDialog',
-            'useMessage',
-            ['useNotification', 'useNaiveNotification'],
-            'useLoadingBar',
-          ],
           'laravel-vue-i18n': [
             'trans',
             'wTrans',
@@ -137,7 +127,7 @@ export default defineConfig({
 
       // Auto import for module exports under directories
       // by default it only scan one level of modules under the directory
-      dirs: ['./resources/js/stores/**'],
+      dirs: ['./resources/js/stores/**', './resources/js/composables/**'],
       // Auto import inside Vue template
       // see https://github.com/unjs/unimport/pull/15 and https://github.com/unjs/unimport/pull/72
       vueTemplate: true,

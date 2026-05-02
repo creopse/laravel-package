@@ -1,9 +1,7 @@
 import { getBaseUrl, removeTrailingSlash } from '@creopse/utils'
 
 // Server
-export var API_BASE_URL = removeTrailingSlash(
-  import.meta.env.APP_URL || getBaseUrl(),
-)
+export var API_BASE_URL = removeTrailingSlash(import.meta.env.APP_URL || getBaseUrl())
 
 export var API_URL = `${API_BASE_URL}/api`
 

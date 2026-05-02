@@ -54,30 +54,5 @@ export const useNewsStore = defineStore('news', {
       })
     },
   },
-  actions: {
-    async loadCategories() {
-      const { request } = useApi()
-
-      const task = await request({
-        url: '/news-categories',
-      })
-
-      if (task.success && task.result.data) {
-        this.categories = task.result.data.filter(
-          (p: NewsCategoryModel) => p.isActive
-        )
-      }
-    },
-    async loadTags() {
-      const { request } = useApi()
-
-      const task = await request({
-        url: '/news-tags',
-      })
-
-      if (task.success && task.result.data) {
-        this.tags = task.result.data.filter((p: NewsTagModel) => p.isActive)
-      }
-    },
-  },
+  actions: {},
 })

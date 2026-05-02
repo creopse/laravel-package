@@ -23,7 +23,7 @@ export default createPinia().use(
               if (encrypted)
                 return CryptoJS.AES.decrypt(
                   encrypted,
-                  STORE_ENCRYPTION_KEY,
+                  STORE_ENCRYPTION_KEY
                 ).toString(CryptoJS.enc.Utf8)
               else return encrypted
             } catch (error) {
@@ -34,7 +34,7 @@ export default createPinia().use(
             try {
               const encrypted = CryptoJS.AES.encrypt(
                 value,
-                STORE_ENCRYPTION_KEY,
+                STORE_ENCRYPTION_KEY
               ).toString()
               return localStorage.setItem(key, encrypted)
             } catch (error) {
