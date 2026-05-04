@@ -1,1 +1,0 @@
-import"./lodash-8QTamlaQ.js";import"./browser-image-compression-BvBgsnu7.js";import{d as a,c as r,r as t}from"./dayjs-DLy8b2ll.js";a.extend(r);a.extend(t);var o="PluginDashboard",E="PluginSettings",m="PluginSetup";export{o as D,E as S,m as a};
