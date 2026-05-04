@@ -115,6 +115,7 @@ export default defineConfig({
           '@creopse/vue': [
             'useApi',
             'useNews',
+            'useMenu',
             'useProps',
             'useVideo',
             'useConfig',

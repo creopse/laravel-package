@@ -92,6 +92,7 @@
     "useForm": true,
     "useHelper": true,
     "useId": true,
+    "useMenu": true,
     "useModel": true,
     "useNews": true,
     "useNewsStore": true,

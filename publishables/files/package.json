@@ -18,7 +18,6 @@
         "@iconify/vue": "^5.0.0",
         "@tailwindcss/postcss": "^4.1.13",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-        "@types/crypto-js": "^4.2.2",
         "@types/jsdom": "^21.1.7",
         "@typescript-eslint/eslint-plugin": "^8.44.0",
         "@typescript-eslint/parser": "^8.44.0",
@@ -48,16 +47,22 @@
     },
     "dependencies": {
         "@creopse/cli": "^0.0.13",
-        "@creopse/utils": "^0.1.12",
-        "@creopse/vue": "^0.0.69",
-        "@inertiajs/core": "^2.1.6",
-        "@inertiajs/vue3": "^2.1.6",
-        "crypto-js": "^4.2.0",
+        "@creopse/utils": "^0.1.13",
+        "@creopse/vue": "^0.0.70",
+        "@inertiajs/core": "^2.3.21",
+        "@inertiajs/vue3": "^2.3.21",
+        "@noble/ciphers": "^2.2.0",
+        "@noble/hashes": "^2.2.0",
         "laravel-vue-i18n": "^2.8.0",
         "localforage": "^1.10.0",
         "pinia": "^2.3.1",
         "pinia-persistence-plugin": "^0.0.7",
         "vue": "^3.5.33",
         "vue3-icon-picker": "^0.3.3"
+    },
+    "pnpm": {
+        "overrides": {
+            "caniuse-lite": "latest"
+        }
     }
 }

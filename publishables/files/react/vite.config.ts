@@ -58,7 +58,7 @@ export default defineConfig({
         {
           'react-i18next': ['useTranslation'],
           '@inertiajs/react': ['useForm', 'usePage', 'router'],
-          '@creopse/react/hooks': ['useApi', 'useConfig', 'useContent', 'useHelper', 'useNews', 'useNewsletter', 'useProps', 'useVideo'],
+          '@creopse/react/hooks': ['useApi', 'useNews', 'useMenu', 'useProps', 'useVideo', 'useConfig', 'useHelper', 'useContent', 'useNewsletter'],
           axios: [['default', 'axios']],
         },
       ],
