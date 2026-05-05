@@ -5,14 +5,26 @@ const NotFoundPage: React.FC = () => {
   const { t } = useTranslation()
 
   return (
-    <section className="tw:flex tw:h-screen tw:flex-col tw:items-center tw:justify-center tw:px-3 tw:text-center">
-      <h1 className="tw:mb-2">{t('Error 404')}</h1>
-      <Error404 className="tw:h-[300px]" />
-      <h4 className="tw:mt-6 tw:mb-0">{t('Page Not Found!')}</h4>
-      <p className="tw:text-2xl tw:text-gray-800">{t('Oops! The page you are looking for does not exist. It might have been moved or deleted.')}</p>
+    <section className="tw:flex tw:flex-col tw:items-center tw:justify-center tw:min-h-screen tw:text-center tw:px-6 tw:gap-4">
+      <p className="tw:text-sm tw:font-semibold tw:tracking-widest tw:text-gray-400 tw:uppercase">
+        {t('Error 404')}
+      </p>
+
+      <Error404 className="tw:h-64 tw:w-auto" />
+
+      <h1 className="tw:text-3xl tw:font-bold tw:text-gray-800">
+        {t('Page Not Found!')}
+      </h1>
+
+      <p className="tw:max-w-md tw:text-gray-500">
+        {t(
+          'Oops! The page you are looking for does not exist. It might have been moved or deleted.',
+        )}
+      </p>
+
       <button
-        onClick={() => router.get('/', { replace: true })}
-        className="tw:bg-primary-600 tw:hover:bg-primary-700 tw:focus:ring-primary-500 tw:mb-4 tw:rounded tw:px-4 tw:py-2 tw:font-medium tw:text-white tw:transition-colors tw:focus:ring-2 tw:focus:ring-offset-2 tw:focus:outline-none">
+        className="tw:mt-2 tw:px-6 tw:py-2.5 tw:rounded-lg tw:bg-[#1E9CD7] tw:text-white tw:text-sm tw:font-semibold tw:tracking-wide tw:transition-opacity hover:tw:opacity-80 tw:cursor-pointer"
+        onClick={() => router.get('/', {}, { replace: true })}>
         {t('BACK TO HOME')}
       </button>
     </section>
