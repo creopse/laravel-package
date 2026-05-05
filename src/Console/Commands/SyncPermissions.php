@@ -6,6 +6,7 @@ use Creopse\Creopse\Enums\AccessGuard;
 use Creopse\Creopse\Enums\PermissionList;
 use Illuminate\Console\Command;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 class SyncPermissions extends CreopseCommand
 {
@@ -39,7 +40,7 @@ class SyncPermissions extends CreopseCommand
         }
 
         // Reset cache
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         $created = 0;
         $updated = 0;
@@ -51,7 +52,7 @@ class SyncPermissions extends CreopseCommand
                 'guard_name' => AccessGuard::WEB->value,
             ]);
 
-            $isNew = !$permission->exists;
+            $isNew = ! $permission->exists;
 
             $permission->fill([
                 'display_name' => $permEnum->label(),
@@ -75,13 +76,13 @@ class SyncPermissions extends CreopseCommand
         $orphaned = $dbPermissions->diff($definedPermissions);
 
         $this->newLine();
-        $this->info("  Summary:");
+        $this->info('  Summary:');
         $this->line("   • Permissions created: <fg=green>{$created}</>");
         $this->line("   • Permissions updated: <fg=yellow>{$updated}</>");
 
         if ($orphaned->isNotEmpty()) {
             $this->newLine();
-            $this->warn("  Orphaned permissions detected (in DB but not in code):");
+            $this->warn('  Orphaned permissions detected (in DB but not in code):');
             foreach ($orphaned as $orphan) {
                 $this->line("   • {$orphan}");
             }
@@ -90,7 +91,7 @@ class SyncPermissions extends CreopseCommand
             if ($this->option('clean')) {
                 if ($this->confirm('Do you want to delete these orphaned permissions?', false)) {
                     Permission::whereIn('name', $orphaned)->delete();
-                    $this->info("Orphaned permissions deleted.");
+                    $this->info('Orphaned permissions deleted.');
                 }
             } else {
                 $this->line("\n Use <fg=cyan>--clean</> to delete them.");
@@ -98,7 +99,7 @@ class SyncPermissions extends CreopseCommand
         }
 
         // Reset cache again
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         $this->newLine();
         $this->info('Synchronization complete!');
@@ -119,7 +120,7 @@ class SyncPermissions extends CreopseCommand
         $outdated = [];
 
         foreach ($definedPermissions as $permEnum) {
-            if (!$dbPermissions->has($permEnum->value)) {
+            if (! $dbPermissions->has($permEnum->value)) {
                 $missing[] = $permEnum->value;
             } else {
                 $present[] = $permEnum->value;
@@ -141,18 +142,18 @@ class SyncPermissions extends CreopseCommand
         $this->newLine();
 
         if (count($present) > 0) {
-            $this->line("<fg=green>  Up to date: " . count($present) . "</>");
+            $this->line('<fg=green>  Up to date: '.count($present).'</>');
         }
 
         if (count($missing) > 0) {
-            $this->line("<fg=red>  Missing: " . count($missing) . "</>");
+            $this->line('<fg=red>  Missing: '.count($missing).'</>');
             foreach ($missing as $perm) {
                 $this->line("   • {$perm}");
             }
         }
 
         if (count($outdated) > 0) {
-            $this->line("<fg=yellow>  Outdated metadata: " . count($outdated) . "</>");
+            $this->line('<fg=yellow>  Outdated metadata: '.count($outdated).'</>');
             foreach ($outdated as $perm) {
                 $this->line("   • {$perm}");
             }
@@ -160,14 +161,14 @@ class SyncPermissions extends CreopseCommand
 
         if ($orphaned->isNotEmpty()) {
             $this->newLine();
-            $this->line("<fg=yellow>  Orphaned: " . $orphaned->count() . "</>");
+            $this->line('<fg=yellow>  Orphaned: '.$orphaned->count().'</>');
             foreach ($orphaned as $perm) {
                 $this->line("   • {$perm}");
             }
         }
 
         $this->newLine();
-        $this->line(" Run <fg=cyan>php artisan permissions:sync</> to synchronize.");
+        $this->line(' Run <fg=cyan>php artisan permissions:sync</> to synchronize.');
 
         return Command::SUCCESS;
     }

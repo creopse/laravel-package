@@ -7,43 +7,43 @@ enum PermissionList: string
     // Dashboard Module
     case VIEW_DASHBOARD = 'view-dashboard';
 
-        // Account Module
+    // Account Module
     case VIEW_ACCOUNT = 'view-account';
     case EDIT_ACCOUNT = 'edit-account';
 
-        // Notifications Module
+    // Notifications Module
     case VIEW_NOTIFICATIONS = 'view-notifications';
     case MANAGE_NOTIFICATIONS = 'manage-notifications';
 
-        // Settings Module
+    // Settings Module
     case VIEW_ABOUT = 'view-about';
     case MANAGE_PLUGINS = 'manage-plugins';
     case MANAGE_APP_SETTINGS = 'manage-app-settings';
 
-        // Users Module
+    // Users Module
     case VIEW_USERS = 'view-users';
     case CREATE_USER = 'create-user';
     case EDIT_USER = 'edit-user';
     case DELETE_USER = 'delete-user';
 
-        // Access Module
+    // Access Module
     case VIEW_ROLES = 'view-roles';
     case MANAGE_ROLES = 'manage-roles';
     case VIEW_PERMISSIONS = 'view-permissions';
     case MANAGE_PERMISSIONS = 'manage-permissions';
 
-        // News Module
+    // News Module
     case CREATE_ARTICLE = 'create-article';
     case EDIT_ARTICLE = 'edit-article';
     case DELETE_ARTICLE = 'delete-article';
     case MANAGE_NEWS = 'manage-news';
 
-        // Media Module
+    // Media Module
     case VIEW_MEDIA = 'view-media';
     case UPLOAD_MEDIA = 'upload-media';
     case DELETE_MEDIA = 'delete-media';
 
-        // Content Module
+    // Content Module
     case VIEW_CONTENT = 'view-content';
     case MANAGE_CONTENT = 'manage-content';
     case USE_VISUAL_EDITOR = 'use-visual-editor';

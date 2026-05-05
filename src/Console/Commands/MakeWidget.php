@@ -50,25 +50,27 @@ class MakeWidget extends CreopseCommand
     {
         $argName = Functions::strToPascalCase($name);
 
-        $fileName = $argName . ($frontendFramework === 'react' ? '.tsx' : '.vue');
-        $filePath = base_path('resources/js/components/widgets/' . $fileName);
+        $fileName = $argName.($frontendFramework === 'react' ? '.tsx' : '.vue');
+        $filePath = base_path('resources/js/components/widgets/'.$fileName);
 
         if (File::exists($filePath)) {
             $this->warn("[$argName] Widget component '$fileName' already exists, skipping.");
+
             return;
         }
 
         $stubFile = $frontendFramework === 'react' ? 'widget.react.stub' : 'widget.vue.stub';
-        $stubPath = app('creopse.base_path') . '/stubs/' . $stubFile;
+        $stubPath = app('creopse.base_path').'/stubs/'.$stubFile;
 
-        if (!File::exists($stubPath)) {
+        if (! File::exists($stubPath)) {
             $this->error("[$argName] Stub file not found for {$frontendFramework}: {$stubPath}");
+
             return;
         }
 
         $stub = File::get($stubPath);
         $stub = str_replace('{{ name }}', $argName, $stub);
-        $stub = str_replace('{{ id }}', Str::kebab($argName) . '-widget', $stub);
+        $stub = str_replace('{{ id }}', Str::kebab($argName).'-widget', $stub);
 
         File::put($filePath, $stub);
 

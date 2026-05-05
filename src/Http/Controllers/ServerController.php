@@ -60,9 +60,9 @@ class ServerController extends Controller
         $configJsonBackupPath = public_path('creopse/config.jsonc.backup');
 
         try {
-            if (!File::exists($envPath)) {
+            if (! File::exists($envPath)) {
                 $templatePath = base_path('.env.template') ?: base_path('.env.example');
-                if (!File::exists($templatePath)) {
+                if (! File::exists($templatePath)) {
                     throw new \RuntimeException('.env.template or .env.example not found');
                 }
                 File::copy($templatePath, $envPath);
@@ -89,7 +89,7 @@ class ServerController extends Controller
             $statefulDomains = collect([
                 $appDomain,
                 $adminDomain,
-                $adminDomain . $adminPort,
+                $adminDomain.$adminPort,
             ])->unique()->filter()->implode(',');
 
             // Update .env with new values
@@ -139,7 +139,7 @@ class ServerController extends Controller
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::INTERNAL_SERVER_ERROR,
-                'Could not update server configuration. Error: ' . $e->getMessage()
+                'Could not update server configuration. Error: '.$e->getMessage()
             );
         }
     }
@@ -149,7 +149,7 @@ class ServerController extends Controller
      */
     private function updateConfigJsonc(string $configPath, string $apiBaseUrl): void
     {
-        if (!File::exists($configPath)) {
+        if (! File::exists($configPath)) {
             // Create default config.jsonc if it doesn't exist
             $defaultConfig = <<<JSONC
 {
@@ -158,6 +158,7 @@ class ServerController extends Controller
 }
 JSONC;
             File::put($configPath, $defaultConfig);
+
             return;
         }
 
@@ -166,7 +167,7 @@ JSONC;
         // Pattern to match "apiBaseUrl": "any value"
         // Handles optional whitespace and preserves indentation
         $pattern = '/("apiBaseUrl"\s*:\s*)"[^"]*"/';
-        $replacement = '$1"' . addslashes($apiBaseUrl) . '"';
+        $replacement = '$1"'.addslashes($apiBaseUrl).'"';
 
         if (preg_match($pattern, $content)) {
             // Update existing value
@@ -177,7 +178,7 @@ JSONC;
             if (preg_match('/\{/', $content)) {
                 $newContent = preg_replace(
                     '/(\{)\s*/',
-                    "$1\n    \"apiBaseUrl\": \"" . addslashes($apiBaseUrl) . "\",\n",
+                    "$1\n    \"apiBaseUrl\": \"".addslashes($apiBaseUrl)."\",\n",
                     $content,
                     1
                 );
@@ -219,7 +220,7 @@ JSONC;
         // Get last 2 parts (domain.tld) and add leading dot
         $baseDomain = implode('.', array_slice($parts, -2));
 
-        return '.' . $baseDomain;
+        return '.'.$baseDomain;
     }
 
     /**
@@ -234,6 +235,7 @@ JSONC;
             if ($value === null) {
                 $pattern = "/^{$key}=.*$/m";
                 $envContent = preg_replace($pattern, "{$key}=", $envContent);
+
                 continue;
             }
 
@@ -261,7 +263,7 @@ JSONC;
 
         // If value contains spaces, #, ; or quotes, wrap it in double quotes
         if (preg_match('/[\s#;"\']/', $value)) {
-            return '"' . str_replace('"', '\\"', $value) . '"';
+            return '"'.str_replace('"', '\\"', $value).'"';
         }
 
         return $value;

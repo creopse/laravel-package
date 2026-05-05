@@ -72,7 +72,7 @@ class UserResource extends JsonResource
     protected function getAppendedAttributes()
     {
         return collect($this->resource->getAppends())
-            ->mapWithKeys(fn($attribute) => [$attribute => $this->{$attribute}])
+            ->mapWithKeys(fn ($attribute) => [$attribute => $this->{$attribute}])
             ->toArray();
     }
 }

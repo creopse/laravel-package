@@ -4,7 +4,8 @@ namespace Creopse\Creopse\Console\Commands\Plugins;
 
 class PluginMakeEvent extends PluginGeneratorCommand
 {
-    protected $name        = 'plugin:make-event';
+    protected $name = 'plugin:make-event';
+
     protected $description = 'Create a new event inside a plugin';
 
     protected function getPluginSubDirectory(): string

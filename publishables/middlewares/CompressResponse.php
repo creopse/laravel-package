@@ -99,8 +99,8 @@ class CompressResponse
             ->setContent($compressed)
             ->withHeaders([
                 'Content-Encoding' => $encoding,
-                'Content-Length'   => (string) strlen($compressed),
-                'Vary'             => 'Accept-Encoding',
+                'Content-Length' => (string) strlen($compressed),
+                'Vary' => 'Accept-Encoding',
             ]);
     }
 
@@ -111,7 +111,7 @@ class CompressResponse
     protected function negotiateEncoding(Request $request): ?string
     {
         $accepted = strtolower($request->header('Accept-Encoding', ''));
-        $secure   = $request->isSecure();
+        $secure = $request->isSecure();
 
         if ($secure && str_contains($accepted, 'br') && function_exists('brotli_compress')) {
             return 'br';
@@ -136,10 +136,10 @@ class CompressResponse
         $level = (int) config('creopse.compression.level', 5);
 
         return match ($encoding) {
-            'br'      => $this->brotliCompress($content, $level),
-            'gzip'    => gzencode($content, min($level, 9)),
+            'br' => $this->brotliCompress($content, $level),
+            'gzip' => gzencode($content, min($level, 9)),
             'deflate' => gzdeflate($content, min($level, 9)),
-            default   => false,
+            default => false,
         };
     }
 

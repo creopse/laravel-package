@@ -9,11 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
-use Illuminate\Support\Str;
 
 class NewsArticle extends Model implements Feedable
 {
@@ -98,12 +98,11 @@ class NewsArticle extends Model implements Feedable
 
     /**
      * Create a new feed item for the current article.
-     *
-     * @return \Spatie\Feed\FeedItem
      */
     public function toFeedItem(): FeedItem
     {
         $author = new UserResource($this->author);
+
         return FeedItem::create([
             'id' => $this->id,
             'title' => Functions::trans($this->title),
@@ -117,7 +116,7 @@ class NewsArticle extends Model implements Feedable
             })->all(),
             'tags' => $this->tags->pluck('name')->map(function ($name) {
                 return Functions::trans($name);
-            })
+            }),
         ]);
     }
 }

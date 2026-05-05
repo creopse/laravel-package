@@ -24,6 +24,7 @@ return new class extends Migration
             $table->unique(['user_id', 'device_id']);
         });
     }
+
     /**
      * Reverse the migrations.
      */

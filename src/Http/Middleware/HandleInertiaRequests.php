@@ -4,14 +4,32 @@ namespace Creopse\Creopse\Http\Middleware;
 
 use Creopse\Creopse\Enums\ContentType;
 use Creopse\Creopse\Helpers\Functions;
-use Creopse\Creopse\Http\Resources\Content\{PageDataResource, ContentModelResource, MenuItemGroupResource, MenuLocationResource, MenuResource, PermalinkResource, SectionResource};
-use Creopse\Creopse\Http\Resources\{UserResource, Ads\AdResource, Ads\AdIdentifierResource};
-use Creopse\Creopse\Models\{AppInformation, AdIdentifier, Ad, ContentModel, Menu, MenuItem, MenuItemGroup, MenuLocation, Page, Permalink, VideoSetting};
+use Creopse\Creopse\Http\Resources\Ads\AdIdentifierResource;
+use Creopse\Creopse\Http\Resources\Ads\AdResource;
+use Creopse\Creopse\Http\Resources\Content\ContentModelResource;
+use Creopse\Creopse\Http\Resources\Content\MenuItemGroupResource;
+use Creopse\Creopse\Http\Resources\Content\MenuLocationResource;
+use Creopse\Creopse\Http\Resources\Content\MenuResource;
+use Creopse\Creopse\Http\Resources\Content\PageDataResource;
+use Creopse\Creopse\Http\Resources\Content\PermalinkResource;
+use Creopse\Creopse\Http\Resources\Content\SectionResource;
+use Creopse\Creopse\Http\Resources\UserResource;
+use Creopse\Creopse\Models\Ad;
+use Creopse\Creopse\Models\AdIdentifier;
+use Creopse\Creopse\Models\AppInformation;
+use Creopse\Creopse\Models\ContentModel;
+use Creopse\Creopse\Models\Menu;
+use Creopse\Creopse\Models\MenuItem;
+use Creopse\Creopse\Models\MenuItemGroup;
+use Creopse\Creopse\Models\MenuLocation;
+use Creopse\Creopse\Models\Page;
+use Creopse\Creopse\Models\Permalink;
+use Creopse\Creopse\Models\VideoSetting;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Inertia\Middleware;
 use Illuminate\Support\Str;
+use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -46,7 +64,7 @@ class HandleInertiaRequests extends Middleware
         $pageData = null;
         $sectionData = null;
 
-        $currentPath = $request->route()->uri() === '/' ? $request->route()->uri() : '/' . $request->route()->uri();
+        $currentPath = $request->route()->uri() === '/' ? $request->route()->uri() : '/'.$request->route()->uri();
 
         if ($currentPath === '/editor-page/s/{slug}' && $request->route('slug')) {
 
@@ -92,7 +110,7 @@ class HandleInertiaRequests extends Middleware
         $descriptionItem = $appInformation->firstWhere('key', 'description');
         $description = $descriptionItem && $descriptionItem->value ? Functions::trans($descriptionItem->value) : '';
 
-        $title = isset($menuItem) ? (Functions::trans($menuItem->title) . ' - ' . $name) : $name;
+        $title = isset($menuItem) ? (Functions::trans($menuItem->title).' - '.$name) : $name;
 
         $channelIdItem = VideoSetting::where('key', 'youtubeChannelId')->first();
 
@@ -134,6 +152,7 @@ class HandleInertiaRequests extends Middleware
                                     $item->content = null;
                                 }
                             }
+
                             return $item;
                         });
                     })
@@ -151,7 +170,7 @@ class HandleInertiaRequests extends Middleware
             'permalinks' => PermalinkResource::collection(
                 Permalink::with(['content' => function (MorphTo $morphTo) {
                     $morphTo->constrain([
-                        ContentModel::class => fn($q) => $q->select(['id', 'slug', 'name', 'title']),
+                        ContentModel::class => fn ($q) => $q->select(['id', 'slug', 'name', 'title']),
                     ]);
                 }])->get()
             ),

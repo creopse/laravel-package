@@ -11,4 +11,4 @@
 |
 */
 
-require __DIR__ . '/profiles.php';
+require __DIR__.'/profiles.php';

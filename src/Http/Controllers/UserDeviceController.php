@@ -85,6 +85,7 @@ class UserDeviceController extends Controller
     public function destroy(UserDevice $userDevice)
     {
         $userDevice->delete();
+
         return $this->sendResponse(
             null,
             ResponseStatusCode::OK,

@@ -7,7 +7,8 @@ use Symfony\Component\Console\Input\InputOption;
 
 class PluginMakeModel extends PluginGeneratorCommand
 {
-    protected $name        = 'plugin:make-model';
+    protected $name = 'plugin:make-model';
+
     protected $description = 'Create a new Eloquent model inside a plugin';
 
     protected function getPluginSubDirectory(): string
@@ -34,8 +35,8 @@ class PluginMakeModel extends PluginGeneratorCommand
             $table = Str::snake(Str::pluralStudly($this->argument('name')));
 
             $this->call('plugin:make-migration', [
-                'plugin'   => $this->argument('plugin'),
-                'name'     => "create_{$table}_table",
+                'plugin' => $this->argument('plugin'),
+                'name' => "create_{$table}_table",
                 '--create' => $table,
             ]);
         }

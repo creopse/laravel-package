@@ -59,11 +59,12 @@ class RemoveSection extends CreopseCommand
      */
     private function deleteComponentFile(string $argName, string $frontendFramework): void
     {
-        $fileName = $argName . ($frontendFramework === 'react' ? '.tsx' : '.vue');
-        $filePath = base_path('resources/js/components/sections/' . $fileName);
+        $fileName = $argName.($frontendFramework === 'react' ? '.tsx' : '.vue');
+        $filePath = base_path('resources/js/components/sections/'.$fileName);
 
-        if (!File::exists($filePath)) {
+        if (! File::exists($filePath)) {
             $this->warn("[$argName] Component file '$fileName' does not exist, skipping.");
+
             return;
         }
 
@@ -78,8 +79,9 @@ class RemoveSection extends CreopseCommand
     {
         $section = Section::where('name', $argName)->first();
 
-        if (!$section) {
+        if (! $section) {
             $this->warn("[$argName] Section does not exist in the database, skipping.");
+
             return;
         }
 

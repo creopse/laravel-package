@@ -4,7 +4,6 @@ namespace Creopse\Creopse\Database\Seeders;
 
 use Creopse\Creopse\Enums\PermalinkContentType;
 use Creopse\Creopse\Models\Permalink;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class PermalinksSeeder extends Seeder

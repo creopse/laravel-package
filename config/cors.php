@@ -22,10 +22,10 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => config('app.env') === 'production'
-        ? array_map(fn($d) => 'https://' . $d, $stateful)
+        ? array_map(fn ($d) => 'https://'.$d, $stateful)
         : array_merge(
-            array_map(fn($d) => 'http://' . $d, $stateful),
-            array_map(fn($d) => 'https://' . $d, $stateful)
+            array_map(fn ($d) => 'http://'.$d, $stateful),
+            array_map(fn ($d) => 'https://'.$d, $stateful)
         ),
 
     'allowed_origins_patterns' => [],

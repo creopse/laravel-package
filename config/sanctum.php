@@ -1,5 +1,8 @@
 <?php
 
+use Creopse\Creopse\Http\Middleware\EncryptCookies;
+use Creopse\Creopse\Http\Middleware\VerifyCsrfToken;
+use Laravel\Sanctum\Http\Middleware\AuthenticateSession;
 use Laravel\Sanctum\Sanctum;
 
 return [
@@ -75,9 +78,9 @@ return [
     */
 
     'middleware' => [
-        'authenticate_session' => Laravel\Sanctum\Http\Middleware\AuthenticateSession::class,
-        'encrypt_cookies' => Creopse\Creopse\Http\Middleware\EncryptCookies::class,
-        'verify_csrf_token' => Creopse\Creopse\Http\Middleware\VerifyCsrfToken::class,
+        'authenticate_session' => AuthenticateSession::class,
+        'encrypt_cookies' => EncryptCookies::class,
+        'verify_csrf_token' => VerifyCsrfToken::class,
     ],
 
 ];

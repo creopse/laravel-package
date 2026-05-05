@@ -2,9 +2,9 @@
 
 namespace Creopse\Creopse\Http\Controllers\Settings;
 
-use Creopse\Creopse\Models\AppSetting;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Http\Controllers\Controller;
+use Creopse\Creopse\Models\AppSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 

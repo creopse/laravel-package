@@ -3,6 +3,7 @@
 namespace Creopse\Creopse\Http\Requests\Ads;
 
 use Creopse\Creopse\Traits\RequestValidationException;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,12 +22,12 @@ class AdIdentifierRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'id' => 'required|string|unique:ad_identifiers'
+            'id' => 'required|string|unique:ad_identifiers',
         ];
     }
 }

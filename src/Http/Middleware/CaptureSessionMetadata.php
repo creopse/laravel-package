@@ -40,7 +40,7 @@ class CaptureSessionMetadata
                 // Silently ignore errors (session may not exist in DB)
                 \Log::debug('Failed to update session metadata', [
                     'session_id' => $sessionId,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
         }
@@ -50,40 +50,64 @@ class CaptureSessionMetadata
 
     private function getDeviceNameFromUserAgent(?string $userAgent): string
     {
-        if (!$userAgent) {
+        if (! $userAgent) {
             return 'Unknown Device';
         }
 
         // Windows
         if (preg_match('/Windows NT/i', $userAgent)) {
-            if (preg_match('/Edg\//i', $userAgent)) return 'Windows (Edge)';
-            if (preg_match('/Chrome/i', $userAgent)) return 'Windows (Chrome)';
-            if (preg_match('/Firefox/i', $userAgent)) return 'Windows (Firefox)';
+            if (preg_match('/Edg\//i', $userAgent)) {
+                return 'Windows (Edge)';
+            }
+            if (preg_match('/Chrome/i', $userAgent)) {
+                return 'Windows (Chrome)';
+            }
+            if (preg_match('/Firefox/i', $userAgent)) {
+                return 'Windows (Firefox)';
+            }
+
             return 'Windows';
         }
 
         // macOS
         if (preg_match('/Macintosh/i', $userAgent)) {
-            if (preg_match('/Safari/i', $userAgent) && !preg_match('/Chrome/i', $userAgent)) {
+            if (preg_match('/Safari/i', $userAgent) && ! preg_match('/Chrome/i', $userAgent)) {
                 return 'macOS (Safari)';
             }
-            if (preg_match('/Chrome/i', $userAgent)) return 'macOS (Chrome)';
-            if (preg_match('/Firefox/i', $userAgent)) return 'macOS (Firefox)';
+            if (preg_match('/Chrome/i', $userAgent)) {
+                return 'macOS (Chrome)';
+            }
+            if (preg_match('/Firefox/i', $userAgent)) {
+                return 'macOS (Firefox)';
+            }
+
             return 'macOS';
         }
 
         // Mobile
-        if (preg_match('/iPhone/i', $userAgent)) return 'iPhone';
-        if (preg_match('/iPad/i', $userAgent)) return 'iPad';
+        if (preg_match('/iPhone/i', $userAgent)) {
+            return 'iPhone';
+        }
+        if (preg_match('/iPad/i', $userAgent)) {
+            return 'iPad';
+        }
         if (preg_match('/Android/i', $userAgent)) {
-            if (preg_match('/Chrome/i', $userAgent)) return 'Android (Chrome)';
+            if (preg_match('/Chrome/i', $userAgent)) {
+                return 'Android (Chrome)';
+            }
+
             return 'Android';
         }
 
         // Linux
         if (preg_match('/Linux/i', $userAgent)) {
-            if (preg_match('/Chrome/i', $userAgent)) return 'Linux (Chrome)';
-            if (preg_match('/Firefox/i', $userAgent)) return 'Linux (Firefox)';
+            if (preg_match('/Chrome/i', $userAgent)) {
+                return 'Linux (Chrome)';
+            }
+            if (preg_match('/Firefox/i', $userAgent)) {
+                return 'Linux (Firefox)';
+            }
+
             return 'Linux';
         }
 

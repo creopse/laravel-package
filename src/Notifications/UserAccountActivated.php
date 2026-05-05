@@ -34,8 +34,6 @@ class UserAccountActivated extends Notification implements ShouldQueue
 
     /**
      * Get the notification data.
-     *
-     * @return array
      */
     private function getData(): array
     {

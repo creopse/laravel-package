@@ -6,7 +6,8 @@ use Symfony\Component\Console\Input\InputOption;
 
 class PluginMakeListener extends PluginGeneratorCommand
 {
-    protected $name        = 'plugin:make-listener';
+    protected $name = 'plugin:make-listener';
+
     protected $description = 'Create a new listener inside a plugin';
 
     protected function getPluginSubDirectory(): string

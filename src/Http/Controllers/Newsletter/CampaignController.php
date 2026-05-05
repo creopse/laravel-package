@@ -4,8 +4,8 @@ namespace Creopse\Creopse\Http\Controllers\Newsletter;
 
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
-use Creopse\Creopse\Models\NewsletterCampaign;
 use Creopse\Creopse\Http\Controllers\Controller;
+use Creopse\Creopse\Models\NewsletterCampaign;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 

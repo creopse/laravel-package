@@ -3,7 +3,6 @@
 namespace Creopse\Creopse\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Attachment;
@@ -72,10 +71,10 @@ class CommonMail extends Mailable
     /**
      * Get the attachments for the message.
      *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     * @return array<int, Attachment>
      */
     public function attachments(): array
     {
-        return array_map(fn($path) => Attachment::fromStorageDisk('public', $path), $this->attachmentsData);
+        return array_map(fn ($path) => Attachment::fromStorageDisk('public', $path), $this->attachmentsData);
     }
 }

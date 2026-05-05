@@ -2,12 +2,12 @@
 
 namespace Creopse\Creopse\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Events\Auth\UserLoggedOutEvent;
+use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Traits\DetectsMobileRequest;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LogoutController extends Controller

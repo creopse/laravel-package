@@ -2,6 +2,7 @@
 
 namespace Creopse\Creopse\Http\Controllers;
 
+use Carbon\Carbon;
 use Creopse\Creopse\Enums\NewsArticleStatus;
 use Creopse\Creopse\Enums\PermalinkContentType;
 use Creopse\Creopse\Helpers\Functions;
@@ -17,32 +18,31 @@ use Creopse\Creopse\Models\NewsArticle;
 use Creopse\Creopse\Models\NewsCategory;
 use Creopse\Creopse\Models\NewsTag;
 use Creopse\Creopse\Models\Permalink;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Storage;
-use Inertia\Inertia;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class DynamicPageController extends Controller
 {
-    public function getEditorPage(Request $request, String $slug)
+    public function getEditorPage(Request $request, string $slug)
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return $this->return404($request);
         }
 
         return Inertia::render('Container', [
             'user' => $request->user(),
             'pageSlug' => $slug,
-            'editor' => true
+            'editor' => true,
         ]);
     }
 
     public function getPage(Request $request)
     {
-        $currentPath = $request->route()->uri() === '/' ? $request->route()->uri() : '/' . $request->route()->uri();
+        $currentPath = $request->route()->uri() === '/' ? $request->route()->uri() : '/'.$request->route()->uri();
 
         $menuItem = MenuItem::where('path', $currentPath)->first();
 
@@ -55,13 +55,13 @@ class DynamicPageController extends Controller
 
     public function getContentPage(Request $request, mixed $id)
     {
-        $currentPath = $request->route()->uri() === '/' ? $request->route()->uri() : '/' . $request->route()->uri();
+        $currentPath = $request->route()->uri() === '/' ? $request->route()->uri() : '/'.$request->route()->uri();
 
         $prefix = str_replace('/{id}', '', $currentPath);
 
         $permalink = Permalink::where('path_prefix', $prefix)->first();
 
-        if ($permalink && !is_null($permalink->page_id)) {
+        if ($permalink && ! is_null($permalink->page_id)) {
             $appNameItem = AppInformation::where('key', 'name')->first();
             $appName = $appNameItem ? $appNameItem->value : config('app.name');
 
@@ -71,8 +71,7 @@ class DynamicPageController extends Controller
 
                     if ($newsArticle) {
                         return Inertia::render('Container', [
-                            'article' =>
-                            $newsArticle->status === NewsArticleStatus::PUBLISHED->value && (is_null($newsArticle->published_at) || $newsArticle->published_at <= Carbon::now())
+                            'article' => $newsArticle->status === NewsArticleStatus::PUBLISHED->value && (is_null($newsArticle->published_at) || $newsArticle->published_at <= Carbon::now())
                                 ? (new ArticleResource(
                                     $newsArticle
                                         ->load(['categories', 'tags', 'comments'])
@@ -80,11 +79,11 @@ class DynamicPageController extends Controller
                                 ))
                                 : null,
                             'meta' => [
-                                'title' => Functions::trans($newsArticle->title) . ' - ' . $appName,
+                                'title' => Functions::trans($newsArticle->title).' - '.$appName,
                                 'description' => Functions::trans($newsArticle->summary),
                                 'url' => $request->url(),
                                 'image' => Functions::replaceEmptySpaces($newsArticle->featured_image_url) ?? asset('assets/images/creopse/icon.svg'),
-                            ]
+                            ],
                         ]);
                     } else {
                         return $this->return404($request);
@@ -117,10 +116,10 @@ class DynamicPageController extends Controller
                             ),
                             'paginatedArticles' => new ArticleCollection($newsArticles),
                             'meta' => [
-                                'title' => Functions::trans($newsCategory->name) . ' - ' . Lang::get('Category') . ' - ' . $appName,
+                                'title' => Functions::trans($newsCategory->name).' - '.Lang::get('Category').' - '.$appName,
                                 'description' => Functions::trans($newsCategory->description),
                                 'url' => $request->url(),
-                            ]
+                            ],
                         ]);
                     } else {
                         return $this->return404($request);
@@ -148,10 +147,10 @@ class DynamicPageController extends Controller
                             ),
                             'paginatedArticles' => new ArticleCollection($newsArticles),
                             'meta' => [
-                                'title' => Functions::trans($newsTag->name) . ' - ' . Lang::get('News Tag') . ' - ' . $appName,
+                                'title' => Functions::trans($newsTag->name).' - '.Lang::get('News Tag').' - '.$appName,
                                 'description' => Functions::trans($newsTag->description),
                                 'url' => $request->url(),
-                            ]
+                            ],
                         ]);
                     } else {
                         return $this->return404($request);
@@ -196,12 +195,12 @@ class DynamicPageController extends Controller
 
         return Inertia::render('NotFound', [
             'meta' => [
-                'title' => Lang::get('Error 404 - Page not found') . ' - ' . $name,
+                'title' => Lang::get('Error 404 - Page not found').' - '.$name,
                 'description' => Lang::get('Oops! The page you are looking for does not exist. It might have been moved or deleted.'),
                 'url' => $request->url(),
                 'image' => $icon,
-                'favicon' => $icon
-            ]
+                'favicon' => $icon,
+            ],
         ]);
     }
 }

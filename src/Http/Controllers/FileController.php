@@ -46,10 +46,10 @@ class FileController extends Controller
                 foreach ($sizes as $sizeName => $dimensions) {
                     $resizedImage = Image::read($file)->scaleDown(width: $dimensions['width']);
 
-                    $thumbnailPath = "thumbnails/{$sizeName}/" . basename($path);
+                    $thumbnailPath = "thumbnails/{$sizeName}/".basename($path);
                     // Storage::put($thumbnailPath, $resizedImage);
                     $directory = dirname($thumbnailPath);
-                    if (!Storage::disk('public')->exists($directory)) {
+                    if (! Storage::disk('public')->exists($directory)) {
                         Storage::disk('public')->makeDirectory($directory);
                     }
                     $resizedImage->save(Storage::disk('public')->path($thumbnailPath));
@@ -61,7 +61,7 @@ class FileController extends Controller
 
         if ($fileType === MediaFileType::VIDEO) {
             try {
-                $thumbnailPath = 'thumbnails/video/' . pathinfo($path, PATHINFO_FILENAME) . '.jpg';
+                $thumbnailPath = 'thumbnails/video/'.pathinfo($path, PATHINFO_FILENAME).'.jpg';
 
                 FFMpeg::fromDisk('public')
                     ->open($path)
@@ -144,7 +144,7 @@ class FileController extends Controller
             return $this->sendResponse(
                 [
                     'path' => $request->input('path'),
-                    'url' => Storage::disk('public')->url($request->input('path'))
+                    'url' => Storage::disk('public')->url($request->input('path')),
                 ],
                 ResponseStatusCode::OK,
                 'File deleted successfully',
@@ -176,7 +176,7 @@ class FileController extends Controller
         }
 
         // Check if file exists
-        if (!Storage::disk('public')->exists($request->input('path'))) {
+        if (! Storage::disk('public')->exists($request->input('path'))) {
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::NOT_FOUND,
@@ -206,7 +206,7 @@ class FileController extends Controller
         }
 
         // Check if file exists
-        if (!Storage::disk('public')->exists($request->input('path'))) {
+        if (! Storage::disk('public')->exists($request->input('path'))) {
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::NOT_FOUND,
@@ -217,7 +217,7 @@ class FileController extends Controller
         return $this->sendResponse(
             [
                 'path' => $request->input('path'),
-                'url' => Storage::disk('public')->url($request->input('path'))
+                'url' => Storage::disk('public')->url($request->input('path')),
             ],
             ResponseStatusCode::OK,
             'File exists',

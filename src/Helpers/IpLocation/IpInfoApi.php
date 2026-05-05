@@ -2,10 +2,9 @@
 
 namespace Creopse\Creopse\Helpers\IpLocation;
 
+use Creopse\Creopse\Helpers\Constants;
 use ipinfo\ipinfo\IPinfo;
 use ipinfo\ipinfo\IPinfoException;
-
-use Creopse\Creopse\Helpers\Constants;
 
 /**
  * IpInfoApi
@@ -24,19 +23,27 @@ use Creopse\Creopse\Helpers\Constants;
  */
 class IpInfoApi
 {
-    var $ipinfo;
+    public $ipinfo;
 
-    var $ip       = null;
-    var $hostname = null;
-    var $city     = null;
-    var $region   = null;
-    var $country  = null;
-    var $loc      = null;
-    var $org      = null;
-    var $postal   = null;
-    var $timezone = null;
+    public $ip = null;
 
-    function __construct()
+    public $hostname = null;
+
+    public $city = null;
+
+    public $region = null;
+
+    public $country = null;
+
+    public $loc = null;
+
+    public $org = null;
+
+    public $postal = null;
+
+    public $timezone = null;
+
+    public function __construct()
     {
         $this->ipinfo = new IPinfo(
             Constants::IP_INFO_API_KEYS[Constants::getIpInfoApiKeysIndex()]
@@ -46,7 +53,7 @@ class IpInfoApi
     /**
      * Locate a given IP address.
      *
-     * @param  string|null $ip
+     * @param  string|null  $ip
      * @return void
      */
     public function locate($ip = null)
@@ -68,14 +75,14 @@ class IpInfoApi
             return;
         }
 
-        $this->ip       = $ip;
+        $this->ip = $ip;
         $this->hostname = $details->hostname ?? null;
-        $this->city     = $details->city     ?? null;
-        $this->region   = $details->region   ?? null;
-        $this->country  = $details->country  ?? null;
-        $this->loc      = $details->loc      ?? null;
-        $this->org      = $details->org      ?? null;
-        $this->postal   = $details->postal   ?? null;
+        $this->city = $details->city ?? null;
+        $this->region = $details->region ?? null;
+        $this->country = $details->country ?? null;
+        $this->loc = $details->loc ?? null;
+        $this->org = $details->org ?? null;
+        $this->postal = $details->postal ?? null;
         $this->timezone = $details->timezone ?? null;
     }
 }

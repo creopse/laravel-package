@@ -42,7 +42,7 @@ class GenerateThumbnails extends CreopseCommand
 
         foreach (array_keys($sizes) as $size) {
             $thumbnailPath = "thumbnails/{$size}";
-            if (!$disk->exists($thumbnailPath)) {
+            if (! $disk->exists($thumbnailPath)) {
                 $disk->makeDirectory($thumbnailPath);
                 $this->info("✓ Directory created: {$thumbnailPath}");
             }
@@ -57,11 +57,13 @@ class GenerateThumbnails extends CreopseCommand
             }
 
             $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
             return in_array($extension, $this->allowedExtensions);
         });
 
         if ($imageFiles->isEmpty()) {
             $this->warn('No images found.');
+
             return Command::SUCCESS;
         }
 
@@ -83,9 +85,10 @@ class GenerateThumbnails extends CreopseCommand
                 $thumbnailFullPath = storage_path("app/public/{$thumbnailPath}");
 
                 // Check if thumbnail already exists
-                if (!$force && $disk->exists($thumbnailPath)) {
+                if (! $force && $disk->exists($thumbnailPath)) {
                     $skipped++;
                     $bar->advance();
+
                     continue;
                 }
 
@@ -99,7 +102,7 @@ class GenerateThumbnails extends CreopseCommand
                 } catch (\Exception $e) {
                     $errors++;
                     $this->newLine();
-                    $this->error("Error for {$file}: " . $e->getMessage());
+                    $this->error("Error for {$file}: ".$e->getMessage());
                 }
 
                 $bar->advance();
@@ -110,7 +113,7 @@ class GenerateThumbnails extends CreopseCommand
         $this->newLine(2);
 
         // Summary
-        $this->info("✓ Generation completed!");
+        $this->info('✓ Generation completed!');
         $this->table(
             ['Status', 'Count'],
             [

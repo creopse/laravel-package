@@ -12,6 +12,7 @@ trait DetectsLaravelVersion
     protected function getLaravelMinorVersion(): int
     {
         $parts = explode('.', $this->app->version());
+
         return isset($parts[1]) ? (int) $parts[1] : 0;
     }
 

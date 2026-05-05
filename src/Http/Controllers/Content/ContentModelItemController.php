@@ -6,12 +6,12 @@ use Creopse\Creopse\Enums\ContentModel\AccessScope;
 use Creopse\Creopse\Enums\ContentModel\ItemCreatorType;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Events\Content\UserEntryEvent;
+use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Requests\Content\ContentModelItemRequest;
 use Creopse\Creopse\Http\Resources\Content\ContentModelItemResource;
+use Creopse\Creopse\Models\ContentModel;
 use Creopse\Creopse\Models\ContentModelItem;
 use Illuminate\Http\Request;
-use Creopse\Creopse\Http\Controllers\Controller;
-use Creopse\Creopse\Models\ContentModel;
 use Illuminate\Support\Facades\DB;
 
 class ContentModelItemController extends Controller
@@ -24,19 +24,19 @@ class ContentModelItemController extends Controller
         $pageSize = $request->query('pageSize');
 
         $prepareQuery = function () use ($request) {
-            $query            = $request->query('query');
-            $isActive         = $request->query('isActive');
-            $contentModelId   = $request->query('contentModelId');
+            $query = $request->query('query');
+            $isActive = $request->query('isActive');
+            $contentModelId = $request->query('contentModelId');
             $contentModelName = $request->query('contentModelName');
-            $createdByType    = $request->query('createdByType');
-            $createdBy        = $request->query('createdBy');
-            $dataFilters      = $request->query('dataFilters', []);
+            $createdByType = $request->query('createdByType');
+            $createdBy = $request->query('createdBy');
+            $dataFilters = $request->query('dataFilters', []);
 
             $items = ContentModelItem::query();
 
             if ($contentModelId) {
                 $items = $items->where('content_model_id', $contentModelId);
-            } else if ($contentModelName) {
+            } elseif ($contentModelName) {
                 $contentModel = ContentModel::where('name', $contentModelName)->first();
 
                 if ($contentModel) {
@@ -48,12 +48,12 @@ class ContentModelItemController extends Controller
 
             if ($query) {
                 $items = $items->where(function ($q) use ($query) {
-                    $q->where('title', 'like', '%' . $query . '%')
-                        ->orWhere('content_model_data', 'like', '%' . $query . '%');
+                    $q->where('title', 'like', '%'.$query.'%')
+                        ->orWhere('content_model_data', 'like', '%'.$query.'%');
                 });
             }
 
-            if (!is_null($isActive)) {
+            if (! is_null($isActive)) {
                 $items = $items->where('is_active', filter_var($isActive, FILTER_VALIDATE_BOOLEAN));
             }
 
@@ -72,13 +72,13 @@ class ContentModelItemController extends Controller
 
             $items = $items->where(function ($q) use ($dataFilters, $allowedOperators) {
                 foreach ($dataFilters as $filter) {
-                    $key      = $filter['key']      ?? null;
-                    $value    = $filter['value']    ?? null;
+                    $key = $filter['key'] ?? null;
+                    $value = $filter['value'] ?? null;
                     $operator = $filter['operator'] ?? '=';
 
                     if (
                         $key &&
-                        !is_null($value) &&
+                        ! is_null($value) &&
                         preg_match('/^[a-zA-Z0-9_]+$/', $key) &&
                         in_array($operator, $allowedOperators)
                     ) {
@@ -109,17 +109,17 @@ class ContentModelItemController extends Controller
 
             return $this->sendResponse([
                 'items' => ContentModelItemResource::collection($items),
-                'meta'  => [
+                'meta' => [
                     'links' => [
                         'first' => $items->url(1),
-                        'last'  => $items->url($items->lastPage()),
-                        'prev'  => $items->previousPageUrl(),
-                        'next'  => $items->nextPageUrl(),
+                        'last' => $items->url($items->lastPage()),
+                        'prev' => $items->previousPageUrl(),
+                        'next' => $items->nextPageUrl(),
                     ],
                     'currentPage' => $items->currentPage(),
-                    'perPage'     => $items->perPage(),
-                    'total'       => $items->total(),
-                    'lastPage'    => $items->lastPage(),
+                    'perPage' => $items->perPage(),
+                    'total' => $items->total(),
+                    'lastPage' => $items->lastPage(),
                 ],
             ]);
         }
@@ -240,8 +240,8 @@ class ContentModelItemController extends Controller
         }); */
 
         $items = $items->where(function ($q) use ($query) {
-            $q->where('title', 'like', '%' . $query . '%')
-                ->orWhere("content_model_data", 'like', '%' . $query . '%');
+            $q->where('title', 'like', '%'.$query.'%')
+                ->orWhere('content_model_data', 'like', '%'.$query.'%');
         });
 
         $items = $items->get();

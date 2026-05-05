@@ -9,7 +9,7 @@ enum ResponseErrorCode: string
     case REQUEST_DATA_RETRIEVAL_FAILED = 'request/data_retrieval_failed';
     case REQUEST_DATA_ALREADY_EXISTS = 'request/data_already_exists';
 
-        // AUTH ERROR CODES
+    // AUTH ERROR CODES
     case AUTH_LOGIN_FAILED = 'auth/login_failed';
     case AUTH_REGISTRATION_FAILED = 'auth/registration_failed';
     case AUTH_MISSING_DATA = 'auth/missing_data';

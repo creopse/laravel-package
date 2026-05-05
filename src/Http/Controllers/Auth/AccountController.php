@@ -2,11 +2,11 @@
 
 namespace Creopse\Creopse\Http\Controllers\Auth;
 
-use Creopse\Creopse\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Http\Controllers\Controller;
+use Creopse\Creopse\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
@@ -16,7 +16,7 @@ class AccountController extends Controller
     public function disableAccount(Request $request): JsonResponse
     {
         User::where('id', $request->user()->id)->update([
-            'account_status' => 0
+            'account_status' => 0,
         ]);
 
         return $this->sendResponse(

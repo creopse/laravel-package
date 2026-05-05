@@ -4,12 +4,12 @@ namespace Creopse\Creopse\Http\Controllers\Content;
 
 use Creopse\Creopse\Enums\PermalinkContentType;
 use Creopse\Creopse\Enums\ResponseStatusCode;
+use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Requests\Content\ContentModelRequest;
 use Creopse\Creopse\Http\Resources\Content\ContentModelResource;
 use Creopse\Creopse\Models\ContentModel;
-use Illuminate\Http\Request;
-use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Models\Permalink;
+use Illuminate\Http\Request;
 
 class ContentModelController extends Controller
 {
@@ -29,8 +29,8 @@ class ContentModelController extends Controller
 
             if ($query) {
                 $items = $items->where(function ($q) use ($query) {
-                    $q->where('title', 'like', '%' . $query . '%')
-                        ->orWhere('description', 'like', '%' . $query . '%');
+                    $q->where('title', 'like', '%'.$query.'%')
+                        ->orWhere('description', 'like', '%'.$query.'%');
                 });
             }
 
@@ -87,7 +87,7 @@ class ContentModelController extends Controller
 
         if ($request->has('has_permalink') && $request->input('has_permalink')) {
             Permalink::create([
-                'path_prefix' => '/' . rtrim($contentModel->slug, '/'),
+                'path_prefix' => '/'.rtrim($contentModel->slug, '/'),
                 'content_type' => PermalinkContentType::CONTENT_MODEL->value,
                 'content_param' => 'id',
                 'content_id' => $contentModel->id,
@@ -121,9 +121,9 @@ class ContentModelController extends Controller
             ->first();
 
         if ($request->has('has_permalink') && $request->input('has_permalink')) {
-            if (!$permalink) {
+            if (! $permalink) {
                 Permalink::create([
-                    'path_prefix' => '/' . rtrim($contentModel->slug, '/'),
+                    'path_prefix' => '/'.rtrim($contentModel->slug, '/'),
                     'content_type' => PermalinkContentType::CONTENT_MODEL->value,
                     'content_param' => 'id',
                     'content_id' => $contentModel->id,

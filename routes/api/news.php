@@ -1,7 +1,7 @@
 <?php
 
-use Creopse\Creopse\Http\Controllers\News\CategoryController;
 use Creopse\Creopse\Http\Controllers\News\ArticleController;
+use Creopse\Creopse\Http\Controllers\News\CategoryController;
 use Creopse\Creopse\Http\Controllers\News\CommentController;
 use Creopse\Creopse\Http\Controllers\News\TagController;
 use Illuminate\Support\Facades\Route;

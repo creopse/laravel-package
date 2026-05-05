@@ -27,8 +27,8 @@ class SectionBasicResource extends JsonResource
             'updatedAt' => $this->updated_at,
             'pagesCount' => $this->whenCounted('pages'),
             'pages' => $this->whenLoaded('pages', function () {
-                return $this->pages->map(fn($page) => [
-                    'id'    => $page->id,
+                return $this->pages->map(fn ($page) => [
+                    'id' => $page->id,
                     'title' => $page->title,
                     'pivot' => $page->pivot,
                 ]);
@@ -43,7 +43,7 @@ class SectionBasicResource extends JsonResource
                     'linkId' => $this->pivot->link_id,
                     'linkTitle' => $this->pivot->link_title,
                     'createdAt' => $this->pivot->created_at,
-                    'updatedAt' => $this->pivot->updated_at
+                    'updatedAt' => $this->pivot->updated_at,
                 ];
             }),
         ];

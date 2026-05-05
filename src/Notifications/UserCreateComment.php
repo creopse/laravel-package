@@ -6,7 +6,6 @@ use Creopse\Creopse\Enums\NotificationSource;
 use Creopse\Creopse\Helpers\Functions;
 use Creopse\Creopse\Models\NewsComment;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -40,8 +39,6 @@ class UserCreateComment extends Notification
 
     /**
      * Get the notification data.
-     *
-     * @return array
      */
     private function getData(): array
     {
@@ -65,7 +62,7 @@ class UserCreateComment extends Notification
             ->subject($data['title'])
             ->line($data['title'])
             ->line($data['content'])
-            ->action(__('creopse::notifications.user_create_comment.action'), env('ADMIN_URL') . '/news-management/comments');
+            ->action(__('creopse::notifications.user_create_comment.action'), env('ADMIN_URL').'/news-management/comments');
     }
 
     /**

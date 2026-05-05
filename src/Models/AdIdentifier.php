@@ -14,7 +14,7 @@ class AdIdentifier extends Model
 
     protected $casts = [
         'params' => 'array',
-        'reusable' => 'boolean'
+        'reusable' => 'boolean',
     ];
 
     protected $keyType = 'string';

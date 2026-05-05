@@ -16,19 +16,21 @@ use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Resources\UserResource;
 use Creopse\Creopse\Models\AppInformation;
 use Creopse\Creopse\Models\User;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Google\Client as GoogleClient;
+use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Twilio\Rest\Client as TwilioClient;
+use Illuminate\Validation\ValidationException;
 use phpseclib3\Crypt\RSA;
 use phpseclib3\Math\BigInteger;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
-use Illuminate\Support\Facades\Log;
+use Twilio\Rest\Client as TwilioClient;
 
 class ProviderController extends Controller
 {
@@ -78,7 +80,7 @@ class ProviderController extends Controller
     /**
      * Handle an incoming google auth request.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function authWithGoogle(Request $request): JsonResponse
     {
@@ -88,7 +90,7 @@ class ProviderController extends Controller
         $validator = Validator::make($request->all(), [
             'client_id' => 'sometimes',
             'credential' => 'required',
-            'preferences' => 'sometimes|array'
+            'preferences' => 'sometimes|array',
         ]);
 
         // If data not valid return error
@@ -138,7 +140,7 @@ class ProviderController extends Controller
                         ? $request->input('account_status')
                         : (User::count() > 0 ? AccountStatus::DISABLED->value : AccountStatus::ENABLED->value),
                     'auth_type' => AuthType::GOOGLE->value,
-                    'preferences' => $request->input('preferences')
+                    'preferences' => $request->input('preferences'),
                 ]);
 
                 if ($user) {
@@ -206,7 +208,7 @@ class ProviderController extends Controller
             $kid = $header['kid'] ?? null;
 
             // Apple Key Recovery
-            $client = new \GuzzleHttp\Client();
+            $client = new Client;
             $response = $client->get('https://appleid.apple.com/auth/keys');
             $appleKeys = json_decode($response->getBody(), true);
 
@@ -225,13 +227,14 @@ class ProviderController extends Controller
             $email = $payload['email'] ?? null;
             $userId = $payload['sub'] ?? null;
 
-            if (!$email || !$userId) {
+            if (! $email || ! $userId) {
                 throw new \Exception('Missing email or user identifier in token');
             }
 
             return $this->handleAppleUser($email, $userId, $request);
         } catch (\Exception $e) {
-            Log::error('Apple authentication failed: ' . $e->getMessage());
+            Log::error('Apple authentication failed: '.$e->getMessage());
+
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::UNPROCESSABLE_ENTITY,
@@ -252,18 +255,20 @@ class ProviderController extends Controller
                     return $this->convertJwkToPem($key);
                 }
             }
+
             return '';
         } catch (\Exception $e) {
-            Log::error('findJWKByKid failed: ' . $e->getMessage());
+            Log::error('findJWKByKid failed: '.$e->getMessage());
+
             return '';
         }
     }
 
-    //composer require phpseclib/phpseclib:~3.0
+    // composer require phpseclib/phpseclib:~3.0
     private function convertJwkToPem(array $jwk): string
     {
         try {
-            if (!isset($jwk['n']) || !isset($jwk['e'])) {
+            if (! isset($jwk['n']) || ! isset($jwk['e'])) {
                 throw new \Exception('Invalid JWK: Missing n or e parameters');
             }
 
@@ -284,7 +289,8 @@ class ProviderController extends Controller
             // Export to PEM
             return $rsa->toString('PKCS8');
         } catch (\Exception $e) {
-            Log::error('convertJwkToPem failed: ' . $e->getMessage());
+            Log::error('convertJwkToPem failed: '.$e->getMessage());
+
             return '';
         }
     }
@@ -354,7 +360,7 @@ class ProviderController extends Controller
                 ? $request->input('account_status')
                 : (User::count() > 0 ? AccountStatus::DISABLED->value : AccountStatus::ENABLED->value),
             'auth_type' => AuthType::APPLE->value,
-            'preferences' => $request->input('preferences', [])
+            'preferences' => $request->input('preferences', []),
         ]);
 
         if ($user) {
@@ -383,7 +389,7 @@ class ProviderController extends Controller
     /**
      * Handle an incoming phone auth request.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function authWithPhone(Request $request): JsonResponse
     {
@@ -395,7 +401,7 @@ class ProviderController extends Controller
             'phone' => 'required',
             'preferences' => 'sometimes|array',
             'allow_registration' => 'sometimes|boolean',
-            'provider' => 'sometimes|in:twilio,wassa_sms'
+            'provider' => 'sometimes|in:twilio,wassa_sms',
         ]);
 
         // If data not valid return error
@@ -431,7 +437,7 @@ class ProviderController extends Controller
                     ? $request->input('account_status')
                     : (User::count() > 0 ? AccountStatus::DISABLED->value : AccountStatus::ENABLED->value),
                 'auth_type' => AuthType::PHONE->value,
-                'preferences' => $request->input('preferences')
+                'preferences' => $request->input('preferences'),
             ]);
 
             if (User::count() === 1) {
@@ -456,17 +462,17 @@ class ProviderController extends Controller
 
                 if ($request->input('provider') === 'wassa_sms') {
 
-                    $client = new \GuzzleHttp\Client();
+                    $client = new Client;
                     $response = $client->get(
                         $wassaSmsConfig['endpoint'],
                         [
                             'query' => [
                                 'access-token' => $wassaSmsConfig['token'],
-                                'sender'       => $appName,
-                                'receiver'     => str_replace('+', '', $phone),
-                                'text'         => __('creopse::auth.verification_code', ['code' => $verificationCode]),
-                                'dlr_url'      => '',
-                            ]
+                                'sender' => $appName,
+                                'receiver' => str_replace('+', '', $phone),
+                                'text' => __('creopse::auth.verification_code', ['code' => $verificationCode]),
+                                'dlr_url' => '',
+                            ],
                         ]
                     );
 
@@ -482,7 +488,7 @@ class ProviderController extends Controller
 
                     $verification = $twilio->verify->v2->services($twilioConfig['service'])
                         ->verifications
-                        ->create($phone, "sms");
+                        ->create($phone, 'sms');
 
                     return $this->sendResponse(
                         $verification,
@@ -512,7 +518,7 @@ class ProviderController extends Controller
     /**
      * Verify phone auth.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function verifyPhoneAuth(Request $request): JsonResponse
     {
@@ -522,7 +528,7 @@ class ProviderController extends Controller
         $validator = Validator::make($request->all(), [
             'phone' => 'required',
             'code' => 'required',
-            'provider' => 'sometimes|in:twilio,wassa_sms'
+            'provider' => 'sometimes|in:twilio,wassa_sms',
         ]);
 
         // If data not valid return error
@@ -556,8 +562,8 @@ class ProviderController extends Controller
                         ->verificationChecks
                         ->create(
                             [
-                                "to" => $phone,
-                                "code" => $request->input('code')
+                                'to' => $phone,
+                                'code' => $request->input('code'),
                             ]
                         );
 

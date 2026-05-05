@@ -6,7 +6,6 @@ use Creopse\Creopse\Enums\ProfileType;
 use Creopse\Creopse\Enums\UserRole;
 use Creopse\Creopse\Models\AdminProfile;
 use Creopse\Creopse\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -16,7 +15,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        if (!User::where('email', 'admin@gmail.com')->orWhere('username', 'admin')->exists()) {
+        if (! User::where('email', 'admin@gmail.com')->orWhere('username', 'admin')->exists()) {
             $adminProfile = AdminProfile::factory()->create();
             $user = User::factory()->withEmail('admin@gmail.com')->withUsername('admin')->withLocale('fr')->unverified()->create();
             $user->assignRole(UserRole::SUPER_ADMIN->value);

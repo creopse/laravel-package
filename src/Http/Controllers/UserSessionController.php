@@ -30,6 +30,7 @@ class UserSessionController extends Controller
     public function destroy(UserSession $userSession)
     {
         $userSession->delete();
+
         return $this->sendResponse(
             null,
             ResponseStatusCode::OK,

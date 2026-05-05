@@ -1,18 +1,18 @@
 <?php
 
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
-use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__ . '/../routes/web/index.php',
-        api: __DIR__ . '/../routes/api/index.php',
-        commands: __DIR__ . '/../routes/console.php',
+        web: __DIR__.'/../routes/web/index.php',
+        api: __DIR__.'/../routes/api/index.php',
+        commands: __DIR__.'/../routes/console.php',
         apiPrefix: 'api',
         then: function () {
             RateLimiter::for('api', function (Request $request) {

@@ -1,8 +1,8 @@
 <?php
 
 use Creopse\Creopse\Http\Controllers\Content\VideoCategoryController;
-use Creopse\Creopse\Http\Controllers\Settings\VideoSettingController;
 use Creopse\Creopse\Http\Controllers\Content\VideoItemController;
+use Creopse\Creopse\Http\Controllers\Settings\VideoSettingController;
 use Illuminate\Support\Facades\Route;
 
 /*

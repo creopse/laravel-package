@@ -29,8 +29,8 @@ class SectionResource extends JsonResource
             'updatedAt' => $this->updated_at,
             'pagesCount' => $this->whenCounted('pages'),
             'pages' => $this->whenLoaded('pages', function () {
-                return $this->pages->map(fn($page) => [
-                    'id'    => $page->id,
+                return $this->pages->map(fn ($page) => [
+                    'id' => $page->id,
                     'title' => $page->title,
                     'pivot' => $page->pivot,
                 ]);
@@ -52,9 +52,9 @@ class SectionResource extends JsonResource
                     'data' => $sourcePivot ? Functions::convertKeysToCamelCase($sourcePivot->data) : Functions::convertKeysToCamelCase($this->pivot->data),
                     'settings' => $sourcePivot ? Functions::convertKeysToCamelCase($sourcePivot->settings) : Functions::convertKeysToCamelCase($this->pivot->settings),
                     'createdAt' => $this->pivot->created_at,
-                    'updatedAt' => $this->pivot->updated_at
+                    'updatedAt' => $this->pivot->updated_at,
                 ];
-            })
+            }),
         ];
     }
 }

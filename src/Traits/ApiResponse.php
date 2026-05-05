@@ -2,7 +2,8 @@
 
 namespace Creopse\Creopse\Traits;
 
-use Creopse\Creopse\Enums\{ResponseStatusCode, ResponseErrorCode};
+use Creopse\Creopse\Enums\ResponseErrorCode;
+use Creopse\Creopse\Enums\ResponseStatusCode;
 use Illuminate\Http\JsonResponse;
 
 trait ApiResponse
@@ -10,25 +11,24 @@ trait ApiResponse
     /**
      * Send a response with JSON data, status code, message, and error code.
      *
-     * @param mixed $data task result
-     * @param ResponseStatusCode $statusCode response status code
-     * @param string $message description of the response
-     * @param string $errorCode response error code
-     * @return JsonResponse
+     * @param  mixed  $data  task result
+     * @param  ResponseStatusCode  $statusCode  response status code
+     * @param  string  $message  description of the response
+     * @param  string  $errorCode  response error code
      */
     public function sendResponse($data = null, $statusCode = ResponseStatusCode::OK, $message = null, $errorCode = null): JsonResponse
     {
         $response = [];
 
-        if (!is_null($data)) {
+        if (! is_null($data)) {
             $response['data'] = $data;
         }
 
-        if (!is_null($message)) {
+        if (! is_null($message)) {
             $response['message'] = $message;
         }
 
-        if (!is_null($errorCode)) {
+        if (! is_null($errorCode)) {
             $response['errorCode'] = $errorCode instanceof ResponseErrorCode ? $errorCode->value : $errorCode;
         }
 

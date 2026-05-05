@@ -3,9 +3,9 @@
 namespace Creopse\Creopse\Console\Commands\Migrations;
 
 use Closure;
-use DOMDocument;
 use Creopse\Creopse\Console\Commands\CreopseCommand;
 use Creopse\Creopse\Models\PageSection;
+use DOMDocument;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 
@@ -36,26 +36,27 @@ class MigrateSectionsDataIcon extends CreopseCommand
      */
     public function handle(): void
     {
-        $this->info("Fetching icons map from GitHub...");
+        $this->info('Fetching icons map from GitHub...');
 
         $response = Http::get('https://raw.githubusercontent.com/noeGnh/vue3-icon-picker/master/packages/vue3-icon-picker/icons-map.json');
 
         if ($response->failed()) {
-            $this->error("Target icon map unreachable. Aborting.");
+            $this->error('Target icon map unreachable. Aborting.');
+
             return;
         }
 
         $iconsMap = $response->json();
 
         // 1. Indexing: Pre-calculate hashes and signatures to avoid O(n^2) overhead during the loop
-        $this->info("Indexing icons repository...");
+        $this->info('Indexing icons repository...');
         $svgIndex = collect($iconsMap)->map(function ($svg, $key) {
             return [
-                'hash'      => $this->normalizeSvg($svg), // For exact matches
-                'svg'       => $svg,
-                'name'      => $this->extractIconName($key),
+                'hash' => $this->normalizeSvg($svg), // For exact matches
+                'svg' => $svg,
+                'name' => $this->extractIconName($key),
                 'signature' => $this->getPathSignature($svg), // For fuzzy matches (Bigrams)
-                'nodeCount' => $this->countGeometryNodes($svg)
+                'nodeCount' => $this->countGeometryNodes($svg),
             ];
         });
 
@@ -75,6 +76,7 @@ class MigrateSectionsDataIcon extends CreopseCommand
 
                 if ($exact) {
                     $stats['matched']++;
+
                     return $exact['name'];
                 }
 
@@ -83,16 +85,18 @@ class MigrateSectionsDataIcon extends CreopseCommand
 
                 if ($fuzzy && $fuzzy['similarity'] >= self::SIMILARITY_THRESHOLD) {
                     $stats['fuzzy']++;
+
                     // Optional: Log fuzzy matches to verify later
                     // Log::debug("Fuzzy match: {$fuzzy['similarity']} -> {$fuzzy['name']}");
                     return $fuzzy['name'];
                 }
 
                 $stats['failed']++;
+
                 return $svg; // Keep original if no match found
             });
 
-            if (!$this->option('dry-run')) {
+            if (! $this->option('dry-run')) {
                 $pageSection->update(['data' => $updatedData]);
             }
 
@@ -109,7 +113,7 @@ class MigrateSectionsDataIcon extends CreopseCommand
         ]);
 
         if ($this->option('dry-run')) {
-            $this->warn("This was a DRY RUN. No changes were saved to the database.");
+            $this->warn('This was a DRY RUN. No changes were saved to the database.');
         }
     }
 
@@ -119,6 +123,7 @@ class MigrateSectionsDataIcon extends CreopseCommand
             foreach ($data as $key => $value) {
                 $data[$key] = $this->replaceSvgInData($value, $replacer);
             }
+
             return $data;
         }
 
@@ -136,15 +141,17 @@ class MigrateSectionsDataIcon extends CreopseCommand
     private function normalizeSvg(string $svg): string
     {
         $dom = $this->getDom($svg);
-        if (!$dom) return md5($svg);
+        if (! $dom) {
+            return md5($svg);
+        }
 
         $shapes = [];
         $geometryMap = [
-            'path'    => ['d'],
-            'rect'    => ['x', 'y', 'width', 'height'],
-            'circle'  => ['cx', 'cy', 'r'],
+            'path' => ['d'],
+            'rect' => ['x', 'y', 'width', 'height'],
+            'circle' => ['cx', 'cy', 'r'],
             'ellipse' => ['cx', 'cy', 'rx', 'ry'],
-            'line'    => ['x1', 'y1', 'x2', 'y2'],
+            'line' => ['x1', 'y1', 'x2', 'y2'],
             'polygon' => ['points'],
             'polyline' => ['points'],
         ];
@@ -160,11 +167,12 @@ class MigrateSectionsDataIcon extends CreopseCommand
                     }
                 }
                 ksort($geom);
-                $shapes[] = $tag . ':' . json_encode($geom);
+                $shapes[] = $tag.':'.json_encode($geom);
             }
         }
 
         sort($shapes);
+
         return md5(implode('|', $shapes));
     }
 
@@ -174,7 +182,9 @@ class MigrateSectionsDataIcon extends CreopseCommand
         $targetNodes = $this->countGeometryNodes($targetSvg);
 
         // Sanity check: if empty, no match possible
-        if ($targetNodes === 0 || empty($targetSig)) return null;
+        if ($targetNodes === 0 || empty($targetSig)) {
+            return null;
+        }
 
         $bestMatch = null;
         $maxSimilarity = 0;
@@ -184,7 +194,9 @@ class MigrateSectionsDataIcon extends CreopseCommand
             // If node count differs significantly (> 20%), it's likely a completely different shape.
             if ($candidate['nodeCount'] > 0) {
                 $nodeDiff = abs($targetNodes - $candidate['nodeCount']) / $targetNodes;
-                if ($nodeDiff > 0.2) continue;
+                if ($nodeDiff > 0.2) {
+                    continue;
+                }
             }
 
             $similarity = $this->calculateCosineSimilarity($targetSig, $candidate['signature']);
@@ -195,7 +207,9 @@ class MigrateSectionsDataIcon extends CreopseCommand
             }
 
             // Early exit on perfect fuzzy match
-            if ($similarity > 0.99) break;
+            if ($similarity > 0.99) {
+                break;
+            }
         }
 
         return $bestMatch;
@@ -211,7 +225,9 @@ class MigrateSectionsDataIcon extends CreopseCommand
         preg_match_all('/[A-Za-z]/', $svg, $matches);
         $commands = $matches[0];
 
-        if (empty($commands)) return [];
+        if (empty($commands)) {
+            return [];
+        }
 
         $bigrams = [];
         $count = count($commands);
@@ -222,8 +238,8 @@ class MigrateSectionsDataIcon extends CreopseCommand
         }
 
         for ($i = 0; $i < $count - 1; $i++) {
-            $pair = $commands[$i] . $commands[$i + 1];
-            if (!isset($bigrams[$pair])) {
+            $pair = $commands[$i].$commands[$i + 1];
+            if (! isset($bigrams[$pair])) {
                 $bigrams[$pair] = 0;
             }
             $bigrams[$pair]++;
@@ -252,7 +268,9 @@ class MigrateSectionsDataIcon extends CreopseCommand
             $mag2 += $v2 ** 2;
         }
 
-        if ($mag1 == 0 || $mag2 == 0) return 0;
+        if ($mag1 == 0 || $mag2 == 0) {
+            return 0;
+        }
 
         return $dotProduct / (sqrt($mag1) * sqrt($mag2));
     }
@@ -260,7 +278,7 @@ class MigrateSectionsDataIcon extends CreopseCommand
     private function normalizePathNumbers(string $pathData): string
     {
         // Round all numbers to 1 decimal to standardise precision
-        return preg_replace_callback('/-?\d+\.?\d*/', fn($m) => round((float)$m[0], 1), $pathData);
+        return preg_replace_callback('/-?\d+\.?\d*/', fn ($m) => round((float) $m[0], 1), $pathData);
     }
 
     private function countGeometryNodes(string $svg): int
@@ -270,14 +288,16 @@ class MigrateSectionsDataIcon extends CreopseCommand
 
     private function getDom(string $xml): ?DOMDocument
     {
-        $dom = new DOMDocument();
+        $dom = new DOMDocument;
         libxml_use_internal_errors(true);
         // Load XML without network access for security
-        if (!$dom->loadXML($xml, LIBXML_NONET)) {
+        if (! $dom->loadXML($xml, LIBXML_NONET)) {
             libxml_clear_errors();
+
             return null;
         }
         libxml_clear_errors();
+
         return $dom;
     }
 
@@ -285,6 +305,7 @@ class MigrateSectionsDataIcon extends CreopseCommand
     {
         // Extracts "heroicons_solid" from "heroicons_solid__check-circle"
         $parts = explode('__', $key, 2);
+
         return $parts[1] ?? $key;
     }
 }

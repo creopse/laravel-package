@@ -7,12 +7,13 @@ use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Http\Resources\MediaFileResource;
 use Creopse\Creopse\Models\MediaFile;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Laravel\Facades\Image;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
@@ -35,8 +36,8 @@ class MediaFileController extends Controller
             $mediaFiles = MediaFile::query();
 
             if ($query) {
-                $mediaFiles = $mediaFiles->where('name', 'like', '%' . $query . '%')
-                    ->orWhere('title', 'like', '%' . $query . '%');
+                $mediaFiles = $mediaFiles->where('name', 'like', '%'.$query.'%')
+                    ->orWhere('title', 'like', '%'.$query.'%');
             }
 
             if ($minSize) {
@@ -58,7 +59,7 @@ class MediaFileController extends Controller
             if ($months) {
                 $mediaFiles = $mediaFiles->where(function ($query) use ($months) {
                     foreach ($months as $month) {
-                        list($year, $month) = explode('-', $month);
+                        [$year, $month] = explode('-', $month);
                         $query->orWhereYear('created_at', $year)
                             ->whereMonth('created_at', $month);
                     }
@@ -120,7 +121,7 @@ class MediaFileController extends Controller
     /**
      * Retrieves a list of months in descending order based on the creation date of media files.
      *
-     * @param Request $request The HTTP request object.
+     * @param  Request  $request  The HTTP request object.
      * @return Response The HTTP response object containing the list of months.
      */
     public function showMonthsList(Request $request)
@@ -136,13 +137,13 @@ class MediaFileController extends Controller
     /**
      * Display the search result for a given query.
      *
-     * @param Request $request The HTTP request object.
-     * @param string $query The search query.
+     * @param  Request  $request  The HTTP request object.
+     * @param  string  $query  The search query.
      * @return \Inertia\Response The rendered search articles page.
      */
     public function searchMediaFiles(Request $request, string $query = '')
     {
-        $mediaFiles = MediaFile::where('name', 'like', '%' . $query . '%')->orWhere('title', 'like', '%' . $query . '%')->get();
+        $mediaFiles = MediaFile::where('name', 'like', '%'.$query.'%')->orWhere('title', 'like', '%'.$query.'%')->get();
 
         return $this->sendResponse(MediaFileResource::collection($mediaFiles));
     }
@@ -150,9 +151,10 @@ class MediaFileController extends Controller
     /**
      * Uploads a file and creates a MediaFile record in the database.
      *
-     * @param Request $request The HTTP request object.
+     * @param  Request  $request  The HTTP request object.
+     * @return JsonResponse The JSON response containing the uploaded MediaFile resource.
+     *
      * @throws \Exception If the file validation fails.
-     * @return \Illuminate\Http\JsonResponse The JSON response containing the uploaded MediaFile resource.
      */
     public function upload(Request $request)
     {
@@ -198,10 +200,10 @@ class MediaFileController extends Controller
                     $resizedImage = Image::read($file);
                     $resizedImage->scaleDown(width: $dimensions['width']);
 
-                    $thumbnailPath = "thumbnails/{$sizeName}/" . basename($path);
+                    $thumbnailPath = "thumbnails/{$sizeName}/".basename($path);
                     // Storage::put($thumbnailPath, $resizedImage);
                     $directory = dirname($thumbnailPath);
-                    if (!Storage::disk('public')->exists($directory)) {
+                    if (! Storage::disk('public')->exists($directory)) {
                         Storage::disk('public')->makeDirectory($directory);
                     }
                     $resizedImage->save(Storage::disk('public')->path($thumbnailPath));
@@ -213,7 +215,7 @@ class MediaFileController extends Controller
 
         if ($fileType === MediaFileType::VIDEO) {
             try {
-                $thumbnailPath = 'thumbnails/video/' . pathinfo($path, PATHINFO_FILENAME) . '.jpg';
+                $thumbnailPath = 'thumbnails/video/'.pathinfo($path, PATHINFO_FILENAME).'.jpg';
 
                 FFMpeg::fromDisk('public')
                     ->open($path)
@@ -248,9 +250,9 @@ class MediaFileController extends Controller
     /**
      * Replaces a media file with a new file and updates the corresponding MediaFile record in the database.
      *
-     * @param Request $request The HTTP request object containing the new file to replace the existing file.
-     * @param MediaFile $mediaFile The MediaFile record to be updated.
-     * @return \Illuminate\Http\JsonResponse The JSON response containing the updated MediaFile resource or an error message.
+     * @param  Request  $request  The HTTP request object containing the new file to replace the existing file.
+     * @param  MediaFile  $mediaFile  The MediaFile record to be updated.
+     * @return JsonResponse The JSON response containing the updated MediaFile resource or an error message.
      */
     public function replace(Request $request, MediaFile $mediaFile)
     {
@@ -269,7 +271,7 @@ class MediaFileController extends Controller
             );
         }
 
-        if (!Storage::disk('public')->exists($mediaFile->path) || Storage::disk('public')->delete($mediaFile->path)) {
+        if (! Storage::disk('public')->exists($mediaFile->path) || Storage::disk('public')->delete($mediaFile->path)) {
             /** @var UploadedFile $file */
             $newFile = $request->file('file');
 
@@ -297,10 +299,10 @@ class MediaFileController extends Controller
                         $resizedImage = Image::read($newFile);
                         $resizedImage->scaleDown(width: $dimensions['width']);
 
-                        $thumbnailPath = "thumbnails/{$sizeName}/" . basename($path);
+                        $thumbnailPath = "thumbnails/{$sizeName}/".basename($path);
                         // Storage::put($thumbnailPath, $resizedImage);
                         $directory = dirname($thumbnailPath);
-                        if (!Storage::disk('public')->exists($directory)) {
+                        if (! Storage::disk('public')->exists($directory)) {
                             Storage::disk('public')->makeDirectory($directory);
                         }
                         $resizedImage->save(Storage::disk('public')->path($thumbnailPath));
@@ -312,7 +314,7 @@ class MediaFileController extends Controller
 
             if ($fileType === MediaFileType::VIDEO) {
                 try {
-                    $thumbnailPath = 'thumbnails/video/' . pathinfo($path, PATHINFO_FILENAME) . '.jpg';
+                    $thumbnailPath = 'thumbnails/video/'.pathinfo($path, PATHINFO_FILENAME).'.jpg';
 
                     FFMpeg::fromDisk('public')
                         ->open($path)
@@ -352,8 +354,8 @@ class MediaFileController extends Controller
     /**
      * Deletes a file from the public disk and returns a JSON response indicating the success or failure of the operation.
      *
-     * @param Request $request The HTTP request object containing the path of the file to be deleted.
-     * @return \Illuminate\Http\JsonResponse The JSON response containing the path of the deleted file and its URL, or an error message.
+     * @param  Request  $request  The HTTP request object containing the path of the file to be deleted.
+     * @return JsonResponse The JSON response containing the path of the deleted file and its URL, or an error message.
      */
     public function delete(Request $request)
     {
@@ -378,7 +380,7 @@ class MediaFileController extends Controller
             return $this->sendResponse(
                 [
                     'path' => $request->input('path'),
-                    'url' => Storage::disk('public')->url($request->input('path'))
+                    'url' => Storage::disk('public')->url($request->input('path')),
                 ],
                 ResponseStatusCode::OK,
                 'Media file deleted successfully',
@@ -395,8 +397,8 @@ class MediaFileController extends Controller
     /**
      * Deletes a MediaFile record from the database.
      *
-     * @param MediaFile $mediaFile The MediaFile record to be deleted.
-     * @return \Illuminate\Http\JsonResponse The JSON response containing the success message.
+     * @param  MediaFile  $mediaFile  The MediaFile record to be deleted.
+     * @return JsonResponse The JSON response containing the success message.
      */
     public function destroy(MediaFile $mediaFile)
     {
@@ -412,8 +414,8 @@ class MediaFileController extends Controller
     /**
      * Deletes a MediaFile record permanently from the database.
      *
-     * @param MediaFile $mediaFile The MediaFile record to be deleted.
-     * @return \Illuminate\Http\JsonResponse The JSON response containing the success message.
+     * @param  MediaFile  $mediaFile  The MediaFile record to be deleted.
+     * @return JsonResponse The JSON response containing the success message.
      */
     public function forceDestroy(MediaFile $mediaFile)
     {
@@ -429,7 +431,7 @@ class MediaFileController extends Controller
     /**
      * Deletes all MediaFile records permanently from the database.
      *
-     * @return \Illuminate\Http\JsonResponse The JSON response containing the success message.
+     * @return JsonResponse The JSON response containing the success message.
      */
     public function forceDestroyAll()
     {
@@ -445,8 +447,8 @@ class MediaFileController extends Controller
     /**
      * Restore the specified resource from storage.
      *
-     * @param MediaFile $mediaFile The MediaFile record to be deleted.
-     * @return \Illuminate\Http\JsonResponse The JSON response containing the success message.
+     * @param  MediaFile  $mediaFile  The MediaFile record to be deleted.
+     * @return JsonResponse The JSON response containing the success message.
      */
     public function restore(MediaFile $mediaFile)
     {
@@ -461,9 +463,6 @@ class MediaFileController extends Controller
 
     /**
      * Determine the file type.
-     *
-     * @param UploadedFile $file
-     * @return MediaFileType
      */
     public static function determineFileType(UploadedFile $file): MediaFileType
     {
@@ -482,7 +481,7 @@ class MediaFileController extends Controller
             'application/vnd.ms-powerpoint',
             'application/vnd.openxmlformats-officedocument.presentationml.presentation',
             'text/plain',
-            'application/rtf'
+            'application/rtf',
         ];
 
         if (in_array($mimeType, $imageMimes)) {

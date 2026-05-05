@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Creopse\Creopse\Models\User>
+ * @extends Factory<User>
  */
 class UserFactory extends Factory
 {
@@ -40,7 +40,7 @@ class UserFactory extends Factory
             'phone' => fake()->unique()->phoneNumber(),
             'address' => fake()->address(),
             'account_status' => AccountStatus::ENABLED->value,
-            'auth_type' => AuthType::EMAIL_PASSWORD->value
+            'auth_type' => AuthType::EMAIL_PASSWORD->value,
         ];
     }
 
@@ -49,7 +49,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
     }
@@ -59,7 +59,7 @@ class UserFactory extends Factory
      */
     public function disabled(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'account_status' => AccountStatus::DISABLED->value,
         ]);
     }
@@ -69,7 +69,7 @@ class UserFactory extends Factory
      */
     public function withLocale(string $locale): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'preferences' => [
                 'inAppNotifEnabled' => 1,
                 'emailNotifEnabled' => 1,
@@ -83,7 +83,7 @@ class UserFactory extends Factory
      */
     public function withEmail(string $email): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'email' => $email,
         ]);
     }
@@ -93,7 +93,7 @@ class UserFactory extends Factory
      */
     public function withUsername(string $username): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'username' => $username,
         ]);
     }
@@ -103,9 +103,9 @@ class UserFactory extends Factory
      */
     public function authWithPhone(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'email' => null,
-            'auth_type' => AuthType::PHONE->value
+            'auth_type' => AuthType::PHONE->value,
         ]);
     }
 
@@ -114,8 +114,8 @@ class UserFactory extends Factory
      */
     public function authWithGoogle(): static
     {
-        return $this->state(fn(array $attributes) => [
-            'auth_type' => AuthType::GOOGLE->value
+        return $this->state(fn (array $attributes) => [
+            'auth_type' => AuthType::GOOGLE->value,
         ]);
     }
 }

@@ -9,7 +9,7 @@ class UserSession extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'location_data' => 'array'
+        'location_data' => 'array',
     ];
 
     public function user()

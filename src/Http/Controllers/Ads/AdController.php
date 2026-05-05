@@ -34,7 +34,7 @@ class AdController extends Controller
             'display' => $request->input('display'),
             'data' => $request->input('data'),
             'broadcast_start' => $request->input('broadcast_start'),
-            'broadcast_end' => $request->input('broadcast_end')
+            'broadcast_end' => $request->input('broadcast_end'),
         ]);
 
         return $this->sendResponse(

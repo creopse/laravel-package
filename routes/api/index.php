@@ -11,25 +11,25 @@
 |
 */
 
-require __DIR__ . '/ads.php';
-require __DIR__ . '/auth.php';
-require __DIR__ . '/lang.php';
-require __DIR__ . '/file.php';
-require __DIR__ . '/stats.php';
-require __DIR__ . '/users.php';
-require __DIR__ . '/email.php';
-require __DIR__ . '/access.php';
-require __DIR__ . '/server.php';
-require __DIR__ . '/install.php';
-require __DIR__ . '/plugins.php';
-require __DIR__ . '/content.php';
-require __DIR__ . '/database.php';
-require __DIR__ . '/newsletter.php';
-require __DIR__ . '/notifications.php';
-require __DIR__ . '/media-files.php';
-require __DIR__ . '/icon-picker.php';
-require __DIR__ . '/app-data.php';
-require __DIR__ . '/sessions.php';
-require __DIR__ . '/videos.php';
-require __DIR__ . '/news.php';
-require __DIR__ . '/sms.php';
+require __DIR__.'/ads.php';
+require __DIR__.'/auth.php';
+require __DIR__.'/lang.php';
+require __DIR__.'/file.php';
+require __DIR__.'/stats.php';
+require __DIR__.'/users.php';
+require __DIR__.'/email.php';
+require __DIR__.'/access.php';
+require __DIR__.'/server.php';
+require __DIR__.'/install.php';
+require __DIR__.'/plugins.php';
+require __DIR__.'/content.php';
+require __DIR__.'/database.php';
+require __DIR__.'/newsletter.php';
+require __DIR__.'/notifications.php';
+require __DIR__.'/media-files.php';
+require __DIR__.'/icon-picker.php';
+require __DIR__.'/app-data.php';
+require __DIR__.'/sessions.php';
+require __DIR__.'/videos.php';
+require __DIR__.'/news.php';
+require __DIR__.'/sms.php';

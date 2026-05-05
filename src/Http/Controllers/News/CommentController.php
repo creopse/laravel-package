@@ -25,9 +25,9 @@ class CommentController extends Controller
             $newsComments = NewsComment::query();
 
             if ($query) {
-                $newsComments = $newsComments->where('name', 'like', '%' . $query . '%')
-                    ->orWhere('email', 'like', '%' . $query . '%')
-                    ->orWhere('content', 'like', '%' . $query . '%');
+                $newsComments = $newsComments->where('name', 'like', '%'.$query.'%')
+                    ->orWhere('email', 'like', '%'.$query.'%')
+                    ->orWhere('content', 'like', '%'.$query.'%');
             }
 
             $newsComments = $newsComments->with(['article'])->latest()->paginate($pageSize);

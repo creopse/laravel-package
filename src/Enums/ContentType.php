@@ -2,6 +2,11 @@
 
 namespace Creopse\Creopse\Enums;
 
+use Creopse\Creopse\Models\ContentModelItem;
+use Creopse\Creopse\Models\NewsArticle;
+use Creopse\Creopse\Models\NewsCategory;
+use Creopse\Creopse\Models\NewsTag;
+
 enum ContentType: string
 {
     case NEWS_TAG = 'news-tag';
@@ -12,10 +17,10 @@ enum ContentType: string
     public function getModelClass(): ?string
     {
         return match ($this) {
-            self::NEWS_TAG => \Creopse\Creopse\Models\NewsTag::class,
-            self::NEWS_CATEGORY => \Creopse\Creopse\Models\NewsCategory::class,
-            self::NEWS_ARTICLE => \Creopse\Creopse\Models\NewsArticle::class,
-            self::CONTENT_MODEL => \Creopse\Creopse\Models\ContentModelItem::class,
+            self::NEWS_TAG => NewsTag::class,
+            self::NEWS_CATEGORY => NewsCategory::class,
+            self::NEWS_ARTICLE => NewsArticle::class,
+            self::CONTENT_MODEL => ContentModelItem::class,
         };
     }
 }

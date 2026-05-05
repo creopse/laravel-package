@@ -94,11 +94,11 @@ class InstallController extends Controller
             $installLockPath = public_path(config('installer.lock_file_path'));
 
             // Check that all required steps are completed
-            if (!File::exists(base_path('.env'))) {
+            if (! File::exists(base_path('.env'))) {
                 throw new \RuntimeException('.env file not configured');
             }
 
-            if (!config('database.connections.mysql.database')) {
+            if (! config('database.connections.mysql.database')) {
                 throw new \RuntimeException('Database not configured');
             }
 
@@ -132,7 +132,7 @@ class InstallController extends Controller
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::INTERNAL_SERVER_ERROR,
-                'Installation finalization failed. Error: ' . $e->getMessage()
+                'Installation finalization failed. Error: '.$e->getMessage()
             );
         }
     }

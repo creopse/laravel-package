@@ -6,7 +6,8 @@ use Symfony\Component\Console\Input\InputOption;
 
 class PluginMakeJob extends PluginGeneratorCommand
 {
-    protected $name        = 'plugin:make-job';
+    protected $name = 'plugin:make-job';
+
     protected $description = 'Create a new queued job inside a plugin';
 
     protected function getPluginSubDirectory(): string

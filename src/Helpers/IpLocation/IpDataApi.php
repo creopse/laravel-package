@@ -3,10 +3,9 @@
 namespace Creopse\Creopse\Helpers\IpLocation;
 
 use Creopse\Creopse\Helpers\Constants;
-
 use Ipdata\ApiClient\Ipdata;
-use Symfony\Component\HttpClient\Psr18Client;
 use Nyholm\Psr7\Factory\Psr17Factory;
+use Symfony\Component\HttpClient\Psr18Client;
 
 /**
  * IpDataApi
@@ -25,31 +24,48 @@ use Nyholm\Psr7\Factory\Psr17Factory;
  */
 class IpDataApi
 {
-    var $ipdata;
-    var $httpClient;
-    var $psr17Factory;
+    public $ipdata;
 
-    var $ip             = null;
-    var $city           = null;
-    var $region         = null;
-    var $region_code    = null;
-    var $country_name   = null;
-    var $country_code   = null;
-    var $continent_name = null;
-    var $continent_code = null;
-    var $latitude       = null;
-    var $longitude      = null;
-    var $asn            = null;
-    var $calling_code   = null;
-    var $flag           = null;
-    var $languages      = null;
-    var $currency       = null;
-    var $timezone       = null;
+    public $httpClient;
 
-    function __construct()
+    public $psr17Factory;
+
+    public $ip = null;
+
+    public $city = null;
+
+    public $region = null;
+
+    public $region_code = null;
+
+    public $country_name = null;
+
+    public $country_code = null;
+
+    public $continent_name = null;
+
+    public $continent_code = null;
+
+    public $latitude = null;
+
+    public $longitude = null;
+
+    public $asn = null;
+
+    public $calling_code = null;
+
+    public $flag = null;
+
+    public $languages = null;
+
+    public $currency = null;
+
+    public $timezone = null;
+
+    public function __construct()
     {
-        $this->httpClient   = new Psr18Client();
-        $this->psr17Factory = new Psr17Factory();
+        $this->httpClient = new Psr18Client;
+        $this->psr17Factory = new Psr17Factory;
 
         $this->ipdata = new Ipdata(
             Constants::IP_DATA_API_KEYS[Constants::getIpDataApiKeysIndex()],
@@ -61,7 +77,7 @@ class IpDataApi
     /**
      * Locate a given IP address.
      *
-     * @param  string|null $ip
+     * @param  string|null  $ip
      * @return void
      */
     public function locate($ip = null)
@@ -82,22 +98,22 @@ class IpDataApi
             return;
         }
 
-        $this->ip             = $ip;
-        $this->city           = $data['city']           ?? null;
-        $this->region         = $data['region']         ?? null;
-        $this->region_code    = $data['region_code']    ?? null;
-        $this->country_name   = $data['country_name']   ?? null;
-        $this->country_code   = $data['country_code']   ?? null;
+        $this->ip = $ip;
+        $this->city = $data['city'] ?? null;
+        $this->region = $data['region'] ?? null;
+        $this->region_code = $data['region_code'] ?? null;
+        $this->country_name = $data['country_name'] ?? null;
+        $this->country_code = $data['country_code'] ?? null;
         $this->continent_name = $data['continent_name'] ?? null;
         $this->continent_code = $data['continent_code'] ?? null;
-        $this->latitude       = $data['latitude']       ?? null;
-        $this->longitude      = $data['longitude']      ?? null;
-        $this->asn            = $data['asn']             ?? null;
-        $this->calling_code   = $data['calling_code']   ?? null;
-        $this->flag           = $data['flag']            ?? null;
-        $this->languages      = $data['languages']      ?? null;
+        $this->latitude = $data['latitude'] ?? null;
+        $this->longitude = $data['longitude'] ?? null;
+        $this->asn = $data['asn'] ?? null;
+        $this->calling_code = $data['calling_code'] ?? null;
+        $this->flag = $data['flag'] ?? null;
+        $this->languages = $data['languages'] ?? null;
         // Nested objects
-        $this->currency       = $data['currency']['name']   ?? null;
-        $this->timezone       = $data['time_zone']['name']  ?? null;
+        $this->currency = $data['currency']['name'] ?? null;
+        $this->timezone = $data['time_zone']['name'] ?? null;
     }
 }

@@ -78,7 +78,7 @@ class CategoryController extends Controller
     /**
      * Show the articles of a category.
      *
-     * @param NewsCategory $newsCategory The category to show the articles of.
+     * @param  NewsCategory  $newsCategory  The category to show the articles of.
      * @return Inertia\Response The rendered CategoryArticles view.
      */
     public function showCategoryArticles(Request $request, NewsCategory $newsCategory)
@@ -110,10 +110,10 @@ class CategoryController extends Controller
             ),
             'paginatedArticles' => new ArticleCollection($newsArticles),
             'meta' => [
-                'title' => Functions::trans($newsCategory->name) . ' - ' . Lang::get('Category') . ' - ' . $appName,
+                'title' => Functions::trans($newsCategory->name).' - '.Lang::get('Category').' - '.$appName,
                 'description' => Functions::trans($newsCategory->description),
                 'url' => $request->url(),
-            ]
+            ],
         ]);
     }
 

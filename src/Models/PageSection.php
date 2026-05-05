@@ -12,6 +12,7 @@ class PageSection extends Pivot
     protected $guarded = [];
 
     protected $foreignKey = 'section_id';
+
     protected $relatedKey = 'page_id';
 
     /**

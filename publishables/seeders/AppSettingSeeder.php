@@ -2,7 +2,6 @@
 
 namespace Database\Seeders\Vendor\Creopse;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -15,29 +14,29 @@ class AppSettingSeeder extends Seeder
     {
         DB::table('app_settings')->insertOrIgnore([
             [
-                'key'    => 'disableInstaller',
+                'key' => 'disableInstaller',
                 'value' => '1',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'allowRegistration',
+                'key' => 'allowRegistration',
                 'value' => '0',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'adminProfileTypeLabel',
+                'key' => 'adminProfileTypeLabel',
                 'value' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'displayAdminProfileType',
+                'key' => 'displayAdminProfileType',
                 'value' => '0',
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]
+            ],
         ]);
     }
 }

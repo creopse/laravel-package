@@ -9,18 +9,19 @@ use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Events\Auth\ProfileCreatedEvent;
 use Creopse\Creopse\Events\Auth\ProfileUpdatedEvent;
-use Creopse\Creopse\Http\Resources\UserResource;
 use Creopse\Creopse\Http\Controllers\Controller as CreopseController;
+use Creopse\Creopse\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class UserProfileController extends CreopseController
 {
     /**
      * Handle an incoming profile creation request.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function registerProfile(Request $request): JsonResponse
     {
@@ -28,7 +29,7 @@ class UserProfileController extends CreopseController
         $validator = Validator::make($request->all(), [
             'id' => 'required',
             'type' => 'required',
-            'profile_data' => 'present|array'
+            'profile_data' => 'present|array',
         ]);
 
         // If data not valid return error
@@ -119,14 +120,14 @@ class UserProfileController extends CreopseController
     /**
      * Handle an incoming profile update request.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function updateProfile(Request $request, int $id): JsonResponse
     {
         // Validate incoming request data
         $validator = Validator::make($request->all(), [
             'type' => 'required',
-            'profile_data' => 'present|array'
+            'profile_data' => 'present|array',
         ]);
 
         // If data not valid return error

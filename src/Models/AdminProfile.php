@@ -3,8 +3,8 @@
 namespace Creopse\Creopse\Models;
 
 use Creopse\Creopse\Database\Factories\AdminProfileFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class AdminProfile extends Model
 {

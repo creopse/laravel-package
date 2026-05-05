@@ -4,9 +4,9 @@ namespace Creopse\Creopse\Http\Controllers;
 
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Http\Resources\NotificationResource;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Notifications\DatabaseNotification as Notification;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\DatabaseNotification as Notification;
+use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
@@ -63,6 +63,7 @@ class NotificationController extends Controller
     public function mark(Notification $notification)
     {
         $notification->markAsRead();
+
         return $this->sendResponse(null, ResponseStatusCode::OK, 'Notification marked as read');
     }
 
@@ -72,6 +73,7 @@ class NotificationController extends Controller
     public function userMarkAll()
     {
         Auth::user()->unreadNotifications()->markAsRead();
+
         return $this->sendResponse(null, ResponseStatusCode::OK, 'All notifications marked as read');
     }
 
@@ -81,6 +83,7 @@ class NotificationController extends Controller
     public function destroy(Notification $notification)
     {
         $notification->delete();
+
         return $this->sendResponse(null, ResponseStatusCode::OK, 'Notification deleted successfully');
     }
 }

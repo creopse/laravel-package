@@ -5,6 +5,8 @@ namespace Creopse\Creopse\Traits;
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Helpers\Functions;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\ValidationException;
 
 trait RequestValidationException
 {
@@ -13,17 +15,16 @@ trait RequestValidationException
     /**
      * Handle a failed validation attempt.
      *
-     * @param  \Illuminate\Contracts\Validation\Validator  $validator
      * @return void
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
-    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    protected function failedValidation(Validator $validator)
     {
         $request = request();
 
         if (Functions::isApiRequest($request)) {
-            throw new \Illuminate\Validation\ValidationException($validator, $this->sendResponse(
+            throw new ValidationException($validator, $this->sendResponse(
                 $validator->errors(),
                 ResponseStatusCode::UNPROCESSABLE_ENTITY,
                 'Validation failed',

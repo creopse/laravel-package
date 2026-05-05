@@ -22,29 +22,42 @@ namespace Creopse\Creopse\Helpers\IpLocation;
  */
 class IpApiComApi
 {
-    var $host = 'http://ip-api.com/json/{IP}?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,lat,lon,timezone,currency,isp,org,query';
+    public $host = 'http://ip-api.com/json/{IP}?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,lat,lon,timezone,currency,isp,org,query';
 
-    var $ip             = null;
-    var $city           = null;
-    var $region         = null;
-    var $region_code    = null;
-    var $country_name   = null;
-    var $country_code   = null;
-    var $continent_name = null;
-    var $continent_code = null;
-    var $latitude       = null;
-    var $longitude      = null;
-    var $timezone       = null;
-    var $currency       = null;
-    var $isp            = null;
-    var $org            = null;
+    public $ip = null;
 
-    function __construct() {}
+    public $city = null;
+
+    public $region = null;
+
+    public $region_code = null;
+
+    public $country_name = null;
+
+    public $country_code = null;
+
+    public $continent_name = null;
+
+    public $continent_code = null;
+
+    public $latitude = null;
+
+    public $longitude = null;
+
+    public $timezone = null;
+
+    public $currency = null;
+
+    public $isp = null;
+
+    public $org = null;
+
+    public function __construct() {}
 
     /**
      * Locate a given IP address.
      *
-     * @param  string|null $ip
+     * @param  string|null  $ip
      * @return void
      */
     public function locate($ip = null)
@@ -74,26 +87,26 @@ class IpApiComApi
             return;
         }
 
-        $this->ip             = $ip;
-        $this->city           = $data['city']          ?? null;
-        $this->region         = $data['region']        ?? null;
-        $this->region_code    = $data['region']        ?? null; // ip-api.com uses region code in the "region" field
-        $this->country_name   = $data['country']       ?? null;
-        $this->country_code   = $data['countryCode']   ?? null;
-        $this->continent_name = $data['continent']     ?? null;
+        $this->ip = $ip;
+        $this->city = $data['city'] ?? null;
+        $this->region = $data['region'] ?? null;
+        $this->region_code = $data['region'] ?? null; // ip-api.com uses region code in the "region" field
+        $this->country_name = $data['country'] ?? null;
+        $this->country_code = $data['countryCode'] ?? null;
+        $this->continent_name = $data['continent'] ?? null;
         $this->continent_code = $data['continentCode'] ?? null;
-        $this->latitude       = $data['lat']           ?? null;
-        $this->longitude      = $data['lon']           ?? null;
-        $this->timezone       = $data['timezone']      ?? null;
-        $this->currency       = $data['currency']      ?? null;
-        $this->isp            = $data['isp']           ?? null;
-        $this->org            = $data['org']           ?? null;
+        $this->latitude = $data['lat'] ?? null;
+        $this->longitude = $data['lon'] ?? null;
+        $this->timezone = $data['timezone'] ?? null;
+        $this->currency = $data['currency'] ?? null;
+        $this->isp = $data['isp'] ?? null;
+        $this->org = $data['org'] ?? null;
     }
 
     /**
      * Perform an HTTP GET request.
      *
-     * @param  string $url
+     * @param  string  $url
      * @return string|null
      */
     private function fetch($url)
@@ -105,7 +118,7 @@ class IpApiComApi
             curl_setopt($ch, CURLOPT_TIMEOUT, 5);
             curl_setopt($ch, CURLOPT_USERAGENT, 'Espoerc/IpApiCom-Driver');
             $response = curl_exec($ch);
-            $error    = curl_errno($ch);
+            $error = curl_errno($ch);
             curl_close($ch);
 
             if ($error || $response === false) {
@@ -117,6 +130,7 @@ class IpApiComApi
 
         if (ini_get('allow_url_fopen')) {
             $response = @file_get_contents($url);
+
             return $response !== false ? $response : null;
         }
 

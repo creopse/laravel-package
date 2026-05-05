@@ -3,11 +3,11 @@
 namespace Creopse\Creopse\Http\Controllers\Access;
 
 use Creopse\Creopse\Enums\AccessGuard;
-use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Enums\ResponseStatusCode;
+use Creopse\Creopse\Http\Controllers\Controller;
+use Creopse\Creopse\Http\Requests\Access\PermissionRequest;
 use Creopse\Creopse\Models\Permission;
 use Creopse\Creopse\Models\User;
-use Creopse\Creopse\Http\Requests\Access\PermissionRequest;
 use Illuminate\Support\Facades\Auth;
 
 class PermissionController extends Controller

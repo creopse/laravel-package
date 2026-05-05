@@ -16,7 +16,8 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class PluginMakeMigration extends Command
 {
-    protected $name        = 'plugin:make-migration';
+    protected $name = 'plugin:make-migration';
+
     protected $description = 'Create a new migration file inside a plugin';
 
     protected function sanitizePluginId(string $id): string
@@ -26,11 +27,12 @@ class PluginMakeMigration extends Command
 
     public function handle(): int
     {
-        $pluginId   = $this->sanitizePluginId($this->argument('plugin'));
+        $pluginId = $this->sanitizePluginId($this->argument('plugin'));
         $pluginRoot = storage_path("plugins/{$pluginId}");
 
         if (! is_dir($pluginRoot)) {
             $this->error("Plugin directory not found: {$pluginRoot}");
+
             return self::FAILURE;
         }
 
@@ -40,16 +42,17 @@ class PluginMakeMigration extends Command
             mkdir($migrationsDir, 0755, true);
         }
 
-        $name     = $this->argument('name');
-        $fileName = now()->format('Y_m_d_His') . "_{$name}.php";
+        $name = $this->argument('name');
+        $fileName = now()->format('Y_m_d_His')."_{$name}.php";
         $filePath = "{$migrationsDir}/{$fileName}";
 
         if (file_exists($filePath)) {
             $this->error("Migration already exists: {$fileName}");
+
             return self::FAILURE;
         }
 
-        $stub    = $this->resolveStub();
+        $stub = $this->resolveStub();
         $content = $this->populateStub($stub);
 
         file_put_contents($filePath, $content);

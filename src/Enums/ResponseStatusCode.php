@@ -4,12 +4,12 @@ namespace Creopse\Creopse\Enums;
 
 enum ResponseStatusCode: int
 {
-        // Informational responses
+    // Informational responses
     case CONTINUE = 100;
     case SWITCHING_PROTOCOLS = 101;
     case PROCESSING = 102;
 
-        // Success
+    // Success
     case OK = 200;
     case CREATED = 201;
     case ACCEPTED = 202;
@@ -18,12 +18,12 @@ enum ResponseStatusCode: int
     case RESET_CONTENT = 205;
     case PARTIAL_CONTENT = 206;
 
-        //
+    //
     case MULTI_STATUS = 207;
     case ALREADY_REPORTED = 208;
     case IM_USED = 226;
 
-        // Redirection
+    // Redirection
     case MULTIPLE_CHOICES = 300;
     case MOVED_PERMANENTLY = 301;
     case FOUND = 302;
@@ -33,7 +33,7 @@ enum ResponseStatusCode: int
     case TEMPORARY_REDIRECT = 307;
     case PERMANENT_REDIRECT = 308;
 
-        // Client errors
+    // Client errors
     case BAD_REQUEST = 400;
     case UNAUTHORIZED = 401;
     case PAYMENT_REQUIRED = 402;
@@ -68,7 +68,7 @@ enum ResponseStatusCode: int
     case UNAVAILABLE_FOR_LEGAL_REASONS = 451;
     case CLIENT_CLOSED_REQUEST = 499;
 
-        // Server errors
+    // Server errors
     case INTERNAL_SERVER_ERROR = 500;
     case NOT_IMPLEMENTED = 501;
     case BAD_GATEWAY = 502;
@@ -90,7 +90,7 @@ enum ResponseStatusCode: int
     case INVALID_SSL_CERTIFICATE = 526;
     case RAILGUN_ERROR = 527;
 
-        // Unofficial codes
+    // Unofficial codes
     case NETWORK_READ_TIMEOUT_ERROR = 598;
     case NETWORK_CONNECT_TIMEOUT_ERROR = 599;
 }

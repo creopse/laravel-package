@@ -4,10 +4,9 @@ use Creopse\Creopse\Enums\AccessGuard;
 use Creopse\Creopse\Enums\PermissionList;
 use Creopse\Creopse\Enums\UserRole;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 return new class extends Migration
 {
@@ -17,7 +16,7 @@ return new class extends Migration
     public function up(): void
     {
         // Reset permission cache
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // Create all permissions from Enum
         foreach (PermissionList::cases() as $permission) {
@@ -127,6 +126,6 @@ return new class extends Migration
         }
 
         // Reset cache
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
     }
 };

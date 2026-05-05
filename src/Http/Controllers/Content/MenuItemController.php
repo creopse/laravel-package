@@ -4,12 +4,12 @@ namespace Creopse\Creopse\Http\Controllers\Content;
 
 use Creopse\Creopse\Enums\ContentType;
 use Creopse\Creopse\Enums\ResponseStatusCode;
+use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Requests\Content\MenuItemRequest;
 use Creopse\Creopse\Http\Resources\Content\MenuItemResource;
+use Creopse\Creopse\Models\Menu;
 use Creopse\Creopse\Models\MenuItem;
 use Illuminate\Http\Request;
-use Creopse\Creopse\Http\Controllers\Controller;
-use Creopse\Creopse\Models\Menu;
 
 class MenuItemController extends Controller
 {
@@ -29,15 +29,15 @@ class MenuItemController extends Controller
 
             if ($menuId) {
                 $items = $items->where('menu_id', $menuId);
-            } else if ($menuName) {
+            } elseif ($menuName) {
                 $menu = Menu::where('name', $menuName)->first();
                 $items = $items->where('menu_id', $menu->id);
             }
 
             if ($query) {
                 $items = $items->where(function ($q) use ($query) {
-                    $q->where('title', 'like', '%' . $query . '%')
-                        ->orWhere('description', 'like', '%' . $query . '%');
+                    $q->where('title', 'like', '%'.$query.'%')
+                        ->orWhere('description', 'like', '%'.$query.'%');
                 });
             }
 
@@ -81,7 +81,7 @@ class MenuItemController extends Controller
 
         if ($menuId) {
             $items = MenuItem::where('menu_id', $menuId)->orderBy('position')->get();
-        } else if ($menuName) {
+        } elseif ($menuName) {
             $menu = Menu::where('name', $menuName)->first();
             $items = MenuItem::where('menu_id', $menu->id)->orderBy('position')->get();
         } else {

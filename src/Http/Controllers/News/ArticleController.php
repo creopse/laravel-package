@@ -12,9 +12,10 @@ use Creopse\Creopse\Http\Resources\News\ArticleResource;
 use Creopse\Creopse\Models\AppInformation;
 use Creopse\Creopse\Models\NewsArticle;
 use Creopse\Creopse\Models\NewsTag;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Inertia\Inertia;
 
@@ -41,9 +42,9 @@ class ArticleController extends Controller
 
             if ($query) {
                 $newsArticles = $newsArticles
-                    ->where('title', 'like', '%' . $query . '%')
-                    ->orWhere('summary', 'like', '%' . $query . '%')
-                    ->orWhere('content', 'like', '%' . $query . '%');
+                    ->where('title', 'like', '%'.$query.'%')
+                    ->orWhere('summary', 'like', '%'.$query.'%')
+                    ->orWhere('content', 'like', '%'.$query.'%');
             }
 
             if ($status && $status > 0) {
@@ -76,14 +77,14 @@ class ArticleController extends Controller
             if ($months) {
                 $newsArticles = $newsArticles->where(function ($query) use ($months) {
                     foreach ($months as $month) {
-                        list($year, $month) = explode('-', $month);
+                        [$year, $month] = explode('-', $month);
                         $query->orWhereYear('created_at', $year)
                             ->whereMonth('created_at', $month);
                     }
                 });
             }
 
-            if (!is_null($isHeadline)) {
+            if (! is_null($isHeadline)) {
                 $newsArticles = $newsArticles->where('is_headline', filter_var($isHeadline, FILTER_VALIDATE_BOOLEAN));
             }
 
@@ -214,7 +215,7 @@ class ArticleController extends Controller
                     $tagIds[] = $tag;
                 } else {
                     $newTag = NewsTag::firstOrCreate([
-                        'name' => '{ "en": "' . $tag . '", "fr": "' . $tag . '" }'
+                        'name' => '{ "en": "'.$tag.'", "fr": "'.$tag.'" }',
                     ]);
                     $tagIds[] = $newTag->id;
                 }
@@ -255,8 +256,8 @@ class ArticleController extends Controller
     /**
      * Display the search result for a given query.
      *
-     * @param Request $request The HTTP request object.
-     * @param string $query The search query.
+     * @param  Request  $request  The HTTP request object.
+     * @param  string  $query  The search query.
      * @return \Inertia\Response The rendered search articles page.
      */
     public function showSearchResult(Request $request, string $query)
@@ -266,9 +267,9 @@ class ArticleController extends Controller
                 $q->whereNull('published_at')->orWhere('published_at', '<=', Carbon::now());
             })
             ->where(function ($q) use ($query) {
-                $q->where('title', 'like', '%' . $query . '%')
-                    ->orWhere('summary', 'like', '%' . $query . '%')
-                    ->orWhere('content', 'like', '%' . $query . '%');
+                $q->where('title', 'like', '%'.$query.'%')
+                    ->orWhere('summary', 'like', '%'.$query.'%')
+                    ->orWhere('content', 'like', '%'.$query.'%');
             })
             ->orderBy('published_at', 'desc')
             ->get();
@@ -277,23 +278,23 @@ class ArticleController extends Controller
             'articles' => ArticleResource::collection($newsArticles->load(['categories', 'tags'])),
             'query' => $query,
             'meta' => [
-                'title' => Lang::get('Search') . ' - «' . $query . '»',
+                'title' => Lang::get('Search').' - «'.$query.'»',
                 'description' => '',
                 'url' => $request->url(),
-            ]
+            ],
         ]);
     }
 
     /**
      * Display the search result for a given query.
      *
-     * @param Request $request The HTTP request object.
-     * @param string $query The search query.
+     * @param  Request  $request  The HTTP request object.
+     * @param  string  $query  The search query.
      * @return \Inertia\Response The rendered search articles page.
      */
     public function searchArticles(Request $request, string $query = '')
     {
-        $newsArticles = NewsArticle::where('title', 'like', '%' . $query . '%')->get();
+        $newsArticles = NewsArticle::where('title', 'like', '%'.$query.'%')->get();
 
         return $this->sendResponse(ArticleResource::collection($newsArticles->load(['categories', 'tags'])));
     }
@@ -345,14 +346,14 @@ class ArticleController extends Controller
                 'title' => Lang::get('Blog'),
                 'description' => Lang::get('Articles'),
                 'url' => $request->url(),
-            ]
+            ],
         ]);
     }
 
     /**
      * Retrieves a list of months in descending order based on the creation date of news articles.
      *
-     * @param Request $request The HTTP request object.
+     * @param  Request  $request  The HTTP request object.
      * @return Response The HTTP response object containing the list of months.
      */
     public function showMonthsList(Request $request)
@@ -368,7 +369,7 @@ class ArticleController extends Controller
     /**
      * Show the details of a article.
      *
-     * @param NewsArticle $newsArticle The article to show the details of.
+     * @param  NewsArticle  $newsArticle  The article to show the details of.
      * @return Inertia\Response The rendered article details page.
      */
     public function showArticleDetails(Request $request, NewsArticle $newsArticle)
@@ -377,8 +378,7 @@ class ArticleController extends Controller
         $appName = $appNameItem ? $appNameItem->value : config('app.name');
 
         return Inertia::render('details/Article', [
-            'article' =>
-            $newsArticle->status === NewsArticleStatus::PUBLISHED->value && (is_null($newsArticle->published_at) || $newsArticle->published_at <= Carbon::now())
+            'article' => $newsArticle->status === NewsArticleStatus::PUBLISHED->value && (is_null($newsArticle->published_at) || $newsArticle->published_at <= Carbon::now())
                 ? (new ArticleResource(
                     $newsArticle
                         ->load(['categories', 'tags', 'comments'])
@@ -386,11 +386,11 @@ class ArticleController extends Controller
                 ))
                 : null,
             'meta' => [
-                'title' => Functions::trans($newsArticle->title) . ' - ' . $appName,
+                'title' => Functions::trans($newsArticle->title).' - '.$appName,
                 'description' => Functions::trans($newsArticle->summary),
                 'url' => $request->url(),
                 'image' => Functions::replaceEmptySpaces($newsArticle->featured_image_url) ?? asset('assets/images/creopse/icon.svg'),
-            ]
+            ],
         ]);
     }
 
@@ -410,7 +410,7 @@ class ArticleController extends Controller
                     $tagIds[] = $tag;
                 } else {
                     $newTag = NewsTag::firstOrCreate([
-                        'name' => '{ "en": "' . $tag . '", "fr": "' . $tag . '" }'
+                        'name' => '{ "en": "'.$tag.'", "fr": "'.$tag.'" }',
                     ]);
                     $tagIds[] = $newTag->id;
                 }
@@ -483,7 +483,7 @@ class ArticleController extends Controller
      * Return a collection of 250 most recent published news articles
      * for RSS feed.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public static function getFeedItems()
     {

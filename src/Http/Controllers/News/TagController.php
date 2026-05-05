@@ -74,7 +74,7 @@ class TagController extends Controller
     /**
      * Show the articles of a tag.
      *
-     * @param NewsTag $newsTag The tag to show the articles of.
+     * @param  NewsTag  $newsTag  The tag to show the articles of.
      * @return Inertia\Response The rendered TagArticles view.
      */
     public function showTagArticles(Request $request, NewsTag $newsTag)
@@ -101,10 +101,10 @@ class TagController extends Controller
             ),
             'paginatedArticles' => new ArticleCollection($newsArticles),
             'meta' => [
-                'title' => Functions::trans($newsTag->name) . ' - ' . Lang::get('News Tag') . ' - ' . $appName,
+                'title' => Functions::trans($newsTag->name).' - '.Lang::get('News Tag').' - '.$appName,
                 'description' => Functions::trans($newsTag->description),
                 'url' => $request->url(),
-            ]
+            ],
         ]);
     }
 

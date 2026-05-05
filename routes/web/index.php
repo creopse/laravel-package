@@ -1,16 +1,26 @@
 <?php
 
+use App\Http\Middleware\EncryptCookies;
+use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\VerifyCsrfToken;
 use Creopse\Creopse\Enums\MenuItemTargetType;
 use Creopse\Creopse\Helpers\Functions;
 use Creopse\Creopse\Http\Controllers\Auth\EmailVerificationController;
 use Creopse\Creopse\Http\Controllers\Auth\PasswordResetController;
 use Creopse\Creopse\Http\Controllers\DynamicPageController;
+use Creopse\Creopse\Http\Middleware\CaptureSessionMetadata;
+use Creopse\Creopse\Http\Middleware\CompressResponse;
+use Creopse\Creopse\Http\Middleware\LogSessionHistory;
 use Creopse\Creopse\Models\AppSetting;
 use Creopse\Creopse\Models\Menu;
 use Creopse\Creopse\Models\Permalink;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,17 +34,17 @@ use Illuminate\Support\Facades\Schema;
 */
 
 $creopseRouteExcludedMiddleware = [
-    \App\Http\Middleware\EncryptCookies::class,
-    \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-    \Illuminate\Session\Middleware\StartSession::class,
-    \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-    \App\Http\Middleware\VerifyCsrfToken::class,
-    \Illuminate\Routing\Middleware\SubstituteBindings::class,
-    \Creopse\Creopse\Http\Middleware\LogSessionHistory::class,
-    \Creopse\Creopse\Http\Middleware\CaptureSessionMetadata::class,
-    \Creopse\Creopse\Http\Middleware\CompressResponse::class,
-    \App\Http\Middleware\HandleInertiaRequests::class,
-    \Creopse\Creopse\Http\Middleware\HandleInertiaRequests::class
+    EncryptCookies::class,
+    AddQueuedCookiesToResponse::class,
+    StartSession::class,
+    ShareErrorsFromSession::class,
+    VerifyCsrfToken::class,
+    SubstituteBindings::class,
+    LogSessionHistory::class,
+    CaptureSessionMetadata::class,
+    CompressResponse::class,
+    HandleInertiaRequests::class,
+    Creopse\Creopse\Http\Middleware\HandleInertiaRequests::class,
 ];
 
 try {
@@ -46,7 +56,7 @@ try {
             foreach ($menu->items as $menuItem) {
                 if (
                     $menuItem->target_type === MenuItemTargetType::PAGE_LINK->value &&
-                    $menuItem->path && !Route::has(Functions::generateRouteNameFromPath($menuItem->path)) && $menuItem->is_active
+                    $menuItem->path && ! Route::has(Functions::generateRouteNameFromPath($menuItem->path)) && $menuItem->is_active
                 ) {
                     Route::get($menuItem->path, [DynamicPageController::class, 'getPage'])->name(Functions::generateRouteNameFromPath($menuItem->path));
                 }
@@ -57,21 +67,21 @@ try {
         $permalinks = Permalink::all();
 
         foreach ($permalinks as $permalink) {
-            if ($permalink->path_prefix && !Route::has(Functions::generateRouteNameFromPath($permalink->path_prefix))) {
-                Route::get(rtrim($permalink->path_prefix, '/') . '/{id}', [DynamicPageController::class, 'getContentPage'])
+            if ($permalink->path_prefix && ! Route::has(Functions::generateRouteNameFromPath($permalink->path_prefix))) {
+                Route::get(rtrim($permalink->path_prefix, '/').'/{id}', [DynamicPageController::class, 'getContentPage'])
                     ->name(Functions::generateRouteNameFromPath($permalink->path_prefix));
             }
         }
     }
     if (Schema::hasTable('app_settings')) {
         $basePathItem = AppSetting::where('key', 'basePath')->first();
-        $basePath = $basePathItem && !empty($basePathItem->value) ? $basePathItem->value : 'creopse';
+        $basePath = $basePathItem && ! empty($basePathItem->value) ? $basePathItem->value : 'creopse';
 
-        Route::get('/' . $basePath . '/{any?}', function () {
+        Route::get('/'.$basePath.'/{any?}', function () {
             return file_get_contents(public_path('creopse/index.html'));
         })->withoutMiddleware($creopseRouteExcludedMiddleware)->where('any', '.*');
     }
-} catch (\Exception $e) {
+} catch (Exception $e) {
     Route::get('/creopse/{any?}', function () {
         return file_get_contents(public_path('creopse/index.html'));
     })->withoutMiddleware($creopseRouteExcludedMiddleware)->where('any', '.*');

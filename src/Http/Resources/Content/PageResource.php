@@ -25,7 +25,7 @@ class PageResource extends JsonResource
             'sections' => SectionBasicResource::collection($this->sections->load([
                 'pages' => function ($query) {
                     $query->select('pages.id', 'pages.title')->withPivot('link_id');
-                }
+                },
             ])),
             'sectionsCount' => $this->whenCounted('sections'),
             'sectionsOrder' => $this->sections_order,
@@ -42,7 +42,7 @@ class PageResource extends JsonResource
                     'linkId' => $this->pivot->link_id,
                     'linkTitle' => $this->pivot->link_title,
                     'createdAt' => $this->pivot->created_at,
-                    'updatedAt' => $this->pivot->updated_at
+                    'updatedAt' => $this->pivot->updated_at,
                 ];
             }),
         ];

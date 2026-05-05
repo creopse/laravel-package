@@ -4,7 +4,8 @@ namespace Creopse\Creopse\Console\Commands\Plugins;
 
 class PluginMakeSeeder extends PluginGeneratorCommand
 {
-    protected $name        = 'plugin:make-seeder';
+    protected $name = 'plugin:make-seeder';
+
     protected $description = 'Create a new seeder inside a plugin';
 
     protected function getPluginSubDirectory(): string

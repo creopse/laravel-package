@@ -4,26 +4,28 @@ namespace Creopse\Creopse\Http\Controllers\Auth;
 
 use Creopse\Creopse\Enums\AccountStatus;
 use Creopse\Creopse\Enums\AuthType;
+use Creopse\Creopse\Enums\ProfileType;
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
-use Creopse\Creopse\Enums\UserRole;
-use Creopse\Creopse\Enums\ProfileType;
 use Creopse\Creopse\Enums\TokenAbility;
+use Creopse\Creopse\Enums\UserRole;
 use Creopse\Creopse\Events\Auth\ProfileCreatedEvent;
 use Creopse\Creopse\Events\Auth\ProfileUpdatedEvent;
-use Creopse\Creopse\Helpers\Functions;
-use Creopse\Creopse\Http\Controllers\Controller;
-use Creopse\Creopse\Models\{User, AdminProfile};
-use Creopse\Creopse\Http\Resources\UserResource;
 use Creopse\Creopse\Events\Auth\UserRegisteredEvent;
+use Creopse\Creopse\Helpers\Functions;
 use Creopse\Creopse\Helpers\UsernameGenerator;
+use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Requests\Auth\RegisterRequest;
+use Creopse\Creopse\Http\Resources\UserResource;
+use Creopse\Creopse\Models\AdminProfile;
+use Creopse\Creopse\Models\User;
 use Creopse\Creopse\Traits\DetectsMobileRequest;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class RegistrationController extends Controller
 {
@@ -32,7 +34,7 @@ class RegistrationController extends Controller
     /**
      * Handle an incoming registration request.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function registerUser(RegisterRequest $request): JsonResponse
     {
@@ -55,7 +57,7 @@ class RegistrationController extends Controller
         if ($user) {
             if (User::count() === 1) {
                 $user->assignRole(UserRole::SUPER_ADMIN->value);
-            } else if ($request->input('is_user')) {
+            } elseif ($request->input('is_user')) {
                 $user->assignRole(UserRole::USER->value);
             }
 
@@ -105,7 +107,7 @@ class RegistrationController extends Controller
     /**
      * Handle an incoming profile creation request.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function registerProfile(Request $request): JsonResponse
     {
@@ -113,7 +115,7 @@ class RegistrationController extends Controller
         $validator = Validator::make($request->all(), [
             'id' => 'required',
             'type' => 'required',
-            'profile_data' => 'present|array'
+            'profile_data' => 'present|array',
         ]);
 
         // If data not valid return error
@@ -204,14 +206,14 @@ class RegistrationController extends Controller
     /**
      * Handle an incoming profile update request.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function updateProfile(Request $request, int $id): JsonResponse
     {
         // Validate incoming request data
         $validator = Validator::make($request->all(), [
             'type' => 'required',
-            'profile_data' => 'present|array'
+            'profile_data' => 'present|array',
         ]);
 
         // If data not valid return error

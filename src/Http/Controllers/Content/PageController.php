@@ -38,7 +38,7 @@ class PageController extends Controller
             'content' => $request->input('content'),
             'position' => $request->input('position', 0),
             'sections_order' => $request->input('sections_order'),
-            'sections_disabled' => $request->input('sections_disabled')
+            'sections_disabled' => $request->input('sections_disabled'),
         ]);
 
         if ($request->has('sections')) {

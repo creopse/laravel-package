@@ -2,7 +2,10 @@
 
 namespace Creopse\Creopse\Http\Controllers\Auth;
 
-use Creopse\Creopse\Enums\{AccountStatus, ResponseErrorCode, ResponseStatusCode, TokenAbility};
+use Creopse\Creopse\Enums\AccountStatus;
+use Creopse\Creopse\Enums\ResponseErrorCode;
+use Creopse\Creopse\Enums\ResponseStatusCode;
+use Creopse\Creopse\Enums\TokenAbility;
 use Creopse\Creopse\Events\Auth\UserLoggedInEvent;
 use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Requests\Auth\LoginRequest;
@@ -29,7 +32,7 @@ class LoginController extends Controller
 
         $userFound = User::where('email', $credentials['id'])->orWhere('username', $credentials['id'])->first();
 
-        if (!$userFound) {
+        if (! $userFound) {
 
             // When the user is not found
             return $this->sendResponse(
@@ -51,9 +54,9 @@ class LoginController extends Controller
             );
         }
 
-        if (!Auth::attempt([
+        if (! Auth::attempt([
             'email' => $userFound->email,
-            'password' => $credentials['password']
+            'password' => $credentials['password'],
         ], $credentials['remember'] ?? false)) {
 
             // When the password is wrong

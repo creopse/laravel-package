@@ -97,7 +97,7 @@ abstract class PluginGeneratorCommand extends GeneratorCommand
     protected function getPluginRoot(): string
     {
         $pluginId = $this->sanitizePluginId($this->argument('plugin'));
-        $path     = storage_path("plugins/{$pluginId}");
+        $path = storage_path("plugins/{$pluginId}");
 
         if (! is_dir($path)) {
             throw new \RuntimeException("Plugin directory not found: {$path}");
@@ -111,7 +111,7 @@ abstract class PluginGeneratorCommand extends GeneratorCommand
      */
     protected function getPluginManifest(): array
     {
-        $manifestPath = $this->getPluginRoot() . '/plugin.json';
+        $manifestPath = $this->getPluginRoot().'/plugin.json';
 
         if (! file_exists($manifestPath)) {
             throw new \RuntimeException("plugin.json not found in: {$this->getPluginRoot()}");
@@ -127,7 +127,7 @@ abstract class PluginGeneratorCommand extends GeneratorCommand
     protected function getPluginRootNamespace(): string
     {
         $manifest = $this->getPluginManifest();
-        $psr4     = $manifest['autoload']['psr-4'] ?? [];
+        $psr4 = $manifest['autoload']['psr-4'] ?? [];
 
         if (empty($psr4)) {
             throw new \RuntimeException('No PSR-4 autoload entry found in plugin.json');
@@ -146,7 +146,7 @@ abstract class PluginGeneratorCommand extends GeneratorCommand
             return rtrim($this->option('namespace'), '\\');
         }
 
-        $root    = $this->getPluginRootNamespace();
+        $root = $this->getPluginRootNamespace();
         $segment = $this->getPluginNamespaceSegment();
 
         return $segment ? "{$root}\\{$segment}" : $root;
@@ -162,10 +162,10 @@ abstract class PluginGeneratorCommand extends GeneratorCommand
     protected function getPath($name): string
     {
         $rootNamespace = $this->getPluginRootNamespace();
-        $relative      = Str::replaceFirst($rootNamespace . '\\', '', $name);
-        $filename      = basename(str_replace('\\', '/', $relative)) . '.php';
+        $relative = Str::replaceFirst($rootNamespace.'\\', '', $name);
+        $filename = basename(str_replace('\\', '/', $relative)).'.php';
 
-        return $this->getPluginRoot() . '/' . $this->getPluginSubDirectory() . '/' . $filename;
+        return $this->getPluginRoot().'/'.$this->getPluginSubDirectory().'/'.$filename;
     }
 
     /**
@@ -173,7 +173,7 @@ abstract class PluginGeneratorCommand extends GeneratorCommand
      */
     protected function rootNamespace(): string
     {
-        return $this->resolveTargetNamespace() . '\\';
+        return $this->resolveTargetNamespace().'\\';
     }
 
     /**
@@ -181,14 +181,14 @@ abstract class PluginGeneratorCommand extends GeneratorCommand
      */
     protected function qualifyClass($name): string
     {
-        $name      = ltrim($name, '\\/');
+        $name = ltrim($name, '\\/');
         $namespace = $this->resolveTargetNamespace();
 
         if (Str::startsWith($name, $namespace)) {
             return $name;
         }
 
-        return $namespace . '\\' . str_replace('/', '\\', $name);
+        return $namespace.'\\'.str_replace('/', '\\', $name);
     }
 
     /**

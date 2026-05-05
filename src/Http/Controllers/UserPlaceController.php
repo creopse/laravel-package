@@ -93,6 +93,7 @@ class UserPlaceController extends Controller
     public function destroy(UserPlace $userPlace)
     {
         $userPlace->delete();
+
         return $this->sendResponse(
             null,
             ResponseStatusCode::OK,

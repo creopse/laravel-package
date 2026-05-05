@@ -25,7 +25,7 @@ class DataChangeController extends Controller
 
             if ($query) {
                 $items = $items->where(function ($q) use ($query) {
-                    $q->where('table_name', 'like', '%' . $query . '%');
+                    $q->where('table_name', 'like', '%'.$query.'%');
                 });
             }
 

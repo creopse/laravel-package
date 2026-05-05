@@ -30,11 +30,12 @@ class Install extends CreopseCommand
      */
     public function handle()
     {
-        $force = !$this->option('no-force');
+        $force = ! $this->option('no-force');
         $template = strtolower($this->option('template'));
 
-        if (!in_array($template, ['vue', 'react'])) {
+        if (! in_array($template, ['vue', 'react'])) {
             $this->error("Invalid template: {$template}. Accepted values: vue, react.");
+
             return 1;
         }
 
@@ -80,14 +81,14 @@ class Install extends CreopseCommand
                 $files = File::files($folder);
 
                 foreach ($files as $file) {
-                    if (!File::delete($file)) {
+                    if (! File::delete($file)) {
                         throw new Exception("\nFailed to delete file: $file");
                     }
                 }
 
                 echo "\nAll files in the folder $folder have been deleted.";
             } catch (Exception $e) {
-                echo "Error: " . $e->getMessage();
+                echo 'Error: '.$e->getMessage();
             }
         }
 
@@ -242,7 +243,7 @@ class Install extends CreopseCommand
         // Run the process
         $process->run();
         // Check if the process was successful
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
         // Output the result
@@ -279,7 +280,7 @@ class Install extends CreopseCommand
         // Run the process
         $process->run();
         // Check if the process was successful
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
         // Output the result

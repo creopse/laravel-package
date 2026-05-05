@@ -16,7 +16,7 @@ class UsernameGenerator
         $base = self::normalize($firstname, $lastname);
 
         // If already unique, return it directly
-        if (!self::exists($base)) {
+        if (! self::exists($base)) {
             return $base;
         }
 
@@ -34,12 +34,12 @@ class UsernameGenerator
         $lastname = Str::slug(Str::lower($lastname), '');
 
         // Format: firstname.lastname (you can adapt to your preferences)
-        $username = $firstname . '.' . $lastname;
+        $username = $firstname.'.'.$lastname;
 
         // Length limit (optional)
         if (strlen($username) > 30) {
             // Shorten firstname if too long
-            $username = substr($firstname, 0, 1) . '.' . $lastname;
+            $username = substr($firstname, 0, 1).'.'.$lastname;
         }
 
         return $username;
@@ -61,7 +61,7 @@ class UsernameGenerator
         $counter = 1;
 
         do {
-            $username = $base . $counter;
+            $username = $base.$counter;
             $counter++;
         } while (self::exists($username));
 

@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Enums\ProfileType;
-use Illuminate\Database\Eloquent\Builder;
 use Creopse\Creopse\Models\User as CreopseUser;
+use Illuminate\Database\Eloquent\Builder;
 
 class User extends CreopseUser
 {

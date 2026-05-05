@@ -4,14 +4,14 @@ namespace Creopse\Creopse\Http\Controllers\Content;
 
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Helpers\Functions;
+use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Requests\Content\VideoCategoryRequest;
 use Creopse\Creopse\Http\Resources\Content\VideoCategoryResource;
-use Creopse\Creopse\Models\VideoCategory;
-use Illuminate\Http\Request;
-use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Resources\Content\VideoItemResource;
 use Creopse\Creopse\Models\AppInformation;
+use Creopse\Creopse\Models\VideoCategory;
 use Creopse\Creopse\Models\VideoItem;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
 use Inertia\Inertia;
 
@@ -76,7 +76,7 @@ class VideoCategoryController extends Controller
     /**
      * Show the items of a category.
      *
-     * @param VideoCategory $videoCategory The category to show the items of.
+     * @param  VideoCategory  $videoCategory  The category to show the items of.
      * @return Inertia\Response The rendered CategoryItems view.
      */
     public function showCategoryItems(Request $request, VideoCategory $videoCategory)
@@ -107,10 +107,10 @@ class VideoCategoryController extends Controller
             ),
             'paginatedItems' => VideoItemResource::collection($videoItems),
             'meta' => [
-                'title' => Functions::trans($videoCategory->name) . ' - ' . Lang::get('Category') . ' - ' . $appName,
+                'title' => Functions::trans($videoCategory->name).' - '.Lang::get('Category').' - '.$appName,
                 'description' => Functions::trans($videoCategory->description),
                 'url' => $request->url(),
-            ]
+            ],
         ]);
     }
 

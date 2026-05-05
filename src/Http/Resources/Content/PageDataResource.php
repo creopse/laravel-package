@@ -24,7 +24,7 @@ class PageDataResource extends JsonResource
             'sections' => SectionDataResource::collection($this->sections->load([
                 'pages' => function ($query) {
                     $query->select('pages.id', 'pages.title')->withPivot('link_id');
-                }
+                },
             ])),
             'sectionsCount' => $this->whenCounted('sections'),
             'sectionsOrder' => $this->sections_order,

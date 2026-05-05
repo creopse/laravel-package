@@ -25,8 +25,8 @@ class MenuItemTypeController extends Controller
 
             if ($query) {
                 $items = $items->where(function ($q) use ($query) {
-                    $q->where('name', 'like', '%' . $query . '%')
-                        ->orWhere('description', 'like', '%' . $query . '%');
+                    $q->where('name', 'like', '%'.$query.'%')
+                        ->orWhere('description', 'like', '%'.$query.'%');
                 });
             }
 

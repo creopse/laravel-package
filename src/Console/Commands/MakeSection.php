@@ -60,27 +60,29 @@ class MakeSection extends CreopseCommand
      */
     private function createComponentFile(string $argName, string $frontendFramework): void
     {
-        $fileName = $argName . ($frontendFramework === 'react' ? '.tsx' : '.vue');
-        $filePath = base_path('resources/js/components/sections/' . $fileName);
+        $fileName = $argName.($frontendFramework === 'react' ? '.tsx' : '.vue');
+        $filePath = base_path('resources/js/components/sections/'.$fileName);
 
         if (File::exists($filePath)) {
             $this->warn("[$argName] Component file '$fileName' already exists, skipping.");
+
             return;
         }
 
         $stubFile = $frontendFramework === 'react' ? 'section.react.stub' : 'section.vue.stub';
-        $stubPath = app('creopse.base_path') . '/stubs/' . $stubFile;
+        $stubPath = app('creopse.base_path').'/stubs/'.$stubFile;
 
-        if (!File::exists($stubPath)) {
+        if (! File::exists($stubPath)) {
             $this->error("[$argName] Stub file not found for {$frontendFramework}: {$stubPath}");
+
             return;
         }
 
         $stub = File::get($stubPath);
         $stub = str_replace('{{ name }}', $argName, $stub);
-        $stub = str_replace('{{ id }}', Str::kebab($argName) . '-section', $stub);
-        $stub = str_replace('{{ settingsVar }}', Str::camel($argName) . 'Settings', $stub);
-        $stub = str_replace('{{ dataVar }}', Str::camel($argName) . 'Data', $stub);
+        $stub = str_replace('{{ id }}', Str::kebab($argName).'-section', $stub);
+        $stub = str_replace('{{ settingsVar }}', Str::camel($argName).'Settings', $stub);
+        $stub = str_replace('{{ dataVar }}', Str::camel($argName).'Data', $stub);
         $stub = str_replace('{{ dataId }}', strtolower(Str::camel($argName)), $stub);
 
         File::put($filePath, $stub);
@@ -99,12 +101,13 @@ class MakeSection extends CreopseCommand
     {
         if (Section::where('name', $argName)->exists()) {
             $this->warn("[$argName] Section already exists in the database, skipping.");
+
             return;
         }
 
         Section::create([
-            'name'  => $argName,
-            'title' => '{ "en": "' . $originalName . '", "fr": "' . $originalName . '" }',
+            'name' => $argName,
+            'title' => '{ "en": "'.$originalName.'", "fr": "'.$originalName.'" }',
         ]);
 
         $this->info("[$argName] Section added to the database successfully.");

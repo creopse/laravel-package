@@ -4,7 +4,6 @@ namespace Creopse\Creopse\Http\Controllers;
 
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class IconPickerController extends Controller
 {
@@ -13,7 +12,7 @@ class IconPickerController extends Controller
         $query = $request->input('query');
 
         if ($query) {
-            $iconsPath = app('creopse.storage') . '/app/data/icons.json';
+            $iconsPath = app('creopse.storage').'/app/data/icons.json';
             if (file_exists($iconsPath)) {
                 $icons = file_get_contents($iconsPath);
 

@@ -4,6 +4,7 @@ namespace Creopse\Creopse\Http\Controllers;
 
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Twilio\Rest\Client as TwilioClient;
@@ -22,7 +23,7 @@ class SmsController extends Controller
             'from_name' => 'sometimes|string',
             'recipients' => 'required|array',
             'recipients.*' => 'phone',
-            'provider' => 'sometimes|in:twilio,wassa_sms'
+            'provider' => 'sometimes|in:twilio,wassa_sms',
         ]);
 
         // If data not valid return error
@@ -37,7 +38,7 @@ class SmsController extends Controller
 
         try {
             if ($request->input('provider') == 'wassa_sms') {
-                $client = new \GuzzleHttp\Client();
+                $client = new Client;
 
                 $messageSids = [];
 
@@ -47,11 +48,11 @@ class SmsController extends Controller
                         [
                             'query' => [
                                 'access-token' => $wassaSmsConfig['token'],
-                                'sender'       => $request->input('from'),
-                                'receiver'     => str_replace('+', '', $phoneNumber),
-                                'text'         => strip_tags($request->input('content')),
-                                'dlr_url'      => '',
-                            ]
+                                'sender' => $request->input('from'),
+                                'receiver' => str_replace('+', '', $phoneNumber),
+                                'text' => strip_tags($request->input('content')),
+                                'dlr_url' => '',
+                            ],
                         ]
                     );
 
@@ -72,8 +73,8 @@ class SmsController extends Controller
                     $message = $twilio->messages->create(
                         $phoneNumber,
                         [
-                            "from" => $request->input('from'),
-                            "body" => strip_tags($request->input('content'))
+                            'from' => $request->input('from'),
+                            'body' => strip_tags($request->input('content')),
                         ]
                     );
 

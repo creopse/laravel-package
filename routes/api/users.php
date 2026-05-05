@@ -1,9 +1,9 @@
 <?php
 
 use Creopse\Creopse\Http\Controllers\UserController;
-use Creopse\Creopse\Http\Controllers\UserSessionController;
 use Creopse\Creopse\Http\Controllers\UserDeviceController;
 use Creopse\Creopse\Http\Controllers\UserPlaceController;
+use Creopse\Creopse\Http\Controllers\UserSessionController;
 use Illuminate\Support\Facades\Route;
 
 /*

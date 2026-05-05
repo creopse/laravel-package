@@ -3,10 +3,10 @@
 namespace Creopse\Creopse\Helpers\IpLocation\Core;
 
 use Creopse\Creopse\Helpers\IpLocation\GeoPluginApi;
+use Creopse\Creopse\Helpers\IpLocation\IpApi;
 use Creopse\Creopse\Helpers\IpLocation\IpApiComApi;
 use Creopse\Creopse\Helpers\IpLocation\IpDataApi;
 use Creopse\Creopse\Helpers\IpLocation\IpInfoApi;
-use Creopse\Creopse\Helpers\IpLocation\IpApi;
 
 /**
  * Aggregator
@@ -30,19 +30,24 @@ use Creopse\Creopse\Helpers\IpLocation\IpApi;
  */
 class Aggregator
 {
-    const GEO_PLUGIN_SRC  = 'geoplugin';
-    const IP_API_COM_SRC  = 'ipapicom';
-    const IP_API_CO_SRC   = 'ipapicoapi';
-    const IP_INFO_SRC     = 'ipinfo';
-    const IP_DATA_SRC     = 'ipdata';
+    const GEO_PLUGIN_SRC = 'geoplugin';
+
+    const IP_API_COM_SRC = 'ipapicom';
+
+    const IP_API_CO_SRC = 'ipapicoapi';
+
+    const IP_INFO_SRC = 'ipinfo';
+
+    const IP_DATA_SRC = 'ipdata';
 
     private $source;
+
     private $ipAddress;
 
     public function __construct($ipAddress, $source = 'auto')
     {
         $this->ipAddress = $ipAddress;
-        $this->source    = strtolower($source);
+        $this->source = strtolower($source);
     }
 
     /**
@@ -53,12 +58,12 @@ class Aggregator
     public function fetchIpLocation()
     {
         $result = match ($this->source) {
-            self::GEO_PLUGIN_SRC  => $this->fetchFromGeoPlugin(),
-            self::IP_API_COM_SRC  => $this->fetchFromIpApiCom(),
-            self::IP_API_CO_SRC   => $this->fetchFromIpApiCo(),
-            self::IP_INFO_SRC     => $this->fetchFromIpInfo(),
-            self::IP_DATA_SRC     => $this->fetchFromIpData(),
-            default               => $this->fetchAuto(),
+            self::GEO_PLUGIN_SRC => $this->fetchFromGeoPlugin(),
+            self::IP_API_COM_SRC => $this->fetchFromIpApiCom(),
+            self::IP_API_CO_SRC => $this->fetchFromIpApiCo(),
+            self::IP_INFO_SRC => $this->fetchFromIpInfo(),
+            self::IP_DATA_SRC => $this->fetchFromIpData(),
+            default => $this->fetchAuto(),
         };
 
         return empty($result) ? 'Unable to find IP Geolocation' : $result;
@@ -76,16 +81,16 @@ class Aggregator
     private function fetchAuto()
     {
         $drivers = [
-            fn() => $this->fetchFromGeoPlugin(),
-            fn() => $this->fetchFromIpApiCom(),
-            fn() => $this->fetchFromIpApiCo(),
-            fn() => $this->fetchFromIpInfo(),
-            fn() => $this->fetchFromIpData(),
+            fn () => $this->fetchFromGeoPlugin(),
+            fn () => $this->fetchFromIpApiCom(),
+            fn () => $this->fetchFromIpApiCo(),
+            fn () => $this->fetchFromIpInfo(),
+            fn () => $this->fetchFromIpData(),
         ];
 
         foreach ($drivers as $driver) {
             $result = $driver();
-            if (!empty($result)) {
+            if (! empty($result)) {
                 return $result;
             }
         }
@@ -104,7 +109,7 @@ class Aggregator
      */
     private function fetchFromGeoPlugin()
     {
-        $geoplugin = new GeoPluginApi();
+        $geoplugin = new GeoPluginApi;
         $geoplugin->locate($this->ipAddress);
 
         if (empty($geoplugin->countryCode)) {
@@ -112,17 +117,17 @@ class Aggregator
         }
 
         return [
-            'ip'        => $geoplugin->ip,
-            'latitude'  => $geoplugin->latitude,
+            'ip' => $geoplugin->ip,
+            'latitude' => $geoplugin->latitude,
             'longitude' => $geoplugin->longitude,
             'continent' => $geoplugin->continentName,
-            'country'   => $geoplugin->countryName,
-            'region'    => $geoplugin->regionName,
-            'city'      => $geoplugin->city,
-            'iso'       => $geoplugin->countryCode,
-            'timezone'  => $geoplugin->timezone,
-            'currency'  => $geoplugin->currencyCode,
-            'source'    => self::GEO_PLUGIN_SRC,
+            'country' => $geoplugin->countryName,
+            'region' => $geoplugin->regionName,
+            'city' => $geoplugin->city,
+            'iso' => $geoplugin->countryCode,
+            'timezone' => $geoplugin->timezone,
+            'currency' => $geoplugin->currencyCode,
+            'source' => self::GEO_PLUGIN_SRC,
         ];
     }
 
@@ -133,7 +138,7 @@ class Aggregator
      */
     private function fetchFromIpApiCom()
     {
-        $ipApiCom = new IpApiComApi();
+        $ipApiCom = new IpApiComApi;
         $ipApiCom->locate($this->ipAddress);
 
         if (empty($ipApiCom->country_code)) {
@@ -141,17 +146,17 @@ class Aggregator
         }
 
         return [
-            'ip'        => $ipApiCom->ip,
-            'latitude'  => $ipApiCom->latitude,
+            'ip' => $ipApiCom->ip,
+            'latitude' => $ipApiCom->latitude,
             'longitude' => $ipApiCom->longitude,
             'continent' => $ipApiCom->continent_name,
-            'country'   => $ipApiCom->country_name,
-            'region'    => $ipApiCom->region,
-            'city'      => $ipApiCom->city,
-            'iso'       => $ipApiCom->country_code,
-            'timezone'  => $ipApiCom->timezone,
-            'currency'  => $ipApiCom->currency,
-            'source'    => self::IP_API_COM_SRC,
+            'country' => $ipApiCom->country_name,
+            'region' => $ipApiCom->region,
+            'city' => $ipApiCom->city,
+            'iso' => $ipApiCom->country_code,
+            'timezone' => $ipApiCom->timezone,
+            'currency' => $ipApiCom->currency,
+            'source' => self::IP_API_COM_SRC,
         ];
     }
 
@@ -162,7 +167,7 @@ class Aggregator
      */
     private function fetchFromIpApiCo()
     {
-        $ipApi = new IpApi();
+        $ipApi = new IpApi;
         $ipApi->locate($this->ipAddress);
 
         if (empty($ipApi->country_code)) {
@@ -170,17 +175,17 @@ class Aggregator
         }
 
         return [
-            'ip'        => $ipApi->ip,
-            'latitude'  => $ipApi->latitude,
+            'ip' => $ipApi->ip,
+            'latitude' => $ipApi->latitude,
             'longitude' => $ipApi->longitude,
             'continent' => $ipApi->continent_code, // ipapi.co only provides continent code, not name
-            'country'   => $ipApi->country_name,
-            'region'    => $ipApi->region,
-            'city'      => $ipApi->city,
-            'iso'       => $ipApi->country_code,
-            'timezone'  => $ipApi->timezone,
-            'currency'  => $ipApi->currency,
-            'source'    => self::IP_API_CO_SRC,
+            'country' => $ipApi->country_name,
+            'region' => $ipApi->region,
+            'city' => $ipApi->city,
+            'iso' => $ipApi->country_code,
+            'timezone' => $ipApi->timezone,
+            'currency' => $ipApi->currency,
+            'source' => self::IP_API_CO_SRC,
         ];
     }
 
@@ -191,7 +196,7 @@ class Aggregator
      */
     private function fetchFromIpInfo()
     {
-        $ipInfo = new IpInfoApi();
+        $ipInfo = new IpInfoApi;
         $ipInfo->locate($this->ipAddress);
 
         if (empty($ipInfo->country)) {
@@ -202,17 +207,17 @@ class Aggregator
         $coordinates = explode(',', $ipInfo->loc ?? ',');
 
         return [
-            'ip'        => $ipInfo->ip,
-            'latitude'  => $coordinates[0] ?? null,
+            'ip' => $ipInfo->ip,
+            'latitude' => $coordinates[0] ?? null,
             'longitude' => $coordinates[1] ?? null,
             'continent' => '',         // ipinfo.io does not provide continent data on the free plan
-            'country'   => $ipInfo->country,
-            'region'    => $ipInfo->region,
-            'city'      => $ipInfo->city,
-            'iso'       => $ipInfo->country,
-            'timezone'  => $ipInfo->timezone,
-            'currency'  => '',         // ipinfo.io does not provide currency data on the free plan
-            'source'    => self::IP_INFO_SRC,
+            'country' => $ipInfo->country,
+            'region' => $ipInfo->region,
+            'city' => $ipInfo->city,
+            'iso' => $ipInfo->country,
+            'timezone' => $ipInfo->timezone,
+            'currency' => '',         // ipinfo.io does not provide currency data on the free plan
+            'source' => self::IP_INFO_SRC,
         ];
     }
 
@@ -223,7 +228,7 @@ class Aggregator
      */
     private function fetchFromIpData()
     {
-        $ipData = new IpDataApi();
+        $ipData = new IpDataApi;
         $ipData->locate($this->ipAddress);
 
         if (empty($ipData->country_code)) {
@@ -231,17 +236,17 @@ class Aggregator
         }
 
         return [
-            'ip'        => $ipData->ip,
-            'latitude'  => $ipData->latitude,
+            'ip' => $ipData->ip,
+            'latitude' => $ipData->latitude,
             'longitude' => $ipData->longitude,
             'continent' => $ipData->continent_name,
-            'country'   => $ipData->country_name,
-            'region'    => $ipData->region,
-            'city'      => $ipData->city,
-            'iso'       => $ipData->country_code,
-            'timezone'  => $ipData->timezone,
-            'currency'  => $ipData->currency,
-            'source'    => self::IP_DATA_SRC,
+            'country' => $ipData->country_name,
+            'region' => $ipData->region,
+            'city' => $ipData->city,
+            'iso' => $ipData->country_code,
+            'timezone' => $ipData->timezone,
+            'currency' => $ipData->currency,
+            'source' => self::IP_DATA_SRC,
         ];
     }
 }

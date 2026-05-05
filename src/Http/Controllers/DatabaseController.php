@@ -5,12 +5,12 @@ namespace Creopse\Creopse\Http\Controllers;
 use Creopse\Creopse\Database\Seeders\AltDatabaseSeeder;
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
+use Doctrine\DBAL\DriverManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Artisan;
-use Doctrine\DBAL\DriverManager;
 use Illuminate\Support\Facades\Validator;
 
 class DatabaseController extends Controller
@@ -22,16 +22,17 @@ class DatabaseController extends Controller
     {
         try {
             DB::connection()->getPdo();
+
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::OK,
-                'Connection established successfully to database: ' . DB::connection()->getDatabaseName()
+                'Connection established successfully to database: '.DB::connection()->getDatabaseName()
             );
         } catch (\Exception $e) {
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::SERVICE_UNAVAILABLE,
-                'Could not connect to the database. Error: ' . $e->getMessage()
+                'Could not connect to the database. Error: '.$e->getMessage()
             );
         }
     }
@@ -103,7 +104,7 @@ class DatabaseController extends Controller
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::SERVICE_UNAVAILABLE,
-                'Connection failed: ' . $e->getMessage()
+                'Connection failed: '.$e->getMessage()
             );
         }
     }
@@ -163,22 +164,22 @@ class DatabaseController extends Controller
             if ($result->rowCount() === 0) {
                 // Database doesn't exist, create it
                 $connection->executeStatement(
-                    'CREATE DATABASE `' . $dbname . '` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci'
+                    'CREATE DATABASE `'.$dbname.'` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci'
                 );
             }
         } catch (\Exception $e) {
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::SERVICE_UNAVAILABLE,
-                'Database creation failed: ' . $e->getMessage()
+                'Database creation failed: '.$e->getMessage()
             );
         }
 
         try {
             // 2. Backup and update .env file
-            if (!File::exists($envPath)) {
+            if (! File::exists($envPath)) {
                 $templatePath = base_path('.env.template') ?: base_path('.env.example');
-                if (!File::exists($templatePath)) {
+                if (! File::exists($templatePath)) {
                     throw new \RuntimeException('.env.template or .env.example not found');
                 }
                 File::copy($templatePath, $envPath);
@@ -199,8 +200,8 @@ class DatabaseController extends Controller
 
             // 4. Test the new connection
             config([
-                'database.connections.mysql.host'     => $host,
-                'database.connections.mysql.port'     => $port,
+                'database.connections.mysql.host' => $host,
+                'database.connections.mysql.port' => $port,
                 'database.connections.mysql.database' => $dbname,
                 'database.connections.mysql.username' => $username,
                 'database.connections.mysql.password' => $password,
@@ -231,7 +232,7 @@ class DatabaseController extends Controller
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::INTERNAL_SERVER_ERROR,
-                'Could not update .env file. Error: ' . $e->getMessage()
+                'Could not update .env file. Error: '.$e->getMessage()
             );
         }
     }
@@ -258,7 +259,7 @@ class DatabaseController extends Controller
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::INTERNAL_SERVER_ERROR,
-                'Database migration failed. Error: ' . $e->getMessage()
+                'Database migration failed. Error: '.$e->getMessage()
             );
         }
     }
@@ -285,7 +286,7 @@ class DatabaseController extends Controller
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::INTERNAL_SERVER_ERROR,
-                'Database seeding failed. Error: ' . $e->getMessage()
+                'Database seeding failed. Error: '.$e->getMessage()
             );
         }
     }
@@ -322,7 +323,7 @@ class DatabaseController extends Controller
 
         // If value contains spaces, #, ; or quotes, wrap it in double quotes
         if (preg_match('/[\s#;"\']/', $value)) {
-            return '"' . str_replace('"', '\\"', $value) . '"';
+            return '"'.str_replace('"', '\\"', $value).'"';
         }
 
         return $value;

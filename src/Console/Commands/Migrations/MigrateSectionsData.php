@@ -64,7 +64,8 @@ class MigrateSectionsData extends CreopseCommand
 
             $this->info('Database sections data migration completed...');
         } catch (\Exception $e) {
-            $this->error('Migration failed: ' . $e->getMessage());
+            $this->error('Migration failed: '.$e->getMessage());
+
             return 1;
         }
 
@@ -80,7 +81,7 @@ class MigrateSectionsData extends CreopseCommand
             DB::connection('old_db')->getPdo();
             $this->info('✓ Successfully connected to old database');
         } catch (\Exception $e) {
-            throw new \Exception("Failed to connect to old database: " . $e->getMessage());
+            throw new \Exception('Failed to connect to old database: '.$e->getMessage());
         }
     }
 
@@ -90,20 +91,23 @@ class MigrateSectionsData extends CreopseCommand
     protected function migrateSectionsData()
     {
         // Check if pages table exists in old database
-        if (!$this->tableExists('old_db', 'pages')) {
+        if (! $this->tableExists('old_db', 'pages')) {
             $this->warn('Pages table does not exist in old database. Skipping.');
+
             return;
         }
 
         // Check if sections table exists in current database
-        if (!$this->tableExists(null, 'sections')) {
+        if (! $this->tableExists(null, 'sections')) {
             $this->warn('Sections table does not exist in current database. Skipping.');
+
             return;
         }
 
         // Check if page_section pivot table exists in current database
-        if (!$this->tableExists(null, 'page_section')) {
+        if (! $this->tableExists(null, 'page_section')) {
             $this->warn('Page_Section pivot table does not exist in current database. Skipping.');
+
             return;
         }
 
@@ -118,10 +122,11 @@ class MigrateSectionsData extends CreopseCommand
 
         if ($totalPages === 0) {
             $this->info('No pages found in old database.');
+
             return;
         }
 
-        $chunkSize = (int)$this->option('chunk');
+        $chunkSize = (int) $this->option('chunk');
         $offset = 0;
         $processedCount = 0;
         $totalSectionsMigrated = 0;
@@ -168,7 +173,7 @@ class MigrateSectionsData extends CreopseCommand
 
         try {
             // Convert to array for easier manipulation
-            $pageData = (array)$page;
+            $pageData = (array) $page;
 
             $pageId = $pageData['id'] ?? null;
             $pageTitle = $pageData['title'] ?? 'No title';
@@ -181,21 +186,24 @@ class MigrateSectionsData extends CreopseCommand
 
             if (json_last_error() !== JSON_ERROR_NONE) {
                 $this->warn("Invalid JSON in sections_data for page ID: {$pageId}");
+
                 return 0;
             }
 
             if (empty($sectionsData)) {
                 $this->info("No sections data found for page ID: {$pageId}");
+
                 return 0;
             }
 
-            $this->info("Found " . count($sectionsData) . " sections for this page");
+            $this->info('Found '.count($sectionsData).' sections for this page');
 
             // Check if page exists in new database
             $newPage = DB::table('pages')->where('id', $pageId)->first();
 
-            if (!$newPage) {
+            if (! $newPage) {
                 $this->warn("Page ID {$pageId} does not exist in new database. Skipping sections.");
+
                 return 0;
             }
 
@@ -208,7 +216,7 @@ class MigrateSectionsData extends CreopseCommand
 
             $this->info("Successfully migrated {$sectionsMigrated} sections for page ID: {$pageId}");
         } catch (\Exception $e) {
-            $this->error("Error processing page ID {$pageId}: " . $e->getMessage());
+            $this->error("Error processing page ID {$pageId}: ".$e->getMessage());
         }
 
         return $sectionsMigrated;
@@ -227,8 +235,9 @@ class MigrateSectionsData extends CreopseCommand
                 ->where('slug', $sectionSlug)
                 ->first();
 
-            if (!$section) {
+            if (! $section) {
                 $this->warn("    Section '{$sectionSlug}' not found in new database. Skipping.");
+
                 return false;
             }
 
@@ -249,7 +258,7 @@ class MigrateSectionsData extends CreopseCommand
                     ->where('section_id', $sectionId)
                     ->update([
                         'data' => json_encode($sectionData),
-                        'updated_at' => now()
+                        'updated_at' => now(),
                     ]);
             } else {
                 $this->info("    Creating new relationship for page {$pageId} and section {$sectionId}");
@@ -260,13 +269,14 @@ class MigrateSectionsData extends CreopseCommand
                     'section_id' => $sectionId,
                     'data' => json_encode($sectionData),
                     'created_at' => now(),
-                    'updated_at' => now()
+                    'updated_at' => now(),
                 ]);
             }
 
             return true;
         } catch (\Exception $e) {
-            $this->error("    Error processing section '{$sectionSlug}': " . $e->getMessage());
+            $this->error("    Error processing section '{$sectionSlug}': ".$e->getMessage());
+
             return false;
         }
     }
@@ -280,6 +290,7 @@ class MigrateSectionsData extends CreopseCommand
             if ($connection) {
                 return DB::connection($connection)->getSchemaBuilder()->hasTable($table);
             }
+
             return DB::getSchemaBuilder()->hasTable($table);
         } catch (\Exception $e) {
             return false;

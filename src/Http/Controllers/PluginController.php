@@ -3,9 +3,9 @@
 namespace Creopse\Creopse\Http\Controllers;
 
 use Creopse\Creopse\Enums\ResponseStatusCode;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Creopse\Creopse\PluginManager;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class PluginController extends Controller
 {
@@ -18,29 +18,33 @@ class PluginController extends Controller
     {
         $backendPath = storage_path('plugins');
 
-        if (!is_dir($backendPath)) {
+        if (! is_dir($backendPath)) {
             mkdir($backendPath, 0755, true);
         }
 
         $pluginsData = [];
 
         foreach (array_diff(scandir($backendPath), ['..', '.', '.active.json']) as $folder) {
-            $pluginDir      = $backendPath . DIRECTORY_SEPARATOR . $folder;
-            $pluginJsonPath = $pluginDir . DIRECTORY_SEPARATOR . 'plugin.json';
+            $pluginDir = $backendPath.DIRECTORY_SEPARATOR.$folder;
+            $pluginJsonPath = $pluginDir.DIRECTORY_SEPARATOR.'plugin.json';
 
-            if (!is_dir($pluginDir) || !file_exists($pluginJsonPath)) continue;
+            if (! is_dir($pluginDir) || ! file_exists($pluginJsonPath)) {
+                continue;
+            }
 
             $data = json_decode(file_get_contents($pluginJsonPath), true);
 
-            if (json_last_error() !== JSON_ERROR_NONE) continue;
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                continue;
+            }
 
             // Sanitized id is the canonical id for all operations
-            $pluginId            = $this->sanitizeId($data['id']);
-            $data['id']          = $pluginId;
-            $data['active']      = $this->isActive($pluginId);
-            $data['hasBackend']  = true;
+            $pluginId = $this->sanitizeId($data['id']);
+            $data['id'] = $pluginId;
+            $data['active'] = $this->isActive($pluginId);
+            $data['hasBackend'] = true;
             $data['hasFrontend'] = is_dir(public_path("creopse/plugins/$pluginId"));
-            $data                = $this->mergeDevManifest($data);
+            $data = $this->mergeDevManifest($data);
 
             $pluginsData[] = $data;
         }
@@ -53,20 +57,20 @@ class PluginController extends Controller
      */
     public function show(string $pluginId): JsonResponse
     {
-        $pluginId       = $this->sanitizeId($pluginId);
-        $pluginDir      = storage_path("plugins/$pluginId");
-        $pluginJsonPath = $pluginDir . DIRECTORY_SEPARATOR . 'plugin.json';
+        $pluginId = $this->sanitizeId($pluginId);
+        $pluginDir = storage_path("plugins/$pluginId");
+        $pluginJsonPath = $pluginDir.DIRECTORY_SEPARATOR.'plugin.json';
 
-        if (!is_dir($pluginDir) || !file_exists($pluginJsonPath)) {
+        if (! is_dir($pluginDir) || ! file_exists($pluginJsonPath)) {
             return $this->sendResponse('Plugin not found.', ResponseStatusCode::NOT_FOUND);
         }
 
-        $data                = json_decode(file_get_contents($pluginJsonPath), true);
-        $data['id']          = $pluginId;
-        $data['active']      = $this->isActive($pluginId);
-        $data['hasBackend']  = true;
+        $data = json_decode(file_get_contents($pluginJsonPath), true);
+        $data['id'] = $pluginId;
+        $data['active'] = $this->isActive($pluginId);
+        $data['hasBackend'] = true;
         $data['hasFrontend'] = is_dir(public_path("creopse/plugins/$pluginId"));
-        $data                = $this->mergeDevManifest($data);
+        $data = $this->mergeDevManifest($data);
 
         return $this->sendResponse($data);
     }
@@ -80,9 +84,9 @@ class PluginController extends Controller
     {
         $request->validate(['plugin' => 'required|file|mimes:zip']);
 
-        $tmpPath = storage_path('tmp/plugin_' . uniqid());
+        $tmpPath = storage_path('tmp/plugin_'.uniqid());
 
-        $archive = new \ZipArchive();
+        $archive = new \ZipArchive;
         if ($archive->open($request->file('plugin')->getPathname()) !== true) {
             return $this->sendResponse('Invalid ZIP.', ResponseStatusCode::UNPROCESSABLE_ENTITY);
         }
@@ -94,6 +98,7 @@ class PluginController extends Controller
 
         if (is_dir(storage_path("plugins/$pluginId"))) {
             \File::deleteDirectory($tmpPath);
+
             return $this->sendResponse('Plugin already installed.', ResponseStatusCode::CONFLICT);
         }
 
@@ -128,7 +133,8 @@ class PluginController extends Controller
             } catch (\Throwable $e) {
                 \File::deleteDirectory(storage_path("plugins/$pluginId"));
                 \File::deleteDirectory(public_path("creopse/plugins/$pluginId"));
-                return $this->sendResponse('Migration failed: ' . $e->getMessage(), ResponseStatusCode::INTERNAL_SERVER_ERROR);
+
+                return $this->sendResponse('Migration failed: '.$e->getMessage(), ResponseStatusCode::INTERNAL_SERVER_ERROR);
             }
         }
 
@@ -136,8 +142,8 @@ class PluginController extends Controller
         $this->manager->loadFromPath(storage_path("plugins/$pluginId"));
 
         return $this->sendResponse([
-            'status'  => 'installed',
-            'id'      => $pluginId,
+            'status' => 'installed',
+            'id' => $pluginId,
             'version' => $manifest['version'],
         ]);
     }
@@ -151,9 +157,9 @@ class PluginController extends Controller
         $request->validate(['plugin' => 'required|file|mimes:zip']);
 
         $pluginId = $this->sanitizeId($pluginId);
-        $tmpPath  = storage_path('tmp/plugin_' . uniqid());
+        $tmpPath = storage_path('tmp/plugin_'.uniqid());
 
-        $archive = new \ZipArchive();
+        $archive = new \ZipArchive;
         if ($archive->open($request->file('plugin')->getPathname()) !== true) {
             return $this->sendResponse('Invalid ZIP.', ResponseStatusCode::UNPROCESSABLE_ENTITY);
         }
@@ -162,16 +168,20 @@ class PluginController extends Controller
 
         $manifest = $this->manager->readManifest($tmpPath);
 
-        $backendSrc     = "$tmpPath/backend";
-        $backendDest    = storage_path("plugins/$pluginId");
-        $frontendSrc    = "$tmpPath/frontend";
-        $frontendDest   = public_path("creopse/plugins/$pluginId");
-        $backendBackup  = storage_path("plugins/{$pluginId}_backup");
+        $backendSrc = "$tmpPath/backend";
+        $backendDest = storage_path("plugins/$pluginId");
+        $frontendSrc = "$tmpPath/frontend";
+        $frontendDest = public_path("creopse/plugins/$pluginId");
+        $backendBackup = storage_path("plugins/{$pluginId}_backup");
         $frontendBackup = public_path("creopse/plugins/{$pluginId}_backup");
 
         // Back up existing versions before replacing
-        if (is_dir($backendDest))  \File::copyDirectory($backendDest, $backendBackup);
-        if (is_dir($frontendDest)) \File::copyDirectory($frontendDest, $frontendBackup);
+        if (is_dir($backendDest)) {
+            \File::copyDirectory($backendDest, $backendBackup);
+        }
+        if (is_dir($frontendDest)) {
+            \File::copyDirectory($frontendDest, $frontendBackup);
+        }
 
         // Replace backend
         if (is_dir($backendSrc)) {
@@ -202,12 +212,16 @@ class PluginController extends Controller
             } catch (\Throwable $e) {
                 \File::deleteDirectory($backendDest);
                 \File::deleteDirectory($frontendDest);
-                if (is_dir($backendBackup))  \File::moveDirectory($backendBackup, $backendDest);
-                if (is_dir($frontendBackup)) \File::moveDirectory($frontendBackup, $frontendDest);
+                if (is_dir($backendBackup)) {
+                    \File::moveDirectory($backendBackup, $backendDest);
+                }
+                if (is_dir($frontendBackup)) {
+                    \File::moveDirectory($frontendBackup, $frontendDest);
+                }
                 \File::deleteDirectory($backendBackup);
                 \File::deleteDirectory($frontendBackup);
 
-                return $this->sendResponse('Migration failed: ' . $e->getMessage(), ResponseStatusCode::INTERNAL_SERVER_ERROR);
+                return $this->sendResponse('Migration failed: '.$e->getMessage(), ResponseStatusCode::INTERNAL_SERVER_ERROR);
             }
         }
 
@@ -219,8 +233,8 @@ class PluginController extends Controller
         $this->manager->loadFromPath(storage_path("plugins/$pluginId"));
 
         return $this->sendResponse([
-            'status'  => 'updated',
-            'id'      => $pluginId,
+            'status' => 'updated',
+            'id' => $pluginId,
             'version' => $manifest['version'],
         ]);
     }
@@ -231,11 +245,11 @@ class PluginController extends Controller
      */
     public function uninstall(string $pluginId): JsonResponse
     {
-        $pluginId     = $this->sanitizeId($pluginId);
-        $backendPath  = storage_path("plugins/$pluginId");
+        $pluginId = $this->sanitizeId($pluginId);
+        $backendPath = storage_path("plugins/$pluginId");
         $frontendPath = public_path("creopse/plugins/$pluginId");
 
-        if (!is_dir($backendPath)) {
+        if (! is_dir($backendPath)) {
             return $this->sendResponse('Plugin not found.', ResponseStatusCode::NOT_FOUND);
         }
 
@@ -246,18 +260,20 @@ class PluginController extends Controller
             try {
                 $this->rollbackPluginMigrations($migrationsPath);
             } catch (\Throwable $e) {
-                return $this->sendResponse('Migration rollback failed: ' . $e->getMessage(), ResponseStatusCode::INTERNAL_SERVER_ERROR);
+                return $this->sendResponse('Migration rollback failed: '.$e->getMessage(), ResponseStatusCode::INTERNAL_SERVER_ERROR);
             }
         }
 
         \File::deleteDirectory($backendPath);
-        if (is_dir($frontendPath)) \File::deleteDirectory($frontendPath);
+        if (is_dir($frontendPath)) {
+            \File::deleteDirectory($frontendPath);
+        }
 
         $this->deactivate($pluginId);
 
         return $this->sendResponse([
             'status' => 'uninstalled',
-            'id'     => $pluginId,
+            'id' => $pluginId,
         ]);
     }
 
@@ -268,7 +284,7 @@ class PluginController extends Controller
     {
         $pluginId = $this->sanitizeId($pluginId);
 
-        if (!is_dir(storage_path("plugins/$pluginId"))) {
+        if (! is_dir(storage_path("plugins/$pluginId"))) {
             return $this->sendResponse('Plugin not found.', ResponseStatusCode::NOT_FOUND);
         }
 
@@ -288,7 +304,7 @@ class PluginController extends Controller
     {
         $pluginId = $this->sanitizeId($pluginId);
 
-        if (!$this->isActive($pluginId)) {
+        if (! $this->isActive($pluginId)) {
             return $this->sendResponse('Plugin already disabled.', ResponseStatusCode::CONFLICT);
         }
 
@@ -308,17 +324,23 @@ class PluginController extends Controller
      */
     protected function mergeDevManifest(array $data): array
     {
-        if (empty($data['frontend_dev_url'])) return $data;
+        if (empty($data['frontend_dev_url'])) {
+            return $data;
+        }
 
         try {
-            $response = \Http::timeout(2)->get($data['frontend_dev_url'] . '/manifest.jsonc');
+            $response = \Http::timeout(2)->get($data['frontend_dev_url'].'/manifest.jsonc');
 
-            if (!$response->successful()) return $data;
+            if (! $response->successful()) {
+                return $data;
+            }
 
             $stripped = preg_replace('~//[^\n]*|/\*.*?\*/~s', '', $response->body());
             $frontend = json_decode($stripped, true);
 
-            if (json_last_error() !== JSON_ERROR_NONE) return $data;
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return $data;
+            }
 
             // Merge only fields absent from the backend manifest
             $data = array_merge(array_diff_key($frontend, $data), $data);
@@ -336,7 +358,7 @@ class PluginController extends Controller
     protected function runPluginMigrations(string $migrationsPath): void
     {
         \Artisan::call('migrate', [
-            '--path'  => $this->relativeMigrationsPath($migrationsPath),
+            '--path' => $this->relativeMigrationsPath($migrationsPath),
             '--force' => true,
         ]);
     }
@@ -347,11 +369,13 @@ class PluginController extends Controller
 
         // Find all migration files belonging to this plugin
         $migrationFiles = array_map(
-            fn($f) => pathinfo($f, PATHINFO_FILENAME),
-            glob($migrationsPath . '/*.php') ?: []
+            fn ($f) => pathinfo($f, PATHINFO_FILENAME),
+            glob($migrationsPath.'/*.php') ?: []
         );
 
-        if (empty($migrationFiles)) return;
+        if (empty($migrationFiles)) {
+            return;
+        }
 
         // Find all distinct batches for these migrations, ordered desc
         $batches = \DB::table('migrations')
@@ -363,8 +387,8 @@ class PluginController extends Controller
 
         foreach ($batches as $batch) {
             \Artisan::call('migrate:rollback', [
-                '--path'  => $relativePath,
-                '--step'  => 1,
+                '--path' => $relativePath,
+                '--step' => 1,
                 '--force' => true,
             ]);
         }
@@ -375,7 +399,7 @@ class PluginController extends Controller
      */
     protected function relativeMigrationsPath(string $absolutePath): string
     {
-        return str_replace(base_path() . DIRECTORY_SEPARATOR, '', $absolutePath);
+        return str_replace(base_path().DIRECTORY_SEPARATOR, '', $absolutePath);
     }
 
     // -------------------------------------------------------------------------
@@ -389,13 +413,18 @@ class PluginController extends Controller
     protected function getActiveState(): array
     {
         $path = storage_path('plugins/.active.json');
-        if (!file_exists($path)) return [];
+        if (! file_exists($path)) {
+            return [];
+        }
+
         return json_decode(file_get_contents($path), true) ?? [];
     }
 
     protected function saveActiveState(array $state): void
     {
-        if (!is_dir(storage_path('plugins'))) mkdir(storage_path('plugins'), 0755, true);
+        if (! is_dir(storage_path('plugins'))) {
+            mkdir(storage_path('plugins'), 0755, true);
+        }
         file_put_contents(storage_path('plugins/.active.json'), json_encode($state, JSON_PRETTY_PRINT));
     }
 
@@ -406,14 +435,14 @@ class PluginController extends Controller
 
     protected function activate(string $pluginId): void
     {
-        $state            = $this->getActiveState();
+        $state = $this->getActiveState();
         $state[$pluginId] = true;
         $this->saveActiveState($state);
     }
 
     protected function deactivate(string $pluginId): void
     {
-        $state            = $this->getActiveState();
+        $state = $this->getActiveState();
         $state[$pluginId] = false;
         $this->saveActiveState($state);
     }

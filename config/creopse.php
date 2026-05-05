@@ -1,5 +1,7 @@
 <?php
 
+use Creopse\Creopse\Models\User;
+
 return [
 
     /*
@@ -24,7 +26,7 @@ return [
     | Default: \Creopse\Creopse\Models\User::class
     |
     */
-    'user_model' => \Creopse\Creopse\Models\User::class,
+    'user_model' => User::class,
 
     /*
     |--------------------------------------------------------------------------

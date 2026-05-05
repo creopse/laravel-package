@@ -7,18 +7,18 @@ use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Models\AppInformation;
 use Creopse\Creopse\Models\User;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Illuminate\View\View;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class PasswordResetController extends Controller
 {
@@ -136,7 +136,7 @@ class PasswordResetController extends Controller
 
         $user = Auth::user();
 
-        if (!Hash::check($request->current_password, $user->password)) {
+        if (! Hash::check($request->current_password, $user->password)) {
             // When the current password are incorrect
             return $this->sendResponse(
                 null,
@@ -156,15 +156,14 @@ class PasswordResetController extends Controller
         );
     }
 
-
     /**
      * Render the reset password form with the given request and token.
      *
-     * @param Request $request The HTTP request object.
-     * @param mixed $token The token for password reset. Defaults to null.
-     * @return \Inertia\Response The rendered reset password form.
+     * @param  Request  $request  The HTTP request object.
+     * @param  mixed  $token  The token for password reset. Defaults to null.
+     * @return Response The rendered reset password form.
      */
-    public function showResetForm(Request $request, $token = null): \Inertia\Response
+    public function showResetForm(Request $request, $token = null): Response
     {
         $appNameItem = AppInformation::where('key', 'name')->first();
         $appName = $appNameItem ? $appNameItem->value : config('app.name');
@@ -173,10 +172,10 @@ class PasswordResetController extends Controller
             'token' => $token,
             'email' => $request->query('email'),
             'meta' => [
-                'title' => Lang::get('Reset password') . ' - ' . $appName,
+                'title' => Lang::get('Reset password').' - '.$appName,
                 'description' => Lang::get('Reset password'),
                 'url' => $request->url(),
-            ]
+            ],
         ]);
     }
 
@@ -198,7 +197,7 @@ class PasswordResetController extends Controller
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password) {
                 $user->forceFill([
-                    'password' => Hash::make($password)
+                    'password' => Hash::make($password),
                 ])->setRememberToken(Str::random(60));
 
                 $user->save();

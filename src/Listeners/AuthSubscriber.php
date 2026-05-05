@@ -4,12 +4,12 @@ namespace Creopse\Creopse\Listeners;
 
 use Creopse\Creopse\Events\Auth\AccountActivatedEvent;
 use Creopse\Creopse\Events\Auth\EmailVerifiedEvent;
-use Creopse\Creopse\Models\User;
+use Creopse\Creopse\Events\Auth\ProfileCreatedEvent;
+use Creopse\Creopse\Events\Auth\ProfileUpdatedEvent;
 use Creopse\Creopse\Events\Auth\UserLoggedInEvent;
 use Creopse\Creopse\Events\Auth\UserLoggedOutEvent;
 use Creopse\Creopse\Events\Auth\UserRegisteredEvent;
-use Creopse\Creopse\Events\Auth\ProfileCreatedEvent;
-use Creopse\Creopse\Events\Auth\ProfileUpdatedEvent;
+use Creopse\Creopse\Models\User;
 use Creopse\Creopse\Notifications\UserAccountActivated;
 use Creopse\Creopse\Notifications\WelcomeUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -79,7 +79,7 @@ class AuthSubscriber implements ShouldQueue
         if ($user) {
             $user->notify(new WelcomeUser($user->id));
 
-            if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
+            if ($user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail()) {
                 try {
                     $user->sendEmailVerificationNotification();
                 } catch (\Exception $e) {

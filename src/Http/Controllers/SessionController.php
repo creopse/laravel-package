@@ -2,11 +2,11 @@
 
 namespace Creopse\Creopse\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Enums\SessionType;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SessionController extends Controller
 {
@@ -120,12 +120,22 @@ class SessionController extends Controller
     private function parseUserAgent(?string $userAgent): string
     {
         // Same logic as in middleware
-        if (!$userAgent) return 'Unknown Device';
+        if (! $userAgent) {
+            return 'Unknown Device';
+        }
 
-        if (str_contains($userAgent, 'Windows')) return 'Windows';
-        if (str_contains($userAgent, 'Macintosh')) return 'macOS';
-        if (str_contains($userAgent, 'iPhone')) return 'iPhone';
-        if (str_contains($userAgent, 'Android')) return 'Android';
+        if (str_contains($userAgent, 'Windows')) {
+            return 'Windows';
+        }
+        if (str_contains($userAgent, 'Macintosh')) {
+            return 'macOS';
+        }
+        if (str_contains($userAgent, 'iPhone')) {
+            return 'iPhone';
+        }
+        if (str_contains($userAgent, 'Android')) {
+            return 'Android';
+        }
 
         return 'Unknown Device';
     }

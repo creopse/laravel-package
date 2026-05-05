@@ -6,7 +6,8 @@ use Symfony\Component\Console\Input\InputOption;
 
 class PluginMakeController extends PluginGeneratorCommand
 {
-    protected $name        = 'plugin:make-controller';
+    protected $name = 'plugin:make-controller';
+
     protected $description = 'Create a new controller inside a plugin';
 
     protected function getPluginSubDirectory(): string

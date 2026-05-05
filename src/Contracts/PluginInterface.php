@@ -2,6 +2,8 @@
 
 namespace Creopse\Creopse\Contracts;
 
+use Creopse\Creopse\PluginManager;
+
 interface PluginInterface
 {
     // Unique identifier
@@ -14,5 +16,5 @@ interface PluginInterface
     public function getDependencies(): array;
 
     // Main entry point — called by the PluginManager
-    public function boot(\Creopse\Creopse\PluginManager $manager): void;
+    public function boot(PluginManager $manager): void;
 }

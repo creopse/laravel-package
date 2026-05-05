@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+
 return [
 
     /*
@@ -66,11 +68,11 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => \App\Models\User::class,
+            'model' => User::class,
         ],
         'admin_users' => [
             'driver' => 'eloquent',
-            'model' => \Creopse\Creopse\Models\User::class,
+            'model' => Creopse\Creopse\Models\User::class,
         ],
 
         // 'users' => [

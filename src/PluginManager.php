@@ -2,16 +2,17 @@
 
 namespace Creopse\Creopse;
 
-use Illuminate\Contracts\Foundation\Application;
+use Composer\Autoload\ClassLoader;
 use Creopse\Creopse\Contracts\PluginInterface;
 use Creopse\Creopse\Exceptions\PluginException;
+use Illuminate\Contracts\Foundation\Application;
 
 class PluginManager
 {
     /** @var PluginInterface[] */
     protected array $plugins = [];
 
-    protected \Composer\Autoload\ClassLoader $autoloader;
+    protected ClassLoader $autoloader;
 
     public function __construct(protected Application $app)
     {
@@ -29,7 +30,9 @@ class PluginManager
     {
         $basePath = storage_path('plugins');
 
-        if (!is_dir($basePath)) return;
+        if (! is_dir($basePath)) {
+            return;
+        }
 
         $activeState = $this->getActiveState($basePath);
 
@@ -39,7 +42,9 @@ class PluginManager
             try {
                 $manifest = $this->readManifest($pluginPath);
 
-                if (empty($activeState[$manifest['id']])) continue;
+                if (empty($activeState[$manifest['id']])) {
+                    continue;
+                }
 
                 $this->loadFromPath($pluginPath);
             } catch (\Throwable $e) {
@@ -51,7 +56,10 @@ class PluginManager
     protected function getActiveState(string $basePath): array
     {
         $path = "$basePath/.active.json";
-        if (!file_exists($path)) return [];
+        if (! file_exists($path)) {
+            return [];
+        }
+
         return json_decode(file_get_contents($path), true) ?? [];
     }
 
@@ -63,13 +71,13 @@ class PluginManager
 
         $pluginClass = $manifest['plugin'];
 
-        if (!class_exists($pluginClass)) {
+        if (! class_exists($pluginClass)) {
             throw new PluginException("Class [$pluginClass] not found in [$pluginPath].");
         }
 
-        $plugin = new $pluginClass();
+        $plugin = new $pluginClass;
 
-        if (!$plugin instanceof PluginInterface) {
+        if (! $plugin instanceof PluginInterface) {
             throw new PluginException("[$pluginClass] must implement PluginInterface.");
         }
 
@@ -100,7 +108,7 @@ class PluginManager
     public function registerRoutes(string $path): void
     {
         $this->app->booted(
-            fn() => \Route::middleware('api')->prefix('api')->group($path)
+            fn () => \Route::middleware('api')->prefix('api')->group($path)
         );
     }
 
@@ -108,7 +116,7 @@ class PluginManager
     {
         $this->app->afterResolving(
             'migrator',
-            fn($m) => $m->path($path)
+            fn ($m) => $m->path($path)
         );
     }
 
@@ -158,7 +166,7 @@ class PluginManager
     {
         $path = "$pluginPath/plugin.json";
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             throw new PluginException("No plugin.json found in [$pluginPath].");
         }
 
@@ -176,7 +184,7 @@ class PluginManager
     protected function resolveDependencies(PluginInterface $plugin): void
     {
         foreach ($plugin->getDependencies() as $dep => $constraint) {
-            if (!$this->hasPlugin($dep)) {
+            if (! $this->hasPlugin($dep)) {
                 throw new PluginException(
                     "Plugin [{$plugin->getId()}] requires [$dep] which is not loaded."
                 );

@@ -40,9 +40,9 @@ class SectionDataResource extends JsonResource
                     'data' => $sourcePivot ? Functions::convertKeysToCamelCase($sourcePivot->data) : Functions::convertKeysToCamelCase($this->pivot->data),
                     'settings' => $sourcePivot ? Functions::convertKeysToCamelCase($sourcePivot->settings) : Functions::convertKeysToCamelCase($this->pivot->settings),
                     'createdAt' => $this->pivot->created_at,
-                    'updatedAt' => $this->pivot->updated_at
+                    'updatedAt' => $this->pivot->updated_at,
                 ];
-            })
+            }),
         ];
     }
 }

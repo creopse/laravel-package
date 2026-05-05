@@ -9,13 +9,13 @@ use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Resources\UserResource;
 use Creopse\Creopse\Models\AppInformation;
 use Creopse\Creopse\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\View\View;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class EmailVerificationController extends Controller
 {
@@ -73,12 +73,12 @@ class EmailVerificationController extends Controller
     /**
      * Verify the user's email manually by checking the provided ID and hash.
      *
-     * @param Request $request The HTTP request object.
-     * @param int $id The ID of the user to verify.
-     * @param string $hash The hash to verify the email.
-     * @return RedirectResponse|\Inertia\Response The response indicating the verification status.
+     * @param  Request  $request  The HTTP request object.
+     * @param  int  $id  The ID of the user to verify.
+     * @param  string  $hash  The hash to verify the email.
+     * @return RedirectResponse|Response The response indicating the verification status.
      */
-    public function verifyManually(Request $request, int $id, string $hash): RedirectResponse|\Inertia\Response
+    public function verifyManually(Request $request, int $id, string $hash): RedirectResponse|Response
     {
         // If data not provided redirect to home
         if ($id > 0 && $hash) {
@@ -93,10 +93,10 @@ class EmailVerificationController extends Controller
                     return Inertia::render('auth/VerifyEmail', [
                         'alreadyVerified' => true,
                         'meta' => [
-                            'title' => Lang::get('Verify email') . ' - ' . $appName,
+                            'title' => Lang::get('Verify email').' - '.$appName,
                             'description' => Lang::get('Your email address has already been verified. You can now access all features.'),
                             'url' => $request->url(),
-                        ]
+                        ],
                     ]);
                 }
 
@@ -109,10 +109,10 @@ class EmailVerificationController extends Controller
                         return Inertia::render('auth/VerifyEmail', [
                             'alreadyVerified' => false,
                             'meta' => [
-                                'title' => Lang::get('Verify email') . ' - ' . $appName,
+                                'title' => Lang::get('Verify email').' - '.$appName,
                                 'description' => Lang::get('Your email address has been successfully verified. You can now access all the features.'),
                                 'url' => $request->url(),
-                            ]
+                            ],
                         ]);
                     }
                 }

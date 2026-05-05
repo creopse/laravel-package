@@ -3,7 +3,6 @@
 namespace Creopse\Creopse\Http\Controllers;
 
 use Creopse\Creopse\Enums\ResponseStatusCode;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 
@@ -15,7 +14,7 @@ class TranslationController extends Controller
         $mainJsonFile = base_path("lang/{$locale}.json");
 
         // Check if locale directory or main JSON file exists
-        if (!File::exists($translationPath) && !File::exists($mainJsonFile)) {
+        if (! File::exists($translationPath) && ! File::exists($mainJsonFile)) {
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::NOT_FOUND,
@@ -37,7 +36,7 @@ class TranslationController extends Controller
             // 2. Load directory-based translations if directory exists
             if (File::exists($translationPath)) {
                 // Load PHP files
-                $phpFiles = File::glob($translationPath . '/*.php');
+                $phpFiles = File::glob($translationPath.'/*.php');
                 foreach ($phpFiles as $file) {
                     $filename = pathinfo($file, PATHINFO_FILENAME);
                     $content = include $file;
@@ -53,7 +52,7 @@ class TranslationController extends Controller
                 }
 
                 // Load JSON files in directory
-                $jsonFiles = File::glob($translationPath . '/*.json');
+                $jsonFiles = File::glob($translationPath.'/*.json');
                 foreach ($jsonFiles as $file) {
                     $filename = pathinfo($file, PATHINFO_FILENAME);
                     $content = json_decode(File::get($file), true);
@@ -79,7 +78,7 @@ class TranslationController extends Controller
                     }
                 }
 
-                if (!empty($flatKeys)) {
+                if (! empty($flatKeys)) {
                     $translations['translation'] = $flatKeys;
                     // Remove flat keys from root level to avoid duplication
                     foreach ($flatKeys as $key => $value) {
@@ -88,7 +87,7 @@ class TranslationController extends Controller
                 }
             }
         } catch (\Exception $e) {
-            Log::error("Error loading translations for locale {$locale}: " . $e->getMessage());
+            Log::error("Error loading translations for locale {$locale}: ".$e->getMessage());
 
             return $this->sendResponse(
                 null,

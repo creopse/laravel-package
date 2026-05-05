@@ -1,18 +1,16 @@
 <?php
 
-use Creopse\Creopse\Http\Controllers\Content\{
-    PageController,
-    SectionController,
-    ContentModelController,
-    ContentModelItemController,
-    MenuController,
-    MenuItemController,
-    MenuItemGroupController,
-    MenuItemTypeController,
-    MenuLocationController,
-    MenuSettingController,
-    PermalinkController,
-};
+use Creopse\Creopse\Http\Controllers\Content\ContentModelController;
+use Creopse\Creopse\Http\Controllers\Content\ContentModelItemController;
+use Creopse\Creopse\Http\Controllers\Content\MenuController;
+use Creopse\Creopse\Http\Controllers\Content\MenuItemController;
+use Creopse\Creopse\Http\Controllers\Content\MenuItemGroupController;
+use Creopse\Creopse\Http\Controllers\Content\MenuItemTypeController;
+use Creopse\Creopse\Http\Controllers\Content\MenuLocationController;
+use Creopse\Creopse\Http\Controllers\Content\MenuSettingController;
+use Creopse\Creopse\Http\Controllers\Content\PageController;
+use Creopse\Creopse\Http\Controllers\Content\PermalinkController;
+use Creopse\Creopse\Http\Controllers\Content\SectionController;
 use Illuminate\Support\Facades\Route;
 
 /*

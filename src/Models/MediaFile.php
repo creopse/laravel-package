@@ -30,7 +30,9 @@ class MediaFile extends Model
     public function getMediaUrlAttribute()
     {
         if (env('APP_ENV') == 'local' || env('APP_ENV') == 'development') {
-            if ($this->foreign_url) return $this->foreign_url;
+            if ($this->foreign_url) {
+                return $this->foreign_url;
+            }
         }
 
         if ($this->path) {

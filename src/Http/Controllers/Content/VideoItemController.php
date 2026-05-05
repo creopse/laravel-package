@@ -38,14 +38,14 @@ class VideoItemController extends Controller
         $youtubeChannelVideosAutoUpdateItem = VideoSetting::where('key', 'youtubeChannelVideosAutoUpdate')->first();
 
         if (
-            isset($apiKeyItem) && !empty($apiKeyItem->value) &&
-            isset($channelIdItem) && !empty($channelIdItem->value) &&
+            isset($apiKeyItem) && ! empty($apiKeyItem->value) &&
+            isset($channelIdItem) && ! empty($channelIdItem->value) &&
             isset($youtubeChannelVideosAutoUpdateItem) && $youtubeChannelVideosAutoUpdateItem->value == '1'
         ) {
             $youtubeLastChannelVideosUpdateItem = VideoSetting::where('key', 'youtubeLastChannelVideosUpdate')->first();
             $makeUpdate = false;
 
-            if (isset($youtubeLastChannelVideosUpdateItem) && !empty($youtubeLastChannelVideosUpdateItem->value)) {
+            if (isset($youtubeLastChannelVideosUpdateItem) && ! empty($youtubeLastChannelVideosUpdateItem->value)) {
                 if (Carbon::parse($youtubeLastChannelVideosUpdateItem->value)->diffInHours(Carbon::now()) >= 6) {
                     $makeUpdate = true;
                 }
@@ -64,9 +64,9 @@ class VideoItemController extends Controller
                             'foreign_id' => $video['videoId'],
                         ],
                         [
-                            'title' => '{ "en": "' . $video['title'] . '", "fr": "' . $video['title'] . '" }',
-                            'description' => '{ "en": "' . $video['description'] . '", "fr": "' . $video['description'] . '" }',
-                            'path' => 'https://www.youtube.com/embed/' . $video['videoId'] . '?autoplay=1&rel=0',
+                            'title' => '{ "en": "'.$video['title'].'", "fr": "'.$video['title'].'" }',
+                            'description' => '{ "en": "'.$video['description'].'", "fr": "'.$video['description'].'" }',
+                            'path' => 'https://www.youtube.com/embed/'.$video['videoId'].'?autoplay=1&rel=0',
                             'thumbnail' => $video['thumbnail'],
                             'source' => VideoItemSource::YOUTUBE->value,
                             'is_visible' => true,
@@ -92,8 +92,8 @@ class VideoItemController extends Controller
 
             if ($query) {
                 $videoItems = $videoItems->where(function ($q) use ($query) {
-                    $q->where('title', 'like', '%' . $query . '%')
-                        ->orWhere('description', 'like', '%' . $query . '%');
+                    $q->where('title', 'like', '%'.$query.'%')
+                        ->orWhere('description', 'like', '%'.$query.'%');
                 });
             }
 
@@ -105,7 +105,7 @@ class VideoItemController extends Controller
                 $videoItems = $videoItems->where('display_type', $displayType);
             }
 
-            if (!is_null($isVisible)) {
+            if (! is_null($isVisible)) {
                 $videoItems = $videoItems->where('is_visible', filter_var($isVisible, FILTER_VALIDATE_BOOLEAN));
             }
 
@@ -159,7 +159,7 @@ class VideoItemController extends Controller
     {
         $videoItem = null;
 
-        if ($request->input('source') == VideoItemSource::YOUTUBE->value && !is_null($request->input('path'))) {
+        if ($request->input('source') == VideoItemSource::YOUTUBE->value && ! is_null($request->input('path'))) {
             $videoId = $this->extractYoutubeVideoId($request->input('path'));
 
             if (is_null($videoId)) {
@@ -182,7 +182,7 @@ class VideoItemController extends Controller
 
             $apiKeyItem = VideoSetting::where('key', 'youtubeApiKey')->first();
 
-            if (isset($apiKeyItem) && !empty($apiKeyItem->value)) {
+            if (isset($apiKeyItem) && ! empty($apiKeyItem->value)) {
                 $videoInfo = $this->fetchYoutubeVideoInfo($videoId, $apiKeyItem->value);
 
                 if ($videoInfo) {
@@ -190,9 +190,9 @@ class VideoItemController extends Controller
 
                     $videoItem = VideoItem::create([
                         'foreign_id' => $videoId,
-                        'title' => '{ "en": "' . $snippet['title'] . '", "fr": "' . $snippet['title'] . '" }',
-                        'description' => '{ "en": "' . $snippet['description'] . '", "fr": "' . $snippet['description'] . '" }',
-                        'path' => 'https://www.youtube.com/embed/' . $videoId . '?autoplay=1&rel=0',
+                        'title' => '{ "en": "'.$snippet['title'].'", "fr": "'.$snippet['title'].'" }',
+                        'description' => '{ "en": "'.$snippet['description'].'", "fr": "'.$snippet['description'].'" }',
+                        'path' => 'https://www.youtube.com/embed/'.$videoId.'?autoplay=1&rel=0',
                         'thumbnail' => $this->getThumbnail($snippet['thumbnails']),
                         'source' => $request->input('source'),
                         'user_metadata' => $request->input('user_metadata'),
@@ -298,7 +298,7 @@ class VideoItemController extends Controller
         $apiKeyItem = VideoSetting::where('key', 'youtubeApiKey')->first();
         $channelIdItem = VideoSetting::where('key', 'youtubeChannelId')->first();
 
-        if (!isset($apiKeyItem) || empty($apiKeyItem->value) || !isset($channelIdItem) || empty($channelIdItem->value)) {
+        if (! isset($apiKeyItem) || empty($apiKeyItem->value) || ! isset($channelIdItem) || empty($channelIdItem->value)) {
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::NOT_FOUND,
@@ -317,9 +317,9 @@ class VideoItemController extends Controller
                     'foreign_id' => $video['videoId'],
                 ],
                 [
-                    'title' => '{ "en": "' . $video['title'] . '", "fr": "' . $video['title'] . '" }',
-                    'description' => '{ "en": "' . $video['description'] . '", "fr": "' . $video['description'] . '" }',
-                    'path' => 'https://www.youtube.com/embed/' . $video['videoId'] . '?autoplay=1&rel=0',
+                    'title' => '{ "en": "'.$video['title'].'", "fr": "'.$video['title'].'" }',
+                    'description' => '{ "en": "'.$video['description'].'", "fr": "'.$video['description'].'" }',
+                    'path' => 'https://www.youtube.com/embed/'.$video['videoId'].'?autoplay=1&rel=0',
                     'thumbnail' => $video['thumbnail'],
                     'source' => VideoItemSource::YOUTUBE->value,
                     'is_visible' => true,
@@ -402,7 +402,7 @@ class VideoItemController extends Controller
 
     private function fetchYoutubeVideoInfo($videoId, $apiKey)
     {
-        $url = "https://www.googleapis.com/youtube/v3/videos";
+        $url = 'https://www.googleapis.com/youtube/v3/videos';
 
         $params = [
             'id' => $videoId,
@@ -433,7 +433,7 @@ class VideoItemController extends Controller
                 'order' => 'date',
                 'maxResults' => 50,
                 'pageToken' => $nextPageToken,
-                'type' => 'video'
+                'type' => 'video',
             ];
 
             $response = Http::get($url, $params);
@@ -449,7 +449,7 @@ class VideoItemController extends Controller
                         'description' => $snippet['description'],
                         'publishedAt' => Carbon::parse($snippet['publishedAt'])->format('Y-m-d H:i:s'),
                         'thumbnail' => $this->getThumbnail($snippet['thumbnails']),
-                        'videoId' => $item['id']['videoId']
+                        'videoId' => $item['id']['videoId'],
                     ];
                 }
             } else {

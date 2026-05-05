@@ -6,7 +6,7 @@ use Creopse\Creopse\Models\AdminProfile;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Creopse\Creopse\Models\AdminProfile>
+ * @extends Factory<AdminProfile>
  */
 class AdminProfileFactory extends Factory
 {

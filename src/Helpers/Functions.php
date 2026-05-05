@@ -12,12 +12,14 @@ class Functions
     /**
      * check if array is associative
      *
-     * @param  mixed $arr
+     * @param  mixed  $arr
      * @return bool
      */
-    static function isAssoc(array $arr)
+    public static function isAssoc(array $arr)
     {
-        if (array() === $arr) return false;
+        if ($arr === []) {
+            return false;
+        }
 
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
@@ -25,49 +27,47 @@ class Functions
     /**
      * check if string start with provided string part
      *
-     * @param  mixed $string
-     * @param  mixed $startString
+     * @param  mixed  $string
+     * @param  mixed  $startString
      * @return bool
      */
-    static function startsWith($string, $startString)
+    public static function startsWith($string, $startString)
     {
         $len = strlen($startString);
 
-        return (substr($string, 0, $len) === $startString);
+        return substr($string, 0, $len) === $startString;
     }
 
     /**
      * check if string end with provided string part
      *
-     * @param  mixed $string
-     * @param  mixed $endString
+     * @param  mixed  $string
+     * @param  mixed  $endString
      * @return bool
      */
-    static function endsWith($string, $endString)
+    public static function endsWith($string, $endString)
     {
         $len = strlen($endString);
 
-        if ($len == 0) return true;
+        if ($len == 0) {
+            return true;
+        }
 
-        return (substr($string, -$len) === $endString);
+        return substr($string, -$len) === $endString;
     }
 
     /**
      * Check if the request is an API request.
-     *
-     * @return bool
      */
-    static function isApiRequest(Request $request): bool
+    public static function isApiRequest(Request $request): bool
     {
         return $request->is('api/*') || $request->header('Accept') == 'application/json';
     }
 
     /**
      * generate uid
-     *
-     * @return string
      */
-    static function generateUid(): string
+    public static function generateUid(): string
     {
         $uid = (string) Str::uuid();
 
@@ -80,10 +80,8 @@ class Functions
 
     /**
      * translate json string
-     *
-     * @return string
      */
-    static function trans($jsonString): string
+    public static function trans($jsonString): string
     {
         if ($jsonString !== null) {
             $cleanJsonString = preg_replace('/\s+/', ' ', $jsonString);
@@ -98,7 +96,7 @@ class Functions
                 // If the value for the current locale is empty, try other locales
                 if (empty($firstValue)) {
                     foreach ($data as $value) {
-                        if (!empty($value)) {
+                        if (! empty($value)) {
                             $firstValue = $value;
                             break;
                         }
@@ -118,10 +116,10 @@ class Functions
     /**
      * Converts the keys of an array or object to camel case recursively.
      *
-     * @param mixed $data The data to convert the keys of.
+     * @param  mixed  $data  The data to convert the keys of.
      * @return array The converted data with camel case keys.
      */
-    static function convertKeysToCamelCase($data)
+    public static function convertKeysToCamelCase($data)
     {
         if (is_null($data)) {
             return $data;
@@ -141,10 +139,10 @@ class Functions
     /**
      * Converts the keys of a collection to camel case recursively.
      *
-     * @param mixed $data The data to convert the keys of.
+     * @param  mixed  $data  The data to convert the keys of.
      * @return Collection The converted collection with camel case keys.
      */
-    static function convertCollectionKeysToCamelCase($data)
+    public static function convertCollectionKeysToCamelCase($data)
     {
         return $data->map(function ($item) {
             return self::convertKeysToCamelCase($item);
@@ -153,11 +151,8 @@ class Functions
 
     /**
      * Convert a string to PascalCase.
-     *
-     * @param string $string
-     * @return string
      */
-    static function strToPascalCase(string $string): string
+    public static function strToPascalCase(string $string): string
     {
         $string = ucwords(str_replace(['-', '_', ' '], ' ', $string));
 
@@ -166,11 +161,8 @@ class Functions
 
     /**
      * Convert a string to normal text with only the first letter uppercase and words separated by space.
-     *
-     * @param string $string
-     * @return string
      */
-    static function strToNormalText(string $string): string
+    public static function strToNormalText(string $string): string
     {
         // Replace underscores and hyphens with spaces
         $string = str_replace(['-', '_'], ' ', $string);
@@ -190,11 +182,11 @@ class Functions
     /**
      * Replaces empty spaces in a string with a given string.
      *
-     * @param string $str The string to replace empty spaces in.
-     * @param string $with The string to replace empty spaces with.
+     * @param  string  $str  The string to replace empty spaces in.
+     * @param  string  $with  The string to replace empty spaces with.
      * @return string The string with empty spaces replaced.
      */
-    static function replaceEmptySpaces($str, $with = '%20'): string
+    public static function replaceEmptySpaces($str, $with = '%20'): string
     {
         return str_replace(' ', $with, $str);
     }
@@ -207,12 +199,14 @@ class Functions
      * a placeholder, replaces slashes with dots, and replaces dashes with
      * underscores (optional).
      *
-     * @param string $path The route path to generate a route name from.
+     * @param  string  $path  The route path to generate a route name from.
      * @return string The generated route name.
      */
-    static function generateRouteNameFromPath(string $path): string
+    public static function generateRouteNameFromPath(string $path): string
     {
-        if ($path === '/') return 'home.index';
+        if ($path === '/') {
+            return 'home.index';
+        }
 
         // Remove leading and trailing slashes
         $path = trim($path, '/');
@@ -229,17 +223,17 @@ class Functions
     /**
      * Generates a password with the specified length and character options.
      *
-     * @param int $length The length of the password to be generated. Default is 10.
-     * @param array $options The character options for the password. Default is ['letters' => true, 'numbers' => true, 'symbols' => false].
+     * @param  int  $length  The length of the password to be generated. Default is 10.
+     * @param  array  $options  The character options for the password. Default is ['letters' => true, 'numbers' => true, 'symbols' => false].
      * @return string The generated password.
      */
-    static function genPassword(int $length = 10, array $options = ['letters' => true, 'numbers' => true, 'symbols' => false]): string
+    public static function genPassword(int $length = 10, array $options = ['letters' => true, 'numbers' => true, 'symbols' => false]): string
     {
         $letters = $options['letters'] ?? true;
         $numbers = $options['numbers'] ?? true;
         $symbols = $options['symbols'] ?? false;
 
-        if (!$letters && !$numbers && !$symbols) {
+        if (! $letters && ! $numbers && ! $symbols) {
             return '';
         }
 
@@ -277,7 +271,6 @@ class Functions
         return $password;
     }
 
-
     /**
      * Decode a JSONC string into a PHP variable.
      *
@@ -289,13 +282,13 @@ class Functions
      * It ignores any comments in the input string and passes the rest of the
      * string to the json_decode function.
      *
-     * @param string $jsonc The JSONC string to decode.
-     * @param bool $assoc When true, returned objects will be converted into associative arrays.
-     * @param int $depth User specified recursion depth.
-     * @param int $flags Bitmask of JSON decode flags.
+     * @param  string  $jsonc  The JSONC string to decode.
+     * @param  bool  $assoc  When true, returned objects will be converted into associative arrays.
+     * @param  int  $depth  User specified recursion depth.
+     * @param  int  $flags  Bitmask of JSON decode flags.
      * @return mixed The decoded PHP variable.
      */
-    static function jsoncDecodeSafe(string $jsonc, bool $assoc = true, int $depth = 512, int $flags = 0)
+    public static function jsoncDecodeSafe(string $jsonc, bool $assoc = true, int $depth = 512, int $flags = 0)
     {
         $output = '';
         $in_string = false;
@@ -309,23 +302,25 @@ class Functions
             $next_char = $i + 1 < $len ? $jsonc[$i + 1] : '';
 
             // Handle string toggling
-            if (!$in_single_line_comment && !$in_multi_line_comment) {
+            if (! $in_single_line_comment && ! $in_multi_line_comment) {
                 if ($char === '"' && $prev_char !== '\\') {
-                    $in_string = !$in_string;
+                    $in_string = ! $in_string;
                 }
             }
 
             // Start of // comment
-            if (!$in_string && !$in_multi_line_comment && $char === '/' && $next_char === '/') {
+            if (! $in_string && ! $in_multi_line_comment && $char === '/' && $next_char === '/') {
                 $in_single_line_comment = true;
                 $i++; // skip next /
+
                 continue;
             }
 
             // Start of /* comment
-            if (!$in_string && !$in_single_line_comment && $char === '/' && $next_char === '*') {
+            if (! $in_string && ! $in_single_line_comment && $char === '/' && $next_char === '*') {
                 $in_multi_line_comment = true;
                 $i++; // skip next *
+
                 continue;
             }
 
@@ -333,6 +328,7 @@ class Functions
             if ($in_single_line_comment && ($char === "\n" || $char === "\r")) {
                 $in_single_line_comment = false;
                 $output .= $char;
+
                 continue;
             }
 
@@ -340,10 +336,11 @@ class Functions
             if ($in_multi_line_comment && $char === '*' && $next_char === '/') {
                 $in_multi_line_comment = false;
                 $i++; // skip /
+
                 continue;
             }
 
-            if (!$in_single_line_comment && !$in_multi_line_comment) {
+            if (! $in_single_line_comment && ! $in_multi_line_comment) {
                 $output .= $char;
             }
 

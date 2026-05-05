@@ -25,7 +25,7 @@ class SectionController extends Controller
     /**
      * Display a section data.
      */
-    public function getSectionData(String $sectionSlug, String $pageSlug, String $linkId)
+    public function getSectionData(string $sectionSlug, string $pageSlug, string $linkId)
     {
         $section = Section::where('slug', $sectionSlug)->first();
         $page = Page::where('slug', $pageSlug)->first();
@@ -92,7 +92,7 @@ class SectionController extends Controller
     /**
      * Get a section linked to a page.
      */
-    public function showLinkedSection(String $slug, String $linkId, String $pageId)
+    public function showLinkedSection(string $slug, string $linkId, string $pageId)
     {
         $section = Section::where('slug', $slug)->with(['pages' => function ($query) use ($pageId, $linkId) {
             $query->where('pages.id', $pageId)
@@ -104,7 +104,7 @@ class SectionController extends Controller
                     'data_source_link_id',
                     'data_source_page_id',
                     'data',
-                    'settings'
+                    'settings',
                 ]);
         }])->first();
 
@@ -182,7 +182,7 @@ class SectionController extends Controller
                 ->where('link_id', $linkId)
                 ->update([
                     'data_source_page_id' => null,
-                    'data_source_link_id' => 'default'
+                    'data_source_link_id' => 'default',
                 ]);
         } else {
             Page::findOrFail($pageId);
@@ -192,7 +192,7 @@ class SectionController extends Controller
                 ->where('link_id', $linkId)
                 ->update([
                     'data_source_page_id' => $sourcePageId,
-                    'data_source_link_id' => $sourceLinkId
+                    'data_source_link_id' => $sourceLinkId,
                 ]);
         }
 
@@ -216,7 +216,7 @@ class SectionController extends Controller
             ->where('link_id', $linkId)
             ->first();
 
-        if (!$pageSection) {
+        if (! $pageSection) {
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::NOT_FOUND,
@@ -224,14 +224,14 @@ class SectionController extends Controller
             );
         }
 
-        $newLinkId = 'lnk_' . uniqid();
+        $newLinkId = 'lnk_'.uniqid();
 
         while (PageSection::where('section_id', $section->id)
             ->where('page_id', $pageId)
             ->where('link_id', $newLinkId)
             ->exists()
         ) {
-            $newLinkId = 'lnk_' . uniqid();
+            $newLinkId = 'lnk_'.uniqid();
         }
 
         $section->pages()->attach($pageId, [
@@ -240,7 +240,7 @@ class SectionController extends Controller
             'data_source_page_id' => $pageSection->data_source_page_id == $pageId ? $pageId : $pageSection->data_source_page_id,
             'data_source_link_id' => $pageSection->data_source_link_id == $linkId ? $newLinkId : $pageSection->data_source_link_id,
             'link_id' => $newLinkId,
-            'link_title' => $pageSection->link_title
+            'link_title' => $pageSection->link_title,
         ]);
 
         return $this->sendResponse(
@@ -265,7 +265,7 @@ class SectionController extends Controller
             ->where('link_id', $fromLinkId)
             ->first();
 
-        if (!$fromPageSection) {
+        if (! $fromPageSection) {
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::NOT_FOUND,

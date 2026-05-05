@@ -49,8 +49,8 @@ class RemoveWidget extends CreopseCommand
     {
         $argName = Functions::strToPascalCase($name);
 
-        $fileName = $argName . ($frontendFramework === 'react' ? '.tsx' : '.vue');
-        $filePath = base_path('resources/js/components/widgets/' . $fileName);
+        $fileName = $argName.($frontendFramework === 'react' ? '.tsx' : '.vue');
+        $filePath = base_path('resources/js/components/widgets/'.$fileName);
 
         if (File::exists($filePath)) {
             File::delete($filePath);

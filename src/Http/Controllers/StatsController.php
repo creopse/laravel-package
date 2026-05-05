@@ -2,8 +2,13 @@
 
 namespace Creopse\Creopse\Http\Controllers;
 
-use Creopse\Creopse\Models\{MediaFile, NewsArticle, NewsCategory, NewsComment, NewsTag, User, UserSession};
-use Illuminate\Http\Request;
+use Creopse\Creopse\Models\MediaFile;
+use Creopse\Creopse\Models\NewsArticle;
+use Creopse\Creopse\Models\NewsCategory;
+use Creopse\Creopse\Models\NewsComment;
+use Creopse\Creopse\Models\NewsTag;
+use Creopse\Creopse\Models\User;
+use Creopse\Creopse\Models\UserSession;
 
 class StatsController extends Controller
 {
@@ -94,7 +99,6 @@ class StatsController extends Controller
     {
         return $this->sendResponse(MediaFile::where('type', $type)->count());
     }
-
 
     /**
      * Count trashed media files.

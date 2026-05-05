@@ -3,11 +3,11 @@
 namespace Creopse\Creopse\Http\Controllers\Content;
 
 use Creopse\Creopse\Enums\ResponseStatusCode;
+use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Requests\Content\MenuLocationRequest;
 use Creopse\Creopse\Http\Resources\Content\MenuLocationResource;
 use Creopse\Creopse\Models\MenuLocation;
 use Illuminate\Http\Request;
-use Creopse\Creopse\Http\Controllers\Controller;
 
 class MenuLocationController extends Controller
 {
@@ -25,8 +25,8 @@ class MenuLocationController extends Controller
 
             if ($query) {
                 $items = $items->where(function ($q) use ($query) {
-                    $q->where('name', 'like', '%' . $query . '%')
-                        ->orWhere('description', 'like', '%' . $query . '%');
+                    $q->where('name', 'like', '%'.$query.'%')
+                        ->orWhere('description', 'like', '%'.$query.'%');
                 });
             }
 

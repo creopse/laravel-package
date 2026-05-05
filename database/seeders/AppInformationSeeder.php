@@ -2,7 +2,6 @@
 
 namespace Creopse\Creopse\Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -15,149 +14,149 @@ class AppInformationSeeder extends Seeder
     {
         DB::table('app_information')->insertOrIgnore([
             [
-                'key'    => 'name',
+                'key' => 'name',
                 'value' => 'creopse.com',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'icon',
+                'key' => 'icon',
                 'value' => '',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'adminIcon',
+                'key' => 'adminIcon',
                 'value' => '',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'oneColorIcon',
+                'key' => 'oneColorIcon',
                 'value' => '',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'oneColorAdminIcon',
+                'key' => 'oneColorAdminIcon',
                 'value' => '',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'logo',
+                'key' => 'logo',
                 'value' => '',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'adminLogo',
+                'key' => 'adminLogo',
                 'value' => '',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'oneColorLogo',
+                'key' => 'oneColorLogo',
                 'value' => '',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'oneColorAdminLogo',
+                'key' => 'oneColorAdminLogo',
                 'value' => '',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'phone',
+                'key' => 'phone',
                 'value' => '(+228) 99 99 99 99',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'email',
+                'key' => 'email',
                 'value' => 'contact@creopse.com',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'address',
+                'key' => 'address',
                 'value' => 'Lomé - Togo',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'postalCode',
+                'key' => 'postalCode',
                 'value' => 'XXBPXX',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'description',
+                'key' => 'description',
                 'value' => '{ "fr": "", "en": ""}',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'primaryColor',
+                'key' => 'primaryColor',
                 'value' => '',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'secondaryColor',
+                'key' => 'secondaryColor',
                 'value' => '',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'accentColor',
+                'key' => 'accentColor',
                 'value' => '',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'facebook',
+                'key' => 'facebook',
                 'value' => 'https://www.facebook.com/creopse',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'twitter',
+                'key' => 'twitter',
                 'value' => 'https://twitter.com/creopse',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'instagram',
+                'key' => 'instagram',
                 'value' => 'https://instagram.com/creopse',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'whatsapp',
+                'key' => 'whatsapp',
                 'value' => '',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'linkedin',
+                'key' => 'linkedin',
                 'value' => 'https://www.linkedin.com/in/creopse',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'youtube',
+                'key' => 'youtube',
                 'value' => 'https://youtube.com/creopse',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'key'    => 'additionalInfo',
+                'key' => 'additionalInfo',
                 'value' => '[]',
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]
+            ],
         ]);
     }
 }

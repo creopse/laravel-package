@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Inertia\Response;
 
 class UserController extends Controller
 {
@@ -37,10 +38,10 @@ class UserController extends Controller
             $users = User::query();
 
             if ($query) {
-                $users = $users->where('firstname', 'like', '%' . $query . '%')
-                    ->orWhere('lastname', 'like', '%' . $query . '%')
-                    ->orWhere('username', 'like', '%' . $query . '%')
-                    ->orWhere('email', 'like', '%' . $query . '%');
+                $users = $users->where('firstname', 'like', '%'.$query.'%')
+                    ->orWhere('lastname', 'like', '%'.$query.'%')
+                    ->orWhere('username', 'like', '%'.$query.'%')
+                    ->orWhere('email', 'like', '%'.$query.'%');
             }
 
             $users->with('profile', 'roles', 'permissions');
@@ -129,7 +130,7 @@ class UserController extends Controller
                 Mail::to($user)->queue(new CommonMail(
                     [
                         'title' => __('creopse::notifications.welcome_user.title', ['appName' => $appName]),
-                        'message' => __('creopse::notifications.welcome_user.content_1') . ' ' . __('creopse::notifications.welcome_user.content_2', ['password' => $request->input('password')]),
+                        'message' => __('creopse::notifications.welcome_user.content_1').' '.__('creopse::notifications.welcome_user.content_2', ['password' => $request->input('password')]),
                     ],
                 ));
             }
@@ -232,7 +233,7 @@ class UserController extends Controller
                 Mail::to($user)->queue(new CommonMail(
                     [
                         'title' => __('creopse::notifications.welcome_user.title', ['appName' => $appName]),
-                        'message' => __('creopse::notifications.welcome_user.content_1') . ' ' . __('creopse::notifications.welcome_user.content_2', ['password' => $request->input('password')]),
+                        'message' => __('creopse::notifications.welcome_user.content_1').' '.__('creopse::notifications.welcome_user.content_2', ['password' => $request->input('password')]),
                     ],
                 ));
             }
@@ -278,16 +279,16 @@ class UserController extends Controller
     /**
      * Display the search result for a given query.
      *
-     * @param Request $request The HTTP request object.
-     * @param string $query The search query.
-     * @return \Inertia\Response The rendered search products page.
+     * @param  Request  $request  The HTTP request object.
+     * @param  string  $query  The search query.
+     * @return Response The rendered search products page.
      */
     public function searchUsers(Request $request, string $query = '')
     {
-        $users = User::where('firstname', 'like', '%' . $query . '%')
-            ->orWhere('lastname', 'like', '%' . $query . '%')
-            ->orWhere('username', 'like', '%' . $query . '%')
-            ->orWhere('email', 'like', '%' . $query . '%')
+        $users = User::where('firstname', 'like', '%'.$query.'%')
+            ->orWhere('lastname', 'like', '%'.$query.'%')
+            ->orWhere('username', 'like', '%'.$query.'%')
+            ->orWhere('email', 'like', '%'.$query.'%')
             ->get();
 
         return $this->sendResponse(UserResource::collection($users->load(['profile', 'roles', 'permissions'])));
@@ -372,6 +373,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
+
         return $this->sendResponse(
             null,
             ResponseStatusCode::OK,
@@ -399,6 +401,7 @@ class UserController extends Controller
         if ($user) {
             return $this->sendResponse($user->place());
         }
+
         return $this->sendResponse(Auth::user()->place());
     }
 
@@ -410,6 +413,7 @@ class UserController extends Controller
         if ($user) {
             return $this->sendResponse($user->devices());
         }
+
         return $this->sendResponse(Auth::user()->devices());
     }
 

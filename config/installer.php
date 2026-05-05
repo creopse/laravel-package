@@ -1,5 +1,9 @@
 <?php
 
+use Creopse\Creopse\Http\Middleware\LogSessionHistory;
+use Illuminate\Session\Middleware\StartSession;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+
 return [
     /**
      * Installation lock file path
@@ -19,8 +23,8 @@ return [
      * - Authentication checks during setup process
      */
     'excluded_middleware' => [
-        \Illuminate\Session\Middleware\StartSession::class,
-        \Creopse\Creopse\Http\Middleware\LogSessionHistory::class,
-        \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        StartSession::class,
+        LogSessionHistory::class,
+        EnsureFrontendRequestsAreStateful::class,
     ],
 ];

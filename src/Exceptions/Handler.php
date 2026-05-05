@@ -4,12 +4,26 @@ namespace Creopse\Creopse\Exceptions;
 
 use Creopse\Creopse\Enums\ContentType;
 use Creopse\Creopse\Helpers\Functions;
-use Creopse\Creopse\Http\Resources\{UserResource, Ads\AdResource, Ads\AdIdentifierResource, Content\ContentModelResource, Content\MenuItemGroupResource, Content\MenuLocationResource, Content\MenuResource};
-use Creopse\Creopse\Models\{Ad, AdIdentifier, AppInformation, ContentModel, Menu, MenuItemGroup, MenuLocation, VideoSetting};
+use Creopse\Creopse\Http\Resources\Ads\AdIdentifierResource;
+use Creopse\Creopse\Http\Resources\Ads\AdResource;
+use Creopse\Creopse\Http\Resources\Content\ContentModelResource;
+use Creopse\Creopse\Http\Resources\Content\MenuItemGroupResource;
+use Creopse\Creopse\Http\Resources\Content\MenuLocationResource;
+use Creopse\Creopse\Http\Resources\Content\MenuResource;
+use Creopse\Creopse\Http\Resources\UserResource;
+use Creopse\Creopse\Models\Ad;
+use Creopse\Creopse\Models\AdIdentifier;
+use Creopse\Creopse\Models\AppInformation;
+use Creopse\Creopse\Models\ContentModel;
+use Creopse\Creopse\Models\Menu;
+use Creopse\Creopse\Models\MenuItemGroup;
+use Creopse\Creopse\Models\MenuLocation;
+use Creopse\Creopse\Models\VideoSetting;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\{Lang, Storage};
 use Inertia\Inertia;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
@@ -37,7 +51,7 @@ class Handler extends ExceptionHandler
         });
 
         $this->renderable(function (NotFoundHttpException $e, Request $request) {
-            if (!Functions::isApiRequest($request)) {
+            if (! Functions::isApiRequest($request)) {
                 $appInformation = AppInformation::all();
 
                 $nameItem = $appInformation->firstWhere('key', 'name');
@@ -56,11 +70,11 @@ class Handler extends ExceptionHandler
                     'appInformation' => AppInformation::all(),
                     'url' => $request->url(),
                     'defaultMeta' => [
-                        'title' => Lang::get('Error 404 - Page not found') . ' - ' . $name,
+                        'title' => Lang::get('Error 404 - Page not found').' - '.$name,
                         'description' => Lang::get('Oops! The page you are looking for does not exist. It might have been moved or deleted.'),
                         'url' => $request->url(),
                         'image' => $icon,
-                        'favicon' => $icon
+                        'favicon' => $icon,
                     ],
                     'adIdentifiers' => AdIdentifierResource::collection(
                         AdIdentifier::all()
@@ -85,6 +99,7 @@ class Handler extends ExceptionHandler
                                             $item->content = null;
                                         }
                                     }
+
                                     return $item;
                                 });
                             })

@@ -3,11 +3,11 @@
 namespace Creopse\Creopse\Http\Controllers\Content;
 
 use Creopse\Creopse\Enums\ResponseStatusCode;
+use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Requests\Content\PermalinkRequest;
 use Creopse\Creopse\Http\Resources\Content\PermalinkResource;
 use Creopse\Creopse\Models\Permalink;
 use Illuminate\Http\Request;
-use Creopse\Creopse\Http\Controllers\Controller;
 
 class PermalinkController extends Controller
 {
@@ -25,7 +25,7 @@ class PermalinkController extends Controller
 
             if ($query) {
                 $items = $items->where(function ($q) use ($query) {
-                    $q->where('path_prefix', 'like', '%' . $query . '%');
+                    $q->where('path_prefix', 'like', '%'.$query.'%');
                 });
             }
 

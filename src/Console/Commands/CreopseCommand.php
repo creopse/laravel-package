@@ -15,12 +15,13 @@ abstract class CreopseCommand extends Command
      *
      * @return string
      */
-    static function detectFrontendFramework(self $command)
+    public static function detectFrontendFramework(self $command)
     {
         $packageJsonPath = base_path('package.json');
 
-        if (!File::exists($packageJsonPath)) {
+        if (! File::exists($packageJsonPath)) {
             $command->warn('package.json not found, defaulting to Vue');
+
             return 'vue';
         }
 
@@ -29,6 +30,7 @@ abstract class CreopseCommand extends Command
 
             if (json_last_error() !== JSON_ERROR_NONE) {
                 $command->warn('Failed to parse package.json, defaulting to Vue');
+
                 return 'vue';
             }
 
@@ -51,6 +53,7 @@ abstract class CreopseCommand extends Command
         }
 
         $command->warn('Could not detect frontend framework from package.json, defaulting to Vue');
+
         return 'vue';
     }
 }
