@@ -4,18 +4,13 @@ namespace Creopse\Creopse\Exceptions;
 
 use Creopse\Creopse\Enums\ContentType;
 use Creopse\Creopse\Helpers\Functions;
-use Creopse\Creopse\Http\Resources\{UserResource, Ads\AdResource, Ads\AdIdentifierResource};
-use Creopse\Creopse\Http\Resources\Content\ContentModelResource;
-use Creopse\Creopse\Http\Resources\Content\MenuItemGroupResource;
-use Creopse\Creopse\Http\Resources\Content\MenuLocationResource;
-use Creopse\Creopse\Http\Resources\Content\MenuResource;
-use Creopse\Creopse\Models\{AppInformation, AdIdentifier, Ad, ContentModel, Menu, MenuItemGroup, MenuLocation, VideoSetting};
+use Creopse\Creopse\Http\Resources\{UserResource, Ads\AdResource, Ads\AdIdentifierResource, Content\ContentModelResource, Content\MenuItemGroupResource, Content\MenuLocationResource, Content\MenuResource};
+use Creopse\Creopse\Models\{Ad, AdIdentifier, AppInformation, ContentModel, Menu, MenuItemGroup, MenuLocation, VideoSetting};
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Storage;
-use Inertia\Inertia;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\{Lang, Storage};
+use Inertia\Inertia;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -104,7 +99,7 @@ class Handler extends ExceptionHandler
                         ContentModel::all()
                     ),
                     'youtubeChannelId' => $channelIdItem ? $channelIdItem->value : null,
-                ]);
+                ])->toResponse($request)->setStatusCode(404);
             }
         });
     }
