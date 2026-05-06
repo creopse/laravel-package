@@ -9,6 +9,7 @@ use Creopse\Creopse\Traits\DetectsMobileRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\TransientToken;
 
 class LogoutController extends Controller
 {
@@ -19,15 +20,23 @@ class LogoutController extends Controller
      */
     public function __invoke(Request $request, string $guard = 'web'): JsonResponse
     {
+        $userId = $request->user()->id;
+
         if ($this->isMobileRequest($request)) {
-            $request->user()->currentAccessToken()->delete();
+            $token = $request->user()->currentAccessToken();
+
+            if ($token && !$token instanceof TransientToken) {
+                $token->delete();
+            }
         } else {
             Auth::guard($guard)->logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+            if ($request->hasSession()) {
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+            }
         }
 
-        event(new UserLoggedOutEvent($request->user()->id));
+        event(new UserLoggedOutEvent($userId));
 
         return $this->sendResponse(
             null,
