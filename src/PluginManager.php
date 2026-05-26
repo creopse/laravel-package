@@ -122,7 +122,7 @@ class PluginManager
 
     public function registerConfig(string $key, string $path): void
     {
-        $this->app['config']->set($key, require $path);
+        $this->app->make('config')->set($key, require $path);
     }
 
     public function addHook(string $event, callable $callback): void

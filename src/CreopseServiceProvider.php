@@ -108,9 +108,8 @@ class CreopseServiceProvider extends ServiceProvider
         });
 
         // Hook into the application's exception handler
-        /** @var Handler $handler */
+        /** @var Handler $exceptionHandler */
         $exceptionHandler = $this->app->make(ExceptionHandler::class);
-        assert($exceptionHandler instanceof Handler);
 
         $exceptionHandler
             ->renderable(function (NotFoundHttpException $e, Request $request) {

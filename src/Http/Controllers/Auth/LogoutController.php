@@ -25,7 +25,7 @@ class LogoutController extends Controller
         if ($this->isMobileRequest($request)) {
             $token = $request->user()->currentAccessToken();
 
-            if ($token && !$token instanceof TransientToken) {
+            if ($token && ! $token instanceof TransientToken) {
                 $token->delete();
             }
         } else {
