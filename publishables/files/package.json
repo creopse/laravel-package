@@ -59,10 +59,5 @@
         "pinia-persistence-plugin": "^0.0.7",
         "vue": "^3.5.33",
         "vue3-icon-picker": "^0.3.3"
-    },
-    "pnpm": {
-        "overrides": {
-            "caniuse-lite": "latest"
-        }
     }
 }

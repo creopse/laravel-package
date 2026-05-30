@@ -1,5 +1,7 @@
-onlyBuiltDependencies:
-  - '@tailwindcss/oxide'
-  - esbuild
-  - unrs-resolver
-  - vue-demi
+overrides:
+  caniuse-lite: 'latest'
+allowBuilds:
+  '@tailwindcss/oxide': true
+  esbuild: true
+  unrs-resolver: true
+  vue-demi: true
