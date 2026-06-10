@@ -1,1 +1,0 @@
-import{k as r,P as i}from"./main-Ch9p-YX9.js";import{u as n}from"./vue-i18n-tyYErYJ0.js";const m=()=>{const{t:e}=n(),{getSettingValue:a}=r(),t=[{label:a("adminProfileTypeLabel")||e("admin"),value:i.ADMIN}];return{profileTypes:t,getProfileTypeLabel:l=>t.find(o=>o.value===l)?.label||e("other")}};export{m as u};
