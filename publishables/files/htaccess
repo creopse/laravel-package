@@ -2,5 +2,12 @@ SetEnv APP_ENV production
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
+
+    # 1. www → non-www
+    RewriteCond %{REQUEST_METHOD} !OPTIONS
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^ http://%1%{REQUEST_URI} [L,R=301]
+
+    # 2. Routing Laravel
     RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
