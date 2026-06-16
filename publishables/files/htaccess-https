@@ -5,6 +5,7 @@ SetEnv APP_ENV production
 
     # 1. HTTP → HTTPS
     RewriteCond %{HTTPS} !=on
+    RewriteCond %{REQUEST_METHOD} !OPTIONS
     RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
     # 2. www → non-www
