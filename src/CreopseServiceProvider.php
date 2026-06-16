@@ -445,7 +445,6 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__.'/../publishables/files/vitest.config.ts' => base_path('vitest.config.ts'),
             __DIR__.'/../publishables/files/window.d.ts' => base_path('window.d.ts'),
             __DIR__.'/../publishables/files/pnpm-workspace.yaml' => base_path('pnpm-workspace.yaml'),
-            __DIR__.'/../publishables/files/HttpKernel.php' => app_path('Http/Kernel.php'),
         ], 'creopse-other-files');
 
         $this->publishes([
@@ -488,6 +487,10 @@ class CreopseServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../publishables/bootstrap/v11/app.php' => base_path('bootstrap/app.php'),
                 __DIR__.'/../publishables/bootstrap/v11/providers.php' => base_path('bootstrap/providers.php'),
+            ], 'creopse-bootstrap-files');
+        } else {
+            $this->publishes([
+                __DIR__.'/../publishables/files/HttpKernel.php' => app_path('Http/Kernel.php'),
             ], 'creopse-bootstrap-files');
         }
 
