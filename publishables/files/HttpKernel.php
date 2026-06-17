@@ -31,6 +31,9 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+use Spatie\Permission\Middleware\RoleMiddleware;
+use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
 use TomLerendu\LaravelConvertCaseMiddleware\ConvertRequestToSnakeCase;
 use TomLerendu\LaravelConvertCaseMiddleware\ConvertResponseToCamelCase;
 
@@ -101,5 +104,8 @@ class Kernel extends HttpKernel
         'verified' => EnsureEmailIsVerified::class,
         'abilities' => CheckAbilities::class,
         'ability' => CheckForAnyAbility::class,
+        'permission' => PermissionMiddleware::class,
+        'role' => RoleMiddleware::class,
+        'role_or_permission' => RoleOrPermissionMiddleware::class,
     ];
 }
