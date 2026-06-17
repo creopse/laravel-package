@@ -7,8 +7,6 @@ use App\Models\SubscriberProfile;
 use App\Models\User;
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
-use Creopse\Creopse\Events\Auth\ProfileCreatedEvent;
-use Creopse\Creopse\Events\Auth\ProfileUpdatedEvent;
 use Creopse\Creopse\Http\Controllers\Controller as CreopseController;
 use Creopse\Creopse\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
@@ -90,8 +88,6 @@ class UserProfileController extends CreopseController
             $user->refresh();
 
             if ($user->profile) {
-                event(new ProfileCreatedEvent($user->id));
-
                 return $this->sendResponse(
                     new UserResource($user->load(['profile', 'roles', 'permissions'])),
                     ResponseStatusCode::OK,
@@ -163,8 +159,6 @@ class UserProfileController extends CreopseController
         }
 
         if ($profile) {
-            event(new ProfileUpdatedEvent($profile, $request->input('type')));
-
             return $this->sendResponse(
                 $profile,
                 ResponseStatusCode::OK,
