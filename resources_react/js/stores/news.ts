@@ -1,7 +1,7 @@
 import type { NewsCategoryModel, NewsTagModel } from '@creopse/utils'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
-import { storage } from '.'
+import { storage } from '../lib/encrypted-storage'
 
 interface CatalogState {
   categories: NewsCategoryModel[]
@@ -63,6 +63,7 @@ export const useNewsStore = create<CatalogState>()(
     {
       name: 'news',
       storage: createJSONStorage(() => storage),
+      skipHydration: true,
     }
   )
 )

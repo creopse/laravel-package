@@ -10,3 +10,14 @@
     visibility: unset;
   }
 }
+
+#nprogress .bar {
+  background: var(--inertia-progress-color);
+  height: 2px;
+}
+
+#nprogress .peg {
+  box-shadow:
+    0 0 10px var(--inertia-progress-color),
+    0 0 5px var(--inertia-progress-color);
+}

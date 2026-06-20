@@ -2,40 +2,47 @@ import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
 
 import { CreopseProvider, type PluginOptions } from '@creopse/react'
-import { LANG_KEY } from './constants'
-import './i18n'
+import type { SharedProps } from '@creopse/utils'
+import { initI18n } from './i18n'
 
 import '@arkn/react-icon-picker/dist/style.css'
+import { configureEncryptedStorage } from './lib/encrypted-storage'
+import { rehydrateStores } from './stores'
 
 createInertiaApp({
-  title: (title) => (title ? `${title} - ${import.meta.env.APP_NAME}` : import.meta.env.APP_NAME),
   resolve: (name) => {
     const pages = import.meta.glob('./pages/**/*.tsx', { eager: true })
     const page: any = pages[`./pages/${name}.tsx`]
     return page
   },
+
   progress: {
-    // The delay after which the progress bar will appear, in milliseconds...
     delay: 250,
-
-    // The color of the progress bar...
-    color: '#3B82F6',
-
-    // Whether to include the default NProgress styles...
     includeCSS: true,
-
-    // Whether the NProgress spinner will be shown...
     showSpinner: false,
   },
+
   setup({ el, App, props }) {
-    // Create react app instance
+    const sharedProps = props.initialPage.props as unknown as SharedProps
+    const config = sharedProps.config
+
+    configureEncryptedStorage(config.frontend.storageEncryptionKey)
+    rehydrateStores()
+
+    initI18n({
+      apiUrl: config.app.apiUrl,
+      langKey: config.frontend.langKey,
+      fallbackLocale: config.app.fallbackLocale,
+      debug: import.meta.env.DEV,
+    })
+
     const root = createRoot(el)
 
     root.render(
       <CreopseProvider
         options={
           {
-            initialProps: props.initialPage.props,
+            initialProps: sharedProps,
             router,
             resolveSections: () => {
               return import.meta.glob('./components/sections/**/*.tsx', {
@@ -44,11 +51,11 @@ createInertiaApp({
             },
             config: {
               debug: import.meta.env.DEV,
-              appUrl: import.meta.env.APP_URL,
-              locale: import.meta.env.APP_LOCALE,
-              fallbackLocale: import.meta.env.APP_FALLBACK_LOCALE,
+              appUrl: config.app.url,
+              locale: config.app.locale,
+              fallbackLocale: config.app.fallbackLocale,
               useUserLocaleAsFallback: true,
-              langKey: LANG_KEY,
+              langKey: config.frontend.langKey,
             },
           } as PluginOptions
         }>
