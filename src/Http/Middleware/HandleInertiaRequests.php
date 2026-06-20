@@ -115,6 +115,21 @@ class HandleInertiaRequests extends Middleware
         $channelIdItem = VideoSetting::where('key', 'youtubeChannelId')->first();
 
         return array_merge(parent::share($request), [
+            'config' => [
+                'app' => [
+                    'name' => config('app.name'),
+                    'env' => config('app.env'),
+                    'locale' => config('app.locale'),
+                    'fallbackLocale' => config('app.fallback_locale'),
+                    'url' => config('app.url'),
+                    'apiUrl' => config('app.url').'/api',
+                ],
+                'frontend' => [
+                    'storageEncryptionKey' => config('frontend.storage_encryption_key'),
+                    'langKey' => config('frontend.lang_key'),
+                    'progressColor' => config('frontend.progress_color'),
+                ],
+            ],
             'appLocale' => app()->getLocale(),
             'appFallbackLocale' => app()->getFallbackLocale(),
             'userData' => $request->user() ? new UserResource($request->user()->load(['profile', 'roles', 'permissions'])) : null,

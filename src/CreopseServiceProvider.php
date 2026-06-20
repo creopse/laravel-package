@@ -82,6 +82,7 @@ class CreopseServiceProvider extends ServiceProvider
         'feed',
         'mail',
         'image',
+        'frontend',
         'session',
         'sanctum',
         'logging',
