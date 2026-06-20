@@ -25,6 +25,12 @@
     <meta name="twitter:card" content="summary_large_image" />
     @endif
 
+    <style>
+        :root {
+            --inertia-progress-color: {{ data_get($page['props'], 'config.frontend.progressColor', '#29d') }};
+        }
+    </style>
+
     <!-- Put your styles here -->
     <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}" />
 
