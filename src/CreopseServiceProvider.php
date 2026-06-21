@@ -347,20 +347,36 @@ class CreopseServiceProvider extends ServiceProvider
 
         // Publish middlewares
         $this->publishes([
+            __DIR__.'/../publishables/middlewares/Authenticate.php' => app_path('Http/Middleware/Authenticate.php'),
             __DIR__.'/../publishables/middlewares/EncryptCookies.php' => app_path('Http/Middleware/EncryptCookies.php'),
-            __DIR__.'/../publishables/middlewares/EnsureEmailIsVerified.php' => app_path('Http/Middleware/EnsureEmailIsVerified.php'),
             __DIR__.'/../publishables/middlewares/HandleInertiaRequests.php' => app_path('Http/Middleware/HandleInertiaRequests.php'),
-            __DIR__.'/../publishables/middlewares/LogSessionHistory.php' => app_path('Http/Middleware/LogSessionHistory.php'),
+            __DIR__.'/../publishables/middlewares/PreventRequestsDuringMaintenance.php' => app_path('Http/Middleware/PreventRequestsDuringMaintenance.php'),
+            __DIR__.'/../publishables/middlewares/RedirectIfAuthenticated.php' => app_path('Http/Middleware/RedirectIfAuthenticated.php'),
+            __DIR__.'/../publishables/middlewares/TrimStrings.php' => app_path('Http/Middleware/TrimStrings.php'),
+            __DIR__.'/../publishables/middlewares/TrustHosts.php' => app_path('Http/Middleware/TrustHosts.php'),
+            __DIR__.'/../publishables/middlewares/TrustProxies.php' => app_path('Http/Middleware/TrustProxies.php'),
+            __DIR__.'/../publishables/middlewares/ValidateSignature.php' => app_path('Http/Middleware/ValidateSignature.php'),
             __DIR__.'/../publishables/middlewares/VerifyCsrfToken.php' => app_path('Http/Middleware/VerifyCsrfToken.php'),
-            __DIR__.'/../publishables/middlewares/CaptureSessionMetadata.php' => app_path('Http/Middleware/CaptureSessionMetadata.php'),
+            __DIR__.'/../publishables/middlewares/custom' => app_path('Http/Middleware'),
         ], 'creopse-middlewares');
 
-        // Publish v11 middlewares
-        if ($this->isLaravelVersionOrAbove('11.0')) {
-            $this->publishes([
-                __DIR__.'/../publishables/middlewares/v11' => app_path('Http/Middleware'),
-            ], 'creopse-v11-middlewares');
-        }
+        // Publish middlewares
+        $this->publishes([
+            __DIR__.'/../publishables/middlewares/Authenticate.php' => app_path('Http/Middleware/Authenticate.php'),
+            __DIR__.'/../publishables/middlewares/EncryptCookies.php' => app_path('Http/Middleware/EncryptCookies.php'),
+            __DIR__.'/../publishables/middlewares/PreventRequestsDuringMaintenance.php' => app_path('Http/Middleware/PreventRequestsDuringMaintenance.php'),
+            __DIR__.'/../publishables/middlewares/RedirectIfAuthenticated.php' => app_path('Http/Middleware/RedirectIfAuthenticated.php'),
+            __DIR__.'/../publishables/middlewares/TrimStrings.php' => app_path('Http/Middleware/TrimStrings.php'),
+            __DIR__.'/../publishables/middlewares/TrustHosts.php' => app_path('Http/Middleware/TrustHosts.php'),
+            __DIR__.'/../publishables/middlewares/TrustProxies.php' => app_path('Http/Middleware/TrustProxies.php'),
+            __DIR__.'/../publishables/middlewares/ValidateSignature.php' => app_path('Http/Middleware/ValidateSignature.php'),
+            __DIR__.'/../publishables/middlewares/VerifyCsrfToken.php' => app_path('Http/Middleware/VerifyCsrfToken.php'),
+        ], 'creopse-installation-middlewares');
+
+        // Publish custom middlewares
+        $this->publishes([
+            __DIR__.'/../publishables/middlewares/custom' => app_path('Http/Middleware'),
+        ], 'creopse-custom-middlewares');
 
         // Publish inertia middleware
         $this->publishes([
@@ -470,30 +486,16 @@ class CreopseServiceProvider extends ServiceProvider
         });
 
         // Publish providers
-        if ($this->isLaravelVersionOrAbove('11.0')) {
-            $this->publishes([
-                __DIR__.'/../publishables/providers/v11/AppServiceProvider.php' => app_path('Providers/AppServiceProvider.php'),
-                __DIR__.'/../publishables/providers/EventServiceProvider.php' => app_path('Providers/EventServiceProvider.php'),
-            ], 'creopse-providers');
-        } else {
-            $this->publishes([
-                __DIR__.'/../publishables/providers/RouteServiceProvider.php' => app_path('Providers/RouteServiceProvider.php'),
-                __DIR__.'/../publishables/providers/EventServiceProvider.php' => app_path('Providers/EventServiceProvider.php'),
-                __DIR__.'/../publishables/providers/AuthServiceProvider.php' => app_path('Providers/AuthServiceProvider.php'),
-            ], 'creopse-providers');
-        }
+        $this->publishes([
+            __DIR__.'/../publishables/providers/AppServiceProvider.php' => app_path('Providers/AppServiceProvider.php'),
+            __DIR__.'/../publishables/providers/EventServiceProvider.php' => app_path('Providers/EventServiceProvider.php'),
+        ], 'creopse-providers');
 
         // Publish bootstrap files
-        if ($this->isLaravelVersionOrAbove('11.0')) {
-            $this->publishes([
-                __DIR__.'/../publishables/bootstrap/v11/app.php' => base_path('bootstrap/app.php'),
-                __DIR__.'/../publishables/bootstrap/v11/providers.php' => base_path('bootstrap/providers.php'),
-            ], 'creopse-bootstrap-files');
-        } else {
-            $this->publishes([
-                __DIR__.'/../publishables/files/HttpKernel.php' => app_path('Http/Kernel.php'),
-            ], 'creopse-bootstrap-files');
-        }
+        $this->publishes([
+            __DIR__.'/../publishables/bootstrap/app.php' => base_path('bootstrap/app.php'),
+            __DIR__.'/../publishables/bootstrap/providers.php' => base_path('bootstrap/providers.php'),
+        ], 'creopse-bootstrap-files');
 
         // Publish routes
         $this->publishes([

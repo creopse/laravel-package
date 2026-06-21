@@ -27,7 +27,6 @@ require __DIR__.'/database.php';
 require __DIR__.'/newsletter.php';
 require __DIR__.'/notifications.php';
 require __DIR__.'/media-files.php';
-require __DIR__.'/icon-picker.php';
 require __DIR__.'/app-data.php';
 require __DIR__.'/sessions.php';
 require __DIR__.'/videos.php';

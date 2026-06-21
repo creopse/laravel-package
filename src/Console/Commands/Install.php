@@ -155,7 +155,7 @@ class Install extends CreopseCommand
         ]);
         $this->info('Publishing other middlewares...');
         $this->call('vendor:publish', [
-            '--tag' => 'creopse-v11-middlewares',
+            '--tag' => 'creopse-installation-middlewares',
             '--force' => $force,
         ]);
 
