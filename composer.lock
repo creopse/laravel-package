@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8c218f2176f516c0727aedc1083d3a3c",
+    "content-hash": "62b820d4b3c2b5459c8c27b979a63041",
     "packages": [
         {
             "name": "alirezasedghi/laravel-image-faker",
@@ -121,22 +121,22 @@
         },
         {
             "name": "arkn/laravel-convert-case-middleware",
-            "version": "1.1.6",
+            "version": "1.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/noeGnh/laravel-convert-case-middleware.git",
-                "reference": "7f9fc5d753310a445f961aba3be357163c8b0517"
+                "reference": "88e5e396fb4ad56718e10867e0db25e5bf6e78b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/noeGnh/laravel-convert-case-middleware/zipball/7f9fc5d753310a445f961aba3be357163c8b0517",
-                "reference": "7f9fc5d753310a445f961aba3be357163c8b0517",
+                "url": "https://api.github.com/repos/noeGnh/laravel-convert-case-middleware/zipball/88e5e396fb4ad56718e10867e0db25e5bf6e78b8",
+                "reference": "88e5e396fb4ad56718e10867e0db25e5bf6e78b8",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "laravel/framework": "^5.2|^6.0|^7.0|^8.0|^9.0|^10|^11|^12",
-                "php": "^8.0|^8.1|^8.2|^8.3"
+                "laravel/framework": "^5.2|^6.0|^7.0|^8.0|^9.0|^10|^11|^12|^13",
+                "php": "^8.0|^8.1|^8.2|^8.3|^8.4|^8.5"
             },
             "require-dev": {
                 "phpunit/phpunit": "^7.5|^10"
@@ -160,9 +160,9 @@
             ],
             "description": "Convert request and response keys to and from camel and snake case.",
             "support": {
-                "source": "https://github.com/noeGnh/laravel-convert-case-middleware/tree/v1.1.6"
+                "source": "https://github.com/noeGnh/laravel-convert-case-middleware/tree/v1.1.7"
             },
-            "time": "2025-07-23T20:31:26+00:00"
+            "time": "2026-06-22T17:37:29+00:00"
         },
         {
             "name": "brick/math",
@@ -1164,16 +1164,16 @@
         },
         {
             "name": "giggsey/libphonenumber-for-php-lite",
-            "version": "9.0.32",
+            "version": "9.0.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/libphonenumber-for-php-lite.git",
-                "reference": "8e3b2cfd8fb77b3922dad43f9a70d516c28570d2"
+                "reference": "38c09da75cebfd6f197b61e57b3a655db04163e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php-lite/zipball/8e3b2cfd8fb77b3922dad43f9a70d516c28570d2",
-                "reference": "8e3b2cfd8fb77b3922dad43f9a70d516c28570d2",
+                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php-lite/zipball/38c09da75cebfd6f197b61e57b3a655db04163e6",
+                "reference": "38c09da75cebfd6f197b61e57b3a655db04163e6",
                 "shasum": ""
             },
             "require": {
@@ -1238,7 +1238,7 @@
                 "issues": "https://github.com/giggsey/libphonenumber-for-php-lite/issues",
                 "source": "https://github.com/giggsey/libphonenumber-for-php-lite"
             },
-            "time": "2026-06-05T07:33:50+00:00"
+            "time": "2026-06-22T10:35:37+00:00"
         },
         {
             "name": "google/apiclient",
@@ -1313,16 +1313,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.445.0",
+            "version": "v0.446.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "d76b09227d898db351457010c88f39eedfb815aa"
+                "reference": "fb2fef1d021fec1e6cf2d2129fcb5c303d0f01c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/d76b09227d898db351457010c88f39eedfb815aa",
-                "reference": "d76b09227d898db351457010c88f39eedfb815aa",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/fb2fef1d021fec1e6cf2d2129fcb5c303d0f01c1",
+                "reference": "fb2fef1d021fec1e6cf2d2129fcb5c303d0f01c1",
                 "shasum": ""
             },
             "require": {
@@ -1351,9 +1351,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.445.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.446.0"
             },
-            "time": "2026-06-15T01:58:30+00:00"
+            "time": "2026-06-22T01:48:35+00:00"
         },
         {
             "name": "google/auth",
@@ -3227,33 +3227,33 @@
         },
         {
             "name": "laravel/tinker",
-            "version": "v2.11.1",
+            "version": "v3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/tinker.git",
-                "reference": "c9f80cc835649b5c1842898fb043f8cc098dd741"
+                "reference": "4faba77764bd33411735936acdf30446d058c78b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/tinker/zipball/c9f80cc835649b5c1842898fb043f8cc098dd741",
-                "reference": "c9f80cc835649b5c1842898fb043f8cc098dd741",
+                "url": "https://api.github.com/repos/laravel/tinker/zipball/4faba77764bd33411735936acdf30446d058c78b",
+                "reference": "4faba77764bd33411735936acdf30446d058c78b",
                 "shasum": ""
             },
             "require": {
-                "illuminate/console": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
-                "illuminate/contracts": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
-                "illuminate/support": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
-                "php": "^7.2.5|^8.0",
-                "psy/psysh": "^0.11.1|^0.12.0",
-                "symfony/var-dumper": "^4.3.4|^5.0|^6.0|^7.0|^8.0"
+                "illuminate/console": "^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
+                "illuminate/contracts": "^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
+                "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
+                "php": "^8.1",
+                "psy/psysh": "^0.12.0",
+                "symfony/var-dumper": "^5.4|^6.0|^7.0|^8.0"
             },
             "require-dev": {
                 "mockery/mockery": "~1.3.3|^1.4.2",
                 "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^8.5.8|^9.3.3|^10.0"
+                "phpunit/phpunit": "^10.5|^11.5"
             },
             "suggest": {
-                "illuminate/database": "The Illuminate Database package (^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0)."
+                "illuminate/database": "The Illuminate Database package (^8.0|^9.0|^10.0|^11.0|^12.0|^13.0)."
             },
             "type": "library",
             "extra": {
@@ -3261,6 +3261,9 @@
                     "providers": [
                         "Laravel\\Tinker\\TinkerServiceProvider"
                     ]
+                },
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
                 }
             },
             "autoload": {
@@ -3287,9 +3290,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/tinker/issues",
-                "source": "https://github.com/laravel/tinker/tree/v2.11.1"
+                "source": "https://github.com/laravel/tinker/tree/v3.0.2"
             },
-            "time": "2026-02-06T14:12:35+00:00"
+            "time": "2026-03-17T14:54:13+00:00"
         },
         {
             "name": "league/commonmark",
@@ -3482,16 +3485,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "3.34.0",
+            "version": "3.35.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "2daaac3b0d4c83ea7ed5d8586e786f5d00f3540e"
+                "reference": "d0a405f03d980461e4b6e08cfed2c162650f9f6b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/2daaac3b0d4c83ea7ed5d8586e786f5d00f3540e",
-                "reference": "2daaac3b0d4c83ea7ed5d8586e786f5d00f3540e",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/d0a405f03d980461e4b6e08cfed2c162650f9f6b",
+                "reference": "d0a405f03d980461e4b6e08cfed2c162650f9f6b",
                 "shasum": ""
             },
             "require": {
@@ -3559,9 +3562,9 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/3.34.0"
+                "source": "https://github.com/thephpleague/flysystem/tree/3.35.0"
             },
-            "time": "2026-05-14T10:28:08+00:00"
+            "time": "2026-06-22T20:12:06+00:00"
         },
         {
             "name": "league/flysystem-local",
@@ -4988,29 +4991,30 @@
         },
         {
             "name": "propaganistas/laravel-phone",
-            "version": "5.3.6",
+            "version": "6.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Propaganistas/Laravel-Phone.git",
-                "reference": "89f26e8336cf8f8041609148b4fef752f0bd720e"
+                "reference": "b0e2bdb44cfbeaf2466862aaf854815605b5205a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Propaganistas/Laravel-Phone/zipball/89f26e8336cf8f8041609148b4fef752f0bd720e",
-                "reference": "89f26e8336cf8f8041609148b4fef752f0bd720e",
+                "url": "https://api.github.com/repos/Propaganistas/Laravel-Phone/zipball/b0e2bdb44cfbeaf2466862aaf854815605b5205a",
+                "reference": "b0e2bdb44cfbeaf2466862aaf854815605b5205a",
                 "shasum": ""
             },
             "require": {
-                "giggsey/libphonenumber-for-php-lite": "^8.13.35|^9.0.0",
-                "illuminate/contracts": "^10.0|^11.0|^12.0",
-                "illuminate/support": "^10.0|^11.0|^12.0",
-                "illuminate/validation": "^10.0|^11.0|^12.0",
-                "php": "^8.1"
+                "ext-mbstring": "*",
+                "giggsey/libphonenumber-for-php-lite": "^9.0",
+                "illuminate/contracts": "^11.0|^12.0|^13.0",
+                "illuminate/support": "^11.0|^12.0|^13.0",
+                "illuminate/validation": "^11.0|^12.0|^13.0",
+                "php": "^8.2"
             },
             "require-dev": {
-                "laravel/pint": "^1.14",
+                "laravel/pint": "^1.21",
                 "orchestra/testbench": "*",
-                "phpunit/phpunit": "^10.5|^11.5.3"
+                "phpunit/phpunit": "^11.5.3"
             },
             "type": "library",
             "extra": {
@@ -5047,7 +5051,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Propaganistas/Laravel-Phone/issues",
-                "source": "https://github.com/Propaganistas/Laravel-Phone/tree/5.3.6"
+                "source": "https://github.com/Propaganistas/Laravel-Phone/tree/6.0.3"
             },
             "funding": [
                 {
@@ -5055,7 +5059,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-21T09:07:26+00:00"
+            "time": "2026-03-18T07:05:47+00:00"
         },
         {
             "name": "psr/cache",
@@ -6167,16 +6171,16 @@
         },
         {
             "name": "spatie/temporary-directory",
-            "version": "2.3.1",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/temporary-directory.git",
-                "reference": "662e481d6ec07ef29fd05010433428851a42cd07"
+                "reference": "32cbb9645b28839cf4f476708e99a2c70e6802c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/temporary-directory/zipball/662e481d6ec07ef29fd05010433428851a42cd07",
-                "reference": "662e481d6ec07ef29fd05010433428851a42cd07",
+                "url": "https://api.github.com/repos/spatie/temporary-directory/zipball/32cbb9645b28839cf4f476708e99a2c70e6802c9",
+                "reference": "32cbb9645b28839cf4f476708e99a2c70e6802c9",
                 "shasum": ""
             },
             "require": {
@@ -6212,7 +6216,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/temporary-directory/issues",
-                "source": "https://github.com/spatie/temporary-directory/tree/2.3.1"
+                "source": "https://github.com/spatie/temporary-directory/tree/2.4.0"
             },
             "funding": [
                 {
@@ -6224,7 +6228,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-01-12T07:42:22+00:00"
+            "time": "2026-06-22T07:55:44+00:00"
         },
         {
             "name": "symfony/cache",
@@ -11328,16 +11332,16 @@
         },
         {
             "name": "laravel-lang/starter-kits",
-            "version": "1.15.0",
+            "version": "1.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Lang/starter-kits.git",
-                "reference": "a8e7c92eeeadba076e15c1d30b3a66d9dbde53d6"
+                "reference": "bbe74a48d7623ccb4561f8225ea13cf82e54c9d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Lang/starter-kits/zipball/a8e7c92eeeadba076e15c1d30b3a66d9dbde53d6",
-                "reference": "a8e7c92eeeadba076e15c1d30b3a66d9dbde53d6",
+                "url": "https://api.github.com/repos/Laravel-Lang/starter-kits/zipball/bbe74a48d7623ccb4561f8225ea13cf82e54c9d9",
+                "reference": "bbe74a48d7623ccb4561f8225ea13cf82e54c9d9",
                 "shasum": ""
             },
             "require": {
@@ -11389,7 +11393,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Laravel-Lang/starter-kits/issues",
-                "source": "https://github.com/Laravel-Lang/starter-kits/tree/1.15.0"
+                "source": "https://github.com/Laravel-Lang/starter-kits/tree/1.16.0"
             },
             "funding": [
                 {
@@ -11401,7 +11405,7 @@
                     "type": "yoomoney"
                 }
             ],
-            "time": "2026-06-14T12:22:23+00:00"
+            "time": "2026-06-22T19:59:10+00:00"
         },
         {
             "name": "laravel/pint",
