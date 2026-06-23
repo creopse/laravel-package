@@ -2,10 +2,10 @@
 
 namespace Creopse\Creopse\Events\Auth;
 
-use Creopse\Creopse\Models\AdminProfile;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -16,7 +16,7 @@ class ProfileUpdatedEvent
     /**
      * Create a new event instance.
      */
-    public function __construct(public AdminProfile $profile, public string $type)
+    public function __construct(public Model $profile, public string $type)
     {
         //
     }

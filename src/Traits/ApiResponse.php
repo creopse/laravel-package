@@ -14,7 +14,7 @@ trait ApiResponse
      * @param  mixed  $data  task result
      * @param  ResponseStatusCode  $statusCode  response status code
      * @param  string  $message  description of the response
-     * @param  string  $errorCode  response error code
+     * @param  ResponseErrorCode|string|null  $errorCode  response error code
      */
     public function sendResponse($data = null, $statusCode = ResponseStatusCode::OK, $message = null, $errorCode = null): JsonResponse
     {
