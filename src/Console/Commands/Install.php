@@ -131,13 +131,13 @@ class Install extends CreopseCommand
         ]);
 
         // Step 4: Publish resources
+        $this->info('Publishing resources...');
         if ($template === 'react') {
             $this->call('vendor:publish', [
                 '--tag' => 'creopse-react-resources',
                 '--force' => $force,
             ]);
         } else {
-            $this->info('Publishing resources...');
             $this->call('vendor:publish', [
                 '--tag' => 'creopse-resources',
                 '--force' => $force,
@@ -240,7 +240,21 @@ class Install extends CreopseCommand
             '--force' => $force,
         ]);
 
-        // Step 17: Install pnpm dependencies
+        // Step 17: Publish agents skills
+        $this->info('Publishing agents skills...');
+        if ($template === 'react') {
+            $this->call('vendor:publish', [
+                '--tag' => 'creopse-react-agents-skills',
+                '--force' => $force,
+            ]);
+        } else {
+            $this->call('vendor:publish', [
+                '--tag' => 'creopse-vue-agents-skills',
+                '--force' => $force,
+            ]);
+        }
+
+        // Step 18: Install pnpm dependencies
         $this->info('Installing pnpm dependencies...');
         $process = new Process(['pnpm', 'i']);
         $process->setTimeout(900);
@@ -254,7 +268,7 @@ class Install extends CreopseCommand
         echo $process->getOutput();
 
         try {
-            // Step 18: Cache config
+            // Step 19: Cache config
             $this->info('Caching config...');
             $this->call('config:cache');
         } catch (Exception $e) {
@@ -262,7 +276,7 @@ class Install extends CreopseCommand
         }
 
         try {
-            // Step 19: Generate app key
+            // Step 20: Generate app key
             $this->info('Generating app key...');
             $this->call('key:generate');
         } catch (Exception $e) {
@@ -270,14 +284,14 @@ class Install extends CreopseCommand
         }
 
         try {
-            // Step 20: Clear config
+            // Step 21: Clear config
             $this->info('Clearing config...');
             $this->call('config:clear');
         } catch (Exception $e) {
             //
         }
 
-        // Step 21: Update composer dependencies
+        // Step 22: Update composer dependencies
         $this->info('Updating composer dependencies...');
         $process = new Process(['composer', 'update']);
         $process->setTimeout(900);
@@ -290,19 +304,19 @@ class Install extends CreopseCommand
         // Output the result
         echo $process->getOutput();
 
-        // Step 22: Link storage folder to public folder
+        // Step 23: Link storage folder to public folder
         $this->info('Linking storage folder to public folder...');
         $this->call('storage:link');
 
-        // Step 23: Clear cache
+        // Step 24: Clear cache
         $this->info('Clearing cache...');
         $this->call('cache:clear');
 
-        // Step 24: Run migrations
+        // Step 25: Run migrations
         // $this->info('Running migrations...');
         // $this->call('migrate');
 
-        // Step 25: Run seeders
+        // Step 26: Run seeders
         // $this->info('Running seeders...');
         // $this->call('db:seed');
 

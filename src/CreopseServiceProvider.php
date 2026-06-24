@@ -432,6 +432,15 @@ class CreopseServiceProvider extends ServiceProvider
             __DIR__ . '/../public' => public_path(),
         ], 'creopse-public');
 
+        // Publish agents skills
+        $this->publishes([
+            __DIR__ . '/../publishables/agents/skills' => base_path('.agents/skills'),
+        ], 'creopse-vue-agents-skills');
+
+        $this->publishes([
+            __DIR__ . '/../publishables/agents/skills_react' => base_path('.agents/skills'),
+        ], 'creopse-react-agents-skills');
+
         // Publish other files
         $composerFile = __DIR__ . '/../publishables/files/composer.json';
         $composerContent = file_get_contents($composerFile);
