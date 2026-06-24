@@ -1,4 +1,5 @@
-import { defineConfig, mergeConfig, type UserConfigFn } from 'vitest/config'
+import { defineConfig, mergeConfig } from 'vitest/config'
+import type { UserConfigFn } from 'vitest/config'
 
 import viteConfig from './vite.config'
 

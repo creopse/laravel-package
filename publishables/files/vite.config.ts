@@ -1,5 +1,9 @@
-import Vue from '@vitejs/plugin-vue'
-import Laravel from 'laravel-vite-plugin'
+import inertia from '@inertiajs/vite'
+import { wayfinder } from '@laravel/vite-plugin-wayfinder'
+import tailwindcss from '@tailwindcss/vite'
+import vue from '@vitejs/plugin-vue'
+import laravel from 'laravel-vite-plugin'
+import { bunny } from 'laravel-vite-plugin/fonts'
 import VueI18n from 'laravel-vue-i18n/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import IconsResolver from 'unplugin-icons/resolver'
@@ -10,10 +14,8 @@ import SvgLoader from 'vite-svg-loader'
 
 export default defineConfig({
   envPrefix: 'APP_',
-  resolve: {
-    alias: {},
-  },
   build: {
+    chunkSizeWarningLimit: 500,
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -24,47 +26,47 @@ export default defineConfig({
               return topLevelFolder
             }
             const scopedPackageName = modulePath.split('/')[1]
-            const chunkName =
-              scopedPackageName.split('@')[
-                scopedPackageName.startsWith('@') ? 1 : 0
-              ]
+            const chunkName = scopedPackageName.split('@')[scopedPackageName.startsWith('@') ? 1 : 0]
             return chunkName
           }
         },
       },
       onwarn(warning, warn) {
-        if (warning.code === 'EMPTY_BUNDLE') return // Ignore empty bundle warnings
+        if (warning.code === 'EMPTY_BUNDLE') return
         warn(warning)
       },
     },
-    chunkSizeWarningLimit: 500,
   },
   plugins: [
-    Vue({
+    laravel({
+      input: ['resources/css/app.css', 'resources/js/app.ts'],
+      refresh: true,
+      fonts: process.env.CI
+        ? undefined
+        : [
+            bunny('Instrument Sans', {
+              weights: [400, 500, 600],
+            }),
+          ],
+    }),
+    inertia({
+      ssr: false,
+    }),
+    tailwindcss(),
+    vue({
       template: {
         transformAssetUrls: {
-          // The Vue plugin will re-write asset URLs, when referenced
-          // in Single File Components, to point to the Laravel web
-          // server. Setting this to `null` allows the Laravel plugin
-          // to instead re-write asset URLs to point to the Vite
-          // server instead.
           base: null,
-
-          // The Vue plugin will parse absolute URLs and treat them
-          // as absolute paths to files on disk. Setting this to
-          // `false` will leave absolute URLs un-touched so they can
-          // reference assets in the public directory as expected.
           includeAbsolute: false,
         },
       },
     }),
-    Laravel({
-      input: ['resources/css/app.css', 'resources/js/app.ts'],
-      refresh: true,
+    wayfinder({
+      formVariants: true,
     }),
     VueI18n(),
     SvgLoader({
-      defaultImport: 'url', // or 'raw'
+      defaultImport: 'url',
     }),
     Components({
       dts: true,
@@ -81,26 +83,13 @@ export default defineConfig({
           }
         },
       ],
-      dirs: [
-        'resources/js/components/sections',
-        'resources/js/components/widgets',
-      ],
+      dirs: ['resources/js/components/sections', 'resources/js/components/widgets'],
     }),
     AutoImport({
-      // targets to transform
-      include: [
-        /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
-        /\.vue$/,
-        /\.vue\?vue/, // .vue
-        /\.md$/, // .md
-      ],
-
-      // global imports to register
+      include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/, /\.md$/],
       imports: [
-        // presets
         'vue',
         'pinia',
-        // custom
         {
           'laravel-vue-i18n': [
             'trans',
@@ -125,22 +114,13 @@ export default defineConfig({
           ],
         },
       ],
-
-      // Auto import for module exports under directories
-      // by default it only scan one level of modules under the directory
       dirs: ['./resources/js/stores/**', './resources/js/composables/**'],
-      // Auto import inside Vue template
-      // see https://github.com/unjs/unimport/pull/15 and https://github.com/unjs/unimport/pull/72
       vueTemplate: true,
-
-      // Include auto-imported packages in Vite's `optimizeDeps` options
-      // Recommend to enable
       viteOptimizeDeps: true,
-
       eslintrc: {
-        enabled: true, // Default `false`
-        filepath: './.eslintrc-auto-import.json', // Default `./.eslintrc-auto-import.json`
-        globalsPropValue: true, // Default `true`, (true | false | 'readonly' | 'readable' | 'writable' | 'writeable')
+        enabled: true,
+        filepath: './.eslintrc-auto-import.json',
+        globalsPropValue: true,
       },
     }),
     Icons({ compiler: 'vue3', autoInstall: true }),

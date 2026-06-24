@@ -17,10 +17,7 @@
     <nav class="tw:bg-white tw:shadow-sm">
       <div class="tw:container tw:mx-auto">
         <div class="tw:flex tw:justify-between tw:items-center tw:px-4 tw:py-4">
-          <img
-            src="/assets/images/creopse/logo.svg"
-            alt="Vue logo"
-            class="tw:h-8" />
+          <img src="/assets/images/creopse/logo.svg" alt="Vue logo" class="tw:h-8" />
           <div class="tw:flex tw:space-x-6">
             <a
               v-for="(link, i) in headlinks"
@@ -44,27 +41,20 @@
           {{ tr(contentData?.title) }}
         </h1>
 
-        <p
-          class="tw:text-xl tw:text-gray-600 tw:mb-12 tw:max-w-2xl tw:mx-auto ck-content">
+        <p class="tw:text-xl tw:text-gray-600 tw:mb-12 tw:max-w-2xl tw:mx-auto ck-content">
           {{ tr(contentData?.text) }}
         </p>
 
-        <div
-          class="tw:grid tw:grid-cols-1 tw:md:grid-cols-2 tw:lg:grid-cols-3 tw:gap-8 tw:max-w-5xl tw:mx-auto">
+        <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-2 tw:lg:grid-cols-3 tw:gap-8 tw:max-w-5xl tw:mx-auto">
           <div
             v-for="(feature, i) in features"
             :key="i"
             class="tw:bg-white tw:rounded-lg tw:shadow-md tw:p-6 tw:hover:shadow-lg tw:transition-shadow tw:text-center">
-            <ContentIcon
-              class="tw:text-[#1E9CD7] tw:inline-block"
-              :data="feature.icon"
-              :size="42" />
+            <ContentIcon class="tw:text-[#1E9CD7] tw:inline-block" :data="feature.icon" :size="42" />
             <h2 class="tw:text-xl tw:font-semibold tw:mb-4 tw:text-gray-900">
               {{ tr(feature.title) }}
             </h2>
-            <p
-              class="tw:text-gray-600 tw:mb-4"
-              v-html="rHtml(feature.text)"></p>
+            <p class="tw:text-gray-600 tw:mb-4" v-html="rHtml(feature.text)"></p>
           </div>
         </div>
       </div>

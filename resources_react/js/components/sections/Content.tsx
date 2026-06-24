@@ -23,7 +23,12 @@ const Content: React.FC<SectionProps> = (props) => {
               <img src="/assets/images/creopse/logo.svg" alt="Vue logo" className="tw:h-8" />
               <div className="tw:flex tw:space-x-6">
                 {headlinks.map((link: { url: string | undefined; title: any }, i: React.Key | null | undefined) => (
-                  <a key={i} href={link.url} target="_blank" rel="noopener noreferrer" className="tw:text-gray-600 tw:hover:text-[#1E9CD7]">
+                  <a
+                    key={i}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="tw:text-gray-600 tw:hover:text-[#1E9CD7]">
                     <div className="tw:flex tw:items-center">
                       <Icon icon="mdi:open-in-new" className="tw:mr-1" />
                       {tr(link.title)}
@@ -45,13 +50,20 @@ const Content: React.FC<SectionProps> = (props) => {
             />
 
             <div className="tw:mx-auto tw:grid tw:max-w-5xl tw:grid-cols-1 tw:gap-8 tw:md:grid-cols-2 tw:lg:grid-cols-3">
-              {features.map((feature: { icon: any; title: any; text: string | null | undefined }, i: React.Key | null | undefined) => (
-                <div key={i} className="tw:rounded-lg tw:bg-white tw:p-6 tw:text-center tw:shadow-md tw:transition-shadow tw:hover:shadow-lg">
-                  <ContentIcon color={'#1E9CD7'} data={feature.icon} size={42} />
-                  <h2 className="tw:mb-4 tw:text-xl tw:font-semibold tw:text-gray-900">{tr(feature.title)}</h2>
-                  <p className="tw:mb-4 tw:text-gray-600" dangerouslySetInnerHTML={{ __html: rHtml(feature.text) }} />
-                </div>
-              ))}
+              {features.map(
+                (
+                  feature: { icon: any; title: any; text: string | null | undefined },
+                  i: React.Key | null | undefined
+                ) => (
+                  <div
+                    key={i}
+                    className="tw:rounded-lg tw:bg-white tw:p-6 tw:text-center tw:shadow-md tw:transition-shadow tw:hover:shadow-lg">
+                    <ContentIcon color={'#1E9CD7'} data={feature.icon} size={42} />
+                    <h2 className="tw:mb-4 tw:text-xl tw:font-semibold tw:text-gray-900">{tr(feature.title)}</h2>
+                    <p className="tw:mb-4 tw:text-gray-600" dangerouslySetInnerHTML={{ __html: rHtml(feature.text) }} />
+                  </div>
+                )
+              )}
             </div>
           </div>
         </main>

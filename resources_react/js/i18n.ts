@@ -1,6 +1,7 @@
 // resources/js/i18n.ts
 import axios from 'axios'
-import i18n, { type BackendModule, type ReadCallback } from 'i18next'
+import i18n from 'i18next'
+import type {BackendModule, ReadCallback} from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { initReactI18next } from 'react-i18next'
 

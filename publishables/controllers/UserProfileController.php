@@ -7,6 +7,8 @@ use App\Models\SubscriberProfile;
 use App\Models\User;
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
+use Creopse\Creopse\Events\Auth\ProfileCreatedEvent;
+use Creopse\Creopse\Events\Auth\ProfileUpdatedEvent;
 use Creopse\Creopse\Http\Controllers\Controller as CreopseController;
 use Creopse\Creopse\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
@@ -42,6 +44,15 @@ class UserProfileController extends CreopseController
 
         $user = User::find($request->input('id'));
 
+        if (! $user instanceof User) {
+            return $this->sendResponse(
+                null,
+                ResponseStatusCode::NOT_FOUND,
+                'User not found',
+                ResponseErrorCode::AUTH_USER_NOT_FOUND
+            );
+        }
+
         // Check if user already has profile
         if ($user->profile) {
             return $this->sendResponse(
@@ -52,65 +63,55 @@ class UserProfileController extends CreopseController
             );
         }
 
-        if ($user) {
-            switch ($request->input('type')) {
-                case ProfileType::SUBSCRIBER->value:
-                    $subscriberValidator = Validator::make($request->input('profile_data'), []);
+        switch ($request->input('type')) {
+            case ProfileType::SUBSCRIBER->value:
+                $subscriberValidator = Validator::make($request->input('profile_data'), []);
 
-                    if ($subscriberValidator->fails()) {
-                        return $this->sendResponse(
-                            $validator->errors(),
-                            ResponseStatusCode::UNPROCESSABLE_ENTITY,
-                            'Validation failed',
-                            ResponseErrorCode::FORM_INVALID_DATA
-                        );
-                    }
-
-                    $subscriberProfile = SubscriberProfile::create([]);
-
-                    if ($subscriberProfile) {
-                        $user->profile_id = $subscriberProfile->id;
-                        $user->profile_type = ProfileType::SUBSCRIBER->value;
-                        $user->save();
-                    }
-                    break;
-
-                default:
-                    // In case user type not found
+                if ($subscriberValidator->fails()) {
                     return $this->sendResponse(
-                        $request->input('type'),
-                        ResponseStatusCode::NOT_FOUND,
-                        'Profile type not found',
-                        ResponseErrorCode::AUTH_PROFILE_TYPE_NOT_FOUND,
+                        $validator->errors(),
+                        ResponseStatusCode::UNPROCESSABLE_ENTITY,
+                        'Validation failed',
+                        ResponseErrorCode::FORM_INVALID_DATA
                     );
-            }
+                }
 
-            $user->refresh();
+                $subscriberProfile = SubscriberProfile::create([]);
 
-            if ($user->profile) {
+                $user->profile_id = $subscriberProfile->id;
+                $user->profile_type = ProfileType::SUBSCRIBER->value;
+                $user->save();
+                break;
+
+            default:
+                // In case user type not found
                 return $this->sendResponse(
-                    new UserResource($user->load(['profile', 'roles', 'permissions'])),
-                    ResponseStatusCode::OK,
-                    'User profile created with success'
+                    $request->input('type'),
+                    ResponseStatusCode::NOT_FOUND,
+                    'Profile type not found',
+                    ResponseErrorCode::AUTH_PROFILE_TYPE_NOT_FOUND,
                 );
-            }
+        }
 
-            // If profile not found
+        $user->refresh();
+
+        if ($user->profile) {
+            event(new ProfileCreatedEvent($user->id));
+
             return $this->sendResponse(
-                null,
-                ResponseStatusCode::NOT_FOUND,
-                'Profile not found',
-                ResponseErrorCode::AUTH_PROFILE_NOT_FOUND,
-            );
-        } else {
-            // If user not found
-            return $this->sendResponse(
-                null,
-                ResponseStatusCode::NOT_FOUND,
-                'User not found',
-                ResponseErrorCode::AUTH_USER_NOT_FOUND,
+                new UserResource($user->load(['profile', 'roles', 'permissions'])),
+                ResponseStatusCode::OK,
+                'User profile created with success'
             );
         }
+
+        // If profile not found
+        return $this->sendResponse(
+            null,
+            ResponseStatusCode::NOT_FOUND,
+            'Profile not found',
+            ResponseErrorCode::AUTH_PROFILE_NOT_FOUND,
+        );
     }
 
     /**
@@ -159,6 +160,8 @@ class UserProfileController extends CreopseController
         }
 
         if ($profile) {
+            event(new ProfileUpdatedEvent($profile, $request->input('type')));
+
             return $this->sendResponse(
                 $profile,
                 ResponseStatusCode::OK,

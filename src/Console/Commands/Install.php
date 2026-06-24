@@ -88,7 +88,7 @@ class Install extends CreopseCommand
 
                 echo "\nAll files in the folder $folder have been deleted.";
             } catch (Exception $e) {
-                echo 'Error: '.$e->getMessage();
+                echo 'Error: ' . $e->getMessage();
             }
         }
 
@@ -116,6 +116,10 @@ class Install extends CreopseCommand
         ]);
         $this->call('vendor:publish', [
             '--tag' => 'creopse-database-config',
+            '--force' => $force,
+        ]);
+        $this->call('vendor:publish', [
+            '--tag' => 'creopse-inertia-config',
             '--force' => $force,
         ]);
 

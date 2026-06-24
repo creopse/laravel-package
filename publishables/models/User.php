@@ -6,24 +6,26 @@ use App\Enums\ProfileType;
 use Creopse\Creopse\Models\User as CreopseUser;
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * @property string|null $profile_type
+ * @property int|null $profile_id
+ * @property SubscriberProfile|null $profile
+ */
 class User extends CreopseUser
 {
     /**
      * Subscriber Profile accessor
-     *
-     * @return bool
      */
-    public function getHasSubscriberProfileAttribute()
+    public function getHasSubscriberProfileAttribute(): bool
     {
-        return $this->profile_type == ProfileType::SUBSCRIBER->value;
+        return $this->profile_type === ProfileType::SUBSCRIBER->value;
     }
 
     /**
-     * Subscriber Profile scope
-     *
-     * @return Builder
+     * @param  Builder<static>  $builder
+     * @return Builder<static>
      */
-    public function scopeWhereHasSubscriberProfile(Builder $builder)
+    public function scopeWhereHasSubscriberProfile(Builder $builder): Builder
     {
         return $builder->where('profile_type', ProfileType::SUBSCRIBER->value);
     }

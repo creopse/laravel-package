@@ -1,14 +1,12 @@
-import App from './App.vue'
-
-import getPiniaInstance from '@/stores'
-
-import creopse from '@creopse/vue'
 import type { SharedProps } from '@creopse/utils'
+import creopse from '@creopse/vue'
 
-import { i18nVue } from 'laravel-vue-i18n'
 import { router, createInertiaApp, Link } from '@inertiajs/vue3'
+import { i18nVue } from 'laravel-vue-i18n'
 
 import { Icon } from 'vue3-icon-picker'
+import getPiniaInstance from '@/stores'
+import App from './App.vue'
 import 'vue3-icon-picker/dist/style.css'
 
 createInertiaApp({
@@ -16,6 +14,7 @@ createInertiaApp({
     const pages = import.meta.glob('./pages/**/*.vue', { eager: true })
     const page: any = pages[`./pages/${name}.vue`]
     page.default.layout = App
+
     return page
   },
 
@@ -30,11 +29,9 @@ createInertiaApp({
 
     const config = sharedProps.config
 
-    const navigatorLanguage =
-      // @ts-ignore
-      window.navigator.language || window.navigator.userLanguage
+    const navigatorLanguage = window.navigator.language
 
-    let userLanguage = navigatorLanguage.split('-')[0]
+    let userLanguage = navigatorLanguage?.split('-')[0]
     const userData = sharedProps.userData
 
     if (userData?.preferences?.locale) {
@@ -61,13 +58,11 @@ createInertiaApp({
         },
       })
       .use(i18nVue, {
-        lang:
-          localStorage.getItem(config.frontend.langKey) ||
-          userLanguage ||
-          config.app.locale,
+        lang: localStorage.getItem(config.frontend.langKey) || userLanguage || config.app.locale,
         fallbackLang: config.app.fallbackLocale,
         resolve: async (lang: string) => {
           const langs: any = import.meta.glob('../../lang/*.json')
+
           return await langs[`../../lang/${lang}.json`]()
         },
       })

@@ -4,3 +4,4 @@
 !resources/vendor/
 !.gitignore
 .DS_Store
+publishables/files/composer.temp.json

@@ -10,10 +10,7 @@ declare module 'pinia' {
   }
 }
 
-const encrypt = (
-  value: string,
-  derivedKey: Uint8Array<ArrayBufferLike> & Uint8Array<ArrayBuffer>,
-): string => {
+const encrypt = (value: string, derivedKey: Uint8Array<ArrayBufferLike> & Uint8Array<ArrayBuffer>): string => {
   const nonce = randomBytes(12)
   const cipher = gcm(derivedKey, nonce)
   const encrypted = cipher.encrypt(new TextEncoder().encode(value))
@@ -25,10 +22,7 @@ const encrypt = (
   return btoa(String.fromCharCode(...combined))
 }
 
-const decrypt = (
-  value: string,
-  derivedKey: Uint8Array<ArrayBufferLike> & Uint8Array<ArrayBuffer>,
-): string => {
+const decrypt = (value: string, derivedKey: Uint8Array<ArrayBufferLike> & Uint8Array<ArrayBuffer>): string => {
   const combined = Uint8Array.from(atob(value), (c) => c.charCodeAt(0))
   const nonce = combined.slice(0, 12)
   const ciphertext = combined.slice(12)
@@ -49,25 +43,15 @@ export default (encryptionKey: string | null) => {
                 getItem: (key: string) => {
                   try {
                     const encrypted = localStorage.getItem(key)
-                    return encrypted
-                      ? decrypt(
-                          encrypted,
-                          sha256(new TextEncoder().encode(encryptionKey)),
-                        )
-                      : encrypted
+
+                    return encrypted ? decrypt(encrypted, sha256(new TextEncoder().encode(encryptionKey))) : encrypted
                   } catch (error) {
                     console.error(error)
                   }
                 },
                 setItem: (key: string, value: any) => {
                   try {
-                    return localStorage.setItem(
-                      key,
-                      encrypt(
-                        value,
-                        sha256(new TextEncoder().encode(encryptionKey)),
-                      ),
-                    )
+                    return localStorage.setItem(key, encrypt(value, sha256(new TextEncoder().encode(encryptionKey))))
                   } catch (error) {
                     console.error(error)
                   }
@@ -83,6 +67,6 @@ export default (encryptionKey: string | null) => {
             },
           ]
         : undefined,
-    }),
+    })
   )
 }

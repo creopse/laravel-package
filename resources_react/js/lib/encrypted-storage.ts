@@ -12,7 +12,9 @@ export function configureEncryptedStorage(encryptionKey: string | null) {
 }
 
 const encrypt = (value: string): string => {
-  if (!derivedKey) return value // mirrors the Pinia plugin: no key = no encryption, not a crash
+  if (!derivedKey) {
+return value
+} // mirrors the Pinia plugin: no key = no encryption, not a crash
 
   const nonce = randomBytes(12)
   const cipher = gcm(derivedKey, nonce)
@@ -26,7 +28,9 @@ const encrypt = (value: string): string => {
 }
 
 const decrypt = (value: string): string => {
-  if (!derivedKey) return value
+  if (!derivedKey) {
+return value
+}
 
   const combined = Uint8Array.from(atob(value), (c) => c.charCodeAt(0))
   const nonce = combined.slice(0, 12)
@@ -40,10 +44,12 @@ export const storage: StateStorage = {
   getItem: (key) => {
     try {
       const raw = localStorage.getItem(key)
+
       return raw ? decrypt(raw) : raw
     } catch (error) {
       console.error(error)
     }
+
     return null
   },
   setItem: (key, value) => {

@@ -1,23 +1,11 @@
 @import 'tailwindcss' prefix(tw);
 @import 'ckeditor5-content.css';
 
-@layer utilities {
-  .sticky {
-    position: unset;
-  }
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
 
-  .collapse {
-    visibility: unset;
-  }
-}
-
-#nprogress .bar {
-  background: var(--inertia-progress-color);
-  height: 2px;
-}
-
-#nprogress .peg {
-  box-shadow:
-    0 0 10px var(--inertia-progress-color),
-    0 0 5px var(--inertia-progress-color);
+@theme inline {
+  --font-sans:
+    Instrument Sans, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
 }

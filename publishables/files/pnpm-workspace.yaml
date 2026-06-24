@@ -1,8 +1,12 @@
-overrides:
-  caniuse-lite: 'latest'
+packages:
+  - '.'
+
 allowBuilds:
-  '@tailwindcss/oxide': true
   esbuild: true
   unrs-resolver: true
   vue-demi: true
+
 minimumReleaseAge: 0
+
+publicHoistPattern:
+  - '@inertiajs/core'

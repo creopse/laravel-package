@@ -1,8 +1,9 @@
+import { CreopseProvider  } from '@creopse/react'
+import type {PluginOptions} from '@creopse/react';
+import type { SharedProps } from '@creopse/utils'
 import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
 
-import { CreopseProvider, type PluginOptions } from '@creopse/react'
-import type { SharedProps } from '@creopse/utils'
 import { initI18n } from './i18n'
 
 import '@arkn/react-icon-picker/dist/style.css'
@@ -13,6 +14,7 @@ createInertiaApp({
   resolve: (name) => {
     const pages = import.meta.glob('./pages/**/*.tsx', { eager: true })
     const page: any = pages[`./pages/${name}.tsx`]
+
     return page
   },
 

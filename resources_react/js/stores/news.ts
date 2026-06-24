@@ -24,11 +24,13 @@ export const useNewsStore = create<CatalogState>()(
       // Getters
       mainCategories: () => {
         const { categories } = get()
+
         return categories.filter((category) => category.parentId === null)
       },
 
       subCategories: (id: number) => {
         const { categories } = get()
+
         return categories.filter((category) => category.parentId === id)
       },
 
@@ -40,7 +42,9 @@ export const useNewsStore = create<CatalogState>()(
         for (const category of sortedCategories) {
           if (!category.parentId) {
             orderedCategories.push(category)
-            const childrenCategories = sortedCategories.filter((c) => c.parentId === category.id).sort((a, b) => a.name.localeCompare(b.name))
+            const childrenCategories = sortedCategories
+              .filter((c) => c.parentId === category.id)
+              .sort((a, b) => a.name.localeCompare(b.name))
             orderedCategories.push(...childrenCategories)
           }
         }
@@ -50,8 +54,12 @@ export const useNewsStore = create<CatalogState>()(
 
       tagsByArticlesCount: () => {
         const { tags } = get()
+
         return [...tags].sort((a, b) => {
-          if (a.articlesCount == null || b.articlesCount == null) return 0
+          if (a.articlesCount == null || b.articlesCount == null) {
+return 0
+}
+
           return (b.articlesCount ?? 0) - (a.articlesCount ?? 0)
         })
       },

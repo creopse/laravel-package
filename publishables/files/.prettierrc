@@ -1,29 +1,29 @@
 {
-    "singleQuote": true,
     "semi": false,
-    "vueIndentScriptAndStyle": true,
-    "tabWidth": 2,
+    "singleQuote": true,
     "trailingComma": "es5",
     "bracketSpacing": true,
     "bracketSameLine": true,
+    "singleAttributePerLine": false,
+    "vueIndentScriptAndStyle": true,
+    "htmlWhitespaceSensitivity": "css",
+    "printWidth": 120,
     "plugins": [
-        "@trivago/prettier-plugin-sort-imports"
+        "prettier-plugin-tailwindcss"
     ],
-    "importOrderParserPlugins": [
-        "typescript"
+    "tailwindFunctions": [
+        "clsx",
+        "cn",
+        "cva"
     ],
-    "importOrder": [
-        "^@/assets/(.*)$",
-        "^@/utils/(.*)$",
-        "^@/stores/(.*)$",
-        "^@/layouts/(.*)$",
-        "^@/components/(.*)$",
-        "^@/composables/(.*)$",
-        "<THIRD_PARTY_MODULES>",
-        "^[./]"
-    ],
-    "importOrderSeparation": true,
-    "importOrderSortSpecifiers": true,
-    "importOrderCaseInsensitive": true,
-    "importOrderGroupNamespaceSpecifiers": true
+    "tailwindStylesheet": "resources/css/app.css",
+    "tabWidth": 2,
+    "overrides": [
+        {
+            "files": "**/*.yml",
+            "options": {
+                "tabWidth": 2
+            }
+        }
+    ]
 }

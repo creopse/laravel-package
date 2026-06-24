@@ -24,8 +24,14 @@ export const useNewsStore = defineStore('news', {
     orderedCategories: (state) => {
       const orderedCategories: NewsCategoryModel[] = []
       const categories = state.categories.sort((a, b) => {
-        if (a.name < b.name) return -1
-        if (a.name > b.name) return 1
+        if (a.name < b.name) {
+          return -1
+        }
+
+        if (a.name > b.name) {
+          return 1
+        }
+
         return 0
       })
 
@@ -35,8 +41,14 @@ export const useNewsStore = defineStore('news', {
           const childrenCategories = categories
             .filter((c) => c.parentId === category.id)
             .sort((a, b) => {
-              if (a.name < b.name) return -1
-              if (a.name > b.name) return 1
+              if (a.name < b.name) {
+                return -1
+              }
+
+              if (a.name > b.name) {
+                return 1
+              }
+
               return 0
             })
           orderedCategories.push(...childrenCategories)
@@ -47,9 +59,18 @@ export const useNewsStore = defineStore('news', {
     },
     tagsByArticlesCount: (state) => {
       return state.tags.sort((a, b) => {
-        if (a.articlesCount == null || b.articlesCount == null) return 0
-        if (a.articlesCount < b.articlesCount) return 1
-        if (a.articlesCount > b.articlesCount) return -1
+        if (a.articlesCount == null || b.articlesCount == null) {
+          return 0
+        }
+
+        if (a.articlesCount < b.articlesCount) {
+          return 1
+        }
+
+        if (a.articlesCount > b.articlesCount) {
+          return -1
+        }
+
         return 0
       })
     },

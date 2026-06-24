@@ -1,15 +1,13 @@
 <script lang="ts" setup>
-  import Error404 from '@/assets/images/404.svg?component'
-
   import { router } from '@inertiajs/vue3'
   import { trans } from 'laravel-vue-i18n'
+  import Error404 from '@/assets/images/404.svg?component'
 </script>
 
 <template>
   <section
     class="tw:flex tw:flex-col tw:items-center tw:justify-center tw:min-h-screen tw:text-center tw:px-6 tw:gap-4">
-    <p
-      class="tw:text-sm tw:font-semibold tw:tracking-widest tw:text-gray-400 tw:uppercase">
+    <p class="tw:text-sm tw:font-semibold tw:tracking-widest tw:text-gray-400 tw:uppercase">
       {{ trans('Error 404') }}
     </p>
 
@@ -20,11 +18,7 @@
     </h1>
 
     <p class="tw:max-w-md tw:text-gray-500">
-      {{
-        trans(
-          'Oops! The page you are looking for does not exist. It might have been moved or deleted.'
-        )
-      }}
+      {{ trans('Oops! The page you are looking for does not exist. It might have been moved or deleted.') }}
     </p>
 
     <button
