@@ -299,6 +299,10 @@ class CreopseServiceProvider extends ServiceProvider
         ], 'creopse-laravel-ffmpeg-config');
 
         $this->publishes([
+            __DIR__ . '/../publishables/config/feed.php' => config_path('feed.php'),
+        ], 'creopse-laravel-feed-config');
+
+        $this->publishes([
             __DIR__ . '/../publishables/config/cache.php' => config_path('cache.php'),
         ], 'creopse-cache-config');
 

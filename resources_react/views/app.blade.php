@@ -24,7 +24,9 @@
         <meta name="twitter:card" content="summary_large_image" />
         @endif
 
-        @fonts
+        @if(class_exists(\Illuminate\Foundation\Vite\ViteFonts::class))
+            @fonts
+        @endif
 
         <style>
             :root {
