@@ -452,6 +452,10 @@ class CreopseServiceProvider extends ServiceProvider
         $editedComposerContent = json_decode($composerContent, true);
         $editedComposerContent['require']['laravel/framework'] = '^' . $this->getLaravelMajorVersion() . '.0';
 
+        if ($this->isLaravelVersionBelow('12.0')) {
+            unset($editedComposerContent['require-dev']['laravel/pao']);
+        }
+
         $tempComposerFile = __DIR__ . '/../publishables/files/composer.temp.json';
         file_put_contents($tempComposerFile, json_encode($editedComposerContent, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
