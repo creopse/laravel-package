@@ -44,6 +44,8 @@ class Install extends CreopseCommand
         // Step 1: Delete some files
         // List of files to delete
         $filesToDelete = [
+            base_path('tailwind.config.js'),
+            base_path('postcss.config.js'),
             base_path('vite.config.js'),
             base_path('routes/api.php'),
             base_path('routes/web.php'),
@@ -63,7 +65,7 @@ class Install extends CreopseCommand
                 File::delete($file);
                 $this->info("Deleted file: $file");
             } else {
-                $this->warn("File not found: $file");
+                $this->info("File not found: $file");
             }
         }
         // Delete folders
