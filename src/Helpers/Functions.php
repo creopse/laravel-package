@@ -3,7 +3,10 @@
 namespace Creopse\Creopse\Helpers;
 
 use Creopse\Creopse\Models\User;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -348,5 +351,23 @@ class Functions
         }
 
         return json_decode($output, $assoc, $depth, $flags);
+    }
+
+    /**
+     * Cache Eloquent model attributes and rehydrate on retrieval.
+     *
+     * @template T of Model
+     *
+     * @param  class-string<T>  $modelClass
+     * @param  \Closure(): ?T  $callback
+     * @return ?T
+     */
+    public static function rememberModel(string $key, int $ttl, string $modelClass, \Closure $callback): ?Model
+    {
+        $attributes = Cache::remember($key, $ttl, function () use ($callback) {
+            return $callback()?->getAttributes();
+        });
+
+        return $attributes ? (new $modelClass)->forceFill($attributes) : null;
     }
 }

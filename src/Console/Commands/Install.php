@@ -90,7 +90,7 @@ class Install extends CreopseCommand
 
                 echo "\nAll files in the folder $folder have been deleted.";
             } catch (Exception $e) {
-                echo 'Error: ' . $e->getMessage();
+                echo 'Error: '.$e->getMessage();
             }
         }
 

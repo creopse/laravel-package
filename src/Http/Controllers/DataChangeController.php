@@ -3,11 +3,11 @@
 namespace Creopse\Creopse\Http\Controllers;
 
 use Creopse\Creopse\Enums\ResponseStatusCode;
+use Creopse\Creopse\Helpers\Functions;
 use Creopse\Creopse\Http\Requests\DataChangeRequest;
 use Creopse\Creopse\Http\Resources\DataChangeResource;
 use Creopse\Creopse\Models\DataChange;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class DataChangeController extends Controller
 {
@@ -85,9 +85,12 @@ class DataChangeController extends Controller
      */
     public function showByTableName(string $tableName)
     {
-        $dataChange = Cache::remember("data_change_{$tableName}", 3600 * 24, function () use ($tableName) {
-            return DataChange::where('table_name', $tableName)->first();
-        });
+        $dataChange = Functions::rememberModel(
+            "data_change_{$tableName}",
+            3600 * 24,
+            DataChange::class,
+            fn () => DataChange::where('table_name', $tableName)->first()
+        );
 
         return $this->sendResponse(new DataChangeResource($dataChange));
     }
