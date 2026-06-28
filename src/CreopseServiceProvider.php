@@ -46,6 +46,7 @@ use Creopse\Creopse\Models\MenuLocation;
 use Creopse\Creopse\Models\VideoSetting;
 use Creopse\Creopse\Traits\DetectsLaravelVersion;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Config\Repository;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -96,6 +97,26 @@ class CreopseServiceProvider extends ServiceProvider
 
     public function boot(Router $router)
     {
+        // Override framework-owned configs that were pre-loaded before register()
+        foreach ($this->configFiles as $config) {
+            $configPath = __DIR__."/../config/{$config}.php";
+            $userHasPublished = file_exists(config_path("{$config}.php"));
+
+            if (! $userHasPublished) {
+                // Framework defaults win over mergeConfigFrom → force package values in boot()
+                /** @var Repository $configRepository */
+                $configRepository = $this->app->make('config');
+
+                $configRepository->set(
+                    $config,
+                    array_merge(
+                        $configRepository->get($config, []),
+                        require $configPath
+                    )
+                );
+            }
+        }
+
         // Hook into the application's scheduler
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);
@@ -317,6 +338,10 @@ class CreopseServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../publishables/config/inertia.php' => config_path('inertia.php'),
         ], 'creopse-inertia-config');
+
+        $this->publishes([
+            __DIR__.'/../publishables/config/cors.php' => config_path('cors.php'),
+        ], 'creopse-cors-config');
 
         // Publish package config
         $this->publishes([
