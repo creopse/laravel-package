@@ -3,7 +3,6 @@
 namespace Creopse\Creopse\Console\Commands;
 
 use Creopse\Creopse\Models\Page;
-use Illuminate\Support\Facades\File;
 
 class MakePage extends CreopseCommand
 {
@@ -68,61 +67,6 @@ class MakePage extends CreopseCommand
      */
     private function buildTitlePayload(): ?string
     {
-        $pairs = $this->option('title');
-
-        if (empty($pairs)) {
-            return null;
-        }
-
-        $title = [];
-
-        foreach ($pairs as $pair) {
-            if (! str_contains($pair, ':')) {
-                $this->error("[--title] Invalid format '{$pair}', expected 'locale:value'.");
-
-                continue;
-            }
-
-            [$locale, $value] = explode(':', $pair, 2);
-            $locale = trim($locale);
-            $value = trim($value);
-
-            if ($locale === '' || $value === '') {
-                $this->error("[--title] Empty locale or value in '{$pair}', skipped.");
-
-                continue;
-            }
-
-            $title[$locale] = $value;
-        }
-
-        return json_encode($title, JSON_UNESCAPED_UNICODE);
-    }
-
-    /**
-     * Resolve a plain-text option (inline or @file). No JSON validation —
-     * content is stored as raw text/HTML, not a structured payload.
-     */
-    private function resolveTextOption(string $option): ?string
-    {
-        $raw = $this->option($option);
-
-        if ($raw === null) {
-            return null;
-        }
-
-        if (str_starts_with($raw, '@')) {
-            $path = substr($raw, 1);
-
-            if (! File::exists($path)) {
-                $this->error("[--{$option}] File not found: {$path}");
-
-                return null;
-            }
-
-            return File::get($path);
-        }
-
-        return $raw;
+        return $this->mergeLocalizedOption([]);
     }
 }

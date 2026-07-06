@@ -14,7 +14,12 @@ class MakeSection extends CreopseCommand
      *
      * @var string
      */
-    protected $signature = 'creopse:make-section {name* : The name(s) of the section(s)} {--alias=creopse:add-section}';
+    protected $signature = 'creopse:make-section
+        {name* : The name(s) of the section(s)}
+        {--title=* : Locale:value pair for the title, e.g. --title="en:Hero". Only allowed with a single name.}
+        {--data-structure= : JSON for the data structure, inline or @path/to/file.json. Only allowed with a single name.}
+        {--settings-structure= : JSON for the settings structure, inline or @path/to/file.json. Only allowed with a single name.}
+        {--alias=creopse:add-section}';
 
     /**
      * The console command aliases.
@@ -35,24 +40,51 @@ class MakeSection extends CreopseCommand
      */
     public function handle()
     {
+        $names = $this->argument('name');
+
+        if (! $this->guardSingleNameOptions($names)) {
+            return self::FAILURE;
+        }
+
         $frontendFramework = $this->detectFrontendFramework($this);
 
-        foreach ($this->argument('name') as $name) {
-            $this->processSection($name, $frontendFramework);
+        foreach ($names as $name) {
+            $this->processSection($name, $frontendFramework, count($names) === 1);
         }
 
         $this->info('Section creation process completed.');
+
+        return self::SUCCESS;
+    }
+
+    /**
+     * Refuse --title, --data-structure, and --settings-structure when
+     * more than one section name is passed — they only make sense for one.
+     */
+    private function guardSingleNameOptions(array $names): bool
+    {
+        $usedSingleOptions = ! empty($this->option('title'))
+            || $this->option('data-structure') !== null
+            || $this->option('settings-structure') !== null;
+
+        if (count($names) > 1 && $usedSingleOptions) {
+            $this->error('--title, --data-structure, and --settings-structure can only be used with a single section name.');
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
      * Process a single section: create the component file and the database entry.
      */
-    private function processSection(string $name, string $frontendFramework): void
+    private function processSection(string $name, string $frontendFramework, bool $applyOptions): void
     {
         $argName = Functions::strToPascalCase($name);
 
         $this->createComponentFile($argName, $frontendFramework);
-        $this->createDatabaseEntry($argName, $name);
+        $this->createDatabaseEntry($argName, $name, $applyOptions);
     }
 
     /**
@@ -60,8 +92,8 @@ class MakeSection extends CreopseCommand
      */
     private function createComponentFile(string $argName, string $frontendFramework): void
     {
-        $fileName = $argName.($frontendFramework === 'react' ? '.tsx' : '.vue');
-        $filePath = base_path('resources/js/components/sections/'.$fileName);
+        $fileName = $argName . ($frontendFramework === 'react' ? '.tsx' : '.vue');
+        $filePath = base_path('resources/js/components/sections/' . $fileName);
 
         if (File::exists($filePath)) {
             $this->warn("[$argName] Component file '$fileName' already exists, skipping.");
@@ -70,7 +102,7 @@ class MakeSection extends CreopseCommand
         }
 
         $stubFile = $frontendFramework === 'react' ? 'section.react.stub' : 'section.vue.stub';
-        $stubPath = app('creopse.base_path').'/stubs/'.$stubFile;
+        $stubPath = app('creopse.base_path') . '/stubs/' . $stubFile;
 
         if (! File::exists($stubPath)) {
             $this->error("[$argName] Stub file not found for {$frontendFramework}: {$stubPath}");
@@ -80,9 +112,9 @@ class MakeSection extends CreopseCommand
 
         $stub = File::get($stubPath);
         $stub = str_replace('{{ name }}', $argName, $stub);
-        $stub = str_replace('{{ id }}', Str::kebab($argName).'-section', $stub);
-        $stub = str_replace('{{ settingsVar }}', Str::camel($argName).'Settings', $stub);
-        $stub = str_replace('{{ dataVar }}', Str::camel($argName).'Data', $stub);
+        $stub = str_replace('{{ id }}', Str::kebab($argName) . '-section', $stub);
+        $stub = str_replace('{{ settingsVar }}', Str::camel($argName) . 'Settings', $stub);
+        $stub = str_replace('{{ dataVar }}', Str::camel($argName) . 'Data', $stub);
         $stub = str_replace('{{ dataId }}', strtolower(Str::camel($argName)), $stub);
 
         File::put($filePath, $stub);
@@ -97,7 +129,7 @@ class MakeSection extends CreopseCommand
     /**
      * Create the section database entry if it does not already exist.
      */
-    private function createDatabaseEntry(string $argName, string $originalName): void
+    private function createDatabaseEntry(string $argName, string $originalName, bool $applyOptions): void
     {
         if (Section::where('name', $argName)->exists()) {
             $this->warn("[$argName] Section already exists in the database, skipping.");
@@ -105,11 +137,40 @@ class MakeSection extends CreopseCommand
             return;
         }
 
-        Section::create([
+        $attributes = [
             'name' => $argName,
-            'title' => '{ "en": "'.$originalName.'", "fr": "'.$originalName.'" }',
-        ]);
+            'title' => $this->buildTitlePayload($originalName, $applyOptions),
+        ];
+
+        if ($applyOptions) {
+            $dataStructure = $this->resolveJsonOption('data-structure');
+            if ($dataStructure !== null) {
+                $attributes['data_structure'] = $dataStructure;
+            }
+
+            $settingsStructure = $this->resolveJsonOption('settings-structure');
+            if ($settingsStructure !== null) {
+                $attributes['settings_structure'] = $settingsStructure;
+            }
+        }
+
+        Section::create($attributes);
 
         $this->info("[$argName] Section added to the database successfully.");
+    }
+
+    /**
+     * Build the title JSON. Falls back to the original name for en/fr
+     * when --title isn't used, matching the previous default behavior.
+     */
+    private function buildTitlePayload(string $originalName, bool $applyOptions): string
+    {
+        $current = ['en' => $originalName, 'fr' => $originalName];
+
+        if (! $applyOptions) {
+            return json_encode($current, JSON_UNESCAPED_UNICODE);
+        }
+
+        return $this->mergeLocalizedOption($current) ?? json_encode($current, JSON_UNESCAPED_UNICODE);
     }
 }

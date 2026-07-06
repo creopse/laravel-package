@@ -56,4 +56,107 @@ abstract class CreopseCommand extends Command
 
         return 'vue';
     }
+
+    /**
+     * Resolve a JSON option (inline or @path/to/file.json). Returns null if
+     * the option was not passed, and null with an error message printed if
+     * the resolved content fails JSON validation.
+     */
+    protected function resolveJsonOption(string $option): ?string
+    {
+        $raw = $this->option($option);
+
+        if ($raw === null) {
+            return null;
+        }
+
+        $content = $raw;
+
+        if (str_starts_with($raw, '@')) {
+            $path = substr($raw, 1);
+
+            if (! File::exists($path)) {
+                $this->error("[--{$option}] File not found: {$path}");
+
+                return null;
+            }
+
+            $content = File::get($path);
+        }
+
+        json_decode($content, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->error("[--{$option}] Invalid JSON: " . json_last_error_msg());
+
+            return null;
+        }
+
+        return $content;
+    }
+
+    /**
+     * Resolve a plain-text option (inline or @path/to/file). No JSON
+     * validation — used for free-form text/HTML fields like page content.
+     */
+    protected function resolveTextOption(string $option): ?string
+    {
+        $raw = $this->option($option);
+
+        if ($raw === null) {
+            return null;
+        }
+
+        if (str_starts_with($raw, '@')) {
+            $path = substr($raw, 1);
+
+            if (! File::exists($path)) {
+                $this->error("[--{$option}] File not found: {$path}");
+
+                return null;
+            }
+
+            return File::get($path);
+        }
+
+        return $raw;
+    }
+
+    /**
+     * Merge locale:value pairs from a repeatable option (e.g. --title)
+     * into an existing locale map. Returns null if no pairs were passed,
+     * so the caller can distinguish "not provided" from "provided but empty".
+     *
+     * @param  array<string, string>  $current  Existing locale => value map to merge into.
+     */
+    protected function mergeLocalizedOption(array $current, string $option = 'title'): ?string
+    {
+        $pairs = $this->option($option);
+
+        if (empty($pairs)) {
+            return null;
+        }
+
+        foreach ($pairs as $pair) {
+            if (! str_contains($pair, ':')) {
+                $this->error("[--{$option}] Invalid format '{$pair}', expected 'locale:value'.");
+
+                continue;
+            }
+
+            [$locale, $value] = explode(':', $pair, 2);
+            $locale = trim($locale);
+            $value = trim($value);
+
+            if ($locale === '' || $value === '') {
+                $this->error("[--{$option}] Empty locale or value in '{$pair}', skipped.");
+
+                continue;
+            }
+
+            $current[$locale] = $value;
+        }
+
+        return json_encode($current, JSON_UNESCAPED_UNICODE);
+    }
 }

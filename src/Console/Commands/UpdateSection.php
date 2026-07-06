@@ -3,7 +3,6 @@
 namespace Creopse\Creopse\Console\Commands;
 
 use Creopse\Creopse\Models\Section;
-use Illuminate\Support\Facades\File;
 
 class UpdateSection extends CreopseCommand
 {
@@ -84,75 +83,12 @@ class UpdateSection extends CreopseCommand
      */
     private function buildTitlePayload(Section $section): ?string
     {
-        $pairs = $this->option('title');
-
-        if (empty($pairs)) {
-            return null;
-        }
-
         $current = json_decode($section->title ?? '{}', true);
 
         if (! is_array($current)) {
             $current = [];
         }
 
-        foreach ($pairs as $pair) {
-            if (! str_contains($pair, ':')) {
-                $this->error("[--title] Invalid format '{$pair}', expected 'locale:value'.");
-
-                continue;
-            }
-
-            [$locale, $value] = explode(':', $pair, 2);
-            $locale = trim($locale);
-            $value = trim($value);
-
-            if ($locale === '' || $value === '') {
-                $this->error("[--title] Empty locale or value in '{$pair}', skipped.");
-
-                continue;
-            }
-
-            $current[$locale] = $value;
-        }
-
-        return json_encode($current, JSON_UNESCAPED_UNICODE);
-    }
-
-    /**
-     * Resolve a JSON option (inline or @file) for the structure columns.
-     * Returns null if the option was not passed, or if it failed validation.
-     */
-    private function resolveJsonOption(string $option): ?string
-    {
-        $raw = $this->option($option);
-
-        if ($raw === null) {
-            return null;
-        }
-
-        $content = $raw;
-
-        if (str_starts_with($raw, '@')) {
-            $path = substr($raw, 1);
-
-            if (! File::exists($path)) {
-                $this->error("[--{$option}] File not found: {$path}");
-
-                return null;
-            }
-
-            $content = File::get($path);
-        }
-
-        json_decode($content, true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->error("[--{$option}] Invalid JSON: " . json_last_error_msg());
-
-            return null;
-        }
-
-        return $content;
+        return $this->mergeLocalizedOption($current);
     }
 }
