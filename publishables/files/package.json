@@ -43,7 +43,7 @@
         "vue-tsc": "^2.2.4"
     },
     "dependencies": {
-        "@creopse/cli": "^0.0.13",
+        "@creopse/cli": "^0.0.15",
         "@creopse/utils": "^0.2.1",
         "@creopse/vue": "^0.0.75",
         "@inertiajs/vite": "^3.4.0",
