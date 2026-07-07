@@ -125,6 +125,9 @@ The wizard will guide you through configuring:
 
 Once configuration is complete, the `install.lock` file is deleted automatically.
 
+> [!WARNING]
+Clear your browser cache if the wizard persists after installation.
+
 #### Option B — Manual configuration
 
 **5.1. Configure the database**
