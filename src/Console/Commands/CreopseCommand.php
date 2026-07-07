@@ -58,11 +58,15 @@ abstract class CreopseCommand extends Command
     }
 
     /**
-     * Resolve a JSON option (inline or @path/to/file.json). Returns null if
-     * the option was not passed, and null with an error message printed if
-     * the resolved content fails JSON validation.
+     * Resolve a JSON option (inline or @path/to/file.json) into a decoded
+     * array. Returns null if the option was not passed, and null with an
+     * error message printed if the resolved content fails JSON validation.
+     *
+     * Returns a decoded array (not a JSON string) so it can be assigned
+     * directly to Eloquent attributes cast as 'array'/'json' — assigning a
+     * raw JSON string to a casted attribute causes double-encoding.
      */
-    protected function resolveJsonOption(string $option): ?string
+    protected function resolveJsonOption(string $option): ?array
     {
         $raw = $this->option($option);
 
@@ -84,15 +88,15 @@ abstract class CreopseCommand extends Command
             $content = File::get($path);
         }
 
-        json_decode($content, true);
+        $decoded = json_decode($content, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->error("[--{$option}] Invalid JSON: " . json_last_error_msg());
+            $this->error("[--{$option}] Invalid JSON: ".json_last_error_msg());
 
             return null;
         }
 
-        return $content;
+        return $decoded;
     }
 
     /**
