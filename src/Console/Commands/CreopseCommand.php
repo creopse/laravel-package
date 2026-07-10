@@ -91,7 +91,7 @@ abstract class CreopseCommand extends Command
         $decoded = json_decode($content, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->error("[--{$option}] Invalid JSON: ".json_last_error_msg());
+            $this->error("[--{$option}] Invalid JSON: " . json_last_error_msg());
 
             return null;
         }
@@ -100,12 +100,17 @@ abstract class CreopseCommand extends Command
     }
 
     /**
-     * Resolve a plain-text option (inline or @path/to/file). No JSON
-     * validation — used for free-form text/HTML fields like page content.
+     * Resolve a plain-text value, supporting @path/to/file. No JSON
+     * validation — used for free-form text fields.
+     *
+     * If $rawValue is null, the value is read from --$option (existing
+     * behavior). If $rawValue is provided, it's resolved directly — used
+     * when the raw value comes from a positional argument instead of an
+     * option (e.g. parsed key=value pairs).
      */
-    protected function resolveTextOption(string $option): ?string
+    protected function resolveTextOption(string $option, ?string $rawValue = null): ?string
     {
-        $raw = $this->option($option);
+        $raw = $rawValue ?? $this->option($option);
 
         if ($raw === null) {
             return null;
