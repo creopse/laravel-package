@@ -43,7 +43,7 @@
         <!-- RSS Feed -->
         @include('feed::links')
 
-        @vite(['resources/css/app.css', 'resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
+        @vite(['resources/css/app.css', 'resources/js/app.ts'])
         <x-inertia::head>
             @if(isset($page['props']['meta']) || isset($page['props']['defaultMeta']))
             <title>{{ data_get($page['props'], 'meta.title', data_get($page['props'], 'defaultMeta.title')) }}</title>
