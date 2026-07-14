@@ -31,6 +31,8 @@ class ContentModelItemController extends Controller
             $createdByType = $request->query('createdByType');
             $createdBy = $request->query('createdBy');
             $dataFilters = $request->query('dataFilters', []);
+            $sortBy = $request->query('sortBy');
+            $sortDirection = strtolower($request->query('sortDirection', 'asc'));
 
             $items = ContentModelItem::query();
 
@@ -47,9 +49,10 @@ class ContentModelItemController extends Controller
             }
 
             if ($query) {
-                $items = $items->where(function ($q) use ($query) {
-                    $q->where('title', 'like', '%'.$query.'%')
-                        ->orWhere('content_model_data', 'like', '%'.$query.'%');
+                $search = mb_strtolower($query);
+                $items = $items->where(function ($q) use ($search) {
+                    $q->whereRaw('LOWER(title) LIKE ?', ['%' . $search . '%'])
+                        ->orWhereRaw('LOWER(CAST(content_model_data AS CHAR)) LIKE ?', ['%' . $search . '%']);
                 });
             }
 
@@ -97,6 +100,28 @@ class ContentModelItemController extends Controller
                     }
                 }
             });
+
+            // --- Sorting ---
+            $sortDirection = in_array($sortDirection, ['asc', 'desc']) ? $sortDirection : 'asc';
+
+            // Native, whitelisted columns. Add to this list as needed.
+            $sortableColumns = ['title', 'created_at', 'updated_at', 'is_active', 'created_by'];
+
+            if ($sortBy) {
+                if (in_array($sortBy, $sortableColumns)) {
+                    $items = $items->orderBy($sortBy, $sortDirection);
+                } elseif (preg_match('/^index\.([a-zA-Z0-9_]+)$/', $sortBy, $matches)) {
+                    // Sort on a JSON "index" field, e.g. sortBy=index.price
+                    $jsonKey = $matches[1];
+                    $items = $items->orderByRaw(
+                        "JSON_UNQUOTE(JSON_EXTRACT(content_model_data, '$.index.{$jsonKey}')) {$sortDirection}"
+                    );
+                }
+                // Unrecognized sortBy is silently ignored rather than throwing,
+                // to avoid breaking the listing UI on a bad/stale query param.
+            } else {
+                $items = $items->orderBy('created_at', 'desc');
+            }
 
             return $items;
         };
@@ -239,9 +264,11 @@ class ContentModelItemController extends Controller
             }
         }); */
 
-        $items = $items->where(function ($q) use ($query) {
-            $q->where('title', 'like', '%'.$query.'%')
-                ->orWhere('content_model_data', 'like', '%'.$query.'%');
+        $search = mb_strtolower($query);
+
+        $items = $items->where(function ($q) use ($search) {
+            $q->whereRaw('LOWER(title) LIKE ?', ['%' . $search . '%'])
+                ->orWhereRaw('LOWER(CAST(content_model_data AS CHAR)) LIKE ?', ['%' . $search . '%']);
         });
 
         $items = $items->get();

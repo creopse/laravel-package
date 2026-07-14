@@ -302,7 +302,7 @@ class ArticleController extends Controller
     /**
      * Show the articles page.
      *
-     * @return Inertia\Response The rendered articles page.
+     * @return \Inertia\Response The rendered articles page.
      */
     public function showArticles(Request $request)
     {
@@ -354,7 +354,7 @@ class ArticleController extends Controller
      * Retrieves a list of months in descending order based on the creation date of news articles.
      *
      * @param  Request  $request  The HTTP request object.
-     * @return Response The HTTP response object containing the list of months.
+     * @return \Illuminate\Http\JsonResponse The HTTP response object containing the list of months.
      */
     public function showMonthsList(Request $request)
     {
@@ -370,7 +370,7 @@ class ArticleController extends Controller
      * Show the details of a article.
      *
      * @param  NewsArticle  $newsArticle  The article to show the details of.
-     * @return Inertia\Response The rendered article details page.
+     * @return \Inertia\Response The rendered article details page.
      */
     public function showArticleDetails(Request $request, NewsArticle $newsArticle)
     {
