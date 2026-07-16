@@ -91,7 +91,7 @@ abstract class CreopseCommand extends Command
         $decoded = json_decode($content, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->error("[--{$option}] Invalid JSON: " . json_last_error_msg());
+            $this->error("[--{$option}] Invalid JSON: ".json_last_error_msg());
 
             return null;
         }

@@ -51,8 +51,8 @@ class ContentModelItemController extends Controller
             if ($query) {
                 $search = mb_strtolower($query);
                 $items = $items->where(function ($q) use ($search) {
-                    $q->whereRaw('LOWER(title) LIKE ?', ['%' . $search . '%'])
-                        ->orWhereRaw('LOWER(CAST(content_model_data AS CHAR)) LIKE ?', ['%' . $search . '%']);
+                    $q->whereRaw('LOWER(title) LIKE ?', ['%'.$search.'%'])
+                        ->orWhereRaw('LOWER(CAST(content_model_data AS CHAR)) LIKE ?', ['%'.$search.'%']);
                 });
             }
 
@@ -267,8 +267,8 @@ class ContentModelItemController extends Controller
         $search = mb_strtolower($query);
 
         $items = $items->where(function ($q) use ($search) {
-            $q->whereRaw('LOWER(title) LIKE ?', ['%' . $search . '%'])
-                ->orWhereRaw('LOWER(CAST(content_model_data AS CHAR)) LIKE ?', ['%' . $search . '%']);
+            $q->whereRaw('LOWER(title) LIKE ?', ['%'.$search.'%'])
+                ->orWhereRaw('LOWER(CAST(content_model_data AS CHAR)) LIKE ?', ['%'.$search.'%']);
         });
 
         $items = $items->get();

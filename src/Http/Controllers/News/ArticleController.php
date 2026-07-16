@@ -12,12 +12,14 @@ use Creopse\Creopse\Http\Resources\News\ArticleResource;
 use Creopse\Creopse\Models\AppInformation;
 use Creopse\Creopse\Models\NewsArticle;
 use Creopse\Creopse\Models\NewsTag;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ArticleController extends Controller
 {
@@ -258,7 +260,7 @@ class ArticleController extends Controller
      *
      * @param  Request  $request  The HTTP request object.
      * @param  string  $query  The search query.
-     * @return \Inertia\Response The rendered search articles page.
+     * @return Response The rendered search articles page.
      */
     public function showSearchResult(Request $request, string $query)
     {
@@ -290,7 +292,7 @@ class ArticleController extends Controller
      *
      * @param  Request  $request  The HTTP request object.
      * @param  string  $query  The search query.
-     * @return \Inertia\Response The rendered search articles page.
+     * @return Response The rendered search articles page.
      */
     public function searchArticles(Request $request, string $query = '')
     {
@@ -302,7 +304,7 @@ class ArticleController extends Controller
     /**
      * Show the articles page.
      *
-     * @return \Inertia\Response The rendered articles page.
+     * @return Response The rendered articles page.
      */
     public function showArticles(Request $request)
     {
@@ -354,7 +356,7 @@ class ArticleController extends Controller
      * Retrieves a list of months in descending order based on the creation date of news articles.
      *
      * @param  Request  $request  The HTTP request object.
-     * @return \Illuminate\Http\JsonResponse The HTTP response object containing the list of months.
+     * @return JsonResponse The HTTP response object containing the list of months.
      */
     public function showMonthsList(Request $request)
     {
@@ -370,7 +372,7 @@ class ArticleController extends Controller
      * Show the details of a article.
      *
      * @param  NewsArticle  $newsArticle  The article to show the details of.
-     * @return \Inertia\Response The rendered article details page.
+     * @return Response The rendered article details page.
      */
     public function showArticleDetails(Request $request, NewsArticle $newsArticle)
     {

@@ -160,7 +160,7 @@ class HandleInertiaRequests extends Middleware
                                     $modelClass = $contentType->getModelClass();
 
                                     if (class_exists($modelClass)) {
-                                        $item->content = $modelClass::find($item->content_id);
+                                        $item->content = Functions::convertKeysToCamelCase($modelClass::find($item->content_id));
                                     }
                                 } catch (\ValueError $e) {
                                     // Handle invalid content_type gracefully
