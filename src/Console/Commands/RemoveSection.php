@@ -13,7 +13,10 @@ class RemoveSection extends CreopseCommand
      *
      * @var string
      */
-    protected $signature = 'creopse:remove-section {name* : The name(s) of the section(s)} {--alias=creopse:delete-section}';
+    protected $signature = 'creopse:remove-section
+        {name* : The name(s) of the section(s)}
+        {--force : Skip the confirmation prompt}
+        {--alias=creopse:delete-section}';
 
     /**
      * The console command aliases.
@@ -34,13 +37,27 @@ class RemoveSection extends CreopseCommand
      */
     public function handle()
     {
+        $names = $this->argument('name');
+
+        $label = count($names) === 1
+            ? "section '{$names[0]}'"
+            : count($names).' sections ('.implode(', ', $names).')';
+
+        if (! $this->confirmDestruction($label)) {
+            $this->warn('Aborted.');
+
+            return self::FAILURE;
+        }
+
         $frontendFramework = $this->detectFrontendFramework($this);
 
-        foreach ($this->argument('name') as $name) {
+        foreach ($names as $name) {
             $this->processSection($name, $frontendFramework);
         }
 
         $this->info('Section removal process completed.');
+
+        return self::SUCCESS;
     }
 
     /**

@@ -12,7 +12,10 @@ class RemoveWidget extends CreopseCommand
      *
      * @var string
      */
-    protected $signature = 'creopse:remove-widget {name* : The name(s) of the widget(s)} {--alias=creopse:delete-widget}';
+    protected $signature = 'creopse:remove-widget
+        {name* : The name(s) of the widget(s)}
+        {--force : Skip the confirmation prompt}
+        {--alias=creopse:delete-widget}';
 
     /**
      * The console command aliases.
@@ -33,13 +36,27 @@ class RemoveWidget extends CreopseCommand
      */
     public function handle()
     {
+        $names = $this->argument('name');
+
+        $label = count($names) === 1
+            ? "widget '{$names[0]}'"
+            : count($names).' widgets ('.implode(', ', $names).')';
+
+        if (! $this->confirmDestruction($label)) {
+            $this->warn('Aborted.');
+
+            return self::FAILURE;
+        }
+
         $frontendFramework = $this->detectFrontendFramework($this);
 
-        foreach ($this->argument('name') as $name) {
+        foreach ($names as $name) {
             $this->processWidget($name, $frontendFramework);
         }
 
         $this->info('Widget removal process completed.');
+
+        return self::SUCCESS;
     }
 
     /**

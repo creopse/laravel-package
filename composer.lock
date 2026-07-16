@@ -11396,16 +11396,16 @@
         },
         {
             "name": "laravel-lang/starter-kits",
-            "version": "1.16.0",
+            "version": "1.16.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Lang/starter-kits.git",
-                "reference": "bbe74a48d7623ccb4561f8225ea13cf82e54c9d9"
+                "reference": "87c00c77bbb73385d0526b35dbe07ea2bbfc32db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Lang/starter-kits/zipball/bbe74a48d7623ccb4561f8225ea13cf82e54c9d9",
-                "reference": "bbe74a48d7623ccb4561f8225ea13cf82e54c9d9",
+                "url": "https://api.github.com/repos/Laravel-Lang/starter-kits/zipball/87c00c77bbb73385d0526b35dbe07ea2bbfc32db",
+                "reference": "87c00c77bbb73385d0526b35dbe07ea2bbfc32db",
                 "shasum": ""
             },
             "require": {
@@ -11457,7 +11457,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Laravel-Lang/starter-kits/issues",
-                "source": "https://github.com/Laravel-Lang/starter-kits/tree/1.16.0"
+                "source": "https://github.com/Laravel-Lang/starter-kits/tree/1.16.1"
             },
             "funding": [
                 {
@@ -11469,7 +11469,7 @@
                     "type": "yoomoney"
                 }
             ],
-            "time": "2026-06-22T19:59:10+00:00"
+            "time": "2026-07-16T18:13:26+00:00"
         },
         {
             "name": "laravel/pint",
