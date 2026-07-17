@@ -7,6 +7,7 @@ use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Http\Resources\MediaFileResource;
 use Creopse\Creopse\Models\MediaFile;
+use Creopse\Creopse\Traits\HandlesMediaProcessing;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -14,11 +15,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Intervention\Image\Laravel\Facades\Image;
-use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
 class MediaFileController extends Controller
 {
+    use HandlesMediaProcessing;
+
     /**
      * Display a listing of the resource.
      */
@@ -122,7 +123,7 @@ class MediaFileController extends Controller
      * Retrieves a list of months in descending order based on the creation date of media files.
      *
      * @param  Request  $request  The HTTP request object.
-     * @return Response The HTTP response object containing the list of months.
+     * @return JsonResponse The HTTP response object containing the list of months.
      */
     public function showMonthsList(Request $request)
     {
@@ -139,7 +140,7 @@ class MediaFileController extends Controller
      *
      * @param  Request  $request  The HTTP request object.
      * @param  string  $query  The search query.
-     * @return \Inertia\Response The rendered search articles page.
+     * @return JsonResponse The rendered search articles page.
      */
     public function searchMediaFiles(Request $request, string $query = '')
     {
@@ -176,66 +177,21 @@ class MediaFileController extends Controller
         /** @var UploadedFile $file */
         $file = $request->file('file');
 
-        $path = $file->store($request->input('folder') ?? 'uploads', 'public');
+        $result = $this->storeAndProcessMediaFile($file, $request->input('folder') ?? 'uploads');
 
-        $fileType = self::determineFileType($file);
-
-        $additionalMetadata = $request->input('additional_metadata') ?? null;
-
-        if ($fileType === MediaFileType::IMAGE) {
-            $additionalMetadata = $additionalMetadata ?? [];
-
-            $imageMetadata = getimagesize($file->getRealPath());
-            if ($imageMetadata) {
-                $additionalMetadata['width'] = $imageMetadata[0];
-                $additionalMetadata['height'] = $imageMetadata[1];
-                $additionalMetadata['image_type'] = $imageMetadata[2];
-            }
-
-            // Generate thumbnails
-            $sizes = config('thumbnail_sizes');
-
-            try {
-                foreach ($sizes as $sizeName => $dimensions) {
-                    $resizedImage = Image::read($file);
-                    $resizedImage->scaleDown(width: $dimensions['width']);
-
-                    $thumbnailPath = "thumbnails/{$sizeName}/".basename($path);
-                    // Storage::put($thumbnailPath, $resizedImage);
-                    $directory = dirname($thumbnailPath);
-                    if (! Storage::disk('public')->exists($directory)) {
-                        Storage::disk('public')->makeDirectory($directory);
-                    }
-                    $resizedImage->save(Storage::disk('public')->path($thumbnailPath));
-                }
-            } catch (\Exception $e) {
-                // Do nothing
-            }
+        foreach ($result['warnings'] as $warning) {
+            Log::info($warning);
         }
 
-        if ($fileType === MediaFileType::VIDEO) {
-            try {
-                $thumbnailPath = 'thumbnails/video/'.pathinfo($path, PATHINFO_FILENAME).'.jpg';
-
-                FFMpeg::fromDisk('public')
-                    ->open($path)
-                    ->getFrameFromSeconds(1)
-                    ->export()
-                    ->toDisk('public')
-                    ->save($thumbnailPath);
-            } catch (\Exception $e) {
-                Log::info($e->getMessage());
-                // Failed to generate video thumbnail, do nothing
-            }
-        }
+        $additionalMetadata = $this->mergeMediaMetadata($request->input('additional_metadata'), $result['metadata']);
 
         $mediaFile = MediaFile::create([
-            'path' => $path,
+            'path' => $result['path'],
             'name' => $request->input('filename') ?? $file->getClientOriginalName(),
-            'mime_type' => $file->getMimeType(),
-            'size' => $file->getSize(),
+            'mime_type' => $result['mime_type'],
+            'size' => $result['size'],
             'extension' => $file->getClientOriginalExtension(),
-            'type' => $fileType,
+            'type' => $result['type'],
             'sender_id' => $request->input('sender_id') ?? (Auth::check() ? Auth::user()->id : null),
             'additional_metadata' => $additionalMetadata,
         ]);
@@ -272,68 +228,24 @@ class MediaFileController extends Controller
         }
 
         if (! Storage::disk('public')->exists($mediaFile->path) || Storage::disk('public')->delete($mediaFile->path)) {
-            /** @var UploadedFile $file */
+            /** @var UploadedFile $newFile */
             $newFile = $request->file('file');
 
-            $path = $newFile->store($request->input('folder') ?? 'uploads', 'public');
+            $result = $this->storeAndProcessMediaFile($newFile, $request->input('folder') ?? 'uploads');
 
-            $fileType = self::determineFileType($newFile);
-
-            $additionalMetadata = $request->input('additional_metadata') ?? null;
-
-            if ($fileType === MediaFileType::IMAGE) {
-                $additionalMetadata = $additionalMetadata ?? [];
-
-                $imageMetadata = getimagesize($newFile->getRealPath());
-                if ($imageMetadata) {
-                    $additionalMetadata['width'] = $imageMetadata[0];
-                    $additionalMetadata['height'] = $imageMetadata[1];
-                    $additionalMetadata['image_type'] = $imageMetadata[2];
-                }
-
-                // Generate thumbnails
-                $sizes = config('thumbnail_sizes');
-
-                try {
-                    foreach ($sizes as $sizeName => $dimensions) {
-                        $resizedImage = Image::read($newFile);
-                        $resizedImage->scaleDown(width: $dimensions['width']);
-
-                        $thumbnailPath = "thumbnails/{$sizeName}/".basename($path);
-                        // Storage::put($thumbnailPath, $resizedImage);
-                        $directory = dirname($thumbnailPath);
-                        if (! Storage::disk('public')->exists($directory)) {
-                            Storage::disk('public')->makeDirectory($directory);
-                        }
-                        $resizedImage->save(Storage::disk('public')->path($thumbnailPath));
-                    }
-                } catch (\Exception $e) {
-                    // Do nothing
-                }
+            foreach ($result['warnings'] as $warning) {
+                Log::info($warning);
             }
 
-            if ($fileType === MediaFileType::VIDEO) {
-                try {
-                    $thumbnailPath = 'thumbnails/video/'.pathinfo($path, PATHINFO_FILENAME).'.jpg';
-
-                    FFMpeg::fromDisk('public')
-                        ->open($path)
-                        ->getFrameFromSeconds(1)
-                        ->export()
-                        ->toDisk('public')
-                        ->save($thumbnailPath);
-                } catch (\Exception $e) {
-                    // Failed to generate video thumbnail, do nothing
-                }
-            }
+            $additionalMetadata = $this->mergeMediaMetadata($request->input('additional_metadata'), $result['metadata']);
 
             $mediaFile->update([
-                'path' => $path,
+                'path' => $result['path'],
                 'name' => $request->input('filename') ?? $newFile->getClientOriginalName(),
-                'mime_type' => $newFile->getMimeType(),
-                'size' => $newFile->getSize(),
+                'mime_type' => $result['mime_type'],
+                'size' => $result['size'],
                 'extension' => $newFile->getClientOriginalExtension(),
-                'type' => $fileType,
+                'type' => $result['type'],
                 'additional_metadata' => $additionalMetadata,
             ]);
 
@@ -342,13 +254,13 @@ class MediaFileController extends Controller
                 ResponseStatusCode::OK,
                 'Media file replaced successfully',
             );
-        } else {
-            return $this->sendResponse(
-                null,
-                ResponseStatusCode::NOT_FOUND,
-                'Media file not found',
-            );
         }
+
+        return $this->sendResponse(
+            null,
+            ResponseStatusCode::NOT_FOUND,
+            'Media file not found',
+        );
     }
 
     /**
@@ -462,45 +374,25 @@ class MediaFileController extends Controller
     }
 
     /**
-     * Determine the file type.
+     * Merge request-provided additional_metadata with auto-extracted
+     * metadata (e.g. image dimensions), preserving null when neither
+     * is present — matching the original controller's null-vs-array semantics.
+     */
+    private function mergeMediaMetadata(?array $requestMetadata, array $autoMetadata): ?array
+    {
+        if ($requestMetadata === null && empty($autoMetadata)) {
+            return null;
+        }
+
+        return array_merge($requestMetadata ?? [], $autoMetadata);
+    }
+
+    /**
+     * Determine the file type. Kept as a static wrapper for backward
+     * compatibility with any external callers of MediaFileController::determineFileType().
      */
     public static function determineFileType(UploadedFile $file): MediaFileType
     {
-        $mimeType = strtolower($file->getMimeType());
-
-        // Define MIME types and extensions for each MediaFileType
-        $imageMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp', 'image/svg+xml'];
-        $videoMimes = ['video/mp4', 'video/mpeg', 'video/quicktime', 'video/x-ms-wmv', 'video/x-msvideo', 'video/x-flv'];
-        $audioMimes = ['audio/mpeg', 'audio/wav', 'audio/x-wav', 'audio/ogg', 'audio/midi', 'audio/x-ms-wma'];
-        $documentMimes = [
-            'application/pdf',
-            'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'application/vnd.ms-excel',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'application/vnd.ms-powerpoint',
-            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-            'text/plain',
-            'application/rtf',
-        ];
-
-        if (in_array($mimeType, $imageMimes)) {
-            return MediaFileType::IMAGE;
-        }
-
-        if (in_array($mimeType, $videoMimes)) {
-            return MediaFileType::VIDEO;
-        }
-
-        if (in_array($mimeType, $audioMimes)) {
-            return MediaFileType::AUDIO;
-        }
-
-        if (in_array($mimeType, $documentMimes)) {
-            return MediaFileType::DOCUMENT;
-        }
-
-        // If the MIME type doesn't match any of the above, return OTHER
-        return MediaFileType::OTHER;
+        return self::determineFileTypeFromMime($file->getMimeType());
     }
 }
