@@ -5,11 +5,49 @@ namespace Creopse\Creopse;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\VerifyCsrfToken;
+use Creopse\Creopse\Console\Commands\Content\ContentModel\MakeContentModel;
+use Creopse\Creopse\Console\Commands\Content\ContentModel\MakeContentModelItem;
+use Creopse\Creopse\Console\Commands\Content\ContentModel\RemoveContentModel;
+use Creopse\Creopse\Console\Commands\Content\ContentModel\RemoveContentModelItem;
+use Creopse\Creopse\Console\Commands\Content\ContentModel\UpdateContentModel;
+use Creopse\Creopse\Console\Commands\Content\ContentModel\UpdateContentModelItem;
+use Creopse\Creopse\Console\Commands\Content\Menu\MakeMenu;
+use Creopse\Creopse\Console\Commands\Content\Menu\MakeMenuItem;
+use Creopse\Creopse\Console\Commands\Content\Menu\MakeMenuItemGroup;
+use Creopse\Creopse\Console\Commands\Content\Menu\MakeMenuItemType;
+use Creopse\Creopse\Console\Commands\Content\Menu\MakeMenuLocation;
+use Creopse\Creopse\Console\Commands\Content\Menu\RemoveMenu;
+use Creopse\Creopse\Console\Commands\Content\Menu\RemoveMenuItem;
+use Creopse\Creopse\Console\Commands\Content\Menu\RemoveMenuItemGroup;
+use Creopse\Creopse\Console\Commands\Content\Menu\RemoveMenuItemType;
+use Creopse\Creopse\Console\Commands\Content\Menu\RemoveMenuLocation;
+use Creopse\Creopse\Console\Commands\Content\Menu\UpdateMenu;
+use Creopse\Creopse\Console\Commands\Content\Menu\UpdateMenuItem;
+use Creopse\Creopse\Console\Commands\Content\Menu\UpdateMenuItemGroup;
+use Creopse\Creopse\Console\Commands\Content\Menu\UpdateMenuItemType;
+use Creopse\Creopse\Console\Commands\Content\Menu\UpdateMenuLocation;
+use Creopse\Creopse\Console\Commands\Content\Page\AttachPageSection;
+use Creopse\Creopse\Console\Commands\Content\Page\DetachPageSection;
+use Creopse\Creopse\Console\Commands\Content\Page\MakePage;
+use Creopse\Creopse\Console\Commands\Content\Page\OrderPageSections;
+use Creopse\Creopse\Console\Commands\Content\Page\RemovePage;
+use Creopse\Creopse\Console\Commands\Content\Page\SetPageSectionSource;
+use Creopse\Creopse\Console\Commands\Content\Page\TogglePageSectionStatus;
+use Creopse\Creopse\Console\Commands\Content\Page\UpdatePage;
+use Creopse\Creopse\Console\Commands\Content\Page\UpdatePageSectionContent;
+use Creopse\Creopse\Console\Commands\Content\Section\MakeSection;
+use Creopse\Creopse\Console\Commands\Content\Section\RemoveSection;
+use Creopse\Creopse\Console\Commands\Content\Section\UpdateSection;
+use Creopse\Creopse\Console\Commands\Content\Widget\MakeWidget;
+use Creopse\Creopse\Console\Commands\Content\Widget\RemoveWidget;
 use Creopse\Creopse\Console\Commands\GenerateThumbnails;
 use Creopse\Creopse\Console\Commands\Install;
-use Creopse\Creopse\Console\Commands\MakePage;
-use Creopse\Creopse\Console\Commands\MakeSection;
-use Creopse\Creopse\Console\Commands\MakeWidget;
+use Creopse\Creopse\Console\Commands\Media\MakeMediaFile;
+use Creopse\Creopse\Console\Commands\Media\PurgeTrashedMedia;
+use Creopse\Creopse\Console\Commands\Media\RemoveMediaFile;
+use Creopse\Creopse\Console\Commands\Media\RemoveMediaRecord;
+use Creopse\Creopse\Console\Commands\Media\ReplaceMediaFile;
+use Creopse\Creopse\Console\Commands\Media\RestoreMediaRecord;
 use Creopse\Creopse\Console\Commands\Migrations\MigrateSectionsData;
 use Creopse\Creopse\Console\Commands\Migrations\MigrateSectionsDataIcon;
 use Creopse\Creopse\Console\Commands\Plugins\PluginMakeController;
@@ -20,11 +58,7 @@ use Creopse\Creopse\Console\Commands\Plugins\PluginMakeMigration;
 use Creopse\Creopse\Console\Commands\Plugins\PluginMakeModel;
 use Creopse\Creopse\Console\Commands\Plugins\PluginMakeRequest;
 use Creopse\Creopse\Console\Commands\Plugins\PluginMakeSeeder;
-use Creopse\Creopse\Console\Commands\RemoveSection;
-use Creopse\Creopse\Console\Commands\RemoveWidget;
 use Creopse\Creopse\Console\Commands\ScheduledCommand;
-use Creopse\Creopse\Console\Commands\UpdatePage;
-use Creopse\Creopse\Console\Commands\UpdateSection;
 use Creopse\Creopse\Database\Seeders\DatabaseSeeder;
 use Creopse\Creopse\Enums\ContentType;
 use Creopse\Creopse\Helpers\Functions;
@@ -270,15 +304,56 @@ class CreopseServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 Install::class,
-                MakePage::class,
-                MakeSection::class,
-                MakeWidget::class,
-                UpdatePage::class,
-                UpdateSection::class,
-                RemoveSection::class,
-                RemoveWidget::class,
                 ScheduledCommand::class,
                 GenerateThumbnails::class,
+                // Content Content Model commands
+                MakeContentModel::class,
+                MakeContentModelItem::class,
+                RemoveContentModel::class,
+                RemoveContentModelItem::class,
+                UpdateContentModel::class,
+                UpdateContentModelItem::class,
+                // Content Menu commands
+                MakeMenu::class,
+                MakeMenuItem::class,
+                MakeMenuItemGroup::class,
+                MakeMenuItemType::class,
+                MakeMenuLocation::class,
+                RemoveMenu::class,
+                RemoveMenuItem::class,
+                RemoveMenuItemGroup::class,
+                RemoveMenuItemType::class,
+                RemoveMenuLocation::class,
+                UpdateMenu::class,
+                UpdateMenuItem::class,
+                UpdateMenuItemGroup::class,
+                UpdateMenuItemType::class,
+                UpdateMenuLocation::class,
+                // Content Page commands
+                MakePage::class,
+                UpdatePage::class,
+                RemovePage::class,
+                AttachPageSection::class,
+                DetachPageSection::class,
+                OrderPageSections::class,
+                SetPageSectionSource::class,
+                TogglePageSectionStatus::class,
+                UpdatePageSectionContent::class,
+                // Content Section commands
+                MakeSection::class,
+                UpdateSection::class,
+                RemoveSection::class,
+                // Content Widget commands
+                MakeWidget::class,
+                RemoveWidget::class,
+                // Media commands
+                MakeMediaFile::class,
+                PurgeTrashedMedia::class,
+                RemoveMediaFile::class,
+                RemoveMediaRecord::class,
+                ReplaceMediaFile::class,
+                RestoreMediaRecord::class,
+                // Migration commands
                 MigrateSectionsData::class,
                 MigrateSectionsDataIcon::class,
                 // Plugin commands
