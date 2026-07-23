@@ -118,13 +118,13 @@ trait HandlesMediaProcessing
     private function generateImageThumbnails(string $localPath, string $storedPath): void
     {
         $sizes = config('thumbnail_sizes');
-        $manager = new ImageManager(new Driver());
+        $manager = new ImageManager(new Driver);
 
         foreach ($sizes as $sizeName => $dimensions) {
             $resizedImage = $manager->read($localPath);
             $resizedImage->scaleDown(width: $dimensions['width']);
 
-            $thumbnailPath = "thumbnails/{$sizeName}/" . basename($storedPath);
+            $thumbnailPath = "thumbnails/{$sizeName}/".basename($storedPath);
             $directory = dirname($thumbnailPath);
 
             if (! Storage::disk('public')->exists($directory)) {
@@ -140,7 +140,7 @@ trait HandlesMediaProcessing
      */
     private function generateVideoThumbnail(string $storedPath): void
     {
-        $thumbnailPath = 'thumbnails/video/' . pathinfo($storedPath, PATHINFO_FILENAME) . '.jpg';
+        $thumbnailPath = 'thumbnails/video/'.pathinfo($storedPath, PATHINFO_FILENAME).'.jpg';
 
         FFMpeg::fromDisk('public')
             ->open($storedPath)

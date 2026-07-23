@@ -38,6 +38,7 @@ use Creopse\Creopse\Console\Commands\Content\Page\UpdatePageSectionContent;
 use Creopse\Creopse\Console\Commands\Content\Section\MakeSection;
 use Creopse\Creopse\Console\Commands\Content\Section\RemoveSection;
 use Creopse\Creopse\Console\Commands\Content\Section\UpdateSection;
+use Creopse\Creopse\Console\Commands\Content\UpdateBaseInformation;
 use Creopse\Creopse\Console\Commands\Content\Widget\MakeWidget;
 use Creopse\Creopse\Console\Commands\Content\Widget\RemoveWidget;
 use Creopse\Creopse\Console\Commands\GenerateThumbnails;
@@ -306,6 +307,8 @@ class CreopseServiceProvider extends ServiceProvider
                 Install::class,
                 ScheduledCommand::class,
                 GenerateThumbnails::class,
+                // Content Model commands
+                UpdateBaseInformation::class,
                 // Content Content Model commands
                 MakeContentModel::class,
                 MakeContentModelItem::class,

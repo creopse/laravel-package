@@ -40,7 +40,7 @@ class GenerateThumbnails extends CreopseCommand
 
         // Create thumbnail directories
         $sizes = config('thumbnail_sizes');
-        $manager = new ImageManager(new Driver());
+        $manager = new ImageManager(new Driver);
 
         foreach (array_keys($sizes) as $size) {
             $thumbnailPath = "thumbnails/{$size}";
@@ -104,7 +104,7 @@ class GenerateThumbnails extends CreopseCommand
                 } catch (\Exception $e) {
                     $errors++;
                     $this->newLine();
-                    $this->error("Error for {$file}: " . $e->getMessage());
+                    $this->error("Error for {$file}: ".$e->getMessage());
                 }
 
                 $bar->advance();
