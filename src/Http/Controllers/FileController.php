@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Intervention\Image\Laravel\Facades\Image;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
 class FileController extends Controller
@@ -41,12 +42,13 @@ class FileController extends Controller
         if ($fileType === MediaFileType::IMAGE) {
             // Generate thumbnails
             $sizes = config('thumbnail_sizes');
+            $manager = new ImageManager(new Driver());
 
             try {
                 foreach ($sizes as $sizeName => $dimensions) {
-                    $resizedImage = Image::read($file)->scaleDown(width: $dimensions['width']);
+                    $resizedImage = $manager->read($file)->scaleDown(width: $dimensions['width']);
 
-                    $thumbnailPath = "thumbnails/{$sizeName}/".basename($path);
+                    $thumbnailPath = "thumbnails/{$sizeName}/" . basename($path);
                     // Storage::put($thumbnailPath, $resizedImage);
                     $directory = dirname($thumbnailPath);
                     if (! Storage::disk('public')->exists($directory)) {
@@ -61,7 +63,7 @@ class FileController extends Controller
 
         if ($fileType === MediaFileType::VIDEO) {
             try {
-                $thumbnailPath = 'thumbnails/video/'.pathinfo($path, PATHINFO_FILENAME).'.jpg';
+                $thumbnailPath = 'thumbnails/video/' . pathinfo($path, PATHINFO_FILENAME) . '.jpg';
 
                 FFMpeg::fromDisk('public')
                     ->open($path)

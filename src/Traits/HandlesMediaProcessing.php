@@ -4,7 +4,8 @@ namespace Creopse\Creopse\Traits;
 
 use Creopse\Creopse\Enums\MediaFileType;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Laravel\Facades\Image;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 
@@ -107,16 +108,23 @@ trait HandlesMediaProcessing
 
     /**
      * Generate resized thumbnails for an image, per config('thumbnail_sizes').
+     *
+     * Uses a manually instantiated Intervention ImageManager rather than the
+     * Image facade, to avoid resolving Laravel's own native Illuminate\Image
+     * facade — both packages register under an ambiguous 'image' accessor,
+     * and which one wins the container binding can differ between HTTP and
+     * console contexts.
      */
     private function generateImageThumbnails(string $localPath, string $storedPath): void
     {
         $sizes = config('thumbnail_sizes');
+        $manager = new ImageManager(new Driver());
 
         foreach ($sizes as $sizeName => $dimensions) {
-            $resizedImage = Image::read($localPath);
+            $resizedImage = $manager->read($localPath);
             $resizedImage->scaleDown(width: $dimensions['width']);
 
-            $thumbnailPath = "thumbnails/{$sizeName}/".basename($storedPath);
+            $thumbnailPath = "thumbnails/{$sizeName}/" . basename($storedPath);
             $directory = dirname($thumbnailPath);
 
             if (! Storage::disk('public')->exists($directory)) {
@@ -132,7 +140,7 @@ trait HandlesMediaProcessing
      */
     private function generateVideoThumbnail(string $storedPath): void
     {
-        $thumbnailPath = 'thumbnails/video/'.pathinfo($storedPath, PATHINFO_FILENAME).'.jpg';
+        $thumbnailPath = 'thumbnails/video/' . pathinfo($storedPath, PATHINFO_FILENAME) . '.jpg';
 
         FFMpeg::fromDisk('public')
             ->open($storedPath)

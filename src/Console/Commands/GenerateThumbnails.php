@@ -4,7 +4,8 @@ namespace Creopse\Creopse\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Laravel\Facades\Image;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 class GenerateThumbnails extends CreopseCommand
 {
@@ -39,6 +40,7 @@ class GenerateThumbnails extends CreopseCommand
 
         // Create thumbnail directories
         $sizes = config('thumbnail_sizes');
+        $manager = new ImageManager(new Driver());
 
         foreach (array_keys($sizes) as $size) {
             $thumbnailPath = "thumbnails/{$size}";
@@ -94,7 +96,7 @@ class GenerateThumbnails extends CreopseCommand
 
                 try {
                     // Generate thumbnail
-                    Image::read($fullPath)
+                    $manager->read($fullPath)
                         ->scaleDown(width: $dimensions['width'])
                         ->save($thumbnailFullPath);
 
@@ -102,7 +104,7 @@ class GenerateThumbnails extends CreopseCommand
                 } catch (\Exception $e) {
                     $errors++;
                     $this->newLine();
-                    $this->error("Error for {$file}: ".$e->getMessage());
+                    $this->error("Error for {$file}: " . $e->getMessage());
                 }
 
                 $bar->advance();
