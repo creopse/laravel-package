@@ -10955,16 +10955,16 @@
         },
         {
             "name": "laravel-lang/lang",
-            "version": "15.32.0",
+            "version": "15.33.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Lang/lang.git",
-                "reference": "581112fa9660e61f272c37045e305eec320ab5f0"
+                "reference": "3f1092ac3772189ec03187c66f3f4efd0002523e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Lang/lang/zipball/581112fa9660e61f272c37045e305eec320ab5f0",
-                "reference": "581112fa9660e61f272c37045e305eec320ab5f0",
+                "url": "https://api.github.com/repos/Laravel-Lang/lang/zipball/3f1092ac3772189ec03187c66f3f4efd0002523e",
+                "reference": "3f1092ac3772189ec03187c66f3f4efd0002523e",
                 "shasum": ""
             },
             "require": {
@@ -11025,7 +11025,7 @@
                     "type": "yoomoney"
                 }
             ],
-            "time": "2026-07-02T07:50:39+00:00"
+            "time": "2026-07-25T15:37:45+00:00"
         },
         {
             "name": "laravel-lang/models",
