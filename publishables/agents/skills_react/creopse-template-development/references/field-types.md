@@ -1,6 +1,6 @@
 # Types de champs — structures de données Creopse
 
-À consulter à l'étape 8 lors de la définition de `data.json` / `settings.json` pour chaque section.
+À consulter à l'étape 9 lors de la définition de `data-structure.json` / `settings.json` pour chaque section.
 
 ## Liste exhaustive des types
 
@@ -70,19 +70,21 @@
 
 ## Format de rendu associé
 
-- `i18n-editor` → rendu avec `v-html="rHtml(field)"`.
-- `i18n-text` → rendu avec `{{ tr(field) }}`.
-- `text` (URL, nom) → rendu direct, pas de `tr()`.
+| Type | Vue | React |
+|---|---|---|
+| `i18n-editor` | `v-html="rHtml(field)"` | `dangerouslySetInnerHTML={{ __html: rHtml(field) }}` |
+| `i18n-text` | `{{ tr(field) }}` | `{tr(field)}` |
+| `text` (URL, nom) | rendu direct, pas de `tr()` | rendu direct, pas de `tr()` |
 
 ## Format de sortie attendu pour les fausses données (fake data)
 
-Chaque type de champ a un format JSON précis à respecter dans `.creopse/fake-data/<NomSection>.json` :
+Chaque type de champ a un format JSON précis à respecter dans `.creopse/sections/<NomSection>/fake-data.json` :
 
 | Type | Format de la valeur |
 |---|---|
 | `i18n-text` / `i18n-editor` | Chaîne JSON échappée contenant un objet `{"fr":"...","en":"..."}`. Pour `i18n-editor`, le contenu inclut des balises HTML (`<p>`, etc.). |
 | `text` | Chaîne brute (URL, nom, etc.). |
-| `image` / `gallery` | URL d'image de test (ex. `https://picsum.photos/{largeur}/{hauteur}?random={slug}`). |
+| `image` / `gallery` | Chemin d'un média réellement uploadé (image recherchée et téléchargée, voir `media-conventions.md`) — `picsum.photos` uniquement en repli si aucune image adéquate n'a été trouvée. |
 | `icon` | SVG inline complet (viewBox 0 0 32 32 par convention sur ce projet). |
 | `menu-item-link` | Selon le cas d'usage réel du champ (voir règle 9 ci-dessus) : un ID numérique (référence vers un item de menu existant) **ou** une URL brute directement utilisable. Vérifier comment le composant consomme la valeur avant de choisir le format des fake data. |
 | `checkbox` / `switch` | `true`/`false`. |

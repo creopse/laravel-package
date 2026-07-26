@@ -1,6 +1,6 @@
 # Conventions — Modèles de contenu (`content-model`)
 
-À consulter à l'étape 7 du workflow (`SKILL.md`), avant la complétion section par section (étape 8) des sections qui en dépendent.
+À consulter à l'étape 7 du workflow (`SKILL.md`), avant l'étape 8 (permalinks) et la complétion section par section (étape 9) des sections qui en dépendent.
 
 ---
 
@@ -8,13 +8,13 @@
 
 Un modèle de contenu est nécessaire dès qu'une section de l'inventaire (étape 5.1) correspond à un pattern "liste + détail" plutôt qu'à du contenu unique de section : Services (`Services.vue` + `ServiceDetails.vue`), Projects (`Projects.vue` + `ProjectDetails.vue`), News/Articles, Team, offres de formation, etc. — reconnaissable au fait que le composant consomme `storeToRefs(useContentStore())` et `getContentPath(item)` plutôt que `getSectionData`/`getSectionRootData` seuls (voir `section-patterns.md`).
 
-Établir la liste des modèles nécessaires à partir de cet inventaire **avant** de commencer l'étape 8, pour que les sections qui les référencent (via `content-model-item`/`content-model-items` dans leur propre structure, ex. le champ `parent-service` de Services) puissent pointer vers des items réels dès leur complétion. Si le menu créé à l'étape 6 doit avoir un item pointant directement vers un item de modèle de contenu (`--target-type content-link`), revenir compléter ce menu juste après cette étape — voir `menu-conventions.md`.
+Établir la liste des modèles nécessaires à partir de cet inventaire **avant** de commencer l'étape 9, pour que les sections qui les référencent (via `content-model-item`/`content-model-items` dans leur propre structure, ex. le champ `parent-service` de Services) puissent pointer vers des items réels dès leur complétion. Si le menu créé à l'étape 6 doit avoir un item pointant directement vers un item de modèle de contenu (`--target-type content-link`), revenir compléter ce menu juste après cette étape — voir `menu-conventions.md`.
 
 ---
 
 ## Store partagé pour modèles de contenu réutilisés (`useContentStore` / `useDataloader`)
 
-Pattern **optionnel, local au projet** — pas fourni par `@creopse/vue`/`@creopse/react`/`@creopse/utils`, à mettre en place au cas par cas plutôt qu'à supposer déjà présent. Pertinent quand un modèle de contenu a **peu d'items** et est consommé par **plusieurs sections** (typiquement liste + détail, ex. Services/Projects) : au lieu d'appeler `getContentModelItems(name)` (`useContent()`) séparément dans chaque section qui en a besoin, charger une fois au démarrage de l'app dans un store Pinia partagé.
+Pattern **optionnel, local au projet** — pas fourni par `@creopse/vue`/`@creopse/react`/`@creopse/utils`, à mettre en place au cas par cas plutôt qu'à supposer déjà présent. **Spécifique à un projet Vue** (repose sur Pinia) — pour un projet React, voir `react-conventions.md` (aucun équivalent confirmé pour l'instant, ne pas transposer Pinia tel quel). Pertinent quand un modèle de contenu a **peu d'items** et est consommé par **plusieurs sections** (typiquement liste + détail, ex. Services/Projects) : au lieu d'appeler `getContentModelItems(name)` (`useContent()`) séparément dans chaque section qui en a besoin, charger une fois au démarrage de l'app dans un store Pinia partagé.
 
 Ne pas l'utiliser pour un modèle de contenu :
 
@@ -116,7 +116,7 @@ creopse content-model add service editorial-content internal \
 ```
 
 - `--title-field-name` : le champ de la structure utilisé comme titre d'affichage en admin (généralement `name` ou `title`).
-- `--has-permalink` : `true` dès que le modèle a une page de détail dédiée (`ServiceDetails`, `ProjectDetails`...), `false` sinon.
+- `--has-permalink` : `true` dès que le modèle a une page de détail dédiée (`ServiceDetails`, `ProjectDetails`...), `false` sinon. **Ce flag seul ne suffit pas** : il indique juste que le modèle est éligible à un permalink, il ne câble pas encore la route vers la page de détail. Ce câblage réel (`pathPrefix` + page cible) se fait à l'étape 8 via `creopse permalink add` — voir `permalinks-conventions.md`, à traiter juste après la création de ce modèle et de ses items.
 
 Pour un modèle de données utilisateur (ex. messages de contact) :
 
@@ -141,7 +141,7 @@ Le format de `--data` suit les mêmes règles que la fake data de section (`fake
 
 ## Cohérence avec les fake data de section
 
-Une fois les items créés, noter leurs IDs (sortie CLI ou requête `database-query` via Laravel Boost si disponible — voir `media-conventions.md`) pour que les champs `content-model-item` référencés depuis d'autres sections (ex. `parent-service` dans la structure Service elle-même, ou un champ similaire dans une autre section) pointent vers de vrais IDs à l'étape 8, au lieu d'un ID inventé au hasard (voir règle correspondante dans `fake-data-conventions.md`).
+Une fois les items créés, noter leurs IDs (sortie CLI ou requête `database-query` via Laravel Boost si disponible — voir `media-conventions.md`) pour que les champs `content-model-item` référencés depuis d'autres sections (ex. `parent-service` dans la structure Service elle-même, ou un champ similaire dans une autre section) pointent vers de vrais IDs à l'étape 9, au lieu d'un ID inventé au hasard (voir règle correspondante dans `fake-data-conventions.md`).
 
 ---
 

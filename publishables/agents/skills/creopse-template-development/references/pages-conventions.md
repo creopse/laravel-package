@@ -1,6 +1,6 @@
 # Conventions — Pages (`page`)
 
-À consulter à l'étape 4 du workflow (`SKILL.md`, création des pages) et à l'étape 9 (assemblage final, attachement des sections).
+À consulter à l'étape 4 du workflow (`SKILL.md`, création des pages) et à l'étape 10 (assemblage final, attachement des sections).
 
 ---
 
@@ -23,6 +23,8 @@ Si cette section est absente de `context.md`, **ne pas déduire les pages unique
 
 La mention `(source: home)` indique une section dont les données doivent être **partagées** avec l'instance d'une autre page plutôt que dupliquées (voir `set-section-source` plus bas) — typiquement un Footer ou une bannière identique partout.
 
+**Pages de détail (`*-details`, ex. `service-details`, `project-details`) :** ce sont des pages normales au même titre que les autres — créées ici, à l'étape 4, avec leurs propres sections (dont une section de type détail : `ServiceDetails`, `ProjectDetails`...). La seule différence est qu'elles ne reçoivent **pas** d'item de menu (étape 6) : leur point d'entrée est le permalink créé à l'étape 8 (voir `permalinks-conventions.md`), qui associe le modèle de contenu concerné à cette page via `--page <name>`. Les lister quand même dans `context.md` avec leurs sections, en notant qu'elles ne sont pas destinées au menu.
+
 ---
 
 ## Étape 4 — Création des pages
@@ -35,21 +37,21 @@ creopse page add contact --title "en:Contact" --title "fr:Contact" --position 3
 
 - Un seul nom de page par appel (`add` ne prend qu'un seul nom, contrairement à `section add`/`widget add`).
 - `--content` n'est utile que si la page a un contenu HTML propre en dehors des sections (rare dans ce workflow — la plupart des pages sont entièrement composées de sections).
-- Cette étape ne crée que la coquille de page. Ne pas tenter d'attacher de sections ici, même si elles sont déjà scaffoldées — l'attachement se fait à l'étape 9, une fois les sections complétées.
+- Cette étape ne crée que la coquille de page. Ne pas tenter d'attacher de sections ici, même si elles sont déjà scaffoldées — l'attachement se fait à l'étape 10, une fois les sections complétées.
 
 ---
 
-## Étape 9 — Attachement des sections
+## Étape 10 — Attachement des sections
 
 ### Attacher une instance de section à une page
 
 ```bash
-creopse page attach-section home Header --link-id top --data @.creopse/fake-data/Header.json
-creopse page attach-section home Slider --link-id main --data @.creopse/fake-data/Slider.json
+creopse page attach-section home Header --link-id top --data @.creopse/sections/Header/fake-data.json
+creopse page attach-section home Slider --link-id main --data @.creopse/sections/Slider/fake-data.json
 ```
 
 - `--link-id` : identifiant d'instance, par défaut `default`. Utiliser un id explicite dès qu'une même section peut apparaître plusieurs fois sur le site (ex. `Testimonials` en accueil et en page service, avec des témoignages différents) — voir l'exemple `HeroBanner:top` / `HeroBanner:bottom` de `cli-reference.md`.
-- `--data` : passer le fichier de fake data validé à l'étape 8 (préfixe `@` obligatoire, même convention que `section edit --data-structure`).
+- `--data` : passer le fichier de fake data validé à l'étape 9 (préfixe `@` obligatoire, même convention que `section edit --data-structure`).
 - `--link-title` : optionnel, titre spécifique à cette instance (utile en admin pour distinguer deux instances de la même section).
 
 ### Sourcer les données depuis une autre page (`set-section-source`)

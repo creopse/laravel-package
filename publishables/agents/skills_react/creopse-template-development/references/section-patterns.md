@@ -1,6 +1,6 @@
 # Patterns de section
 
-Consulter la sous-section correspondant au type de section traité à l'étape 8.2, en complément de `vue-conventions.md`.
+Consulter la sous-section correspondant au type de section traité à l'étape 9.2, en complément de `vue-conventions.md` (stack Vue) ou `react-conventions.md` (stack React). Les extraits de code ci-dessous sont écrits en Vue, mais la logique qu'ils décrivent (quel composable/hook appeler, quels champs vérifier, dans quel ordre) est valable pour les deux stacks — sur un projet React, traduire la syntaxe via les tables de `react-conventions.md` sans changer cette logique.
 
 ## Table des matières
 

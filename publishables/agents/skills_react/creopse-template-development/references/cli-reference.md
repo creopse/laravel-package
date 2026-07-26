@@ -1,18 +1,19 @@
 # Référence CLI Creopse
 
-Référence complète de `@creopse/cli`, utilisée à travers toutes les étapes du workflow (`SKILL.md`) à partir de l'étape 2. Ce document couvre les groupes de commandes réellement utilisés par cette skill : `section`, `widget`, `page`, `content-model`, `menu`, `media`, `base-info`. Le groupe `plugin` (scaffolding de classes Laravel dans un plugin) n'est **pas couvert** par cette skill — hors périmètre du template building front, voir note en fin de document.
+Référence complète de `@creopse/cli`, utilisée à travers toutes les étapes du workflow (`SKILL.md`) à partir de l'étape 2. Ce document couvre les groupes de commandes réellement utilisés par cette skill : `section`, `widget`, `page`, `content-model`, `permalink`, `menu`, `media`, `base-info`. Le groupe `plugin` (scaffolding de classes Laravel dans un plugin) n'est **pas couvert** par cette skill — hors périmètre du template building front, voir note en fin de document.
 
 ## Conventions générales
 
-- **Alias de groupe** : `sec` ↔ `section`, `wid` ↔ `widget`, `pag` ↔ `page`, `cm` ↔ `content-model`, `men` ↔ `menu`, `med` ↔ `media`, `info` ↔ `base-info`.
+- **Alias de groupe** : `sec` ↔ `section`, `wid` ↔ `widget`, `pag` ↔ `page`, `cm` ↔ `content-model`, `perm` ↔ `permalink`, `men` ↔ `menu`, `med` ↔ `media`, `info` ↔ `base-info`, `plg` ↔ `plugin`.
 - **Alias de sous-commande** : chaque paire `add`/`make`, `remove`/`delete`, `edit`/`update` est équivalente.
 - **Options JSON** (`--data`, `--settings`, `--data-structure`, `--settings-structure`, `--metadata`) acceptent soit une chaîne JSON inline, soit une référence `@chemin/fichier.json` (le préfixe `@` charge le fichier).
 - **Options localisées** (`--title`, `--description`, `--link-title`) sont répétables et prennent une paire `locale:valeur`, ex. `--title "en:Home"` `--title "fr:Accueil"`.
+- Le flag interne `--alias` exposé par les commandes artisan sous-jacentes n'est **pas** relayé par la CLI — utiliser les noms/alias de sous-commande documentés ici.
 
 ⚠️ **Préfixe `@` obligatoire pour un chemin de fichier.** La CLI ne peut pas deviner si la valeur passée est du JSON littéral ou un chemin à lire — sans marqueur, elle tentera de parser le chemin lui-même comme JSON et échouera :
 
 ```bash
---data-structure @.creopse/structures/Header/data.json
+--data-structure @.creopse/sections/Header/data-structure.json
 ```
 
 Ne jamais injecter le JSON inline via une substitution de commande (`--data-structure "$(cat fichier.json)"`) : ça reproduit exactement le problème d'échappement/volumétrie que le mécanisme `@chemin` est censé éviter.
@@ -29,7 +30,9 @@ creopse install -t vue      # ou -t react
 
 ---
 
-## `creopse section` (alias `sec`) — étape 5 et étape 8
+## `creopse section` (alias `sec`) — étape 5 et étape 9
+
+Sections = blocs UI réutilisables et traduisibles, rendus par le frontend (composant `.vue`/`.tsx` dans `resources/js/Sections`). Ce groupe génère à la fois le fichier composant et l'entrée base décrivant la section (titre par locale, structure de données, structure de réglages).
 
 | Sous-commande | Alias | Description |
 |---|---|---|
@@ -43,8 +46,8 @@ Options `edit` : mêmes options que `add`.
 ```bash
 creopse section add Header Hero Features Services Testimonials Footer Contact
 creopse section edit Header \
-  --data-structure @.creopse/structures/Header/data.json \
-  --settings-structure @.creopse/structures/Header/settings.json
+  --data-structure @.creopse/sections/Header/data-structure.json \
+  --settings-structure @.creopse/sections/Header/settings.json
 ```
 
 ## `creopse widget` (alias `wid`) — étape 5
@@ -62,7 +65,7 @@ creopse widget add Preloader ScrollProgress
 
 ---
 
-## `creopse page` (alias `pag`) — étape 4 et étape 9
+## `creopse page` (alias `pag`) — étape 4 et étape 10
 
 Une page est une entité top-level (titre, contenu optionnel, position d'affichage). Les sections ne sont **pas** créées avec la page — elles sont attachées séparément via les sous-commandes d'instance ci-dessous, qui contrôlent la donnée, l'ordre et la visibilité par instance.
 
@@ -71,7 +74,7 @@ Une page est une entité top-level (titre, contenu optionnel, position d'afficha
 | `add <name>` | `make` | Crée une page vide (étape 4) |
 | `edit <name>` | `update` | Met à jour titre, contenu et/ou position |
 | `remove <name>` | `delete` | Supprime une page (`-f/--force`) |
-| `attach-section <page> <section>` | | Attache une instance de section à une page (étape 9) |
+| `attach-section <page> <section>` | | Attache une instance de section à une page (étape 10) |
 | `detach-section <page> <section>` | | Détache une instance spécifique (`-f/--force`) |
 | `order-sections <page>` | | Définit l'ordre d'affichage des sections d'une page |
 | `set-section-source <page> <section>` | | Fixe/efface la page source de données d'une instance |
@@ -89,8 +92,8 @@ Options `update-section-content` : `--link-id <id>`, `--link-title <locale:value
 # Étape 4
 creopse page add home --title "en:Home" --title "fr:Accueil" --position 1
 
-# Étape 9 — attachement, avec deux instances de la même section à des emplacements différents
-creopse page attach-section home Hero --link-id top --link-title "en:Hero Top" --data @.creopse/fake-data/Hero.json
+# Étape 10 — attachement, avec deux instances de la même section à des emplacements différents
+creopse page attach-section home Hero --link-id top --link-title "en:Hero Top" --data @.creopse/sections/Hero/fake-data.json
 creopse page attach-section home Hero --link-id bottom --data '{"heading":"Footer hero"}'
 
 # Réordonner et désactiver l'instance du bas
@@ -138,7 +141,41 @@ creopse content-model item-edit 12 --title "en:Renamed"
 creopse content-model remove service --force
 ```
 
-Voir `references/content-models-conventions.md` pour le détail propre à ce workflow.
+`--has-permalink true` flague seulement le modèle comme éligible — ça ne câble pas la route vers une page de détail. Voir le groupe `permalink` ci-dessous (étape 8) et `references/content-models-conventions.md`.
+
+---
+
+## `creopse permalink` (alias `perm`) — étape 8
+
+Un permalink associe un préfixe d'URL à un contenu (item de modèle de contenu, ou type de contenu natif news) et, optionnellement, à la page/template qui le rend. Sans cette étape, aucune page de détail (`ServiceDetails`, `ProjectDetails`, `NewsDetails`...) n'est jamais atteinte, même parfaitement codée et attachée à sa page.
+
+| Sous-commande | Alias | Description |
+|---|---|---|
+| `add <path-prefix> <content-type>` | `make` | Crée un permalink |
+| `remove` | `delete` | Supprime un permalink (`-f/--force`) |
+| `edit` | `update` | Met à jour un permalink |
+
+- `content-type` : `news-tag`, `news-category`, `news-article`, ou `content-model`.
+- Options `add` : `--content-id <valeur>` (requis si `content-type=content-model` ; id ou nom du modèle), `--content-param <valeur>` (champ utilisé pour résoudre la cible — `id` ou `slug`, défaut `id`), `--page <name>` (page/template utilisé pour rendre ce contenu).
+- **remove/edit** identifient la cible avec exactement un de `--id <id>`, `--path-prefix <prefix>`, ou `--content-model <name>`.
+- Options `edit` : `--new-path-prefix <prefix>`, `--content-param <valeur>`, `--page <name>` (`none` pour désassocier). Le contenu cible lui-même (`content-type`/`content-id`) ne peut pas être changé une fois fixé.
+
+```bash
+# Un permalink pour un modèle de contenu, résolu par id (défaut) — ou par tout autre champ
+# réellement présent dans data-structure.json du modèle (ex. un champ slug ajouté à l'étape 7)
+creopse permalink add /services content-model --content-id service --page service-details
+
+# Un permalink pour les articles de news, résolu par slug (structure native fixe)
+creopse permalink add /actualites news-article --content-param slug --page news-details
+
+# Modifier, identifié par son préfixe actuel
+creopse permalink edit --path-prefix /services --new-path-prefix /nos-services
+
+# Supprimer, identifié par son modèle de contenu
+creopse permalink remove --content-model service --force
+```
+
+Voir `references/permalinks-conventions.md` pour le détail complet (choix de `--content-param` selon le type de contenu, format de suivi local, ordre par rapport aux étapes 4 et 7).
 
 ---
 
@@ -169,11 +206,11 @@ creopse menu item-add main --title "en:Home" --page home --target-type page-link
 creopse menu item-add main --title "en:About" --path "/about" --parent 1 --menu-item-type dropdown
 ```
 
-Voir `references/menu-conventions.md` pour le détail propre à ce workflow.
+Voir `references/menu-conventions.md` pour le détail propre à ce workflow, notamment la distinction avec les permalinks de l'étape 8.
 
 ---
 
-## `creopse media` (alias `med`) — étape 2
+## `creopse media` (alias `med`) — étape 2 et étape 9
 
 Un **fichier** vit sur le disque, un **enregistrement** (`MediaFile`) est l'entrée en base — suppression indépendante possible des deux.
 
@@ -191,13 +228,25 @@ Options `replace` : `--folder`, `--filename`, `--metadata`.
 `remove-record --permanent` force la suppression définitive (sinon soft delete, restaurable).
 
 ```bash
-creopse media upload ./assets/logo.png --folder branding --filename "Company Logo"
+# Étape 2 — asset de marque, déposé par l'utilisateur dans .creopse/media/source/
+creopse media upload .creopse/media/source/logo.png --folder branding --filename "Company Logo"
+
+# Étape 9 — image de contenu trouvée et téléchargée dans .creopse/media/generated/
+creopse media upload .creopse/media/generated/hero-agence.jpg --folder content --metadata '{"alt":"Summer sale"}'
+
+# Remplacer le fichier derrière l'enregistrement #42 sans changer son id
 creopse media replace 42 ./banner-v2.jpg
+
+# Supprimer juste le fichier disque, ou juste l'enregistrement (soft delete par défaut)
+creopse media remove-file branding/logo.png --force
 creopse media remove-record 42
+
+# Récupérer, ou purger définitivement tous les enregistrements soft-deleted
 creopse media restore 42
+creopse media purge --force
 ```
 
-Voir `references/media-conventions.md` pour le détail propre à ce workflow, notamment la récupération du chemin définitif après upload.
+Voir `references/media-conventions.md` pour le détail propre à ce workflow : distinction `source/`/`generated/`, récupération du chemin définitif après upload, et procédure de recherche d'images de contenu (étape 9).
 
 ---
 

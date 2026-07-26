@@ -1,6 +1,6 @@
 # Conventions Vue/Creopse
 
-Lecture obligatoire avant l'étape 8.2 (adaptation du HTML collé). Ces règles s'appliquent systématiquement, quel que soit le type de section. Ce fichier documente des **patterns d'usage** (quel composable pour quel besoin, quelle convention de rendu) — pour la **signature exacte** d'un composable/helper/composant cité ici, voir `vue-api-reference.md` (packages `@creopse/vue`) et `utils-api-reference.md` (packages `@creopse/utils`, communs à tous les templates).
+Lecture obligatoire avant l'étape 9.2 (adaptation du HTML collé). Ces règles s'appliquent systématiquement, quel que soit le type de section. Ce fichier documente des **patterns d'usage** (quel composable pour quel besoin, quelle convention de rendu) — pour la **signature exacte** d'un composable/helper/composant cité ici, voir `vue-api-reference.md` (packages `@creopse/vue`) et `utils-api-reference.md` (packages `@creopse/utils`, communs à tous les templates).
 
 ## Interdictions strictes
 

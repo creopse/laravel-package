@@ -1,6 +1,6 @@
 # Conventions de génération des fausses données
 
-Consulter ce document à l'étape 8.5 du workflow (`SKILL.md`), une fois la structure `data.json` d'une section validée et soumise à la CLI.
+Consulter ce document à l'étape 9, point 5, du workflow (`SKILL.md`), une fois la structure `data-structure.json` d'une section validée et soumise à la CLI.
 
 ---
 
@@ -44,21 +44,21 @@ Points de format stricts :
 - **Une clé top-level par collection**, contenant un **tableau** d'objets — un objet par entrée de la collection.
 - **Champs i18n** (`i18n-text`, `i18n-editor`) : toujours une chaîne JSON stringifiée `"{\"fr\":\"...\",\"en\":\"...\"}"`, jamais un objet JS natif. Rappel : `i18n-textarea` n'est jamais utilisé sur ce projet (voir `field-types.md`), donc ce format ne s'applique en pratique qu'à `i18n-text`/`i18n-editor`.
 - **Champs `i18n-list`** : suivre le format `[{"value": "{\"fr\":\"...\",\"en\":\"...\"}"}]` — voir `field-types.md`.
-- **Champs `menu-item-link`** : type hybride (voir règle 9 de `field-types.md`) — générer soit une valeur numérique (ID d'item de menu existant), soit une URL brute, **selon la façon dont le composant consomme réellement le champ**. Ne pas assumer par défaut que c'est toujours un ID : vérifier le composant complété à l'étape 8.2 avant de choisir le format. Les items de menu sont créés en amont à l'étape 6 (voir `menu-conventions.md`) — reprendre l'ID réel noté dans `.creopse/menus/<location>.json`, ne jamais en inventer un au hasard.
+- **Champs `menu-item-link`** : type hybride (voir règle 9 de `field-types.md`) — générer soit une valeur numérique (ID d'item de menu existant), soit une URL brute, **selon la façon dont le composant consomme réellement le champ**. Ne pas assumer par défaut que c'est toujours un ID : vérifier le composant complété à l'étape 9.2 avant de choisir le format. Les items de menu sont créés en amont à l'étape 6 (voir `menu-conventions.md`) — reprendre l'ID réel noté dans `.creopse/menus/<location>.json`, ne jamais en inventer un au hasard.
 - **Champs `content-model-item`** : une valeur numérique référençant l'ID d'un item existant du modèle de contenu ciblé (ex : service parent). Les modèles et leurs items sont créés en amont à l'étape 7 (voir `content-models-conventions.md`) — reprendre un ID réellement créé, jamais un ID inventé.
 
 ---
 
-## Images placeholder
+## Images de contenu
 
-Toujours `picsum.photos`, avec un slug `random` unique et descriptif par entrée — jamais le même slug réutilisé deux fois dans le même jeu de fausses données :
+**Par défaut, une vraie image recherchée et uploadée** — voir la procédure complète dans `media-conventions.md` (section "Images de contenu") : recherche restreinte à des banques d'images explicitement libres de droits (Unsplash, Pexels, Pixabay), téléchargement dans `.creopse/media/generated/`, upload via `creopse media upload`, chemin définitif consigné dans `.creopse/media/manifest.json` et réutilisé ici — jamais l'URL de la plateforme source ni le chemin local.
+
+`picsum.photos` reste un **repli** ponctuel, uniquement si aucune image adéquate n'a été trouvée pour un champ précis après quelques tentatives (voir `media-conventions.md`) — jamais le choix par défaut. En repli, même règle qu'avant : un slug `random` unique et descriptif par entrée, jamais réutilisé deux fois dans le même jeu de fausses données, dimensions adaptées au type d'image (grande image de fond ~1200x800, vignette de carte ~600x400, avatar/logo ~200x200) :
 
 ```
 https://picsum.photos/1200/800?random=nom-projet-section-descriptif
 https://picsum.photos/600/400?random=nom-projet-feature-audit-energetique
 ```
-
-Adapter les dimensions au type d'image (grande image de fond ~1200x800, vignette de carte ~600x400, avatar/logo ~200x200).
 
 ---
 
@@ -72,7 +72,7 @@ Format SVG inline complet (pas de référence à un fichier externe ni de nom d'
 </svg>
 ```
 
-Si le projet utilise des icônes MDI plutôt que du SVG inline pour certains champs (`icon` en usage `<Icon icon="mdi:...">` côté composant plutôt que `<ContentIcon :data="...">`), vérifier le composant complété à l'étape 8.2 pour savoir quel format est réellement consommé, et générer en conséquence.
+Si le projet utilise des icônes MDI plutôt que du SVG inline pour certains champs (`icon` en usage `<Icon icon="mdi:...">` côté composant plutôt que `<ContentIcon :data="...">`), vérifier le composant complété à l'étape 9.2 pour savoir quel format est réellement consommé, et générer en conséquence.
 
 ---
 
@@ -92,10 +92,10 @@ Rédiger en HTML simple et propre, cohérent avec le contexte métier :
 
 ## Cohérence inter-sections
 
-Quand plusieurs sections référencent la même entité (ex : un service listé dans `Services` et détaillé dans `ServiceDetails`, ou une session liée à une formation), les fausses données générées pour chaque section/modèle de contenu doivent rester cohérentes entre elles — mêmes noms, mêmes IDs de référence, mêmes images si c'est censé être la même entité. Vérifier les fichiers déjà écrits dans `.creopse/fake-data/` avant de générer une nouvelle section qui référence un modèle de contenu déjà traité.
+Quand plusieurs sections référencent la même entité (ex : un service listé dans `Services` et détaillé dans `ServiceDetails`, ou une session liée à une formation), les fausses données générées pour chaque section/modèle de contenu doivent rester cohérentes entre elles — mêmes noms, mêmes IDs de référence, mêmes images si c'est censé être la même entité. Vérifier les fichiers déjà écrits dans `.creopse/sections/*/fake-data.json` avant de générer une nouvelle section qui référence un modèle de contenu déjà traité.
 
 ---
 
 ## Règle de régénération
 
-Si une collection ou un tableau de fausses données doit être modifié après une correction ou un ajout demandé par l'utilisateur, régénérer et réécrire l'**intégralité** du tableau concerné dans `.creopse/fake-data/<NomSection>.json` plutôt que de ne fournir que la partie modifiée — cela préserve un fichier toujours complet et directement copiable dans le CMS, et suit le principe de rewrites complets déjà en vigueur sur ce projet plutôt que des patches partiels.
+Si une collection ou un tableau de fausses données doit être modifié après une correction ou un ajout demandé par l'utilisateur, régénérer et réécrire l'**intégralité** du tableau concerné dans `.creopse/sections/<NomSection>/fake-data.json` plutôt que de ne fournir que la partie modifiée — cela préserve un fichier toujours complet et directement copiable dans le CMS, et suit le principe de rewrites complets déjà en vigueur sur ce projet plutôt que des patches partiels.
