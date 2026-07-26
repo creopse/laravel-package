@@ -35,6 +35,9 @@ use Creopse\Creopse\Console\Commands\Content\Page\SetPageSectionSource;
 use Creopse\Creopse\Console\Commands\Content\Page\TogglePageSectionStatus;
 use Creopse\Creopse\Console\Commands\Content\Page\UpdatePage;
 use Creopse\Creopse\Console\Commands\Content\Page\UpdatePageSectionContent;
+use Creopse\Creopse\Console\Commands\Content\Permalink\MakePermalink;
+use Creopse\Creopse\Console\Commands\Content\Permalink\RemovePermalink;
+use Creopse\Creopse\Console\Commands\Content\Permalink\UpdatePermalink;
 use Creopse\Creopse\Console\Commands\Content\Section\MakeSection;
 use Creopse\Creopse\Console\Commands\Content\Section\RemoveSection;
 use Creopse\Creopse\Console\Commands\Content\Section\UpdateSection;
@@ -342,6 +345,10 @@ class CreopseServiceProvider extends ServiceProvider
                 SetPageSectionSource::class,
                 TogglePageSectionStatus::class,
                 UpdatePageSectionContent::class,
+                // Content Permalink commands
+                MakePermalink::class,
+                UpdatePermalink::class,
+                RemovePermalink::class,
                 // Content Section commands
                 MakeSection::class,
                 UpdateSection::class,
