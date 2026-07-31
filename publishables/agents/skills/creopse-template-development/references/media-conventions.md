@@ -1,55 +1,55 @@
-# Conventions — Médias réels et images de contenu (`media`)
+# Conventions — Real media and content images (`media`)
 
-À consulter à l'étape 2 du workflow (`SKILL.md`), juste après le découpage du template (étape 1) et avant les informations de base (étape 3) — et de nouveau à l'étape 9, point 5, pour les images de contenu (voir dernière section de ce document).
+To consult at step 2 of the workflow (`SKILL.md`), right after template splitting (step 1) and before base information (step 3) — and again at step 9, point 5, for content images (see the last section of this document).
 
 ---
 
-## Arborescence
+## Directory tree
 
 ```
 .creopse/media/
-├── source/           # assets de marque réels déposés par l'utilisateur (logo, favicon, photos officielles) — input, lecture seule
-├── generated/         # images de contenu trouvées et téléchargées à l'étape 9 — staging avant upload
-└── manifest.json      # ledger unique : tout fichier local uploadé (source/ ou generated/) → média en base
+├── source/           # real brand assets deposited by the user (logo, favicon, official photos) — input, read-only
+├── generated/         # content images found and downloaded at step 9 — staging before upload
+└── manifest.json      # single ledger: every uploaded local file (source/ or generated/) → media in DB
 ```
 
-`source/` et `generated/` ne sont jamais confondus : le premier contient des fichiers fournis par l'utilisateur (à ne jamais remplacer ni régénérer), le second des fichiers que l'agent a lui-même trouvés et peut régénérer/retélécharger si besoin.
+`source/` and `generated/` are never interchanged: the former holds files provided by the user (never to be replaced or regenerated), the latter files the agent found itself and can regenerate/re-download if needed.
 
 ---
 
-## 1. Assets de marque réels (étape 2)
+## 1. Real brand assets (step 2)
 
-- **À uploader**, depuis `.creopse/media/source/` : logo, version monochrome du logo (`oneColorLogo`), favicon/icône (`icon`, `oneColorIcon`), et toute photo officielle explicitement fournie par le client.
-- Ne **jamais** aller chercher ces assets dans `.creopse/html_template/assets/` : le template source est un thème de démonstration, ses visuels (y compris un éventuel logo placeholder) ne sont pas des assets de marque réels, même s'ils s'y trouvent physiquement.
-- Si `.creopse/media/source/` est vide ou ne contient manifestement pas de logo/favicon, **demander à l'utilisateur** plutôt que d'improviser avec un visuel du template ou de sauter l'étape silencieusement.
+- **To upload**, from `.creopse/media/source/`: logo, monochrome version of the logo (`oneColorLogo`), favicon/icon (`icon`, `oneColorIcon`), and any official photo explicitly provided by the client.
+- **Never** fetch these assets from `.creopse/html_template/assets/`: the source template is a demo theme, its visuals (including any placeholder logo) are not real brand assets, even if they're physically found there.
+- If `.creopse/media/source/` is empty or clearly doesn't contain a logo/favicon, **ask the user** rather than improvising with a template visual or silently skipping the step.
 
 ```bash
-creopse media upload .creopse/media/source/logo.png --folder branding --filename "Logo École Alpha"
-creopse media upload .creopse/media/source/favicon.png --folder branding --filename "Favicon École Alpha"
+creopse media upload .creopse/media/source/logo.png --folder branding --filename "École Alpha Logo"
+creopse media upload .creopse/media/source/favicon.png --folder branding --filename "École Alpha Favicon"
 ```
 
-- `--folder` : `branding` pour ces assets, pour les distinguer des uploads de contenu (voir plus bas, dossier `content` par exemple).
-- `--filename` : nom lisible, pas le nom de fichier brut.
-- `--metadata <json>` : optionnel, fusionné avec les métadonnées auto-extraites (utile pour un `alt` texte si pertinent).
+- `--folder`: `branding` for these assets, to distinguish them from content uploads (see below, e.g. the `content` folder).
+- `--filename`: a readable name, not the raw file name.
+- `--metadata <json>`: optional, merged with the auto-extracted metadata (useful for `alt` text if relevant).
 
 ---
 
-## Récupérer le chemin définitif après upload
+## Retrieving the final path after upload
 
-La sortie CLI seule n'est pas toujours suffisante pour obtenir le chemin de stockage définitif tel qu'il sera résolu par `fileUrl()` côté front. Si Laravel Boost est disponible dans le projet (outils `database-schema` / `database-query`), l'utiliser pour lire directement le chemin en base plutôt que de le deviner ou de reconstruire une URL à la main :
+CLI output alone isn't always enough to get the final storage path as it will be resolved by `fileUrl()` on the front end. If Laravel Boost is available on the project (`database-schema` / `database-query` tools), use it to read the path directly from the database rather than guessing it or rebuilding a URL by hand:
 
-1. `database-schema` (une seule fois par projet, pour repérer la table des médias — généralement `media_files` ou équivalent selon le schéma Creopse installé, et ses colonnes de chemin/URL).
-2. `database-query` avec une requête ciblée sur l'enregistrement fraîchement créé (par nom de fichier ou par id renvoyé par la commande d'upload) pour récupérer la valeur exacte du champ chemin/URL.
+1. `database-schema` (once per project, to locate the media table — usually `media_files` or an equivalent, depending on the Creopse schema installed, and its path/URL columns).
+2. `database-query` with a targeted query on the freshly created record (by file name or by the id returned by the upload command) to retrieve the exact value of the path/URL field.
 
-Si Laravel Boost n'est pas disponible sur ce projet, se rabattre sur la sortie de la commande `creopse media upload` (qui retourne l'id et, selon la version, le chemin) et vérifier visuellement en dev que l'image se charge correctement une fois référencée.
+If Laravel Boost isn't available on this project, fall back on the output of the `creopse media upload` command (which returns the id and, depending on the version, the path) and visually verify in dev that the image loads correctly once referenced.
 
-**Ne jamais reconstruire un chemin de stockage "à la main"** par convention supposée (ex. `storage/uploads/logo.png`) sans l'avoir vérifié — la structure de dossiers peut varier selon la configuration du disque Laravel du projet.
+**Never rebuild a storage path "by hand"** from an assumed convention (e.g. `storage/uploads/logo.png`) without having verified it — the folder structure can vary depending on the project's Laravel disk configuration.
 
 ---
 
 ## `manifest.json`
 
-Consigner **chaque** upload (assets de marque comme images de contenu) dans `.creopse/media/manifest.json`, pour que les étapes suivantes réutilisent les chemins sans re-uploader :
+Record **every** upload (brand assets as well as content images) in `.creopse/media/manifest.json`, so later steps reuse the paths without re-uploading:
 
 ```json
 {
@@ -57,51 +57,51 @@ Consigner **chaque** upload (assets de marque comme images de contenu) dans `.cr
     "type": "brand",
     "source": ".creopse/media/source/logo.png",
     "media_id": 42,
-    "path": "<chemin définitif récupéré en base ou en sortie CLI>"
+    "path": "<final path retrieved from the DB or CLI output>"
   },
   "services-essentiel-hero": {
     "type": "content",
     "source": ".creopse/media/generated/services-essentiel-hero.jpg",
-    "source_url": "<URL de la page source sur le site d'origine, pas l'URL directe du fichier>",
+    "source_url": "<URL of the source page on the origin site, not the direct file URL>",
     "license": "Unsplash License",
     "media_id": 57,
-    "path": "<chemin définitif>"
+    "path": "<final path>"
   }
 }
 ```
 
-- `type` : `brand` (étape 2) ou `content` (étape 9) — distingue les deux origines dans un ledger commun.
-- `source_url`/`license` : uniquement pour les entrées `content` (voir section suivante) — traçabilité de la provenance et de la licence, même quand celle-ci n'exige pas d'attribution.
+- `type`: `brand` (step 2) or `content` (step 9) — distinguishes the two origins in a shared ledger.
+- `source_url`/`license`: only for `content` entries (see next section) — traceability of provenance and license, even when the license doesn't require attribution.
 
-Ce fichier est la source de vérité utilisée par l'étape 3 (`base-info-conventions.md`) pour les entrées `brand`, et par l'étape 9 (`fake-data-conventions.md`) pour les entrées `content` — dans les deux cas, vérifier si une entrée existe déjà avant de re-télécharger/re-uploader un fichier équivalent.
+This file is the source of truth used by step 3 (`base-info-conventions.md`) for `brand` entries, and by step 9 (`fake-data-conventions.md`) for `content` entries — in both cases, check whether an entry already exists before re-downloading/re-uploading an equivalent file.
 
 ---
 
-## 2. Images de contenu — recherche et upload (étape 9, remplace `picsum.photos` par défaut)
+## 2. Content images — search and upload (step 9, replaces the default `picsum.photos`)
 
-Objectif : pour chaque champ `image`/`gallery` d'une fake data de section ou d'item de modèle de contenu, utiliser une **vraie image pertinente**, réellement hébergée chez le client, plutôt qu'un placeholder générique — sans introduire de risque de droits d'auteur.
+Objective: for every `image`/`gallery` field of a section's or content-model item's fake data, use a **genuinely relevant real image**, actually hosted on the client's side, rather than a generic placeholder — without introducing copyright risk.
 
-### Sources autorisées
+### Allowed sources
 
-Le critère n'est pas une liste fermée de plateformes, mais une règle de licence : **toute plateforme dont l'intégralité du catalogue est explicitement publiée sous une licence de réutilisation libre** (CC0, licence Unsplash, licence Pexels, licence Pixabay, domaine public) qualifie — y compris un agrégateur comme Openverse (moteur de recherche dédié au contenu sous licence Creative Commons/domaine public, maintenu par la fondation Creative Commons). Wikimedia Commons est acceptable pour du contenu factuel (logo d'institution publique, photo d'un lieu), en vérifiant la licence précise de chaque fichier individuel — toutes les images qui s'y trouvent ne sont pas au même régime.
+The criterion isn't a closed list of platforms, but a licensing rule: **any platform whose entire catalog is explicitly published under a free-reuse license** (CC0, Unsplash License, Pexels License, Pixabay License, public domain) qualifies — including an aggregator like Openverse (a search engine dedicated to Creative Commons/public-domain licensed content, maintained by the Creative Commons foundation). Wikimedia Commons is acceptable for factual content (a public institution's logo, a photo of a place), checking the precise license of each individual file — not all images found there are under the same terms.
 
-Ce que ce critère exclut, ce n'est pas "les sources autres qu'Unsplash/Pexels/Pixabay" — c'est **un moteur de recherche d'images généraliste non filtré** (Google Images, Bing Images tels quels, réseaux sociaux, sites de presse), qui mélange des résultats sous toutes licences sans le signaler. Rien n'empêche d'utiliser une recherche web scopée à un domaine qualifiant (ex. `site:unsplash.com <mots-clés>`) plutôt que de naviguer manuellement sur chaque plateforme une par une — l'important est que le domaine d'où vient l'image garantisse lui-même la licence, pas la méthode de recherche employée pour l'atteindre.
+What this criterion excludes isn't "sources other than Unsplash/Pexels/Pixabay" — it's **an unfiltered, general-purpose image search engine** (Google Images, Bing Images as-is, social networks, news sites), which mixes results under every license without flagging it. Nothing prevents using a web search scoped to a qualifying domain (e.g. `site:unsplash.com <keywords>`) instead of manually browsing each platform one by one — what matters is that the domain the image comes from itself guarantees the license, not the search method used to reach it.
 
-Ne jamais télécharger une image dont la licence n'est pas clairement établie **par la plateforme source elle-même** (pas de capture d'écran d'un résultat de recherche d'image tierce, pas d'image "trouvée" sur un site qui n'est pas lui-même la source de la licence — un blog qui republie une photo sans en être l'auteur n'est pas une source valide même si l'image y semble libre).
+Never download an image whose license isn't clearly established **by the source platform itself** (no screenshot of a third-party image search result, no image "found" on a site that isn't itself the licensing source — a blog that republishes a photo without being its author is not a valid source, even if the image appears free there).
 
-### Procédure
+### Procedure
 
-1. **Rechercher** une image en croisant le contexte général du site (`.creopse/context.md` — secteur, positionnement) et le contexte spécifique du champ concerné (le texte de la section/item auquel l'image est associée), sur l'une des sources autorisées.
-2. **Télécharger** le fichier retenu dans `.creopse/media/generated/`, avec un nom de fichier descriptif et stable (ex. `services-pack-video-hero.jpg`, pas `image1.jpg`).
-3. **Uploader** via la CLI :
+1. **Search** for an image by cross-referencing the site's general context (`.creopse/context.md` — industry, positioning) and the specific context of the field in question (the text of the section/item the image is tied to), on one of the allowed sources.
+2. **Download** the chosen file into `.creopse/media/generated/`, with a descriptive, stable file name (e.g. `services-pack-video-hero.jpg`, not `image1.jpg`).
+3. **Upload** via the CLI:
 
    ```bash
-   creopse media upload .creopse/media/generated/services-pack-video-hero.jpg --folder content --filename "Pack Vidéo — image principale"
+   creopse media upload .creopse/media/generated/services-pack-video-hero.jpg --folder content --filename "Video Pack — main image"
    ```
 
-4. **Consigner** l'entrée dans `.creopse/media/manifest.json` (`type: content`, avec `source_url` pointant vers la page de la photo sur la plateforme d'origine, et `license`).
-5. **Référencer** le chemin définitif obtenu (pas l'URL de la plateforme source, pas le chemin local `.creopse/media/generated/...`) dans la fake data de la section/item concerné, à la place de l'URL `picsum.photos`.
+4. **Record** the entry in `.creopse/media/manifest.json` (`type: content`, with `source_url` pointing to the photo's page on the origin platform, and `license`).
+5. **Reference** the final path obtained (not the source platform's URL, not the local `.creopse/media/generated/...` path) in the fake data of the relevant section/item, in place of the `picsum.photos` URL.
 
-### Repli
+### Fallback
 
-Si aucune image adéquate n'est trouvée après quelques tentatives de recherche pour un champ donné (thématique trop spécifique, aucun résultat pertinent sur les sources autorisées), revenir à `picsum.photos` pour ce champ précis plutôt que de bloquer la génération de la fake data — signaler ce repli à l'utilisateur au moment de la pause de review (étape 9, point 7) plutôt que de le passer sous silence, pour qu'il puisse fournir lui-même une image plus tard si besoin.
+If no suitable image is found after a few search attempts for a given field (too specific a theme, no relevant results on the allowed sources), fall back to `picsum.photos` for that specific field rather than blocking fake data generation — flag this fallback to the user at the review pause (step 9, point 7) rather than passing over it silently, so they can provide a better image themselves later if needed.

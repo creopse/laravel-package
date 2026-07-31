@@ -1,25 +1,25 @@
-# Conventions de génération des fausses données
+# Fake data generation conventions
 
-Consulter ce document à l'étape 9, point 5, du workflow (`SKILL.md`), une fois la structure `data-structure.json` d'une section validée et soumise à la CLI.
-
----
-
-## Utiliser `.creopse/context.md`
-
-Avant de générer la moindre fausse donnée, lire `.creopse/context.md` s'il existe. Ce fichier contient le contexte métier du projet : nom, secteur d'activité, positionnement/ton, langue(s) cible, contact (adresse, téléphone, email). Il sert à :
-
-- Rédiger des titres, descriptions et textes cohérents avec le domaine réel du site (un cabinet d'audit énergétique n'a pas le même vocabulaire qu'un hôtel de bien-être).
-- Reprendre le bon nom de marque/entité dans les textes générés.
-- Adapter le registre de langue (formel/institutionnel vs chaleureux/accueillant) selon le positionnement décrit.
-- Éviter d'inventer des coordonnées de contact fictives quand elles sont déjà fournies dans le contexte — les réutiliser telles quelles si le champ correspondant existe dans la structure.
-
-Si `context.md` n'existe pas, demander le contexte à l'utilisateur avant de générer des textes trop génériques, plutôt que d'inventer un domaine métier au hasard.
+Consult this document at step 9, point 5, of the workflow (`SKILL.md`), once a section's `data-structure.json` has been validated and submitted to the CLI.
 
 ---
 
-## Format racine des fausses données
+## Using `.creopse/context.md`
 
-Un objet avec une clé `index` pour les singletons, et une clé top-level par collection — miroir exact de la structure `data.json`, mais avec les valeurs réelles à la place des définitions de champs. **Les clés passent en snake_case** dans les fausses données (alors qu'elles étaient en kebab-case dans la structure) :
+Before generating any fake data, read `.creopse/context.md` if it exists. This file contains the project's business context: name, industry, positioning/tone, target language(s), contact details (address, phone, email). It's used to:
+
+- Write titles, descriptions, and copy consistent with the site's actual domain (an energy audit firm doesn't use the same vocabulary as a wellness hotel).
+- Reuse the correct brand/entity name in the generated text.
+- Adapt the register (formal/institutional vs warm/welcoming) to the described positioning.
+- Avoid inventing fictitious contact details when they're already provided in the context — reuse them as-is if the matching field exists in the structure.
+
+If `context.md` doesn't exist, ask the user for context before generating overly generic copy, rather than inventing a business domain at random.
+
+---
+
+## Root format of the fake data
+
+An object with an `index` key for the singletons, and one top-level key per collection — an exact mirror of the `data.json` structure, but with real values instead of field definitions. **Keys switch to snake_case** in the fake data (whereas they were in kebab-case in the structure):
 
 ```json
 {
@@ -27,7 +27,7 @@ Un objet avec une clé `index` pour les singletons, et une clé top-level par co
     "title": "{\"fr\":\"...\",\"en\":\"...\"}",
     "text": "{\"fr\":\"...\",\"en\":\"...\"}",
     "btn_url": 6,
-    "main_image": "https://picsum.photos/1200/800?random=nom-slug-unique"
+    "main_image": "https://picsum.photos/1200/800?random=unique-slug-name"
   },
   "features": [
     { "icon": "<svg>...</svg>", "title": "{...}", "text": "{...}" }
@@ -38,33 +38,33 @@ Un objet avec une clé `index` pour les singletons, et une clé top-level par co
 }
 ```
 
-Points de format stricts :
+Strict format points:
 
-- **Un seul objet `index`** pour tous les singletons de la section (pas un tableau).
-- **Une clé top-level par collection**, contenant un **tableau** d'objets — un objet par entrée de la collection.
-- **Champs i18n** (`i18n-text`, `i18n-editor`) : toujours une chaîne JSON stringifiée `"{\"fr\":\"...\",\"en\":\"...\"}"`, jamais un objet JS natif. Rappel : `i18n-textarea` n'est jamais utilisé sur ce projet (voir `field-types.md`), donc ce format ne s'applique en pratique qu'à `i18n-text`/`i18n-editor`.
-- **Champs `i18n-list`** : suivre le format `[{"value": "{\"fr\":\"...\",\"en\":\"...\"}"}]` — voir `field-types.md`.
-- **Champs `menu-item-link`** : type hybride (voir règle 9 de `field-types.md`) — générer soit une valeur numérique (ID d'item de menu existant), soit une URL brute, **selon la façon dont le composant consomme réellement le champ**. Ne pas assumer par défaut que c'est toujours un ID : vérifier le composant complété à l'étape 9.2 avant de choisir le format. Les items de menu sont créés en amont à l'étape 6 (voir `menu-conventions.md`) — reprendre l'ID réel noté dans `.creopse/menus/<location>.json`, ne jamais en inventer un au hasard.
-- **Champs `content-model-item`** : une valeur numérique référençant l'ID d'un item existant du modèle de contenu ciblé (ex : service parent). Les modèles et leurs items sont créés en amont à l'étape 7 (voir `content-models-conventions.md`) — reprendre un ID réellement créé, jamais un ID inventé.
-
----
-
-## Images de contenu
-
-**Par défaut, une vraie image recherchée et uploadée** — voir la procédure complète dans `media-conventions.md` (section "Images de contenu") : recherche restreinte à des banques d'images explicitement libres de droits (Unsplash, Pexels, Pixabay), téléchargement dans `.creopse/media/generated/`, upload via `creopse media upload`, chemin définitif consigné dans `.creopse/media/manifest.json` et réutilisé ici — jamais l'URL de la plateforme source ni le chemin local.
-
-`picsum.photos` reste un **repli** ponctuel, uniquement si aucune image adéquate n'a été trouvée pour un champ précis après quelques tentatives (voir `media-conventions.md`) — jamais le choix par défaut. En repli, même règle qu'avant : un slug `random` unique et descriptif par entrée, jamais réutilisé deux fois dans le même jeu de fausses données, dimensions adaptées au type d'image (grande image de fond ~1200x800, vignette de carte ~600x400, avatar/logo ~200x200) :
-
-```
-https://picsum.photos/1200/800?random=nom-projet-section-descriptif
-https://picsum.photos/600/400?random=nom-projet-feature-audit-energetique
-```
+- **A single `index` object** for all of a section's singletons (not an array).
+- **One top-level key per collection**, containing an **array** of objects — one object per collection entry.
+- **i18n fields** (`i18n-text`, `i18n-editor`): always a stringified JSON string `"{\"fr\":\"...\",\"en\":\"...\"}"`, never a native JS object. Reminder: `i18n-textarea` is never used on this project (see `field-types.md`), so this format in practice only applies to `i18n-text`/`i18n-editor`.
+- **`i18n-list` fields**: follow the format `[{"value": "{\"fr\":\"...\",\"en\":\"...\"}"}]` — see `field-types.md`.
+- **`menu-item-link` fields**: hybrid type (see rule 9 of `field-types.md`) — generate either a numeric value (existing menu item ID) or a raw URL, **depending on how the component actually consumes the field**. Don't assume by default that it's always an ID: check the component completed at step 9.2 before choosing the format. Menu items are created upstream at step 6 (see `menu-conventions.md`) — reuse the real ID noted in `.creopse/menus/<location>.json`, never invent one at random.
+- **`content-model-item` fields**: a numeric value referencing the ID of an existing item of the targeted content model (e.g. a parent service). Models and their items are created upstream at step 7 (see `content-models-conventions.md`) — reuse an ID that was actually created, never an invented one.
 
 ---
 
-## Icônes
+## Content images
 
-Format SVG inline complet (pas de référence à un fichier externe ni de nom d'icône seul), cohérent avec la charte du projet quand elle est connue. Exemple de structure SVG type utilisée dans les projets existants :
+**By default, a real image, searched for and uploaded** — see the complete procedure in `media-conventions.md` ("Content images" section): search restricted to explicitly royalty-free image banks (Unsplash, Pexels, Pixabay), download into `.creopse/media/generated/`, upload via `creopse media upload`, final path recorded in `.creopse/media/manifest.json` and reused here — never the source platform's URL nor the local path.
+
+`picsum.photos` remains a one-off **fallback**, only if no suitable image was found for a given field after a few attempts (see `media-conventions.md`) — never the default choice. When falling back, same rule as before: a unique, descriptive `random` slug per entry, never reused twice within the same fake data set, dimensions matched to the image type (large background image ~1200x800, card thumbnail ~600x400, avatar/logo ~200x200):
+
+```
+https://picsum.photos/1200/800?random=project-section-descriptive-name
+https://picsum.photos/600/400?random=project-feature-energy-audit
+```
+
+---
+
+## Icons
+
+Complete inline SVG format (no reference to an external file, no bare icon name), consistent with the project's brand guidelines when known. Typical SVG structure example used in existing projects:
 
 ```
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" ... viewBox="0 0 32 32" ...>
@@ -72,30 +72,30 @@ Format SVG inline complet (pas de référence à un fichier externe ni de nom d'
 </svg>
 ```
 
-Si le projet utilise des icônes MDI plutôt que du SVG inline pour certains champs (`icon` en usage `<Icon icon="mdi:...">` côté composant plutôt que `<ContentIcon :data="...">`), vérifier le composant complété à l'étape 9.2 pour savoir quel format est réellement consommé, et générer en conséquence.
+If the project uses MDI icons rather than inline SVG for some fields (`icon` used as `<Icon icon="mdi:...">` on the component side rather than `<ContentIcon :data="...">`), check the component completed at step 9.2 to find out which format is actually consumed, and generate accordingly.
 
 ---
 
-## Contenu éditorial (`i18n-editor`)
+## Editorial content (`i18n-editor`)
 
-Rédiger en HTML simple et propre, cohérent avec le contexte métier :
+Write in clean, simple HTML, consistent with the business context:
 
 ```json
 "{\"fr\":\"<p style=\\\"text-align:justify;\\\">Texte en français...</p>\",\"en\":\"<p style=\\\"text-align:justify;\\\">English text...</p>\"}"
 ```
 
-- Toujours fournir les deux langues si le projet est bilingue (vérifier dans `context.md` ou dans la structure elle-même si un seul `fr` suffit).
-- Texte réaliste et substantiel (plusieurs phrases pour une description principale), pas de lorem ipsum.
-- Échapper correctement les guillemets doubles imbriqués dans le HTML (`\\\"` dans la chaîne JSON finale).
+- Always provide both languages if the project is bilingual (check `context.md` or the structure itself to see if a single `fr` is enough).
+- Realistic, substantial text (several sentences for a main description), no lorem ipsum.
+- Correctly escape double quotes nested inside the HTML (`\\\"` in the final JSON string).
 
 ---
 
-## Cohérence inter-sections
+## Cross-section consistency
 
-Quand plusieurs sections référencent la même entité (ex : un service listé dans `Services` et détaillé dans `ServiceDetails`, ou une session liée à une formation), les fausses données générées pour chaque section/modèle de contenu doivent rester cohérentes entre elles — mêmes noms, mêmes IDs de référence, mêmes images si c'est censé être la même entité. Vérifier les fichiers déjà écrits dans `.creopse/sections/*/fake-data.json` avant de générer une nouvelle section qui référence un modèle de contenu déjà traité.
+When several sections reference the same entity (e.g. a service listed in `Services` and detailed in `ServiceDetails`, or a session tied to a training course), the fake data generated for each section/content model must stay consistent with one another — same names, same reference IDs, same images if it's supposed to be the same entity. Check the files already written in `.creopse/sections/*/fake-data.json` before generating a new section that references a content model that's already been handled.
 
 ---
 
-## Règle de régénération
+## Regeneration rule
 
-Si une collection ou un tableau de fausses données doit être modifié après une correction ou un ajout demandé par l'utilisateur, régénérer et réécrire l'**intégralité** du tableau concerné dans `.creopse/sections/<NomSection>/fake-data.json` plutôt que de ne fournir que la partie modifiée — cela préserve un fichier toujours complet et directement copiable dans le CMS, et suit le principe de rewrites complets déjà en vigueur sur ce projet plutôt que des patches partiels.
+If a collection or array of fake data needs to be modified following a correction or addition requested by the user, regenerate and rewrite the **entire** array in question in `.creopse/sections/<SectionName>/fake-data.json` rather than providing only the modified part — this keeps the file always complete and directly copyable into the CMS, and follows the full-rewrite principle already in force on this project rather than partial patches.

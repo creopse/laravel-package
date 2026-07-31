@@ -1,32 +1,32 @@
-# Conventions — Modèles de contenu (`content-model`)
+# Conventions — Content models (`content-model`)
 
-À consulter à l'étape 7 du workflow (`SKILL.md`), avant l'étape 8 (permalinks) et la complétion section par section (étape 9) des sections qui en dépendent.
-
----
-
-## Détecter le besoin
-
-Un modèle de contenu est nécessaire dès qu'une section de l'inventaire (étape 5.1) correspond à un pattern "liste + détail" plutôt qu'à du contenu unique de section : Services (`Services.vue` + `ServiceDetails.vue`), Projects (`Projects.vue` + `ProjectDetails.vue`), News/Articles, Team, offres de formation, etc. — reconnaissable au fait que le composant consomme `storeToRefs(useContentStore())` et `getContentPath(item)` plutôt que `getSectionData`/`getSectionRootData` seuls (voir `section-patterns.md`).
-
-Établir la liste des modèles nécessaires à partir de cet inventaire **avant** de commencer l'étape 9, pour que les sections qui les référencent (via `content-model-item`/`content-model-items` dans leur propre structure, ex. le champ `parent-service` de Services) puissent pointer vers des items réels dès leur complétion. Si le menu créé à l'étape 6 doit avoir un item pointant directement vers un item de modèle de contenu (`--target-type content-link`), revenir compléter ce menu juste après cette étape — voir `menu-conventions.md`.
+To consult at step 7 of the workflow (`SKILL.md`), before step 8 (permalinks) and the section-by-section completion (step 9) of the sections that depend on them.
 
 ---
 
-## Store partagé pour modèles de contenu réutilisés (`useContentStore` / `useDataloader`)
+## Detecting the need
 
-Pattern **optionnel, local au projet** — pas fourni par `@creopse/vue`/`@creopse/react`/`@creopse/utils`, à mettre en place au cas par cas plutôt qu'à supposer déjà présent. **Spécifique à un projet Vue** (repose sur Pinia) — pour un projet React, voir `react-conventions.md` (aucun équivalent confirmé pour l'instant, ne pas transposer Pinia tel quel). Pertinent quand un modèle de contenu a **peu d'items** et est consommé par **plusieurs sections** (typiquement liste + détail, ex. Services/Projects) : au lieu d'appeler `getContentModelItems(name)` (`useContent()`) séparément dans chaque section qui en a besoin, charger une fois au démarrage de l'app dans un store Pinia partagé.
+A content model is needed as soon as a section from the inventory (step 5.1) matches a "list + detail" pattern rather than single-section content: Services (`Services.vue` + `ServiceDetails.vue`), Projects (`Projects.vue` + `ProjectDetails.vue`), News/Articles, Team, training offerings, etc. — recognizable by the fact that the component consumes `storeToRefs(useContentStore())` and `getContentPath(item)` rather than `getSectionData`/`getSectionRootData` alone (see `section-patterns.md`).
 
-Ne pas l'utiliser pour un modèle de contenu :
+Build the list of needed models from this inventory **before** starting step 9, so that the sections referencing them (via `content-model-item`/`content-model-items` in their own structure, e.g. the `parent-service` field of Services) can point to real items as soon as they're completed. If the menu created in step 6 needs an item pointing directly to a content model item (`--target-type content-link`), come back to complete that menu right after this step — see `menu-conventions.md`.
 
-- consommé par une seule section → `getContentModelItems(name)` directement sur place, pas de store nécessaire ;
-- avec beaucoup d'items ou nécessitant filtrage/pagination serveur → `getPaginatedContentModelItems` à la demande (le store charge tout en mémoire une seule fois, adapté aux petits volumes seulement).
+---
+
+## Shared store for reused content models (`useContentStore` / `useDataloader`)
+
+**Optional, project-local** pattern — not provided by `@creopse/vue`/`@creopse/react`/`@creopse/utils`, to be set up case by case rather than assumed already present. **Specific to a Vue project** (relies on Pinia) — for a React project, see `react-conventions.md` (no confirmed equivalent for now, don't transpose Pinia as-is). Relevant when a content model has **few items** and is consumed by **several sections** (typically list + detail, e.g. Services/Projects): instead of calling `getContentModelItems(name)` (`useContent()`) separately in every section that needs it, load it once at app startup into a shared Pinia store.
+
+Don't use it for a content model that is:
+
+- consumed by a single section → `getContentModelItems(name)` directly on the spot, no store needed;
+- has many items or requires server-side filtering/pagination → `getPaginatedContentModelItems` on demand (the store loads everything into memory at once, suited only to small volumes).
 
 ### Structure
 
 ```
-resources/js/stores/content.ts          # store Pinia : state uniquement, un tableau par modèle réutilisé
-resources/js/composables/dataloader.ts  # composable qui peuple le store au démarrage
-resources/js/App.vue                    # appelle initializeData() une seule fois, au montage racine
+resources/js/stores/content.ts          # Pinia store: state only, one array per reused model
+resources/js/composables/dataloader.ts  # composable that populates the store on startup
+resources/js/App.vue                    # calls initializeData() once, at root mount
 ```
 
 ```ts
@@ -36,7 +36,7 @@ import type { ContentModelItemModel } from '@creopse/utils'
 interface ContentState {
   services: ContentModelItemModel['data'][]
   projects: ContentModelItemModel['data'][]
-  // une clé par modèle de contenu réutilisé du projet — adapter aux modèles réels, ne pas préremplir par défaut
+  // one key per content model reused in the project — adapt to the real models, don't pre-fill by default
 }
 
 export const useContentStore = defineStore('content', {
@@ -75,37 +75,37 @@ export const useDataloader = () => {
 </template>
 ```
 
-Une fois ce store en place pour un modèle donné, les sections le consomment exclusivement via `storeToRefs(useContentStore())` (voir `section-patterns.md` — Services/Projects) — ne jamais appeler `getContentModelItems` en parallèle pour ce même modèle, sous peine de double chargement.
+Once this store is in place for a given model, sections consume it exclusively via `storeToRefs(useContentStore())` (see `section-patterns.md` — Services/Projects) — never call `getContentModelItems` in parallel for that same model, on pain of double loading.
 
 ---
 
-## Choix `intent` / `access-scope`
+## `intent` / `access-scope` choice
 
-Deux couples à utiliser selon le type de contenu, **convention confirmée pour ce projet** (à retenir telle quelle, indépendamment du phrasé générique de la documentation CLI) :
+Two pairs to use depending on the content type, **confirmed convention for this project** (to be kept as-is, regardless of the generic wording of the CLI documentation):
 
-| Type de contenu | `intent` | `access-scope` | Exemples |
+| Content type | `intent` | `access-scope` | Examples |
 |---|---|---|---|
-| Contenu géré **uniquement depuis l'administration** (éditorial, catalogue) | `editorial-content` | `internal` | Services, Projects, Team, Articles, offres de formation |
-| Contenu **soumis par les utilisateurs** du site (formulaires, données côté visiteur) | `user-data` | `user-editable` | Messages du formulaire de contact (`contact-form-messages`, voir `Contact.vue`), inscriptions newsletter si modélisées en content-model |
+| Content managed **only from the admin** (editorial, catalog) | `editorial-content` | `internal` | Services, Projects, Team, Articles, training offerings |
+| Content **submitted by site users** (forms, visitor-side data) | `user-data` | `user-editable` | Contact form messages (`contact-form-messages`, see `Contact.vue`), newsletter sign-ups if modeled as a content-model |
 
-Ne pas utiliser `user-data`/`user-editable` pour du contenu catalogue même si un admin doit pouvoir le modifier depuis l'interface — la distinction porte sur **qui produit la donnée à l'origine** (l'équipe éditoriale vs le visiteur du site), pas sur qui peut la consulter ensuite.
+Don't use `user-data`/`user-editable` for catalog content even if an admin needs to be able to edit it from the interface — the distinction is about **who originally produces the data** (the editorial team vs. the site visitor), not about who can view it afterward.
 
 ---
 
-## Structure de dossier
+## Folder structure
 
 ```
-.creopse/content-models/<NomModele>/
-├── data-structure.json     # structure des champs (singletons uniquement, format identique à data.json de section)
+.creopse/content-models/<ModelName>/
+├── data-structure.json     # field structure (singletons only, same format as a section's data.json)
 └── items/
-    └── <slug-item>.json    # une fake data par item, prête pour item-add --data
+    └── <item-slug>.json    # one fake data file per item, ready for item-add --data
 ```
 
 ---
 
-## Commandes CLI
+## CLI commands
 
-### Création du modèle
+### Creating the model
 
 ```bash
 creopse content-model add service editorial-content internal \
@@ -115,10 +115,10 @@ creopse content-model add service editorial-content internal \
   --has-permalink true
 ```
 
-- `--title-field-name` : le champ de la structure utilisé comme titre d'affichage en admin (généralement `name` ou `title`).
-- `--has-permalink` : `true` dès que le modèle a une page de détail dédiée (`ServiceDetails`, `ProjectDetails`...), `false` sinon. **Ce flag seul ne suffit pas** : il indique juste que le modèle est éligible à un permalink, il ne câble pas encore la route vers la page de détail. Ce câblage réel (`pathPrefix` + page cible) se fait à l'étape 8 via `creopse permalink add` — voir `permalinks-conventions.md`, à traiter juste après la création de ce modèle et de ses items.
+- `--title-field-name`: the structure field used as the display title in admin (usually `name` or `title`).
+- `--has-permalink`: `true` as soon as the model has a dedicated detail page (`ServiceDetails`, `ProjectDetails`...), `false` otherwise. **This flag alone is not enough**: it just marks the model as eligible for a permalink, it doesn't wire the route to the detail page yet. That actual wiring (`pathPrefix` + target page) happens at step 8 via `creopse permalink add` — see `permalinks-conventions.md`, to handle right after creating this model and its items.
 
-Pour un modèle de données utilisateur (ex. messages de contact) :
+For a user-data model (e.g. contact messages):
 
 ```bash
 creopse content-model add contact-form-messages user-data user-editable \
@@ -126,25 +126,25 @@ creopse content-model add contact-form-messages user-data user-editable \
   --data-structure @.creopse/content-models/ContactFormMessages/data-structure.json
 ```
 
-Ce cas précis (`contact-form-messages`) n'a en général pas besoin d'être recréé manuellement s'il existe déjà nativement dans l'installation Creopse du projet (utilisé directement par `submitUserContentModelItem` dans `Contact.vue`) — vérifier son existence avant de le recréer.
+This specific case (`contact-form-messages`) generally doesn't need to be manually recreated if it already exists natively in the project's Creopse install (used directly by `submitUserContentModelItem` in `Contact.vue`) — check whether it exists before recreating it.
 
-### Ajout des items (fake data)
+### Adding items (fake data)
 
 ```bash
 creopse content-model item-add service --title "en:Energy Audit" --data @.creopse/content-models/Service/items/energy-audit.json
 creopse content-model item-add service --title "en:Capacity Building" --data @.creopse/content-models/Service/items/capacity-building.json
 ```
 
-Le format de `--data` suit les mêmes règles que la fake data de section (`fake-data-conventions.md`) : `i18n-text`/`i18n-editor` en JSON stringifié, images en `picsum.photos` sauf asset de marque réel, icônes en SVG inline, etc. — et suit la **même imbrication `index`** pour les champs singletons qu'une section (un modèle de contenu n'a en général pas de collections, seulement des singletons, donc le fichier de fake data d'un item se limite à l'objet `index`). Cette imbrication se retrouve directement côté composant : `ServiceDetails.vue`/`ProjectDetails.vue` consomment `contentProps?.contentModelItem?.contentModelData?.index?.title` — ne pas l'omettre en générant la fake data d'un item sous peine de rendu vide côté détail.
+The `--data` format follows the same rules as section fake data (`fake-data-conventions.md`): `i18n-text`/`i18n-editor` as stringified JSON, images as `picsum.photos` unless a real brand asset, icons as inline SVG, etc. — and follows the **same `index` nesting** for singleton fields as a section (a content model generally has no collections, only singletons, so an item's fake data file is limited to the `index` object). This nesting shows up directly on the component side: `ServiceDetails.vue`/`ProjectDetails.vue` consume `contentProps?.contentModelItem?.contentModelData?.index?.title` — don't omit it when generating an item's fake data, on pain of an empty render on the detail side.
 
 ---
 
-## Cohérence avec les fake data de section
+## Consistency with section fake data
 
-Une fois les items créés, noter leurs IDs (sortie CLI ou requête `database-query` via Laravel Boost si disponible — voir `media-conventions.md`) pour que les champs `content-model-item` référencés depuis d'autres sections (ex. `parent-service` dans la structure Service elle-même, ou un champ similaire dans une autre section) pointent vers de vrais IDs à l'étape 9, au lieu d'un ID inventé au hasard (voir règle correspondante dans `fake-data-conventions.md`).
+Once items are created, note their IDs (CLI output or a `database-query` via Laravel Boost if available — see `media-conventions.md`) so that `content-model-item` fields referenced from other sections (e.g. `parent-service` in the Service structure itself, or a similar field in another section) point to real IDs at step 9, instead of a randomly invented ID (see the corresponding rule in `fake-data-conventions.md`).
 
 ---
 
-## Point de validation
+## Validation point
 
-Présenter la liste des modèles détectés comme nécessaires, avec le couple `intent`/`access-scope` proposé pour chacun, avant exécution des commandes `content-model add`.
+Present the list of models detected as necessary, with the `intent`/`access-scope` pair proposed for each, before running the `content-model add` commands.

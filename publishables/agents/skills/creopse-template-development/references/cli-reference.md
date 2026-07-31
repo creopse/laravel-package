@@ -1,47 +1,47 @@
-# Référence CLI Creopse
+# Creopse CLI reference
 
-Référence complète de `@creopse/cli`, utilisée à travers toutes les étapes du workflow (`SKILL.md`) à partir de l'étape 2. Ce document couvre les groupes de commandes réellement utilisés par cette skill : `section`, `widget`, `page`, `content-model`, `permalink`, `menu`, `media`, `base-info`. Le groupe `plugin` (scaffolding de classes Laravel dans un plugin) n'est **pas couvert** par cette skill — hors périmètre du template building front, voir note en fin de document.
+Complete reference for `@creopse/cli`, used throughout every step of the workflow (`SKILL.md`) starting at step 2. This document covers the command groups actually used by this skill: `section`, `widget`, `page`, `content-model`, `permalink`, `menu`, `media`, `base-info`. The `plugin` group (scaffolding Laravel classes inside a plugin) is **not covered** by this skill — out of scope for front-end template building, see the note at the end of this document.
 
-## Conventions générales
+## General conventions
 
-- **Alias de groupe** : `sec` ↔ `section`, `wid` ↔ `widget`, `pag` ↔ `page`, `cm` ↔ `content-model`, `perm` ↔ `permalink`, `men` ↔ `menu`, `med` ↔ `media`, `info` ↔ `base-info`, `plg` ↔ `plugin`.
-- **Alias de sous-commande** : chaque paire `add`/`make`, `remove`/`delete`, `edit`/`update` est équivalente.
-- **Options JSON** (`--data`, `--settings`, `--data-structure`, `--settings-structure`, `--metadata`) acceptent soit une chaîne JSON inline, soit une référence `@chemin/fichier.json` (le préfixe `@` charge le fichier).
-- **Options localisées** (`--title`, `--description`, `--link-title`) sont répétables et prennent une paire `locale:valeur`, ex. `--title "en:Home"` `--title "fr:Accueil"`.
-- Le flag interne `--alias` exposé par les commandes artisan sous-jacentes n'est **pas** relayé par la CLI — utiliser les noms/alias de sous-commande documentés ici.
+- **Group aliases**: `sec` ↔ `section`, `wid` ↔ `widget`, `pag` ↔ `page`, `cm` ↔ `content-model`, `perm` ↔ `permalink`, `men` ↔ `menu`, `med` ↔ `media`, `info` ↔ `base-info`, `plg` ↔ `plugin`.
+- **Sub-command aliases**: each `add`/`make`, `remove`/`delete`, `edit`/`update` pair is equivalent.
+- **JSON options** (`--data`, `--settings`, `--data-structure`, `--settings-structure`, `--metadata`) accept either an inline JSON string or an `@path/file.json` reference (the `@` prefix loads the file).
+- **Localized options** (`--title`, `--description`, `--link-title`) are repeatable and take a `locale:value` pair, e.g. `--title "en:Home"` `--title "fr:Accueil"`.
+- The internal `--alias` flag exposed by the underlying artisan commands is **not** relayed by the CLI — use the sub-command names/aliases documented here.
 
-⚠️ **Préfixe `@` obligatoire pour un chemin de fichier.** La CLI ne peut pas deviner si la valeur passée est du JSON littéral ou un chemin à lire — sans marqueur, elle tentera de parser le chemin lui-même comme JSON et échouera :
+⚠️ **`@` prefix mandatory for a file path.** The CLI cannot guess whether the passed value is literal JSON or a path to read — without the marker, it will try to parse the path itself as JSON and fail:
 
 ```bash
 --data-structure @.creopse/sections/Header/data-structure.json
 ```
 
-Ne jamais injecter le JSON inline via une substitution de commande (`--data-structure "$(cat fichier.json)"`) : ça reproduit exactement le problème d'échappement/volumétrie que le mécanisme `@chemin` est censé éviter.
+Never inject inline JSON via command substitution (`--data-structure "$(cat file.json)"`): that reproduces exactly the escaping/size problem the `@path` mechanism is meant to avoid.
 
 ---
 
 ## `creopse install`
 
-**Non utilisé par cette skill** — le projet Laravel avec Creopse est un prérequis déjà en place (voir `SKILL.md`). Mentionné ici pour complétude uniquement :
+**Not used by this skill** — the Laravel project with Creopse is a prerequisite already in place (see `SKILL.md`). Mentioned here for completeness only:
 
 ```bash
-creopse install -t vue      # ou -t react
+creopse install -t vue      # or -t react
 ```
 
 ---
 
-## `creopse section` (alias `sec`) — étape 5 et étape 9
+## `creopse section` (alias `sec`) — step 5 and step 9
 
-Sections = blocs UI réutilisables et traduisibles, rendus par le frontend (composant `.vue`/`.tsx` dans `resources/js/Sections`). Ce groupe génère à la fois le fichier composant et l'entrée base décrivant la section (titre par locale, structure de données, structure de réglages).
+Sections = reusable, translatable UI blocks, rendered by the front end (a `.vue`/`.tsx` component in `resources/js/Sections`). This group generates both the component file and the database entry describing the section (title per locale, data structure, settings structure).
 
-| Sous-commande | Alias | Description |
+| Sub-command | Alias | Description |
 |---|---|---|
-| `add <name...>` | `make` | Ajoute une ou plusieurs sections (composant + entrée DB) |
-| `remove <name...>` | `delete` | Supprime une ou plusieurs sections (`-f/--force`) |
-| `edit <name>` | `update` | Met à jour le titre (par locale), la structure de données et/ou de réglages |
+| `add <name...>` | `make` | Adds one or more sections (component + DB entry) |
+| `remove <name...>` | `delete` | Deletes one or more sections (`-f/--force`) |
+| `edit <name>` | `update` | Updates the title (per locale), the data structure and/or settings structure |
 
-Options `add` (un seul nom à la fois) : `-t/--title <locale:value>` (répétable), `--data-structure <json|@chemin>`, `--settings-structure <json|@chemin>`.
-Options `edit` : mêmes options que `add`.
+`add` options (one name at a time): `-t/--title <locale:value>` (repeatable), `--data-structure <json|@path>`, `--settings-structure <json|@path>`.
+`edit` options: same options as `add`.
 
 ```bash
 creopse section add Header Hero Features Services Testimonials Footer Contact
@@ -50,14 +50,14 @@ creopse section edit Header \
   --settings-structure @.creopse/sections/Header/settings.json
 ```
 
-## `creopse widget` (alias `wid`) — étape 5
+## `creopse widget` (alias `wid`) — step 5
 
-| Sous-commande | Alias | Description |
+| Sub-command | Alias | Description |
 |---|---|---|
-| `add <name...>` | `make` | Ajoute un ou plusieurs widgets |
-| `remove <name...>` | `delete` | Supprime un ou plusieurs widgets (`-f/--force`) |
+| `add <name...>` | `make` | Adds one or more widgets |
+| `remove <name...>` | `delete` | Deletes one or more widgets (`-f/--force`) |
 
-Pas d'option `--data-structure` : les widgets n'ont pas de structure de données par nature.
+No `--data-structure` option: widgets have no data structure by nature.
 
 ```bash
 creopse widget add Preloader ScrollProgress
@@ -65,70 +65,70 @@ creopse widget add Preloader ScrollProgress
 
 ---
 
-## `creopse page` (alias `pag`) — étape 4 et étape 10
+## `creopse page` (alias `pag`) — step 4 and step 10
 
-Une page est une entité top-level (titre, contenu optionnel, position d'affichage). Les sections ne sont **pas** créées avec la page — elles sont attachées séparément via les sous-commandes d'instance ci-dessous, qui contrôlent la donnée, l'ordre et la visibilité par instance.
+A page is a top-level entity (title, optional content, display position). Sections are **not** created with the page — they're attached separately via the instance sub-commands below, which control the data, order, and visibility per instance.
 
-| Sous-commande | Alias | Description |
+| Sub-command | Alias | Description |
 |---|---|---|
-| `add <name>` | `make` | Crée une page vide (étape 4) |
-| `edit <name>` | `update` | Met à jour titre, contenu et/ou position |
-| `remove <name>` | `delete` | Supprime une page (`-f/--force`) |
-| `attach-section <page> <section>` | | Attache une instance de section à une page (étape 10) |
-| `detach-section <page> <section>` | | Détache une instance spécifique (`-f/--force`) |
-| `order-sections <page>` | | Définit l'ordre d'affichage des sections d'une page |
-| `set-section-source <page> <section>` | | Fixe/efface la page source de données d'une instance |
-| `toggle-section-status <page> <section>` | | Active/désactive une instance |
-| `update-section-content <page> <section>` | `edit-section-content` | Met à jour le titre/data/settings d'une instance |
+| `add <name>` | `make` | Creates an empty page (step 4) |
+| `edit <name>` | `update` | Updates title, content, and/or position |
+| `remove <name>` | `delete` | Deletes a page (`-f/--force`) |
+| `attach-section <page> <section>` | | Attaches a section instance to a page (step 10) |
+| `detach-section <page> <section>` | | Detaches a specific instance (`-f/--force`) |
+| `order-sections <page>` | | Sets the display order of a page's sections |
+| `set-section-source <page> <section>` | | Sets/clears an instance's data source page |
+| `toggle-section-status <page> <section>` | | Enables/disables an instance |
+| `update-section-content <page> <section>` | `edit-section-content` | Updates an instance's title/data/settings |
 
-Options `add`/`edit` : `-t/--title <locale:value>` (répétable), `--content <texte>`, `--position <nombre>` (défaut `add` : `0`).
-Options `attach-section` : `--link-id <id>` (défaut `default`), `--link-title <locale:value>` (répétable), `--data <json|@chemin>`, `--settings <json|@chemin>`, `--source-page <name>`, `--source-link-id <id>` (défaut `default`).
-Options `order-sections` : `--item <section:link-id>` (répétable, dans l'ordre voulu).
-Options `set-section-source` : `--link-id <id>`, `--source-page <name>` (`none` pour effacer), `--source-link-id <id>`.
-Options `toggle-section-status` : `--link-id <id>`, `--disabled <bool>` (défaut `true`).
-Options `update-section-content` : `--link-id <id>`, `--link-title <locale:value>` (répétable), `--data <json|@chemin>`, `--settings <json|@chemin>`.
+`add`/`edit` options: `-t/--title <locale:value>` (repeatable), `--content <text>`, `--position <number>` (default for `add`: `0`).
+`attach-section` options: `--link-id <id>` (default `default`), `--link-title <locale:value>` (repeatable), `--data <json|@path>`, `--settings <json|@path>`, `--source-page <name>`, `--source-link-id <id>` (default `default`).
+`order-sections` options: `--item <section:link-id>` (repeatable, in the desired order).
+`set-section-source` options: `--link-id <id>`, `--source-page <name>` (`none` to clear), `--source-link-id <id>`.
+`toggle-section-status` options: `--link-id <id>`, `--disabled <bool>` (default `true`).
+`update-section-content` options: `--link-id <id>`, `--link-title <locale:value>` (repeatable), `--data <json|@path>`, `--settings <json|@path>`.
 
 ```bash
-# Étape 4
+# Step 4
 creopse page add home --title "en:Home" --title "fr:Accueil" --position 1
 
-# Étape 10 — attachement, avec deux instances de la même section à des emplacements différents
+# Step 10 — attaching, with two instances of the same section in different locations
 creopse page attach-section home Hero --link-id top --link-title "en:Hero Top" --data @.creopse/sections/Hero/fake-data.json
 creopse page attach-section home Hero --link-id bottom --data '{"heading":"Footer hero"}'
 
-# Réordonner et désactiver l'instance du bas
+# Reordering and disabling the bottom instance
 creopse page order-sections home --item "Hero:top" --item "Hero:bottom"
 creopse page toggle-section-status home Hero --link-id bottom --disabled true
 
-# Sourcer l'instance du bas depuis une autre page
+# Sourcing the bottom instance from another page
 creopse page set-section-source home Hero --link-id bottom --source-page landing
 
-# Détacher
+# Detaching
 creopse page detach-section home Hero --link-id top --force
 ```
 
-Voir `references/pages-conventions.md` pour le détail des cas d'usage propres à ce workflow.
+See `references/pages-conventions.md` for the detailed use cases specific to this workflow.
 
 ---
 
-## `creopse content-model` (alias `cm`) — étape 7
+## `creopse content-model` (alias `cm`) — step 7
 
-Un modèle de contenu définit une structure ; les items sont les enregistrements réels.
+A content model defines a structure; items are the actual records.
 
-| Sous-commande | Alias | Description |
+| Sub-command | Alias | Description |
 |---|---|---|
-| `add <name> <intent> <access-scope>` | `make` | Crée un modèle de contenu |
-| `remove <name>` | `delete` | Supprime un modèle de contenu (`-f/--force`) |
-| `edit <name>` | `update` | Met à jour un modèle de contenu |
-| `item-add <content-model>` | `item-make` | Crée un item |
-| `item-remove <id>` | `item-delete` | Supprime un item (`-f/--force`) |
-| `item-edit <id>` | `item-update` | Met à jour un item |
+| `add <name> <intent> <access-scope>` | `make` | Creates a content model |
+| `remove <name>` | `delete` | Deletes a content model (`-f/--force`) |
+| `edit <name>` | `update` | Updates a content model |
+| `item-add <content-model>` | `item-make` | Creates an item |
+| `item-remove <id>` | `item-delete` | Deletes an item (`-f/--force`) |
+| `item-edit <id>` | `item-update` | Updates an item |
 
-- `intent` : `editorial-content` ou `user-data`. `access-scope` : `internal` ou `user-editable`. **Voir `references/content-models-conventions.md` pour le couple à utiliser selon le type de contenu — convention spécifique à ce projet, à ne pas déduire du seul nom des options.**
-- Options `add` : `--title`/`--description` (répétables), `--image <valeur>`, `--data-structure <json|@chemin>`, `--title-field-name <valeur>`, `--has-permalink <bool>`.
-- Options `edit` : mêmes que `add`, plus `--intent`, `--access-scope`.
-- Options `item-add` : `--title` (répétable), `--data <json|@chemin>`, `--is-active <bool>` (défaut `true`), `--created-by-type <valeur>` (`user`/`admin`/`system`, défaut `system`).
-- Options `item-edit` : `--content-model <name>` (déplacer l'item), `--title` (répétable), `--data <json|@chemin>`, `--is-active <bool>`, `--created-by-type <valeur>`.
+- `intent`: `editorial-content` or `user-data`. `access-scope`: `internal` or `user-editable`. **See `references/content-models-conventions.md` for the pair to use depending on content type — a convention specific to this project, not to be inferred from the option names alone.**
+- `add` options: `--title`/`--description` (repeatable), `--image <value>`, `--data-structure <json|@path>`, `--title-field-name <value>`, `--has-permalink <bool>`.
+- `edit` options: same as `add`, plus `--intent`, `--access-scope`.
+- `item-add` options: `--title` (repeatable), `--data <json|@path>`, `--is-active <bool>` (default `true`), `--created-by-type <value>` (`user`/`admin`/`system`, default `system`).
+- `item-edit` options: `--content-model <name>` (move the item), `--title` (repeatable), `--data <json|@path>`, `--is-active <bool>`, `--created-by-type <value>`.
 
 ```bash
 creopse content-model add service editorial-content internal \
@@ -141,63 +141,63 @@ creopse content-model item-edit 12 --title "en:Renamed"
 creopse content-model remove service --force
 ```
 
-`--has-permalink true` flague seulement le modèle comme éligible — ça ne câble pas la route vers une page de détail. Voir le groupe `permalink` ci-dessous (étape 8) et `references/content-models-conventions.md`.
+`--has-permalink true` only flags the model as eligible — it doesn't wire the route to a detail page. See the `permalink` group below (step 8) and `references/content-models-conventions.md`.
 
 ---
 
-## `creopse permalink` (alias `perm`) — étape 8
+## `creopse permalink` (alias `perm`) — step 8
 
-Un permalink associe un préfixe d'URL à un contenu (item de modèle de contenu, ou type de contenu natif news) et, optionnellement, à la page/template qui le rend. Sans cette étape, aucune page de détail (`ServiceDetails`, `ProjectDetails`, `NewsDetails`...) n'est jamais atteinte, même parfaitement codée et attachée à sa page.
+A permalink associates a URL prefix with a piece of content (a content-model item, or a native news content type) and, optionally, with the page/template that renders it. Without this step, no detail page (`ServiceDetails`, `ProjectDetails`, `NewsDetails`...) is ever reached, even if perfectly coded and attached to its page.
 
-| Sous-commande | Alias | Description |
+| Sub-command | Alias | Description |
 |---|---|---|
-| `add <path-prefix> <content-type>` | `make` | Crée un permalink |
-| `remove` | `delete` | Supprime un permalink (`-f/--force`) |
-| `edit` | `update` | Met à jour un permalink |
+| `add <path-prefix> <content-type>` | `make` | Creates a permalink |
+| `remove` | `delete` | Deletes a permalink (`-f/--force`) |
+| `edit` | `update` | Updates a permalink |
 
-- `content-type` : `news-tag`, `news-category`, `news-article`, ou `content-model`.
-- Options `add` : `--content-id <valeur>` (requis si `content-type=content-model` ; id ou nom du modèle), `--content-param <valeur>` (champ utilisé pour résoudre la cible — `id` ou `slug`, défaut `id`), `--page <name>` (page/template utilisé pour rendre ce contenu).
-- **remove/edit** identifient la cible avec exactement un de `--id <id>`, `--path-prefix <prefix>`, ou `--content-model <name>`.
-- Options `edit` : `--new-path-prefix <prefix>`, `--content-param <valeur>`, `--page <name>` (`none` pour désassocier). Le contenu cible lui-même (`content-type`/`content-id`) ne peut pas être changé une fois fixé.
+- `content-type`: `news-tag`, `news-category`, `news-article`, or `content-model`.
+- `add` options: `--content-id <value>` (required if `content-type=content-model`; the model's id or name), `--content-param <value>` (field used to resolve the target — `id` or `slug`, default `id`), `--page <name>` (page/template used to render this content).
+- **remove/edit** identify the target with exactly one of `--id <id>`, `--path-prefix <prefix>`, or `--content-model <name>`.
+- `edit` options: `--new-path-prefix <prefix>`, `--content-param <value>`, `--page <name>` (`none` to unlink). The target content itself (`content-type`/`content-id`) cannot be changed once set.
 
 ```bash
-# Un permalink pour un modèle de contenu, résolu par id (défaut) — ou par tout autre champ
-# réellement présent dans data-structure.json du modèle (ex. un champ slug ajouté à l'étape 7)
+# A permalink for a content model, resolved by id (default) — or by any other field
+# actually present in the model's data-structure.json (e.g. a slug field added in step 7)
 creopse permalink add /services content-model --content-id service --page service-details
 
-# Un permalink pour les articles de news, résolu par slug (structure native fixe)
+# A permalink for news articles, resolved by slug (fixed native structure)
 creopse permalink add /actualites news-article --content-param slug --page news-details
 
-# Modifier, identifié par son préfixe actuel
+# Editing, identified by its current prefix
 creopse permalink edit --path-prefix /services --new-path-prefix /nos-services
 
-# Supprimer, identifié par son modèle de contenu
+# Deleting, identified by its content model
 creopse permalink remove --content-model service --force
 ```
 
-Voir `references/permalinks-conventions.md` pour le détail complet (choix de `--content-param` selon le type de contenu, format de suivi local, ordre par rapport aux étapes 4 et 7).
+See `references/permalinks-conventions.md` for the full details (choosing `--content-param` depending on content type, local tracking format, ordering relative to steps 4 and 7).
 
 ---
 
-## `creopse menu` (alias `men`) — étape 6
+## `creopse menu` (alias `men`) — step 6
 
-Un menu est assigné à une **location** (`header`, `footer`...) ; les **items** sont les entrées de navigation ; **groupes** et **types** servent à catégoriser/styler les items (dropdowns notamment).
+A menu is assigned to a **location** (`header`, `footer`...); **items** are the navigation entries; **groups** and **types** are used to categorize/style items (dropdowns in particular).
 
-| Sous-commande | Alias | Description |
+| Sub-command | Alias | Description |
 |---|---|---|
-| `add <name>` | `make` | Crée un menu |
-| `remove <name>` | `delete` | Supprime un menu (`-f/--force`) |
-| `edit <name>` | `update` | Met à jour un menu |
-| `item-add <menu>` | `item-make` | Crée un item de menu |
-| `item-remove <id>` | `item-delete` | Supprime un item (`-f/--force`) |
-| `item-edit <id>` | `item-update` | Met à jour un item |
-| `item-group-add/-remove/-edit <name>` | `item-group-make/-delete/-update` | Groupes de menu |
-| `item-type-add/-remove/-edit <name>` | `item-type-make/-delete/-update` | Types de menu |
-| `location-add/-remove/-edit <name>` | `location-make/-delete/-update` | Locations de menu |
+| `add <name>` | `make` | Creates a menu |
+| `remove <name>` | `delete` | Deletes a menu (`-f/--force`) |
+| `edit <name>` | `update` | Updates a menu |
+| `item-add <menu>` | `item-make` | Creates a menu item |
+| `item-remove <id>` | `item-delete` | Deletes an item (`-f/--force`) |
+| `item-edit <id>` | `item-update` | Updates an item |
+| `item-group-add/-remove/-edit <name>` | `item-group-make/-delete/-update` | Menu groups |
+| `item-type-add/-remove/-edit <name>` | `item-type-make/-delete/-update` | Menu types |
+| `location-add/-remove/-edit <name>` | `location-make/-delete/-update` | Menu locations |
 
-Options `menu add/edit` : `--title`/`--description` (répétables), `--data <json>`, `--location <name>` (`none` pour désassigner en edit).
-Options `item-add/item-edit` : `--title`/`--description` (répétables), `--path`, `--url`, `--controller`, `--parent <id>` (`none` pour edit), `--position`, `--target-type` (`external-link`/`page-link`/`content-link`), `--is-active`/`--is-visible` (bool), `--color`, `--icon`, `--image`, `--page <name>` (`none` pour edit), `--section-key`, `--menu-item-group`, `--menu-item-type`, `--content-type` (`news-tag`/`news-category`/`news-article`/`content-model`), `--content-id`.
-Options groupe/type/location `add` : `--description` (répétable). `edit` : `--new-name`, `--description`.
+`menu add/edit` options: `--title`/`--description` (repeatable), `--data <json>`, `--location <name>` (`none` to unassign on edit).
+`item-add/item-edit` options: `--title`/`--description` (repeatable), `--path`, `--url`, `--controller`, `--parent <id>` (`none` for edit), `--position`, `--target-type` (`external-link`/`page-link`/`content-link`), `--is-active`/`--is-visible` (bool), `--color`, `--icon`, `--image`, `--page <name>` (`none` for edit), `--section-key`, `--menu-item-group`, `--menu-item-type`, `--content-type` (`news-tag`/`news-category`/`news-article`/`content-model`), `--content-id`.
+Group/type/location `add` options: `--description` (repeatable). `edit`: `--new-name`, `--description`.
 
 ```bash
 creopse menu location-add header --description "en:Site header"
@@ -206,55 +206,55 @@ creopse menu item-add main --title "en:Home" --page home --target-type page-link
 creopse menu item-add main --title "en:About" --path "/about" --parent 1 --menu-item-type dropdown
 ```
 
-Voir `references/menu-conventions.md` pour le détail propre à ce workflow, notamment la distinction avec les permalinks de l'étape 8.
+See `references/menu-conventions.md` for the details specific to this workflow, notably the distinction from the permalinks in step 8.
 
 ---
 
-## `creopse media` (alias `med`) — étape 2 et étape 9
+## `creopse media` (alias `med`) — step 2 and step 9
 
-Un **fichier** vit sur le disque, un **enregistrement** (`MediaFile`) est l'entrée en base — suppression indépendante possible des deux.
+A **file** lives on disk, a **record** (`MediaFile`) is the database entry — the two can be deleted independently.
 
-| Sous-commande | Alias | Description |
+| Sub-command | Alias | Description |
 |---|---|---|
-| `upload <path>` | `add` | Upload un fichier local |
-| `replace <id> <path>` | | Remplace le fichier sous-jacent d'un enregistrement |
-| `remove-file <path>` | | Supprime un fichier du disque (`-f/--force`) |
-| `remove-record <id>` | | Supprime un enregistrement `MediaFile` (`--permanent`, `-f/--force`) |
-| `restore <id>` | | Restaure un enregistrement soft-deleted |
-| `purge` | | Supprime définitivement tous les enregistrements soft-deleted (`-f/--force`) |
+| `upload <path>` | `add` | Uploads a local file |
+| `replace <id> <path>` | | Replaces a record's underlying file |
+| `remove-file <path>` | | Deletes a file from disk (`-f/--force`) |
+| `remove-record <id>` | | Deletes a `MediaFile` record (`--permanent`, `-f/--force`) |
+| `restore <id>` | | Restores a soft-deleted record |
+| `purge` | | Permanently deletes every soft-deleted record (`-f/--force`) |
 
-Options `upload` : `--folder <name>` (défaut `uploads`), `--filename <name>`, `--metadata <json>`, `--sender <id>`.
-Options `replace` : `--folder`, `--filename`, `--metadata`.
-`remove-record --permanent` force la suppression définitive (sinon soft delete, restaurable).
+`upload` options: `--folder <name>` (default `uploads`), `--filename <name>`, `--metadata <json>`, `--sender <id>`.
+`replace` options: `--folder`, `--filename`, `--metadata`.
+`remove-record --permanent` forces permanent deletion (otherwise a soft delete, restorable).
 
 ```bash
-# Étape 2 — asset de marque, déposé par l'utilisateur dans .creopse/media/source/
+# Step 2 — brand asset, deposited by the user in .creopse/media/source/
 creopse media upload .creopse/media/source/logo.png --folder branding --filename "Company Logo"
 
-# Étape 9 — image de contenu trouvée et téléchargée dans .creopse/media/generated/
+# Step 9 — content image found and downloaded into .creopse/media/generated/
 creopse media upload .creopse/media/generated/hero-agence.jpg --folder content --metadata '{"alt":"Summer sale"}'
 
-# Remplacer le fichier derrière l'enregistrement #42 sans changer son id
+# Replace the file behind record #42 without changing its id
 creopse media replace 42 ./banner-v2.jpg
 
-# Supprimer juste le fichier disque, ou juste l'enregistrement (soft delete par défaut)
+# Delete just the disk file, or just the record (soft delete by default)
 creopse media remove-file branding/logo.png --force
 creopse media remove-record 42
 
-# Récupérer, ou purger définitivement tous les enregistrements soft-deleted
+# Restore, or permanently purge every soft-deleted record
 creopse media restore 42
 creopse media purge --force
 ```
 
-Voir `references/media-conventions.md` pour le détail propre à ce workflow : distinction `source/`/`generated/`, récupération du chemin définitif après upload, et procédure de recherche d'images de contenu (étape 9).
+See `references/media-conventions.md` for the details specific to this workflow: the `source/`/`generated/` distinction, retrieving the final path after upload, and the content-image search procedure (step 9).
 
 ---
 
-## `creopse base-info` (alias `info`) — étape 3
+## `creopse base-info` (alias `info`) — step 3
 
-| Sous-commande | Description |
+| Sub-command | Description |
 |---|---|
-| `update <pairs...>` | Met à jour les entrées d'information de base avec des paires `key=value` (valeur possible en `@chemin/fichier`) |
+| `update <pairs...>` | Updates base information entries with `key=value` pairs (value can be `@path/file`) |
 
 ```bash
 creopse base-info update name="My App" email=hello@app.com phone="+33123456789"
@@ -262,19 +262,19 @@ creopse base-info update description=@description.txt
 creopse base-info update facebook="https://facebook.com/myapp" twitter="https://twitter.com/myapp"
 ```
 
-Voir `references/base-info-conventions.md` pour la liste des clés et leur correspondance avec `context.md`.
+See `references/base-info-conventions.md` for the list of keys and their correspondence with `context.md`.
 
 ---
 
-## `creopse plugin` (alias `plg`) — hors périmètre de cette skill
+## `creopse plugin` (alias `plg`) — out of scope for this skill
 
-Génère des classes Laravel (modèles, contrôleurs, migrations, events, listeners, jobs, requests, seeders) **à l'intérieur d'un plugin**, pas dans l'app hôte. Relève du développement backend custom (ex. logique métier derrière un formulaire), pas du template building front couvert par cette skill. Ne pas utiliser dans le cadre de ce workflow — si un besoin de ce type apparaît sur un projet, le traiter en dehors de cette skill.
+Generates Laravel classes (models, controllers, migrations, events, listeners, jobs, requests, seeders) **inside a plugin**, not in the host app. This falls under custom backend development (e.g. business logic behind a form), not the front-end template building covered by this skill. Do not use it as part of this workflow — if a need of this kind comes up on a project, handle it outside this skill.
 
 ---
 
-## Format des fichiers `--data-structure` (sections)
+## `--data-structure` file format (sections)
 
-Le fichier passé en argument doit contenir un objet avec deux clés : `index` (tableau de champs singletons) et le reste des clés du niveau racine représentant chaque collection. Exemple :
+The file passed as an argument must contain an object with two kinds of keys: `index` (an array of singleton fields) and the remaining root-level keys, each representing a collection. Example:
 
 ```json
 {
@@ -294,11 +294,11 @@ Le fichier passé en argument doit contenir un objet avec deux clés : `index` (
 }
 ```
 
-Voir `field-types.md` pour la liste exhaustive des `type` disponibles et leurs règles d'usage. Le fichier `--data-structure` d'un modèle de contenu (`content-model add`) suit uniquement la partie "singletons" de ce format (un tableau de champs, pas de clé `index` imbriquée) — voir `content-models-conventions.md`.
+See `field-types.md` for the exhaustive list of available `type` values and their usage rules. A content model's `--data-structure` file (`content-model add`) only follows the "singletons" part of this format (an array of fields, no nested `index` key) — see `content-models-conventions.md`.
 
 ---
 
-## Exemple de `app.blade.php` cible (référence étape 1)
+## Target `app.blade.php` example (step 1 reference)
 
 ```blade
 <!DOCTYPE html>
@@ -334,7 +334,7 @@ Voir `field-types.md` pour la liste exhaustive des `type` disponibles et leurs r
         }
     </style>
 
-    <!-- CSS des plugins du template HTML source, déplacés dans public/assets -->
+    <!-- CSS of the source HTML template's plugins, moved into public/assets -->
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/fontawesome-free.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/aos.css') }}">
@@ -354,7 +354,7 @@ Voir `field-types.md` pour la liste exhaustive des `type` disponibles et leurs r
 <body>
     @inertia
 
-    <!-- JS des plugins du template HTML source -->
+    <!-- JS of the source HTML template's plugins -->
     <script src="{{ asset('assets/js/plugins/jquery-3-7-1.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/waypoints.js') }}"></script>
@@ -369,4 +369,4 @@ Voir `field-types.md` pour la liste exhaustive des `type` disponibles et leurs r
 </html>
 ```
 
-**Attention** : les scripts JS de plugins servent surtout les comportements que le pattern Creopse remplace ensuite par du Vue natif (voir `vue-conventions.md` — pas de Bootstrap JS pour les carousels/modals/accordéons). Certains scripts (jQuery, waypoints, counter, AOS) peuvent néanmoins rester utiles pour des animations au scroll non gérées autrement ; ne pas les retirer par réflexe, seulement ceux qui font doublon avec un pattern Vue-natif imposé (Bootstrap JS pour carousel/modal/collapse notamment).
+**Note**: plugin JS scripts mostly serve behaviors that the Creopse pattern then replaces with native Vue (see `vue-conventions.md` — no Bootstrap JS for carousels/modals/accordions). Some scripts (jQuery, waypoints, counter, AOS) can nevertheless remain useful for scroll animations not handled elsewhere; don't remove them out of reflex — only the ones that duplicate an imposed native-Vue pattern (Bootstrap JS for carousel/modal/collapse in particular).

@@ -1,33 +1,33 @@
 # Conventions — Pages (`page`)
 
-À consulter à l'étape 4 du workflow (`SKILL.md`, création des pages) et à l'étape 10 (assemblage final, attachement des sections).
+To consult at step 4 of the workflow (`SKILL.md`, page creation) and at step 10 (final assembly, section attachment).
 
 ---
 
-## Format attendu dans `.creopse/context.md`
+## Expected format in `.creopse/context.md`
 
-`context.md` doit contenir une section dédiée listant les pages à créer, par exemple :
+`context.md` must contain a dedicated section listing the pages to create, for example:
 
 ```markdown
 ## Pages
 
 - **home** (position 1) — "Accueil" / "Home"
-  Sections : Header, Slider, About, Services, Testimonials, News, Footer
+  Sections: Header, Slider, About, Services, Testimonials, News, Footer
 - **about** (position 2) — "À propos" / "About"
-  Sections : Header, Banner, About (source: home), Features, Footer
+  Sections: Header, Banner, About (source: home), Features, Footer
 - **contact** (position 3) — "Contact" / "Contact us"
-  Sections : Header, Banner, Contact, Footer
+  Sections: Header, Banner, Contact, Footer
 ```
 
-Si cette section est absente de `context.md`, **ne pas déduire les pages uniquement à partir des fichiers HTML du template** (un `index.html`/`about.html`/`contact.html` ne donne pas forcément le bon nom de page ni la bonne position) — demander la liste à l'utilisateur avant l'étape 4.
+If this section is missing from `context.md`, **do not infer the pages solely from the template's HTML files** (an `index.html`/`about.html`/`contact.html` doesn't necessarily give the right page name or the right position) — ask the user for the list before step 4.
 
-La mention `(source: home)` indique une section dont les données doivent être **partagées** avec l'instance d'une autre page plutôt que dupliquées (voir `set-section-source` plus bas) — typiquement un Footer ou une bannière identique partout.
+The `(source: home)` mention indicates a section whose data must be **shared** with another page's instance rather than duplicated (see `set-section-source` below) — typically a Footer or a banner identical everywhere.
 
-**Pages de détail (`*-details`, ex. `service-details`, `project-details`) :** ce sont des pages normales au même titre que les autres — créées ici, à l'étape 4, avec leurs propres sections (dont une section de type détail : `ServiceDetails`, `ProjectDetails`...). La seule différence est qu'elles ne reçoivent **pas** d'item de menu (étape 6) : leur point d'entrée est le permalink créé à l'étape 8 (voir `permalinks-conventions.md`), qui associe le modèle de contenu concerné à cette page via `--page <name>`. Les lister quand même dans `context.md` avec leurs sections, en notant qu'elles ne sont pas destinées au menu.
+**Detail pages (`*-details`, e.g. `service-details`, `project-details`):** these are normal pages just like the others — created here, at step 4, with their own sections (including a detail-type section: `ServiceDetails`, `ProjectDetails`...). The only difference is that they do **not** receive a menu item (step 6): their entry point is the permalink created at step 8 (see `permalinks-conventions.md`), which associates the relevant content model with this page via `--page <name>`. List them in `context.md` anyway, along with their sections, noting that they're not meant for the menu.
 
 ---
 
-## Étape 4 — Création des pages
+## Step 4 — Creating the pages
 
 ```bash
 creopse page add home --title "en:Home" --title "fr:Accueil" --position 1
@@ -35,37 +35,37 @@ creopse page add about --title "en:About" --title "fr:À propos" --position 2
 creopse page add contact --title "en:Contact" --title "fr:Contact" --position 3
 ```
 
-- Un seul nom de page par appel (`add` ne prend qu'un seul nom, contrairement à `section add`/`widget add`).
-- `--content` n'est utile que si la page a un contenu HTML propre en dehors des sections (rare dans ce workflow — la plupart des pages sont entièrement composées de sections).
-- Cette étape ne crée que la coquille de page. Ne pas tenter d'attacher de sections ici, même si elles sont déjà scaffoldées — l'attachement se fait à l'étape 10, une fois les sections complétées.
+- One page name per call (`add` only takes a single name, unlike `section add`/`widget add`).
+- `--content` is only useful if the page has its own HTML content outside of sections (rare in this workflow — most pages are entirely composed of sections).
+- This step only creates the page shell. Do not attempt to attach sections here, even if they're already scaffolded — attachment happens at step 10, once sections have been completed.
 
 ---
 
-## Étape 10 — Attachement des sections
+## Step 10 — Attaching the sections
 
-### Attacher une instance de section à une page
+### Attach a section instance to a page
 
 ```bash
 creopse page attach-section home Header --link-id top --data @.creopse/sections/Header/fake-data.json
 creopse page attach-section home Slider --link-id main --data @.creopse/sections/Slider/fake-data.json
 ```
 
-- `--link-id` : identifiant d'instance, par défaut `default`. Utiliser un id explicite dès qu'une même section peut apparaître plusieurs fois sur le site (ex. `Testimonials` en accueil et en page service, avec des témoignages différents) — voir l'exemple `HeroBanner:top` / `HeroBanner:bottom` de `cli-reference.md`.
-- `--data` : passer le fichier de fake data validé à l'étape 9 (préfixe `@` obligatoire, même convention que `section edit --data-structure`).
-- `--link-title` : optionnel, titre spécifique à cette instance (utile en admin pour distinguer deux instances de la même section).
+- `--link-id`: instance identifier, defaults to `default`. Use an explicit id as soon as the same section can appear several times on the site (e.g. `Testimonials` on the home page and on a service page, with different testimonials) — see the `HeroBanner:top` / `HeroBanner:bottom` example in `cli-reference.md`.
+- `--data`: pass the fake data file validated at step 9 (`@` prefix mandatory, same convention as `section edit --data-structure`).
+- `--link-title`: optional, an instance-specific title (useful in admin to distinguish two instances of the same section).
 
-### Sourcer les données depuis une autre page (`set-section-source`)
+### Sourcing data from another page (`set-section-source`)
 
-Pour une section qui doit rester strictement identique entre plusieurs pages (Footer, Header typiquement) plutôt que dupliquée manuellement à chaque page :
+For a section that must remain strictly identical across several pages (typically Footer, Header) rather than manually duplicated on each page:
 
 ```bash
 creopse page attach-section about Footer --link-id bottom
 creopse page set-section-source about Footer --link-id bottom --source-page home --source-link-id bottom
 ```
 
-Une modification future du Footer sur `home` se répercute alors automatiquement sur `about` — pas besoin de repasser par chaque page pour une mise à jour de Footer/Header. Préférer ce mécanisme à la duplication de `--data` identiques sur chaque page dès que `context.md` indique `(source: <page>)` pour une section.
+A future edit to the Footer on `home` then automatically propagates to `about` — no need to go through every page for a Footer/Header update. Prefer this mechanism over duplicating identical `--data` on each page as soon as `context.md` indicates `(source: <page>)` for a section.
 
-### Ordonner les sections d'une page
+### Ordering a page's sections
 
 ```bash
 creopse page order-sections home \
@@ -74,26 +74,26 @@ creopse page order-sections home \
   --item "News:default" --item "Footer:bottom"
 ```
 
-L'ordre des `--item` détermine l'ordre d'affichage vertical sur la page — le construire dans l'ordre exact du template HTML source pour cette page.
+The order of `--item` determines the vertical display order on the page — build it in the exact order of the source HTML template for that page.
 
-### Activer/désactiver une instance
+### Enabling/disabling an instance
 
 ```bash
 creopse page toggle-section-status home Testimonials --link-id main --disabled true
 ```
 
-Utile pour une section attachée mais volontairement non publiée le temps d'une validation supplémentaire, plutôt que de la détacher puis la rattacher.
+Useful for a section that's attached but deliberately unpublished while awaiting further validation, rather than detaching and reattaching it.
 
-### Détacher une instance
+### Detaching an instance
 
 ```bash
 creopse page detach-section home Testimonials --link-id main --force
 ```
 
-À utiliser uniquement en cas d'erreur d'attachement, pas comme mécanisme de désactivation temporaire (préférer `toggle-section-status` dans ce cas).
+Use only in case of an attachment error, not as a temporary deactivation mechanism (prefer `toggle-section-status` for that case).
 
 ---
 
-## Point de validation
+## Validation point
 
-Présenter, page par page, la liste ordonnée des sections avec leur `link-id` avant d'exécuter `attach-section`/`order-sections` — ces commandes déterminent le rendu final visible en dev/production.
+Present, page by page, the ordered list of sections with their `link-id` before running `attach-section`/`order-sections` — these commands determine the final rendering visible in dev/production.

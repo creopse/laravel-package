@@ -1,64 +1,64 @@
 # Conventions — Permalinks (`permalink`)
 
-À consulter à l'étape 8 du workflow (`SKILL.md`), après les modèles de contenu (étape 7) et avant la complétion section par section (étape 9).
+To consult at step 8 of the workflow (`SKILL.md`), after content models (step 7) and before section-by-section completion (step 9).
 
 ---
 
-## Pourquoi cette étape est nécessaire
+## Why this step is necessary
 
-`content-model add --has-permalink true` (étape 7) **flague** un modèle comme ayant une page de détail, mais ne câble rien : il n'existe, à l'issue de l'étape 7, aucune route reliant un item du modèle à une page. C'est le rôle de `creopse permalink add` — une entité à part entière (`PermalinkModel` : `pathPrefix`, `contentType`, `contentId`, `pageId`), distincte du modèle de contenu lui-même.
+`content-model add --has-permalink true` (step 7) **flags** a model as having a detail page, but wires nothing: at the end of step 7, no route exists linking a model item to a page. That's the role of `creopse permalink add` — a full-fledged entity (`PermalinkModel`: `pathPrefix`, `contentType`, `contentId`, `pageId`), distinct from the content model itself.
 
-**Ce n'est pas réservé aux modèles de contenu custom.** Le type de contenu natif `news-article` (articles) a exactement le même besoin : sans permalink dédié, `NewsDetails.vue` n'est jamais atteint par `getContentPath(article)`, même une fois la section parfaitement codée et attachée à sa page (étape 9/10). Traiter les deux cas dans cette étape :
+**This isn't limited to custom content models.** The native `news-article` content type (articles) has exactly the same need: without a dedicated permalink, `NewsDetails.vue` is never reached by `getContentPath(article)`, even once the section is perfectly coded and attached to its page (step 9/10). Handle both cases in this step:
 
-- Un permalink par modèle de contenu créé à l'étape 7 avec `--has-permalink true` (Services, Projects, Team...).
-- Un permalink pour `news-article` si le projet a des articles (`News.vue`/`NewsDetails.vue`).
-- Un permalink pour `news-category`/`news-tag` uniquement si le template source a des pages dédiées de listing par catégorie/tag (rare — vérifier l'inventaire de l'étape 5.1 avant d'en créer un par réflexe).
+- One permalink per content model created in step 7 with `--has-permalink true` (Services, Projects, Team...).
+- One permalink for `news-article` if the project has articles (`News.vue`/`NewsDetails.vue`).
+- One permalink for `news-category`/`news-tag` only if the source template has dedicated category/tag listing pages (rare — check the step 5.1 inventory before creating one out of reflex).
 
 ---
 
-## Choix de `--content-param`
+## Choosing `--content-param`
 
-Détermine quelle propriété de l'item cible est utilisée pour résoudre l'URL (`getContentPath(item)` côté Vue) :
+Determines which property of the target item is used to resolve the URL (`getContentPath(item)` on the Vue side):
 
-| `content-type` | Valeurs possibles pour `--content-param` | Comment choisir |
+| `content-type` | Possible values for `--content-param` | How to choose |
 |---|---|---|
-| `content-model` | `id` (défaut), ou **n'importe quel champ défini dans `data-structure.json` du modèle** | Pas une règle figée à `id` : si le projet a défini un champ dédié pour des URLs propres (ex. un champ `slug` ajouté à la structure du modèle, cf. étape 7), l'utiliser. Sinon, rester sur `id` par défaut plutôt que d'inventer un champ qui n'existe pas dans la structure — vérifier `.creopse/content-models/<NomModele>/data-structure.json` avant de choisir. |
-| `news-article` | `id` ou `slug` | Structure native, fixe, pas de champ custom possible — `slug` (présent sur `NewsArticleModel`) est l'usage idiomatique pour une URL lisible. |
-| `news-category` / `news-tag` | `id` ou `slug` | Idem, `slug?` disponible nativement sur ces modèles. |
+| `content-model` | `id` (default), or **any field defined in the model's `data-structure.json`** | Not a rule fixed to `id`: if the project defined a dedicated field for clean URLs (e.g. a `slug` field added to the model's structure, see step 7), use it. Otherwise, stick with `id` by default rather than inventing a field that doesn't exist in the structure — check `.creopse/content-models/<ModelName>/data-structure.json` before choosing. |
+| `news-article` | `id` or `slug` | Native, fixed structure, no custom field possible — `slug` (present on `NewsArticleModel`) is the idiomatic choice for a readable URL. |
+| `news-category` / `news-tag` | `id` or `slug` | Same, `slug?` is natively available on these models. |
 
 ---
 
-## Commandes CLI
+## CLI commands
 
 ```bash
-# Un modèle de contenu (Services), résolu par id — page de détail créée à l'étape 4
+# A content model (Services), resolved by id — detail page created in step 4
 creopse permalink add /services content-model --content-id service --page service-details
 
-# Un autre modèle de contenu (Projects/Réalisations)
+# Another content model (Projects)
 creopse permalink add /realisations content-model --content-id project --page project-details
 
-# Le type de contenu natif news-article, résolu par slug
+# The native news-article content type, resolved by slug
 creopse permalink add /actualites news-article --content-param slug --page news-details
 ```
 
-- `<path-prefix>` : préfixe d'URL public pour ce type de contenu (ex. `/services/mon-item`) — choisir un préfixe cohérent avec la langue/l'univers du projet, pas un défaut générique type `/items`.
-- `--content-id` : **uniquement requis pour `content-type=content-model`** — nom ou id du modèle créé à l'étape 7 (ex. `service`, pas `Service` ni `Services` : reprendre exactement le nom passé à `content-model add`).
-- `--page <name>` : nom de la page créée à l'étape 4 qui sert de template de détail (ex. `service-details`) — jamais le nom d'une section, jamais une page qui n'existe pas encore à ce stade.
+- `<path-prefix>`: public URL prefix for this content type (e.g. `/services/my-item`) — choose a prefix consistent with the project's language/context, not a generic `/items` default.
+- `--content-id`: **only required for `content-type=content-model`** — the name or id of the model created in step 7 (e.g. `service`, not `Service` nor `Services`: reuse exactly the name passed to `content-model add`).
+- `--page <name>`: the name of the page created in step 4 that serves as the detail template (e.g. `service-details`) — never the name of a section, never a page that doesn't exist yet at this stage.
 
-### Modifier un permalink existant
+### Editing an existing permalink
 
 ```bash
 creopse permalink edit --content-model service --new-path-prefix /nos-services
 creopse permalink edit --path-prefix /actualites --page news-details-v2
 ```
 
-Identifier la cible avec **exactement un** de `--id`, `--path-prefix`, ou `--content-model` — jamais plusieurs à la fois. Le contenu cible lui-même (`content-type`/`content-id`) ne peut pas être changé une fois fixé ; pour changer de contenu cible, supprimer et recréer le permalink plutôt que d'essayer de le réassigner via `edit`.
+Identify the target with **exactly one** of `--id`, `--path-prefix`, or `--content-model` — never several at once. The target content itself (`content-type`/`content-id`) cannot be changed once set; to change the target content, delete and recreate the permalink rather than trying to reassign it via `edit`.
 
 ---
 
-## Où consigner l'état
+## Where to record state
 
-Un fichier par permalink créé, dans `.creopse/permalinks/<nom>.json` (nom libre mais stable, ex. `services.json`, `news.json`) — même logique que `.creopse/menus/<location>.json` : un dossier plat, un fichier par entité, pas de sous-structure nécessaire ici (contrairement à `sections/`/`content-models/` qui ont structure + données à faire cohabiter).
+One file per permalink created, in `.creopse/permalinks/<name>.json` (free-form but stable name, e.g. `services.json`, `news.json`) — same logic as `.creopse/menus/<location>.json`: a flat folder, one file per entity, no sub-structure needed here (unlike `sections/`/`content-models/`, which have structure + data to co-locate).
 
 ```json
 {
@@ -71,10 +71,10 @@ Un fichier par permalink créé, dans `.creopse/permalinks/<nom>.json` (nom libr
 }
 ```
 
-`id` : l'id du permalink retourné par la commande, à noter une fois créé — permet de vérifier avant un `edit`/`remove` ultérieur qu'un permalink existe déjà pour ce modèle plutôt que d'en recréer un doublon.
+`id`: the permalink's id returned by the command, to note once created — allows checking before a later `edit`/`remove` that a permalink already exists for this model rather than creating a duplicate.
 
 ---
 
-## Point de validation
+## Validation point
 
-Présenter la liste des permalinks à créer (préfixe, modèle/type de contenu ciblé, page de détail associée) avant exécution — ces commandes créent des entrées en base qui déterminent le routing public du site.
+Present the list of permalinks to create (prefix, targeted model/content type, associated detail page) before execution — these commands create database entries that determine the site's public routing.

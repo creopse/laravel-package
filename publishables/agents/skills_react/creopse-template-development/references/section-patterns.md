@@ -1,100 +1,100 @@
-# Patterns de section
+# Section patterns
 
-Consulter la sous-section correspondant au type de section traité à l'étape 9.2, en complément de `vue-conventions.md` (stack Vue) ou `react-conventions.md` (stack React). Les extraits de code ci-dessous sont écrits en Vue, mais la logique qu'ils décrivent (quel composable/hook appeler, quels champs vérifier, dans quel ordre) est valable pour les deux stacks — sur un projet React, traduire la syntaxe via les tables de `react-conventions.md` sans changer cette logique.
+Consult the subsection matching the type of section being handled at step 9.2, as a complement to `vue-conventions.md` (Vue stack) or `react-conventions.md` (React stack). The code excerpts below are written in Vue, but the logic they describe (which composable/hook to call, which fields to check, in what order) is valid for both stacks — on a React project, translate the syntax via the tables in `react-conventions.md` without changing this logic.
 
-## Table des matières
+## Table of contents
 
 - [Header](#header)
 - [Footer](#footer)
 - [Slider / Hero carousel](#slider--hero-carousel)
 - [Testimonials](#testimonials)
-- [Services (liste + détail)](#services-liste--détail)
-- [Projects (liste + détail)](#projects-liste--détail)
-- [News / Blog (liste + détail)](#news--blog-liste--détail)
+- [Services (list + detail)](#services-list--detail)
+- [Projects (list + detail)](#projects-list--detail)
+- [News / Blog (list + detail)](#news--blog-list--detail)
 - [Contact](#contact)
-- [Banner (bandeau de page interne)](#banner-bandeau-de-page-interne)
-- [Section générique avec collection](#section-générique-avec-collection)
+- [Banner (internal page header band)](#banner-internal-page-header-band)
+- [Generic section with a collection](#generic-section-with-a-collection)
 
 ---
 
 ## Header
 
-- Menu principal via `useMenu().getMenuItemsByLocation('header', true)` (pas de composable dédié à créer pour ça — ce n'est pas fourni par le template, et la logique reste simple : filtrage des items top-level, regroupement des sous-items par `parentId`, et détermination de l'item actif par comparaison entre `item.path` et `useHelper().currentRoutePath` — à écrire directement dans `Header.vue`, ou en composable local si le développeur préfère extraire, mais ce n'est pas une convention à imposer par le skill).
-- Rendu de chaque item (principal et sous-menu) via le pattern transverse `getMenuHref(item)` + `@click.prevent="openMenu(item)"` (`useMenu()`) — voir `vue-conventions.md#rendu-de-liens-de-menu`. Ne jamais câbler un `href` en dur sur un item de menu.
-- Sous-menus (`item.subMenuItems`) rendus en dropdown Vue-natif (pas de `data-bs-toggle` fonctionnel — l'attribut peut rester pour le style Bootstrap CSS mais aucun JS Bootstrap ne doit le piloter).
-- Sidebar mobile : ouverture/fermeture via manipulation directe de `style.width` sur une ref DOM (`document.getElementById('mySidenav')`), pas de classe Bootstrap offcanvas.
-- Sélecteur de langue conditionné par `headerSettings?.displayRules?.displayLangSelector` (donc prévoir ce champ dans `settings.json` si le header source a un sélecteur de langue) — implémentation via `languages`/`updateLang` de `useHelper()` et `getActiveLanguage()` (auto-importé de `laravel-vue-i18n`, pas un composable Creopse), voir `vue-conventions.md#sélecteur-de-langue-header`.
-- Bouton CTA optionnel : paire `btnText`/`btnLink` (`menu-item-link` — ici résolu via `getLinkFromMenuItemId`, donc bien un ID de menu dans ce cas précis), rendu conditionnel (`v-if="tr(headerData?.btnText) && headerData?.btnLink"`).
-- Injection de `--thm-base` en CSS variable dans `onMounted` (cf. `vue-conventions.md`).
-- Réseaux sociaux : boucle sur `useHelper().socialNetworks`, chaque réseau conditionné par la présence de la valeur correspondante dans `getAppInformationValue(network.name)`.
+- Main menu via `useMenu().getMenuItemsByLocation('header', true)` (no dedicated composable to create for this — it's not provided by the template, and the logic stays simple: filtering top-level items, grouping sub-items by `parentId`, and determining the active item by comparing `item.path` against `useHelper().currentRoutePath` — write it directly in `Header.vue`, or as a local composable if the developer prefers to extract it, but this isn't a convention the skill should impose).
+- Rendering each item (main and sub-menu) via the cross-cutting `getMenuHref(item)` + `@click.prevent="openMenu(item)"` pattern (`useMenu()`) — see `vue-conventions.md#rendering-menu-links`. Never hardcode an `href` on a menu item.
+- Sub-menus (`item.subMenuItems`) rendered as a native-Vue dropdown (no functional `data-bs-toggle` — the attribute can remain for Bootstrap CSS styling but no Bootstrap JS should drive it).
+- Mobile sidebar: open/close via direct manipulation of `style.width` on a DOM ref (`document.getElementById('mySidenav')`), not a Bootstrap offcanvas class.
+- Language selector gated by `headerSettings?.displayRules?.displayLangSelector` (so plan for this field in `settings.json` if the source header has a language selector) — implemented via `useHelper()`'s `languages`/`updateLang` and `getActiveLanguage()` (auto-imported from `laravel-vue-i18n`, not a Creopse composable), see `vue-conventions.md#header-language-selector`.
+- Optional CTA button: `btnText`/`btnLink` pair (`menu-item-link` — here resolved via `getLinkFromMenuItemId`, so genuinely a menu ID in this specific case), conditional rendering (`v-if="tr(headerData?.btnText) && headerData?.btnLink"`).
+- Injecting `--thm-base` as a CSS variable in `onMounted` (see `vue-conventions.md`).
+- Social networks: loop over `useHelper().socialNetworks`, each network conditioned on the presence of the matching value in `getAppInformationValue(network.name)`.
 
 ## Footer
 
-- Liens de menu via `getMenuItemsByLocation('footer', true)`, rendus avec le même pattern `getMenuHref`/`openMenu` que le Header (voir `vue-conventions.md#rendu-de-liens-de-menu`).
-- Newsletter : état local (`ref('')`) + `useNewsletter()` → `subscribeEmail(email, onSuccess, onError)`, feedback via `useMessage()` (Naive UI), spinner via `n-spin :show="isLoading"`.
-- Coordonnées de contact via `getAppInformationValue('phone'|'email'|'address')`, chaque bloc conditionné par la présence de la valeur.
-- Copyright : `new Date().getFullYear()` + `getAppInformationValue('name')` + un champ `copyrightText` (i18n-text) pour le texte additionnel.
-- Réseaux sociaux : même pattern que le Header.
+- Menu links via `getMenuItemsByLocation('footer', true)`, rendered with the same `getMenuHref`/`openMenu` pattern as the Header (see `vue-conventions.md#rendering-menu-links`).
+- Newsletter: local state (`ref('')`) + `useNewsletter()` → `subscribeEmail(email, onSuccess, onError)`, feedback via `useMessage()` (Naive UI), spinner via `n-spin :show="isLoading"`.
+- Contact details via `getAppInformationValue('phone'|'email'|'address')`, each block conditioned on the presence of the value.
+- Copyright: `new Date().getFullYear()` + `getAppInformationValue('name')` + a `copyrightText` field (i18n-text) for the additional text.
+- Social networks: same pattern as the Header.
 
 ## Slider / Hero carousel
 
-- **Jamais Swiper pour un hero plein écran avec overlay texte** — implémentation carousel maison : `ref(currentIndex)`, `next()`/`prev()`, autoplay `setInterval` géré `onMounted`/`onUnmounted`, pause au survol (`@mouseenter="stopAutoplay"` / `@mouseleave="startAutoplay"`).
-- Collection `slides` avec structure plate par slide : `image`, `subtitle` (i18n-text), `title` (i18n-text), `titleBreak` (number, optionnel), et **paire de boutons en champs plats** : `btnOneLabel`/`btnOneUrl`, `btnTwoLabel`/`btnTwoUrl` — pas de sous-collection de boutons puisque le nombre est fixe (règle `field-types.md` point 6), rendus via le pattern CTA `menu-item-link` (`vue-conventions.md#boutons-cta-en-menu-item-link-getlinkfrommenuitemid--openlink`).
-- Réglage `autoplayInterval` dans `settings.json` (défaut 5000ms si absent).
+- **Never Swiper for a full-screen hero with a text overlay** — a hand-built carousel implementation: `ref(currentIndex)`, `next()`/`prev()`, autoplay via `setInterval` managed in `onMounted`/`onUnmounted`, pause on hover (`@mouseenter="stopAutoplay"` / `@mouseleave="startAutoplay"`).
+- `slides` collection with a flat structure per slide: `image`, `subtitle` (i18n-text), `title` (i18n-text), `titleBreak` (number, optional), and a **button pair as flat fields**: `btnOneLabel`/`btnOneUrl`, `btnTwoLabel`/`btnTwoUrl` — no button sub-collection since the count is fixed (`field-types.md` rule 6), rendered via the `menu-item-link` CTA pattern (`vue-conventions.md#cta-buttons-as-menu-item-link-getlinkfrommenuitemid--openlink`).
+- `autoplayInterval` setting in `settings.json` (defaults to 5000ms if absent).
 
 ## Testimonials
 
-- Bloc contenu à gauche (uptitle/title/description + CTA + bloc Google Review optionnel) / slider à droite.
-- Le slider utilise **Swiper natif** (`swiper/vue`, module `Navigation`), boutons prev/next externes reliés via des refs (`prevEl`/`nextEl`) plutôt que la navigation Swiper par défaut, pour permettre un style CSS maison sur les flèches.
-- Bloc Google Review conditionnel : `reviewLabel` (i18n-text) + `reviewScore` (number/text), rendu uniquement si les deux sont renseignés.
-- Collection `testimonials` : `companyLogo` (image), `quote` (i18n-text ou i18n-editor selon longueur), `authorName` (**text**, nom propre — pas i18n), `authorRole` (i18n-text).
+- Content block on the left (uptitle/title/description + CTA + optional Google Review block) / slider on the right.
+- The slider uses **native Swiper** (`swiper/vue`, `Navigation` module), external prev/next buttons wired via refs (`prevEl`/`nextEl`) rather than Swiper's default navigation, to allow custom CSS styling on the arrows.
+- Conditional Google Review block: `reviewLabel` (i18n-text) + `reviewScore` (number/text), rendered only if both are set.
+- `testimonials` collection: `companyLogo` (image), `quote` (i18n-text or i18n-editor depending on length), `authorName` (**text**, proper noun — not i18n), `authorRole` (i18n-text).
 
-## Services (liste + détail)
+## Services (list + detail)
 
-**Liste** : les services proviennent généralement d'un **modèle de contenu global** (`storeToRefs(useContentStore())` → `services`), pas d'une collection de section — cohérent avec le principe "modèles de contenu réutilisables globalement". Ce store est un pattern local à mettre en place si absent, voir `content-models-conventions.md#store-partagé-pour-modèles-de-contenu-réutilisés-usecontentstore--usedataloader`. La section elle-même ne porte que l'uptitle/title et un lien "voir plus" éventuel.
+**List**: services generally come from a **global content model** (`storeToRefs(useContentStore())` → `services`), not a section collection — consistent with the "globally reusable content models" principle. This store is a local pattern to set up if absent, see `content-models-conventions.md#shared-store-for-reused-content-models-usecontentstore--usedataloader`. The section itself only carries the uptitle/title and an optional "see more" link.
 
-**Détail** : `useProps().contentModelItem.contentModelData`, accès aux champs via `item?.index?.<champ>`. Pattern sidebar (infos contact + liens vers services associés) + zone de contenu principale (`v-html="rHtml(item?.index?.content)"`).
+**Detail**: `useProps().contentModelItem.contentModelData`, field access via `item?.index?.<field>`. Sidebar pattern (contact info + links to related services) + main content zone (`v-html="rHtml(item?.index?.content)"`).
 
-- Services associés (fil d'ariane / liens contextuels) : `computed` qui filtre le store global des services selon une relation `parentService` (`content-model-item` en structure de données), pas une requête serveur dédiée.
+- Related services (breadcrumb / contextual links): a `computed` that filters the global services store by a `parentService` relationship (`content-model-item` in the data structure), not a dedicated server request.
 
-## Projects (liste + détail)
+## Projects (list + detail)
 
-Même logique que Services : modèle de contenu global pour la liste (`storeToRefs(useContentStore())` → `projects`, voir `content-models-conventions.md#store-partagé-pour-modèles-de-contenu-réutilisés-usecontentstore--usedataloader`), section porteuse uniquement de l'habillage (uptitle, title, lien "voir plus", `bgColor` éventuellement injecté via `v-bind` en CSS).
+Same logic as Services: global content model for the list (`storeToRefs(useContentStore())` → `projects`, see `content-models-conventions.md#shared-store-for-reused-content-models-usecontentstore--usedataloader`), the section only carries the wrapper (uptitle, title, "see more" link, `bgColor` possibly injected via `v-bind` in CSS).
 
-**Détail** : pas de sidebar dans le pattern observé le plus récent — mise en page pleine largeur : image principale, titre, ligne de meta horizontale (`startDate`/`endDate` **texte brut**, formatées via le helper `formatDate()` de `@creopse/utils`, voir `vue-conventions.md#formatage-de-date`), statut (`status`, `single-select` ou `text` avec valeurs `ongoing`/`completed`/`advocacy`, résolu côté composant via une table de correspondance `Record<string, {fr,en}>` plutôt que traduit en base), `partners` (i18n-text). Puis contenu long (`v-html="rHtml(item?.index?.content)"`), et en bas un bloc à deux colonnes `secondaryImage` + FAQ.
+**Detail**: no sidebar in the most recently observed pattern — full-width layout: main image, title, a horizontal meta line (`startDate`/`endDate` as **plain text**, formatted via the `formatDate()` helper from `@creopse/utils`, see `vue-conventions.md#date-formatting`), status (`status`, `single-select` or `text` with values `ongoing`/`completed`/`advocacy`, resolved on the component side via a `Record<string, {fr,en}>` lookup table rather than translated in the database), `partners` (i18n-text). Then long-form content (`v-html="rHtml(item?.index?.content)"`), and at the bottom a two-column block with `secondaryImage` + FAQ.
 
-- FAQ : collection `faqs` (`question`/`answer`, `i18n-text`) rendue en accordéon Vue-natif (voir `vue-conventions.md#accordéons`), pas de galerie `n-image-group` dans ce pattern-ci — si le template source a effectivement une galerie de livrables plutôt qu'une FAQ, adapter au cas par cas, mais l'accordéon FAQ est désormais le pattern par défaut à proposer pour ce type de section.
+- FAQ: `faqs` collection (`question`/`answer`, `i18n-text`) rendered as a native-Vue accordion (see `vue-conventions.md#accordions`), no `n-image-group` gallery in this particular pattern — if the source template genuinely has a gallery of deliverables rather than an FAQ, adapt case by case, but the FAQ accordion is now the default pattern to propose for this type of section.
 
-## News / Blog (liste + détail)
+## News / Blog (list + detail)
 
-- **Toujours** `useNews()` → `loadArticles({ pageSize, page, categories, tags })`, jamais une collection de section pour les articles.
-- Squelette de chargement (`isLoading`) avec blocs `tw:animate-pulse` pendant le fetch.
-- Détail : `useProps()?.article` (spécifique aux articles, différent de `contentModelItem`).
-- Catégories/tags de l'article : viennent directement de `item.categories`/`item.tags` (calculés côté API), **jamais dupliqués en collection de section** (règle `field-types.md` point 7).
-- Partage social : modal Vue-natif (`Teleport` + `v-if`), génération de liens de partage via `encodeURIComponent(currentUrl.value)` pour Facebook/Twitter/LinkedIn/WhatsApp — pas de widget JS tiers.
-- Articles récents en sidebar : rappel de `loadArticles` filtré pour exclure l'article courant (`result.articles.filter(a => a.slug !== item?.slug)`).
+- **Always** `useNews()` → `loadArticles({ pageSize, page, categories, tags })`, never a section collection for articles.
+- Loading skeleton (`isLoading`) with `tw:animate-pulse` blocks during the fetch.
+- Detail: `useProps()?.article` (specific to articles, different from `contentModelItem`).
+- Article categories/tags: come directly from `item.categories`/`item.tags` (computed server-side), **never duplicated in a section collection** (`field-types.md` rule 7).
+- Social sharing: native-Vue modal (`Teleport` + `v-if`), share link generation via `encodeURIComponent(currentUrl.value)` for Facebook/Twitter/LinkedIn/WhatsApp — no third-party JS widget.
+- Recent articles in the sidebar: another `loadArticles` call filtered to exclude the current article (`result.articles.filter(a => a.slug !== item?.slug)`).
 
 ## Contact
 
-- Formulaire en `reactive()` local, soumission via `submitUserContentModelItem('', 'nom-modele-formulaire', {...form}, {}, onSuccess, onError)`.
-- Champs du formulaire : `text` bruts, jamais `i18n-*` (ce sont des saisies visiteur, cf. `field-types.md` point 4).
-- Feedback succès/erreur : booléens locaux (`isSuccess`/`isError`), pas de structure de données pour ces messages — seuls les libellés (`successMessage`, `errorMessage`) sont des champs `i18n-text` de la section.
-- Bloc Google Maps optionnel : simple `iframe` avec `src` = champ `text` `mapsUrl` (URL d'embed, non traduisible).
+- Local `reactive()` form, submission via `submitUserContentModelItem('', 'form-model-name', {...form}, {}, onSuccess, onError)`.
+- Form fields: raw `text`, never `i18n-*` (these are visitor-entered values, see `field-types.md` rule 4).
+- Success/error feedback: local booleans (`isSuccess`/`isError`), no data structure for these messages — only the labels (`successMessage`, `errorMessage`) are `i18n-text` fields of the section.
+- Optional Google Maps block: a simple `iframe` with `src` = the `text` field `mapsUrl` (embed URL, non-translatable).
 
-## Banner (bandeau de page interne)
+## Banner (internal page header band)
 
-- Titre contextuel en priorité : `useProps()` pour tenter `contentModelItem.contentModelData.index.name`, puis `.title`, puis `article.title`, avec repli sur le titre de section CMS (`bannerData?.title`) ou le titre de page (`pageData?.title`) si aucun contexte de contenu n'est présent.
-- Fil d'ariane (breadcrumb) : toujours un lien "Accueil" (`trans('Home')`) + le titre courant si présent.
-- Section très légère en structure de données : généralement un seul singleton `title` (i18n-text), le reste est calculé dynamiquement.
+- Contextual title takes priority: `useProps()` tries `contentModelItem.contentModelData.index.name`, then `.title`, then `article.title`, falling back to the CMS section title (`bannerData?.title`) or the page title (`pageData?.title`) if no content context is present.
+- Breadcrumb: always a "Home" link (`trans('Home')`) + the current title if present.
+- Very light data structure: generally a single `title` singleton (i18n-text), the rest is computed dynamically.
 
-## Section générique avec collection
+## Generic section with a collection
 
-Pattern par défaut pour une section "features"/"avantages" simple (uptitle/title/text + grille d'items) :
+Default pattern for a simple "features"/"benefits" section (uptitle/title/text + item grid):
 
 ```ts
 const contentData = getSectionRootData(props.sectionKey)
 const features = getSectionData(props.sectionKey)?.features ?? []
 ```
 
-- Item de collection typique : `icon` (type `icon`, rendu via `<ContentIcon :data="feature.icon" :size="42" />`), `title` (i18n-text), `text` (**i18n-editor**, jamais i18n-textarea — rendu `v-html="rHtml(feature.text)"`).
-- Grille responsive Tailwind (`tw:grid tw:grid-cols-1 tw:md:grid-cols-2 tw:lg:grid-cols-3`) plutôt que les classes Bootstrap `row-cols-*` quand le composant n'a pas d'autre dépendance Bootstrap forte — au cas par cas selon le style dominant du template source.
+- Typical collection item: `icon` (type `icon`, rendered via `<ContentIcon :data="feature.icon" :size="42" />`), `title` (i18n-text), `text` (**i18n-editor**, never i18n-textarea — rendered via `v-html="rHtml(feature.text)"`).
+- Responsive Tailwind grid (`tw:grid tw:grid-cols-1 tw:md:grid-cols-2 tw:lg:grid-cols-3`) rather than Bootstrap's `row-cols-*` classes when the component has no other strong Bootstrap dependency — decide case by case based on the source template's dominant style.

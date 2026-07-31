@@ -1,26 +1,26 @@
-# Référence de l'API — `@creopse/utils`
+# API reference — `@creopse/utils`
 
-Documentation de la surface publique du package `@creopse/utils` (version `0.2.1`), commun à tous les templates (Vue, React). Source de vérité pour les helpers purs (fonctions sans composable, ex. `hexToRgba`, `formatDate`), les enums, les modèles de domaine et les types partagés. **Ne contient aucun composable/hook** — pas de `useXxx()` dans ce package ; tout `use...()` vient de `@creopse/vue`/`@creopse/react` (voir `vue-api-reference.md`) ou est local au projet (voir `vue-conventions.md#composables-locaux-au-projet`).
+Documentation of the public surface of the `@creopse/utils` package (version `0.2.1`), shared by every template (Vue, React). Source of truth for pure helpers (composable-free functions, e.g. `hexToRgba`, `formatDate`), enums, domain models, and shared types. **Contains no composable/hook** — no `useXxx()` in this package; every `use...()` comes from `@creopse/vue`/`@creopse/react` (see `vue-api-reference.md`) or is local to the project (see `vue-conventions.md#composables-locaux-au-projet`).
 
-Le package expose cinq points d'entrée (subpaths) via son champ `exports` :
+The package exposes five entry points (subpaths) via its `exports` field:
 
-| Subpath                 | Contenu                                                                 |
+| Subpath                 | Content                                                                 |
 | ----------------------- | ----------------------------------------------------------------------- |
-| `@creopse/utils`        | Réexporte l'ensemble des groups (`models`, `helpers`, `enums`, `types`) |
-| `@creopse/utils/enums`  | Énumérations TypeScript                                                 |
-| `@creopse/utils/models` | Modèles de domaine (classes / interfaces)                               |
-| `@creopse/utils/types`  | Types TypeScript partagés                                               |
-| `@creopse/utils/helpers`| Fonctions utilitaires et constantes                                     |
+| `@creopse/utils`        | Re-exports every group (`models`, `helpers`, `enums`, `types`)          |
+| `@creopse/utils/enums`  | TypeScript enumerations                                                 |
+| `@creopse/utils/models` | Domain models (classes / interfaces)                                    |
+| `@creopse/utils/types`  | Shared TypeScript types                                                 |
+| `@creopse/utils/helpers`| Utility functions and constants                                         |
 
-Les identifiants de code sont conservés en anglais ; les explications sont en français.
+Code identifiers are kept in English; explanations are in English.
 
 ---
 
-## 1. `helpers` — Fonctions utilitaires
+## 1. `helpers` — Utility functions
 
-Les helpers sont regroupés par catégorie. Chaque fonction exportée est listée ci-dessous avec sa signature et une courte description.
+Helpers are grouped by category. Every exported function is listed below with its signature and a short description.
 
-### 1.1 Constantes (`helpers/constants`)
+### 1.1 Constants (`helpers/constants`)
 
 ```ts
 export const DASHBOARD_MODULE_NAME: string  // 'PluginDashboard'
@@ -29,223 +29,223 @@ export const SETUP_MODULE_NAME: string      // 'PluginSetup'
 export const SETUP_MODULE: string           // './src/setup.ts'
 ```
 
-Noms de modules et chemin du module de setup utilisés par l'application core.
+Module names and the setup module path used by the core application.
 
-### 1.2 Chaînes de caractères (`string`)
+### 1.2 Strings (`string`)
 
 ```ts
 getNameInitials(name: string): string
 ```
 
-Renvoie les initiales (2 lettres majuscules) d'un nom composé.
+Returns the initials (2 uppercase letters) of a compound name.
 
 ```ts
 strPadLeft(string: string, pad: string, length: number): string
 ```
 
-Complète une chaîne à gauche avec un caractère jusqu'à la longueur voulue.
+Pads a string on the left with a character up to the desired length.
 
 ```ts
 capitalizeFirstLetter(string: string): string
 ```
 
-Met en majuscule la première lettre d'une chaîne.
+Capitalizes the first letter of a string.
 
 ```ts
 extractUppercaseWords(input: string): RegExpMatchArray | null
 ```
 
-Extrait les mots entièrement en majuscules.
+Extracts words that are entirely uppercase.
 
 ```ts
 extractLowercaseWords(input: string): RegExpMatchArray | null
 ```
 
-Extrait les mots entièrement en minuscules.
+Extracts words that are entirely lowercase.
 
 ```ts
 extractNumber(string: string, options?: { array?: boolean; float?: boolean }): number | number[]
 ```
 
-Extrait un ou plusieurs nombres d'une chaîne (par défaut les flottants sont inclus, renvoie un seul nombre).
+Extracts one or more numbers from a string (floats included by default, returns a single number).
 
 ```ts
 extractAlphabet(string: string, options?: { array?: boolean }): string | string[]
 ```
 
-Extrait les caractères alphabétiques d'une chaîne.
+Extracts alphabetic characters from a string.
 
 ```ts
 removeFromString(str: string, searchString: string): string
 ```
 
-Retire `searchString` de la fin de `str` s'il y est présent.
+Removes `searchString` from the end of `str` if present.
 
 ```ts
 replaceStringParts(inputString: string, replacements: Record<string, string>): string
 ```
 
-Remplace plusieurs parties d'une chaîne selon un dictionnaire de remplacements.
+Replaces several parts of a string according to a replacement dictionary.
 
 ```ts
 isTitleLike(value: any, options?: { thresholdScore?: number; tooLongValue?: number; tooShortValue?: number }): { match: boolean; score: number }
 ```
 
-Détermine si une valeur ressemble à un titre (non vide, longueur raisonnable, pas de saut de ligne, commence par une majuscule). Renvoie le score obtenu.
+Determines whether a value looks like a title (non-empty, reasonable length, no line breaks, starts with a capital letter). Returns the resulting score.
 
 ```ts
 extractTitleLike(data: unknown, tr: (value: string) => string, defaultValue?: string): string | undefined
 ```
 
-Extrait la valeur la plus proche d'un titre depuis un objet, d'abord par nom de champ connu, puis par score heuristique, puis par repli sur la première valeur chaîne.
+Extracts the value closest to a title from an object, first by known field name, then by heuristic score, then falling back to the first string value.
 
-### 1.3 Nombres (`number`)
+### 1.3 Numbers (`number`)
 
 ```ts
 getRandomInteger(min: number, max: number): number
 ```
 
-Génère un entier aléatoire inclusif entre `min` et `max`.
+Generates a random inclusive integer between `min` and `max`.
 
 ```ts
 abbreviateNumber(number: number): string | number
 ```
 
-Abrège un nombre avec un suffixe de magnitude (`k`, `M`, `G`, …).
+Abbreviates a number with a magnitude suffix (`k`, `M`, `G`, …).
 
-### 1.4 Tableaux (`array`)
+### 1.4 Arrays (`array`)
 
 ```ts
 removeDuplicates<T>(arr: T[], property: keyof T): T[]
 ```
 
-Supprime les doublons d'un tableau selon une propriété donnée.
+Removes duplicates from an array based on a given property.
 
 ```ts
 toArrayOfPureJsObjects(array: Array<object>): Array<object>
 ```
 
-Renvoie une copie superficielle de chaque objet du tableau (objets JS purs).
+Returns a shallow copy of every object in the array (pure JS objects).
 
 ```ts
 shuffleArray<T>(array: T[]): T[]
 ```
 
-Mélange un tableau en place (algorithme Fisher-Yates) et le renvoie.
+Shuffles an array in place (Fisher-Yates algorithm) and returns it.
 
-### 1.5 Couleurs (`color`)
+### 1.5 Colors (`color`)
 
 ```ts
 genRandomColor(): string
 ```
 
-Génère un code couleur hexadécimal aléatoire (`#RRGGBB`).
+Generates a random hexadecimal color code (`#RRGGBB`).
 
 ```ts
 hexToRgba(hex: string, alpha: number): string
 ```
 
-Convertit un code hexadécimal en couleur `rgba()` avec l'alpha fourni. **Renvoie directement une chaîne `rgba(...)` complète** (pas des composantes r/g/b séparées à recomposer) — voir usage dans `vue-conventions.md#footer--header-patterns-transverses`.
+Converts a hexadecimal code into an `rgba()` color with the given alpha. **Returns a complete `rgba(...)` string directly** (not separate r/g/b components to recompose) — see usage in `vue-conventions.md#footer--header-cross-cutting-patterns`.
 
-### 1.6 Objets (`object`)
+### 1.6 Objects (`object`)
 
 ```ts
 isRealObject(value: any): boolean
 ```
 
-Vrai si `value` est un objet (ni tableau, ni `null`).
+True if `value` is an object (neither an array nor `null`).
 
 ```ts
 isStringifiedObject(str: string): boolean
 ```
 
-Vrai si la chaîne est un JSON valide représentant un objet.
+True if the string is valid JSON representing an object.
 
 ```ts
 flattenObject(obj: any, prefix?: string): Record<string, any>
 ```
 
-Aplatit récursivement un objet imbriqué en clés séparées par des points.
+Recursively flattens a nested object into dot-separated keys.
 
 ```ts
 unflattenObject(obj: Record<string, any>): any
 ```
 
-Recompose un objet à partir de clés séparées par des points.
+Rebuilds an object from dot-separated keys.
 
 ```ts
 renameKey(obj: Record<string, any>, oldKey: string, newKey: string): void
 ```
 
-Renomme une clé d'un objet (en place).
+Renames a key of an object (in place).
 
 ```ts
 renameKeyImmutable(obj: Record<string, any>, oldKey: string, newKey: string): Record<string, any>
 ```
 
-Renvoie un nouvel objet avec une clé renommée (sans muter l'original).
+Returns a new object with a key renamed (without mutating the original).
 
 ```ts
 omitKeys<T, K extends keyof T>(obj: T, keys: K[]): Omit<T, K>
 ```
 
-Retourne un nouvel objet sans les clés indiquées.
+Returns a new object without the given keys.
 
 ```ts
 isObjectEmpty(obj: any): boolean
 ```
 
-Vrai si l'objet est une instance `Object` sans propriété énumérable.
+True if the object is an `Object` instance with no enumerable property.
 
-### 1.7 Fichiers (`file`)
+### 1.7 Files (`file`)
 
 ```ts
 humanFileSize(bytes: number, si?: boolean, dp?: number): string
 ```
 
-Convertit un nombre d'octets en taille lisible (SI = 1000, sinon binaire 1024).
+Converts a number of bytes into a human-readable size (SI = 1000, otherwise binary 1024).
 
 ```ts
 filenameFromUrl(url: string): string
 ```
 
-Extrait le nom de fichier depuis une URL.
+Extracts the file name from a URL.
 
 ```ts
 binaryContentToFile(binaryContent: string, fileName?: string, mimeType?: string, download?: boolean): File
 ```
 
-Convertit un contenu binaire en objet `File`, avec téléchargement optionnel.
+Converts binary content into a `File` object, with optional download.
 
 ```ts
 binaryContentToDataURL(binaryContent: string, mimeType: string): Promise<string>
 ```
 
-Convertit un contenu binaire en Data URL.
+Converts binary content into a Data URL.
 
 ```ts
 blobToDataURL(blob: Blob): Promise<string>
 ```
 
-Convertit un `Blob` en Data URL.
+Converts a `Blob` into a Data URL.
 
 ```ts
 determineFileType(file: File): MediaFileType
 ```
 
-Détermine le type de média (`IMAGE`, `VIDEO`, `AUDIO`, `DOCUMENT`, `OTHER`) à partir du MIME du fichier.
+Determines the media type (`IMAGE`, `VIDEO`, `AUDIO`, `DOCUMENT`, `OTHER`) from the file's MIME type.
 
 ```ts
 getFileExtension(path: string): string
 ```
 
-Renvoie l'extension de fichier d'un chemin (chaîne vide si aucune).
+Returns the file extension of a path (empty string if none).
 
 ```ts
 downloadObjectAsJson(exportObj: object, exportName: string): void
 ```
 
-Télécharge un objet sous forme de fichier JSON.
+Downloads an object as a JSON file.
 
 ### 1.8 Images (`image`)
 
@@ -253,13 +253,13 @@ Télécharge un objet sous forme de fichier JSON.
 compressImage(file: File, options?: { maxSizeMB?: number; maxWidthOrHeight?: number }): Promise<File>
 ```
 
-Compresse une image (`jpeg/jpg/png/gif/webp`) via `browser-image-compression`.
+Compresses an image (`jpeg/jpg/png/gif/webp`) via `browser-image-compression`.
 
 ```ts
 loadImageMeta(url: string): Promise<HTMLImageElement>
 ```
 
-Charge les métadonnées d'une image depuis une URL.
+Loads an image's metadata from a URL.
 
 ### 1.9 URLs (`url`)
 
@@ -267,165 +267,165 @@ Charge les métadonnées d'une image depuis une URL.
 removeTrailingSlash(path: string): string
 ```
 
-Retire le slash final d'un chemin (sauf s'il ne fait qu'un caractère).
+Removes the trailing slash from a path (unless it's a single character).
 
 ```ts
 removeLeadingSlash(path: string): string
 ```
 
-Retire le slash initial d'un chemin (sauf s'il ne fait qu'un caractère).
+Removes the leading slash from a path (unless it's a single character).
 
 ```ts
 getBaseUrl(): string
 ```
 
-Renvoie l'URL de base (`protocol//hostname[:port]`) de la fenêtre courante.
+Returns the base URL (`protocol//hostname[:port]`) of the current window.
 
 ```ts
 getPageUrl(): string
 ```
 
-Renvoie l'URL complète de la page courante.
+Returns the full URL of the current page.
 
 ```ts
 isExternal(path: string): boolean
 ```
 
-Vrai si le chemin est une URL externe, un email (`mailto:`) ou un téléphone (`tel:`).
+True if the path is an external URL, an email (`mailto:`), or a phone number (`tel:`).
 
 ```ts
 isURL(str: string): boolean
 ```
 
-Valide qu'une chaîne est une URL (`http`, `https`, `ftp`), avec gestion du TLD, localhost et adresses IP.
+Validates that a string is a URL (`http`, `https`, `ftp`), handling TLDs, localhost, and IP addresses.
 
-### 1.10 Navigateur (`browser`)
+### 1.10 Browser (`browser`)
 
 ```ts
 openWindowWithJS(url: string, data: Record<string, string>, options?: { target?: string; method?: string }): void
 ```
 
-Soumet un formulaire caché (POST par défaut) vers une URL donnée.
+Submits a hidden form (POST by default) to a given URL.
 
 ```ts
 downloadByUrl(url: string): void
 ```
 
-Déclenche le téléchargement d'un fichier via son URL.
+Triggers the download of a file via its URL.
 
 ```ts
 dataUrlToBlob(dataUrl: string): Blob
 ```
 
-Convertit une Data URL en `Blob`.
+Converts a Data URL into a `Blob`.
 
 ```ts
 dataUrlToFile(dataUrl: string, options?: { fileName?: string; type?: string }): File
 ```
 
-Convertit une Data URL en `File`.
+Converts a Data URL into a `File`.
 
-### 1.11 Temps (`time`)
+### 1.11 Time (`time`)
 
 ```ts
 sleep(ms: number): Promise<void>
 ```
 
-Attend le nombre de millisecondes donné.
+Waits for the given number of milliseconds.
 
 ```ts
 getCurrentTimestamp(): number
 ```
 
-Renvoie le timestamp UNIX courant (en secondes).
+Returns the current UNIX timestamp (in seconds).
 
 ```ts
 getDateFromTimestamp(date: number, options?: { locale?: string; pattern?: string }): string
 ```
 
-Formate un timestamp (secondes) en chaîne de date.
+Formats a timestamp (seconds) into a date string.
 
 ```ts
 reformatDate(date: string | Date, options?: { inPattern?: string; outPattern?: string; locale?: string }): string
 ```
 
-Convertit une date d'un format à un autre (via dayjs, locale `fr` par défaut).
+Converts a date from one format to another (via dayjs, `fr` locale by default).
 
 ```ts
 formatDate(date: string | Date, options?: { outPattern?: string; locale?: string }): string
 ```
 
-Formate une date dans le format de sortie voulu. **C'est le helper à utiliser pour tout affichage de date dans une section** — ne pas réécrire de `toLocaleDateString(...)` local, voir `vue-conventions.md#formatage-de-date`.
+Formats a date in the desired output format. **This is the helper to use for any date display in a section** — don't rewrite a local `toLocaleDateString(...)`, see `vue-conventions.md#date-formatting`.
 
 ```ts
 differenceWithToday(date: string | Date, options?: { pattern?: string; unit?: OpUnitType | QUnitType }): number
 ```
 
-Différence (en unité donnée) entre une date et aujourd'hui.
+Difference (in the given unit) between a date and today.
 
 ```ts
 differenceBetweenDates(startDate: string | Date, endDate: string | Date, options?: { startDatePattern?: string; endDatePattern?: string; unit?: OpUnitType | QUnitType }): number
 ```
 
-Différence entre deux dates.
+Difference between two dates.
 
 ```ts
 differenceFromNow(date: string | Date, options?: { locale?: string; pattern?: string }): string
 ```
 
-Différence relative (« il y a … ») entre une date et maintenant.
+Relative difference ("… ago") between a date and now.
 
-### 1.12 Géolocalisation (`geo`)
+### 1.12 Geolocation (`geo`)
 
 ```ts
 getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number): number
 ```
 
-Distance (en km) entre deux coordonnées via la formule de Haversine.
+Distance (in km) between two coordinates via the Haversine formula.
 
 ```ts
 deg2rad(deg: number): number
 ```
 
-Convertit des degrés en radians.
+Converts degrees to radians.
 
-### 1.13 Divers (`misc`)
+### 1.13 Miscellaneous (`misc`)
 
 ```ts
 formatTimeFromSeconds(duration: number, options?: { separator?: string }): string
 ```
 
-Formate une durée en secondes en `HH:MM:SS` (séparateur `:` par défaut).
+Formats a duration in seconds as `HH:MM:SS` (`:` separator by default).
 
 ```ts
 genPassword(length?: number, options?: { letters?: boolean; numbers?: boolean; symbols?: boolean }): string
 ```
 
-Génère un mot de passe avec les jeux de caractères demandés.
+Generates a password with the requested character sets.
 
 ```ts
 parseINIString(iniString: string): { [key: string]: string }
 ```
 
-Parse une chaîne INI (sections + clés/valeurs) en objet.
+Parses an INI string (sections + key/value pairs) into an object.
 
 ```ts
 generateCustomId(length: number): string
 ```
 
-Génère un identifiant aléatoire de la longueur demandée.
+Generates a random identifier of the requested length.
 
 ```ts
 sanitizeId(id: string): string
 ```
 
-Nettoie un identifiant (lettres, chiffres, slash, tiret ; slash → tiret).
+Sanitizes an identifier (letters, digits, slash, hyphen; slash → hyphen).
 
 ```ts
 slideToId(id: string): void
 ```
 
-Défile en douceur vers l'élément ayant l'ID donné.
+Smoothly scrolls to the element with the given ID.
 
 ### 1.14 SVG (`svg`)
 
@@ -433,11 +433,11 @@ Défile en douceur vers l'élément ayant l'ID donné.
 isSVG(input: string): boolean
 ```
 
-Vrai si la chaîne est un document SVG valide (parsing DOM inclus).
+True if the string is a valid SVG document (includes DOM parsing).
 
 ---
 
-## 2. `enums` — Énumérations
+## 2. `enums` — Enumerations
 
 ### `ItemCreatorType` (`content-model/item-creator-type`)
 
@@ -603,14 +603,14 @@ Vrai si la chaîne est un document SVG valide (parsing DOM inclus).
 
 ### `ResponseStatusCode` (`response-status-code`)
 
-Code HTTP standard (1xx–5xx) incluant des ajouts spécifiques :
+Standard HTTP codes (1xx–5xx) including specific additions:
 
-- Informations : `CONTINUE = 100`, `SWITCHING_PROTOCOLS = 101`, `PROCESSING = 102`
-- Succès : `OK = 200`, `CREATED = 201`, `ACCEPTED = 202`, `NON_AUTHORITATIVE_INFORMATION = 203`, `NO_CONTENT = 204`, `RESET_CONTENT = 205`, `PARTIAL_CONTENT = 206`, `MULTI_STATUS = 207`, `ALREADY_REPORTED = 208`, `IM_USED = 226`
-- Redirections : `MULTIPLE_CHOICES = 300`, `MOVED_PERMANENTLY = 301`, `FOUND = 302`, `SEE_OTHER = 303`, `NOT_MODIFIED = 304`, `USE_PROXY = 305`, `TEMPORARY_REDIRECT = 307`, `PERMANENT_REDIRECT = 308`
-- Erreurs client : `BAD_REQUEST = 400`, `UNAUTHORIZED = 401`, `PAYMENT_REQUIRED = 402`, `FORBIDDEN = 403`, `NOT_FOUND = 404`, `METHOD_NOT_ALLOWED = 405`, `NOT_ACCEPTABLE = 406`, `PROXY_AUTHENTICATION_REQUIRED = 407`, `REQUEST_TIMEOUT = 408`, `CONFLICT = 409`, `GONE = 410`, `LENGTH_REQUIRED = 411`, `PRECONDITION_FAILED = 412`, `PAYLOAD_TOO_LARGE = 413`, `URI_TOO_LONG = 414`, `UNSUPPORTED_MEDIA_TYPE = 415`, `RANGE_NOT_SATISFIABLE = 416`, `EXPECTATION_FAILED = 417`, `IM_A_TEAPOT = 418`, `SESSION_HAS_EXPIRED = 419`, `MISDIRECTED_REQUEST = 421`, `UNPROCESSABLE_ENTITY = 422`, `LOCKED = 423`, `FAILED_DEPENDENCY = 424`, `TOO_EARLY = 425`, `UPGRADE_REQUIRED = 426`, `PRECONDITION_REQUIRED = 428`, `TOO_MANY_REQUESTS = 429`, `REQUEST_HEADER_FIELDS_TOO_LARGE = 431`, `CONNECTION_CLOSED_WITHOUT_RESPONSE = 444`, `RETRY_WITH = 449`, `UNAVAILABLE_FOR_LEGAL_REASONS = 451`, `CLIENT_CLOSED_REQUEST = 499`
-- Erreurs serveur : `INTERNAL_SERVER_ERROR = 500`, `NOT_IMPLEMENTED = 501`, `BAD_GATEWAY = 502`, `SERVICE_UNAVAILABLE = 503`, `GATEWAY_TIMEOUT = 504`, `HTTP_VERSION_NOT_SUPPORTED = 505`, `VARIANT_ALSO_NEGOTIATES = 506`, `INSUFFICIENT_STORAGE = 507`, `LOOP_DETECTED = 508`, `BANDWIDTH_LIMIT_EXCEEDED = 509`, `NOT_EXTENDED = 510`, `NETWORK_AUTHENTICATION_REQUIRED = 511`, `UNKNOWN_ERROR = 520`, `WEB_SERVER_IS_DOWN = 521`, `CONNECTION_TIMED_OUT = 522`, `ORIGIN_IS_UNREACHABLE = 523`, `A_TIMEOUT_OCCURRED = 524`, `SSL_HANDSHAKE_FAILED = 525`, `INVALID_SSL_CERTIFICATE = 526`, `RAILGUN_ERROR = 527`
-- Non officiels : `NETWORK_READ_TIMEOUT_ERROR = 598`, `NETWORK_CONNECT_TIMEOUT_ERROR = 599`
+- Informational: `CONTINUE = 100`, `SWITCHING_PROTOCOLS = 101`, `PROCESSING = 102`
+- Success: `OK = 200`, `CREATED = 201`, `ACCEPTED = 202`, `NON_AUTHORITATIVE_INFORMATION = 203`, `NO_CONTENT = 204`, `RESET_CONTENT = 205`, `PARTIAL_CONTENT = 206`, `MULTI_STATUS = 207`, `ALREADY_REPORTED = 208`, `IM_USED = 226`
+- Redirection: `MULTIPLE_CHOICES = 300`, `MOVED_PERMANENTLY = 301`, `FOUND = 302`, `SEE_OTHER = 303`, `NOT_MODIFIED = 304`, `USE_PROXY = 305`, `TEMPORARY_REDIRECT = 307`, `PERMANENT_REDIRECT = 308`
+- Client errors: `BAD_REQUEST = 400`, `UNAUTHORIZED = 401`, `PAYMENT_REQUIRED = 402`, `FORBIDDEN = 403`, `NOT_FOUND = 404`, `METHOD_NOT_ALLOWED = 405`, `NOT_ACCEPTABLE = 406`, `PROXY_AUTHENTICATION_REQUIRED = 407`, `REQUEST_TIMEOUT = 408`, `CONFLICT = 409`, `GONE = 410`, `LENGTH_REQUIRED = 411`, `PRECONDITION_FAILED = 412`, `PAYLOAD_TOO_LARGE = 413`, `URI_TOO_LONG = 414`, `UNSUPPORTED_MEDIA_TYPE = 415`, `RANGE_NOT_SATISFIABLE = 416`, `EXPECTATION_FAILED = 417`, `IM_A_TEAPOT = 418`, `SESSION_HAS_EXPIRED = 419`, `MISDIRECTED_REQUEST = 421`, `UNPROCESSABLE_ENTITY = 422`, `LOCKED = 423`, `FAILED_DEPENDENCY = 424`, `TOO_EARLY = 425`, `UPGRADE_REQUIRED = 426`, `PRECONDITION_REQUIRED = 428`, `TOO_MANY_REQUESTS = 429`, `REQUEST_HEADER_FIELDS_TOO_LARGE = 431`, `CONNECTION_CLOSED_WITHOUT_RESPONSE = 444`, `RETRY_WITH = 449`, `UNAVAILABLE_FOR_LEGAL_REASONS = 451`, `CLIENT_CLOSED_REQUEST = 499`
+- Server errors: `INTERNAL_SERVER_ERROR = 500`, `NOT_IMPLEMENTED = 501`, `BAD_GATEWAY = 502`, `SERVICE_UNAVAILABLE = 503`, `GATEWAY_TIMEOUT = 504`, `HTTP_VERSION_NOT_SUPPORTED = 505`, `VARIANT_ALSO_NEGOTIATES = 506`, `INSUFFICIENT_STORAGE = 507`, `LOOP_DETECTED = 508`, `BANDWIDTH_LIMIT_EXCEEDED = 509`, `NOT_EXTENDED = 510`, `NETWORK_AUTHENTICATION_REQUIRED = 511`, `UNKNOWN_ERROR = 520`, `WEB_SERVER_IS_DOWN = 521`, `CONNECTION_TIMED_OUT = 522`, `ORIGIN_IS_UNREACHABLE = 523`, `A_TIMEOUT_OCCURRED = 524`, `SSL_HANDSHAKE_FAILED = 525`, `INVALID_SSL_CERTIFICATE = 526`, `RAILGUN_ERROR = 527`
+- Unofficial: `NETWORK_READ_TIMEOUT_ERROR = 598`, `NETWORK_CONNECT_TIMEOUT_ERROR = 599`
 
 ### `UserRole` (`user-role`)
 
@@ -630,9 +630,9 @@ Code HTTP standard (1xx–5xx) incluant des ajouts spécifiques :
 
 ---
 
-## 3. `models` — Modèles de domaine
+## 3. `models` — Domain models
 
-Les modèles sont majoritairement des classes (`Model`) avec constructeur, mais certains sont des interfaces. Champs principaux (les champs marqués optionnels `?` le sont dans la source ; les relations listées sont le plus souvent optionnelles).
+Models are mostly classes (`Model`) with a constructor, but some are interfaces. Main fields (fields marked optional `?` are optional in the source; listed relations are most often optional).
 
 ### `AdIdentifierModel`
 
@@ -658,7 +658,7 @@ Les modèles sont majoritairement des classes (`Model`) avec constructeur, mais 
 
 `id?`, `contentModelId?`, `title: string`, `contentModelData: any | null`, `data?: { [key: string]: any } | null`, `isActive: boolean`, `createdByType?: ItemCreatorType`, `createdBy?`, `createdAt?`, `updatedAt?` + relations `createdByUser?`, `contentModel?`, `relatedItems?`, `relatedTo?`.
 
-> Deux formes du même contenu : `contentModelData` (accédé `.index.champ` — utilisé sur les pages de détail via `useProps()`) et `data` (accédé `.champ` directement — utilisé sur les items venant d'une liste, ex. `storeToRefs(useContentStore())` ou `getContentModelItems`). Cohérent avec les patterns déjà documentés dans `section-patterns.md`.
+> Two forms of the same content: `contentModelData` (accessed via `.index.field` — used on detail pages via `useProps()`) and `data` (accessed via `.field` directly — used on items coming from a list, e.g. `storeToRefs(useContentStore())` or `getContentModelItems`). Consistent with the patterns already documented in `section-patterns.md`.
 
 ### `ContentModelModel`
 
@@ -682,7 +682,7 @@ Les modèles sont majoritairement des classes (`Model`) avec constructeur, mais 
 
 ### `MenuItemModel`
 
-`id?`, `menuId?`, `pageId?`, `sectionKey?`, `menuItemTypeId?`, `menuItemGroupId?`, `title: string`, `description?`, `path?`, `url?`, `controller?`, `parentId?`, `position: number`, `isActive: boolean`, `isVisible: boolean`, `color?`, `icon?`, `image?`, `targetType: MenuItemTargetType`, `contentType?`, `contentId?`, `createdAt?`, `updatedAt?` + relations `subMenuItems?`, `menu?`, `page?`, `section?`, `type?`, `group?`, `content?` (type union de `ContentModelItemModel | NewsCategoryModel | NewsArticleModel | NewsTagModel`).
+`id?`, `menuId?`, `pageId?`, `sectionKey?`, `menuItemTypeId?`, `menuItemGroupId?`, `title: string`, `description?`, `path?`, `url?`, `controller?`, `parentId?`, `position: number`, `isActive: boolean`, `isVisible: boolean`, `color?`, `icon?`, `image?`, `targetType: MenuItemTargetType`, `contentType?`, `contentId?`, `createdAt?`, `updatedAt?` + relations `subMenuItems?`, `menu?`, `page?`, `section?`, `type?`, `group?`, `content?` (union type of `ContentModelItemModel | NewsCategoryModel | NewsArticleModel | NewsTagModel`).
 
 ### `MenuLocationModel`
 
@@ -710,7 +710,7 @@ Les modèles sont majoritairement des classes (`Model`) avec constructeur, mais 
 
 ### `NewsletterCampaignModel`
 
-`id?`, `title: string`, `subject: string`, `content: string`, `rawContent: string`, `recipients: string[]`, `history?: NewsletterCampaignHistory[] | null`, `createdAt?`, `updatedAt?`. Interface `NewsletterCampaignHistory` : `id: string`, `date: string`, `report: string`.
+`id?`, `title: string`, `subject: string`, `content: string`, `rawContent: string`, `recipients: string[]`, `history?: NewsletterCampaignHistory[] | null`, `createdAt?`, `updatedAt?`. Interface `NewsletterCampaignHistory`: `id: string`, `date: string`, `report: string`.
 
 ### `NewsletterEmailModel`
 
@@ -722,7 +722,7 @@ Les modèles sont majoritairement des classes (`Model`) avec constructeur, mais 
 
 ### `NotificationModel`
 
-`id?`, `type: NotificationType`, `notifiableId: number`, `notifiableType: string`, `data: NotificationData`, `readAt?`, `createdAt?`, `updatedAt?`. Interface `NotificationData` : `title: string`, `content: string`, `params: any[]`, `triggeredBy: string`, `source: NotificationSource`, `target: string`, `removable: boolean`.
+`id?`, `type: NotificationType`, `notifiableId: number`, `notifiableType: string`, `data: NotificationData`, `readAt?`, `createdAt?`, `updatedAt?`. Interface `NotificationData`: `title: string`, `content: string`, `params: any[]`, `triggeredBy: string`, `source: NotificationSource`, `target: string`, `removable: boolean`.
 
 ### `PageSectionModel`
 
@@ -762,7 +762,7 @@ Les modèles sont majoritairement des classes (`Model`) avec constructeur, mais 
 
 ### `UserSessionModel`
 
-`id?`, `userId?`, `ipAddress: string`, `userAgent: string`, `locationData?: LocationData`, `lastActivity: string`, `createdAt?`, `updatedAt?` + relation `user?`. Interface `LocationData` : `ip: string`, `iso?`, `city?`, `region?`, `source?`, `country?`, `currency?`, `latitude?`, `timezone?`, `continent?`, `longitude?`.
+`id?`, `userId?`, `ipAddress: string`, `userAgent: string`, `locationData?: LocationData`, `lastActivity: string`, `createdAt?`, `updatedAt?` + relation `user?`. Interface `LocationData`: `ip: string`, `iso?`, `city?`, `region?`, `source?`, `country?`, `currency?`, `latitude?`, `timezone?`, `continent?`, `longitude?`.
 
 ### `UserModel`
 
@@ -782,17 +782,17 @@ Les modèles sont majoritairement des classes (`Model`) avec constructeur, mais 
 
 ---
 
-## 4. `types` — Types partagés
+## 4. `types` — Shared types
 
 ### `app-information.ts`
 
-- `AppInformationObject` — objet décrivant les informations de l'application (nom, icônes, logo, contacts, couleurs, et une longue liste de réseaux sociaux : facebook, twitter, instagram, whatsapp, linkedin, youtube, … , playstore, appstore, etc., plus `additionalInfo`). Voir la liste complète des clés utilisées dans `field-types.md` (règle sur `getAppInformationValue`).
+- `AppInformationObject` — object describing the application's information (name, icons, logo, contact details, colors, and a long list of social networks: facebook, twitter, instagram, whatsapp, linkedin, youtube, … , playstore, appstore, etc., plus `additionalInfo`). See the full list of keys used in `field-types.md` (the `getAppInformationValue` rule).
 - `AppInformationKey = keyof AppInformationObject`.
 
 ### `app-setting.ts`
 
-- `AppSettingObject` — configuration applicative (routing de base, inscription, libellés de profil, traduction avec clés d'API Google/DeepL, apparence : logos, icônes, couleurs, pages d'auth, contenu).
-- `AppSettingKey = Flatten<AppSettingObject>` — clés aplaties (pointées) de la configuration.
+- `AppSettingObject` — app configuration (base routing, registration, profile labels, translation with Google/DeepL API keys, appearance: logos, icons, colors, auth pages, content).
+- `AppSettingKey = Flatten<AppSettingObject>` — flattened (dotted) keys of the configuration.
 - `AppSettingType = 'string' | 'number' | 'boolean' | 'object' | 'array'`.
 
 ### `pagination.ts`
@@ -809,8 +809,8 @@ Les modèles sont majoritairement des classes (`Model`) avec constructeur, mais 
 
 ### `flatten.ts`
 
-- `Join<K, P>` — type utilitaire joignant deux clés par un point.
-- `Flatten<T>` — type utilitaire aplatissant récursivement les clés d'un objet (les tableaux sont conservés tels quels).
+- `Join<K, P>` — utility type joining two keys with a dot.
+- `Flatten<T>` — utility type recursively flattening the keys of an object (arrays are kept as-is).
 
 ### `common.ts`
 
@@ -822,31 +822,31 @@ Les modèles sont majoritairement des classes (`Model`) avec constructeur, mais 
 ### `plugin.ts`
 
 - `PluginPage` — `{ name: string; path: string; title?: string | { [key: string]: string }; module: string; icon?: string; hidden?: boolean }`.
-- `PluginData` — `{ id: string; entry: string; pages?; navIcon?; indexPageName?; dashboard?; settings?; mode?; development? }` (description des métadonnées d'un plugin).
+- `PluginData` — `{ id: string; entry: string; pages?; navIcon?; indexPageName?; dashboard?; settings?; mode?; development? }` (metadata description of a plugin).
 
 ### `props.ts`
 
-- `SharedProps` — étend `Page` d'Inertia ; expose la configuration (`config.app`, `config.frontend`), `appLocale`, `appFallbackLocale`, `userData`, `isUserLoggedIn`, `pageData`, `sectionData`, `defaultMeta`, et de nombreuses données partagées (`articles?`, `paginatedArticles?`, `categories?`, `tags?`, `article?`, `appInformation`, `adIdentifiers?`, `contentModels?`, `menus?`, `menuLocations?`, `menuItemGroups?`, `ads?`, `permalinks?`, `query?`, `data?`, `youtubeChannelId?`, index de signature `[key: string]: unknown`).
+- `SharedProps` — extends Inertia's `Page`; exposes configuration (`config.app`, `config.frontend`), `appLocale`, `appFallbackLocale`, `userData`, `isUserLoggedIn`, `pageData`, `sectionData`, `defaultMeta`, and numerous shared data fields (`articles?`, `paginatedArticles?`, `categories?`, `tags?`, `article?`, `appInformation`, `adIdentifiers?`, `contentModels?`, `menus?`, `menuLocations?`, `menuItemGroups?`, `ads?`, `permalinks?`, `query?`, `data?`, `youtubeChannelId?`, index signature `[key: string]: unknown`).
 - `SectionProps` — `{ data?; settings?; sectionKey?; metadata: { slug?; name?; title?; linkId?; createdAt?; updatedAt? } }`.
 
-### `core-bridge/*` — Contrat de pont avec l'application core
+### `core-bridge/*` — Contract with the core application bridge
 
 #### `core-bridge/api.ts`
 
-- `ResponseType` — type de réponse axios (`'arraybuffer' | 'blob' | 'document' | 'json' | 'text' | 'stream' | 'formdata'`).
+- `ResponseType` — axios response type (`'arraybuffer' | 'blob' | 'document' | 'json' | 'text' | 'stream' | 'formdata'`).
 - `Method = 'get' | 'post' | 'put' | 'delete'`.
-- `Payload` — options de requête (`method?`, `routeBase?`, `responseType?`, `params?`, `data?`, `baseUrl?`, `url?`, `id?`, `headers?`, `useApiBaseUrl?`).
+- `Payload` — request options (`method?`, `routeBase?`, `responseType?`, `params?`, `data?`, `baseUrl?`, `url?`, `id?`, `headers?`, `useApiBaseUrl?`).
 - `Response<T>` — `{ success: boolean; failure: boolean; result: { [key: string]: any; data?: T }; error?: any }`.
-- `Api` — interface du client API (`request`, `postItemRequest`, `putItemRequest`, `deleteItemRequest`, `getItemRequest`, `getAllItemsRequest`, `instance: AxiosInstance`).
+- `Api` — API client interface (`request`, `postItemRequest`, `putItemRequest`, `deleteItemRequest`, `getItemRequest`, `getAllItemsRequest`, `instance: AxiosInstance`).
 
 #### `core-bridge/i18n.ts`
 
-- `TranslationMessages = Partial<Record<string, Record<string, any>>>` — messages de traduction indexés par locale puis par clé.
+- `TranslationMessages = Partial<Record<string, Record<string, any>>>` — translation messages indexed by locale then by key.
 - `BridgeI18n` — `{ t(key, params?): string; getLocale(): string; register(messages): void; languages: Language[] }`.
 
 #### `core-bridge/stores.ts`
 
-- `UserInterfaceState` — état UI (thème clair, menus, taille de layout, …).
+- `UserInterfaceState` — UI state (light theme, menus, layout size, …).
 - `BridgeAuthState` — `{ userData: UserModel | null }`.
 - `BridgeServerState` — `{ isServerAvailable: boolean; isDatabaseAvailable: boolean }`.
 - `BridgeStore<T>` — `{ getState(): T; setState(state): void; subscribe(listener): () => void }`.

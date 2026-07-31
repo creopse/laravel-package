@@ -1,45 +1,45 @@
 # Conventions — Navigation (`menu`)
 
-À consulter à l'étape 6 du workflow (`SKILL.md`), après la création des pages (étape 4) et le scaffolding des sections (étape 5).
+To consult at step 6 of the workflow (`SKILL.md`), after page creation (step 4) and section scaffolding (step 5).
 
 ---
 
-## Pourquoi cette étape est nécessaire
+## Why this step is necessary
 
-`Header.vue` et `Footer.vue` (voir `section-patterns.md`) consomment respectivement `getMenuItems()` (menu principal) et `getMenuItemsByLocation('footer', true)` (menu pied de page), et résolvent les liens via `getMenuHref(item)` / `openMenu(item)`. Les champs de section `menu-item-link` sont résolus via `getLinkFromMenuItemId`. Tant que cette étape n'est pas exécutée, ces composants n'ont **aucune donnée réelle à afficher** en dev, même une fois parfaitement codés.
+`Header.vue` and `Footer.vue` (see `section-patterns.md`) respectively consume `getMenuItems()` (main menu) and `getMenuItemsByLocation('footer', true)` (footer menu), and resolve links via `getMenuHref(item)` / `openMenu(item)`. Section `menu-item-link` fields are resolved via `getLinkFromMenuItemId`. Until this step is executed, these components have **no real data to display** in dev, even once perfectly coded.
 
 ---
 
-## Correspondance location ↔ usage
+## Location ↔ usage correspondence
 
-| Location | Consommée par | Exemple |
+| Location | Consumed by | Example |
 |---|---|---|
-| `header` | `Header.vue` — menu principal (`getMenuItems()` récupère le menu assigné à cette location) | Accueil, À propos, Services, Contact |
-| `footer` | `Footer.vue` — `getMenuItemsByLocation('footer', true)` | Liens rapides / quick links |
+| `header` | `Header.vue` — main menu (`getMenuItems()` retrieves the menu assigned to this location) | Home, About, Services, Contact |
+| `footer` | `Footer.vue` — `getMenuItemsByLocation('footer', true)` | Quick links |
 
-D'autres locations peuvent être créées si le template source en a besoin (ex. une barre de liens secondaire), mais `header`/`footer` couvrent la grande majorité des cas observés dans les composants de ce projet.
+Other locations can be created if the source template needs them (e.g. a secondary link bar), but `header`/`footer` cover the vast majority of cases observed in this project's components.
 
 ---
 
-## Ordre des commandes
+## Command order
 
-### 1. Locations et taxonomie (si le menu a des sous-menus stylés différemment)
+### 1. Locations and taxonomy (if the menu has sub-menus styled differently)
 
 ```bash
 creopse menu location-add header --description "en:Site header menu"
 creopse menu location-add footer --description "en:Site footer menu"
 ```
 
-Ne créer `item-group-add`/`item-type-add` que si le template source distingue visuellement certains items (ex. un item "dropdown" stylé différemment) — ne pas les créer par défaut si le menu est plat.
+Only create `item-group-add`/`item-type-add` if the source template visually distinguishes certain items (e.g. a "dropdown" item styled differently) — don't create them by default if the menu is flat.
 
-### 2. Le menu, assigné à sa location
+### 2. The menu, assigned to its location
 
 ```bash
 creopse menu add main --title "en:Main Menu" --title "fr:Menu Principal" --location header
 creopse menu add footer-links --title "en:Footer Links" --location footer
 ```
 
-### 3. Les items, pointant vers les pages créées à l'étape 4
+### 3. The items, pointing to the pages created in step 4
 
 ```bash
 creopse menu item-add main --title "en:Home" --title "fr:Accueil" --page home --target-type page-link --position 1
@@ -47,14 +47,14 @@ creopse menu item-add main --title "en:About" --title "fr:À propos" --page abou
 creopse menu item-add main --title "en:Contact" --title "fr:Contact" --page contact --target-type page-link --position 3
 ```
 
-- `--target-type page-link` + `--page <name>` : lien vers une page créée à l'étape 4 — c'est le cas très majoritaire dans ce workflow.
-- `--target-type external-link` + `--url` : uniquement pour un lien externe réel (réseaux sociaux dans un menu, lien vers une plateforme tierce) — ne pas utiliser pour les liens internes du site.
-- `--target-type content-link` + `--content-type content-model` + `--content-id <id>` : lien direct vers un item de modèle de contenu (ex. une fiche Service précise) plutôt que vers une page générique. **Attention à l'ordre** : les modèles de contenu et leurs items ne sont créés qu'à l'étape 7, donc **après** cette étape 6 — un item de menu `content-link` ne peut pas encore être créé à ce stade. Si le template source en a besoin (rare — la nav principale pointe presque toujours vers des pages), différer la création de ces items-là spécifiquement et revenir compléter le menu en un second passage juste après l'étape 7, plutôt que d'inventer un `--content-id` provisoire.
-  Ne pas confondre avec le permalink créé à l'étape 8 (`permalinks-conventions.md`) : un item de menu `content-link` est un lien de navigation **explicite** vers un item précis (ex. "Notre service phare" dans le header) ; le permalink, lui, fait exister la route de détail **pour tous les items** du modèle sans qu'aucun item de menu ne soit nécessaire (cas très majoritaire — un item de portfolio n'a pas d'entrée de menu dédiée, juste un lien depuis la carte qui le liste). Les deux mécanismes sont indépendants et peuvent coexister.
-- `--parent <id>` : pour un item enfant d'un dropdown, avec `--menu-item-type dropdown` sur le groupe concerné si une distinction visuelle existe.
-- `--section-key` : pour un lien d'ancrage vers une section précise d'une page (scroll interne), si le template source en a besoin.
+- `--target-type page-link` + `--page <name>`: link to a page created in step 4 — this is by far the most common case in this workflow.
+- `--target-type external-link` + `--url`: only for a genuinely external link (social networks in a menu, link to a third-party platform) — do not use for the site's internal links.
+- `--target-type content-link` + `--content-type content-model` + `--content-id <id>`: direct link to a content model item (e.g. a specific Service entry) rather than to a generic page. **Watch the ordering**: content models and their items aren't created until step 7, i.e. **after** this step 6 — a `content-link` menu item can't be created yet at this stage. If the source template needs one (rare — the main nav almost always points to pages), defer creating those specific items and come back to complete the menu in a second pass right after step 7, rather than inventing a provisional `--content-id`.
+  Don't confuse this with the permalink created in step 8 (`permalinks-conventions.md`): a `content-link` menu item is an **explicit** navigation link to a specific item (e.g. "Our flagship service" in the header); the permalink, on the other hand, makes the detail route exist **for every item** of the model without any menu item being necessary (the most common case — a portfolio item has no dedicated menu entry, just a link from the card that lists it). The two mechanisms are independent and can coexist.
+- `--parent <id>`: for a child item of a dropdown, with `--menu-item-type dropdown` on the relevant group if a visual distinction exists.
+- `--section-key`: for an anchor link to a specific section of a page (internal scroll), if the source template needs it.
 
-### 4. Menu de pied de page
+### 4. Footer menu
 
 ```bash
 creopse menu item-add footer-links --title "en:Home" --page home --target-type page-link --position 1
@@ -63,9 +63,9 @@ creopse menu item-add footer-links --title "en:Services" --page services --targe
 
 ---
 
-## Retrouver les IDs générés pour les champs `menu-item-link`
+## Finding the generated IDs for `menu-item-link` fields
 
-Les fake data générées à l'étape 9 pour des champs `menu-item-link` référencent des items de menu par ID numérique (voir règle 9 de `field-types.md` pour le choix `menu-item-link` vs `text`). Après création des items ci-dessus, noter les IDs retournés (sortie CLI, ou requête `database-query` si Laravel Boost est disponible sur le projet — voir `media-conventions.md` pour le principe) dans `.creopse/menus/<location>.json`, pour réutilisation directe lors de la génération des fake data de section.
+The fake data generated in step 9 for `menu-item-link` fields reference menu items by numeric ID (see rule 9 of `field-types.md` for the `menu-item-link` vs `text` choice). After creating the items above, note the IDs returned (CLI output, or a `database-query` if Laravel Boost is available on the project — see `media-conventions.md` for the principle) in `.creopse/menus/<location>.json`, for direct reuse when generating section fake data.
 
 ```json
 {
@@ -81,6 +81,6 @@ Les fake data générées à l'étape 9 pour des champs `menu-item-link` référ
 
 ---
 
-## Point de validation
+## Validation point
 
-Présenter la structure de menu complète (locations, items, hiérarchie éventuelle) avant exécution — ces commandes créent des entrées en base consommées immédiatement par Header/Footer.
+Present the complete menu structure (locations, items, any hierarchy) before execution — these commands create database entries consumed immediately by Header/Footer.

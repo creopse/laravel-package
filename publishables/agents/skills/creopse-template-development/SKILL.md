@@ -1,281 +1,281 @@
 ---
 name: creopse-template-development
-description: Convertit un template HTML statique en template Creopse complet et fonctionnel en dev (base information, médias réels, pages, composants de section/widget Vue ou React, structures de données JSON, modèles de contenu, permalinks, navigation/menus, fausses données bilingues avec images réelles, assemblage final des pages), en suivant un workflow en 10 étapes. Couvre les deux stacks frontend Creopse (Vue 3 et React 19), détectées automatiquement sur le projet. Utiliser cette skill dès qu'un template HTML est fourni pour intégration Creopse, dès qu'on parle de découper un index.html en sections, de créer des sections/widgets/pages/menus/modèles de contenu/permalinks Creopse, ou de générer des structures de données JSON et des fake data pour une section ou un modèle de contenu Creopse — même si l'utilisateur ne mentionne pas explicitement "skill" ou "template".
+description: Converts a static HTML template into a complete, functional Creopse template in dev (base information, real media, pages, Vue or React section/widget components, JSON data structures, content models, permalinks, navigation/menus, bilingual fake data with real images, final page assembly), following a 10-step workflow. Covers both Creopse frontend stacks (Vue 3 and React 19), auto-detected on the project. Use this skill as soon as an HTML template is provided for Creopse integration, as soon as splitting an index.html into sections is discussed, when creating Creopse sections/widgets/pages/menus/content-models/permalinks, or when generating JSON data structures and fake data for a Creopse section or content model — even if the user doesn't explicitly say "skill" or "template".
 ---
 
 # Creopse Template Development
 
-Conception de templates Creopse (Vue 3 ou React 19, + TypeScript + Laravel/Inertia, selon le template installé sur le projet) à partir d'une base HTML statique. Cette skill couvre tout le pipeline, du découpage du template source jusqu'à l'assemblage final de pages fonctionnelles en base : médias, informations de base, pages, sections/widgets, modèles de contenu, permalinks, navigation, complétion des composants, et attachement final.
+Design of Creopse templates (Vue 3 or React 19, + TypeScript + Laravel/Inertia, depending on the template installed on the project) from a static HTML base. This skill covers the entire pipeline, from splitting the source template through to the final assembly of functional pages in the database: media, base information, pages, sections/widgets, content models, permalinks, navigation, component completion, and final attachment.
 
-Prérequis : le projet Laravel avec Creopse est déjà installé et accessible (cette skill n'effectue pas l'installation initiale — elle suppose un projet en place).
+Prerequisite: the Laravel project with Creopse is already installed and accessible (this skill does not perform the initial installation — it assumes a project already in place).
 
-`references/vue-api-reference.md`/`references/react-api-reference.md` et `references/utils-api-reference.md` documentent la surface d'API réelle des packages `@creopse/vue`/`@creopse/react`/`@creopse/utils` (signatures exactes de chaque composable/hook, helper, composant, type) — à consulter en cas de doute sur une signature, en complément de `vue-conventions.md`/`react-conventions.md` et `section-patterns.md` qui documentent des patterns d'usage plutôt que l'API elle-même. **Couverture asymétrique entre les deux stacks** : le côté Vue s'appuie sur de nombreux composants réels observés sur des projets précédents, le côté React sur un seul exemple réel et une traduction déduite de la parité d'API (voir l'avertissement en tête de `react-conventions.md`) — accorder une vigilance accrue aux pauses de review de l'étape 9 sur un projet React, au moins jusqu'à ce que davantage d'exemples réels aient permis de solidifier `react-conventions.md`.
+`references/vue-api-reference.md`/`references/react-api-reference.md` and `references/utils-api-reference.md` document the actual API surface of the `@creopse/vue`/`@creopse/react`/`@creopse/utils` packages (exact signatures for every composable/hook, helper, component, type) — consult them whenever a signature is in doubt, as a complement to `vue-conventions.md`/`react-conventions.md` and `section-patterns.md`, which document usage patterns rather than the API itself. **Asymmetric coverage between the two stacks**: the Vue side is based on numerous real components observed on previous projects, the React side on a single real-world example plus a translation inferred from API parity (see the warning at the top of `react-conventions.md`) — apply extra vigilance at the step 9 review pauses on a React project, at least until more real-world examples have helped solidify `react-conventions.md`.
 
-## Détection de la stack frontend (Vue vs React)
+## Frontend stack detection (Vue vs React)
 
-Avant l'étape 1, déterminer quelle stack le projet utilise réellement — ne jamais la supposer par défaut :
+Before step 1, determine which stack the project actually uses — never assume a default:
 
-1. Inspecter `package.json` : présence de `vue`/`@inertiajs/vue3` (stack Vue) vs `react`/`react-dom`/`@inertiajs/react` (stack React).
-2. Si des sections sont déjà scaffoldées (`resources/js/Sections/`), l'extension des fichiers existants (`.vue` vs `.tsx`) confirme la stack sans ambiguïté.
-3. En cas de doute persistant, demander plutôt que de deviner — les conventions de composant, les composables/hooks et les chemins de fichiers diffèrent entre les deux stacks (voir étapes 5 et 9).
+1. Inspect `package.json`: presence of `vue`/`@inertiajs/vue3` (Vue stack) vs `react`/`react-dom`/`@inertiajs/react` (React stack).
+2. If sections are already scaffolded (`resources/js/Sections/`), the extension of existing files (`.vue` vs `.tsx`) confirms the stack unambiguously.
+3. If doubt persists, ask rather than guess — component conventions, composables/hooks, and file paths differ between the two stacks (see steps 5 and 9).
 
-Toute cette détection ne concerne que l'étape 9 (adaptation du HTML en composant) et le chemin de fichier de l'étape 5.3 — le reste du workflow (étapes 1 à 8, 10 : médias, base-info, pages, modèles de contenu, permalinks, menus, assemblage) est piloté par la CLI et strictement identique quelle que soit la stack.
+All of this detection only matters for step 9 (adapting HTML into a component) and the file path in step 5.3 — the rest of the workflow (steps 1–8, 10: media, base-info, pages, content models, permalinks, menus, assembly) is CLI-driven and strictly identical regardless of the stack.
 
-## Détection de l'environnement Node avant toute commande shell
+## Node environment detection before any shell command
 
-Avant la première commande `npm`/`yarn`/`pnpm`/`bun` de cette skill — ce qui peut arriver dès l'étape 5 (scaffolding) ou plus tôt si une vérification est nécessaire, pas seulement à l'étape 9 — identifier le gestionnaire de paquets réellement utilisé par le projet en inspectant le fichier de lock présent à la racine, jamais par défaut :
+Before the first `npm`/`yarn`/`pnpm`/`bun` command in this skill — which can happen as early as step 5 (scaffolding), or earlier if a check is needed, not only at step 9 — identify the package manager actually used by the project by inspecting the lock file present at the root, never by default:
 
-| Fichier de lock trouvé | Gestionnaire |
+| Lock file found | Manager |
 |---|---|
 | `package-lock.json` | npm |
 | `yarn.lock` | yarn |
 | `pnpm-lock.yaml` | pnpm |
 | `bun.lock` / `bun.lockb` | bun |
 
-Lire ensuite `package.json` (clé `scripts`) pour identifier les noms réels des commandes de lintage, formatage et vérification TypeScript (`lint`, `format`, `type-check`, `typecheck`, `tsc`, `check`... les noms varient d'un projet à l'autre, ne pas les supposer). Ces commandes sont utilisées à l'étape 9, point 6, pour valider chaque composant complété avant de le présenter à l'utilisateur.
+Then read `package.json` (`scripts` key) to identify the actual names of the lint, format, and TypeScript-check commands (`lint`, `format`, `type-check`, `typecheck`, `tsc`, `check`... names vary from project to project, never assume them). These commands are used in step 9, point 6, to validate each completed component before presenting it to the user.
 
-## Zone de travail : `.creopse/`
+## Working area: `.creopse/`
 
-Tous les artefacts de travail vivent dans `.creopse/` à la racine du projet Laravel :
+All working artifacts live under `.creopse/` at the root of the Laravel project:
 
 ```
 .creopse/
-├── html_template/            # template HTML source fourni par l'utilisateur (input, lecture seule)
-├── context.md                 # contexte projet : client, secteur, ton éditorial, langues cibles,
-│                               # coordonnées, réseaux sociaux, ET section dédiée "Pages" (liste des
-│                               # pages à créer + sections à y attacher, si connues à l'avance) — voir
-│                               # pages-conventions.md pour le cas des pages de détail (*-details)
-├── base-info.json             # brouillon des paires clé/valeur pour `creopse base-info update` (étape 3)
+├── html_template/            # source HTML template provided by the user (input, read-only)
+├── context.md                 # project context: client, industry, editorial tone, target languages,
+│                               # contact details, social networks, AND a dedicated "Pages" section
+│                               # (list of pages to create + sections to attach to them, if known in
+│                               # advance) — see pages-conventions.md for the *-details pages case
+├── base-info.json             # draft key/value pairs for `creopse base-info update` (step 3)
 ├── media/
-│   ├── source/                # assets de marque réels déposés par l'utilisateur (logo, favicon...) — input
-│   ├── generated/              # images de contenu trouvées et téléchargées (étape 9) — staging avant upload
-│   └── manifest.json           # ledger unique : fichier local (source/ ou generated/) → média uploadé
-│                                # (id, chemin définitif en base, source_url/licence pour le contenu)
+│   ├── source/                # real brand assets deposited by the user (logo, favicon...) — input
+│   ├── generated/              # content images found and downloaded (step 9) — staging before upload
+│   └── manifest.json           # single ledger: local file (source/ or generated/) → uploaded media
+│                                # (id, final path in DB, source_url/license for content)
 ├── sections/
-│   └── <NomSection>/
-│       ├── data-structure.json # structure des singletons + collections (format CLI)
-│       ├── settings.json       # structure des réglages de section (si applicable)
-│       └── fake-data.json      # fausses données de section, prêtes pour `page attach-section --data`
+│   └── <SectionName>/
+│       ├── data-structure.json # singleton + collection structure (CLI format)
+│       ├── settings.json       # section settings structure (if applicable)
+│       └── fake-data.json      # section fake data, ready for `page attach-section --data`
 ├── content-models/
-│   └── <NomModele>/
+│   └── <ModelName>/
 │       ├── data-structure.json
 │       └── items/
-│           └── <slug>.json    # fake data d'un item, prête pour `content-model item-add --data`
+│           └── <slug>.json    # fake data for an item, ready for `content-model item-add --data`
 ├── permalinks/
-│   └── <nom>.json              # une entrée par permalink créé (path-prefix, content-type, content-id,
-│                                # content-param, page, id) — voir permalinks-conventions.md
+│   └── <name>.json             # one entry per permalink created (path-prefix, content-type, content-id,
+│                                # content-param, page, id) — see permalinks-conventions.md
 └── menus/
-    └── <location>.json        # définition menu + items pour une location (header, footer...)
+    └── <location>.json        # menu definition + items for a location (header, footer...)
 ```
 
-**Avant toute chose** : lire `.creopse/context.md` s'il existe. Il conditionne le ton, le secteur d'activité, la langue des fausses données, les coordonnées réelles à utiliser, et la liste des pages à créer — ne jamais générer de fake data générique type "Lorem Corp" ni inventer des pages au hasard si ce fichier donne un contexte réel. S'il n'existe pas ou si la section "Pages" y est absente, demander ces informations avant l'étape 4 plutôt que de les improviser.
+**Before anything else**: read `.creopse/context.md` if it exists. It drives the tone, the industry, the language of the fake data, the real contact details to use, and the list of pages to create — never generate generic "Lorem Corp"-style fake data, nor invent pages at random, if this file provides real context. If it doesn't exist, or if the "Pages" section is missing from it, ask for this information before step 4 rather than improvising it.
 
-**Chaque section a son propre dossier `sections/<NomSection>/`**, chaque modèle de contenu son propre dossier `content-models/<NomModele>/` — jamais de fichier JSON monolithique regroupant plusieurs entités. Structure et données concrètes (fake data, items) cohabitent sous le même dossier nommé d'après l'entité, pour les deux cas — ça permet des rewrites ciblés (principe déjà en vigueur sur ce projet) et un état inspectable indépendamment de la CLI. `permalinks/` et `menus/` restent des dossiers plats (un fichier par entité) faute de sous-structure à faire cohabiter pour ces deux-là.
+**Each section has its own `sections/<SectionName>/` folder**, each content model its own `content-models/<ModelName>/` folder — never a monolithic JSON file grouping several entities. Structure and concrete data (fake data, items) live side by side under the same folder, named after the entity, in both cases — this allows targeted rewrites (a principle already in force on this project) and a state that's inspectable independently of the CLI. `permalinks/` and `menus/` remain flat folders (one file per entity) since there's no sub-structure to co-locate for either of them.
 
-`media/source/` (fourni par l'utilisateur, à ne jamais régénérer) et `media/generated/` (téléchargé par l'agent, régénérable) ne se substituent jamais l'un à l'autre — voir `media-conventions.md`.
+`media/source/` (provided by the user, never to be regenerated) and `media/generated/` (downloaded by the agent, regenerable) are never interchangeable — see `media-conventions.md`.
 
 ---
 
-## Vue d'ensemble du workflow
+## Workflow overview
 
 ```
-Étape 1 : Découpage du template
-  └─ assets → public/assets, intégration dans app.blade.php
+Step 1: Template splitting
+  └─ assets → public/assets, integration into app.blade.php
 
-Étape 2 : Médias réels
-  └─ upload des assets de marque déposés dans .creopse/media/source/ (logo, favicon, photos)
+Step 2: Real media
+  └─ upload of brand assets deposited in .creopse/media/source/ (logo, favicon, photos)
 
-Étape 3 : Informations de base
-  └─ creopse base-info update, à partir de context.md + médias uploadés à l'étape 2
+Step 3: Base information
+  └─ creopse base-info update, from context.md + media uploaded in step 2
 
-Étape 4 : Pages
-  └─ création des pages listées dans context.md (creopse page add), y compris les pages
-     de détail (*-details) — ce sont des pages normales, pas des entrées de menu
+Step 4: Pages
+  └─ creation of the pages listed in context.md (creopse page add), including detail
+     pages (*-details) — these are normal pages, not menu entries
 
-Étape 5 : Scaffolding des sections et widgets (EN LOT)
-  └─ analyse du body, classification section/widget, détection doublons,
-     validation utilisateur, puis creopse section/widget add en masse
+Step 5: Scaffolding of sections and widgets (IN BULK)
+  └─ body analysis, section/widget classification, duplicate detection,
+     user validation, then bulk creopse section/widget add
 
-Étape 6 : Navigation (menus)
-  └─ locations, menu(s), items pointant vers les pages créées à l'étape 4
-     (hors pages de détail, qui n'ont pas d'entrée de menu)
+Step 6: Navigation (menus)
+  └─ locations, menu(s), items pointing to the pages created in step 4
+     (excluding detail pages, which have no menu entry)
 
-Étape 7 : Modèles de contenu
-  └─ création des content models référencés par les sections (Services, Projects, Team...)
+Step 7: Content models
+  └─ creation of the content models referenced by the sections (Services, Projects, Team...)
 
-Étape 8 : Permalinks
-  └─ creopse permalink add — câble chaque modèle de contenu (--has-permalink true) et
-     le type de contenu natif news-article vers leur page de détail créée à l'étape 4
+Step 8: Permalinks
+  └─ creopse permalink add — wires each content model (--has-permalink true) and the
+     native news-article content type to their detail page created in step 4
 
-Étape 9 : Complétion (SECTION PAR SECTION, avec pause de review après chaque section)
-  └─ pour chaque section : coller/adapter le HTML → structure JSON → CLI submit →
-     images de contenu (recherche + upload) → fake data → vérification lint/format/typecheck → pause
+Step 9: Completion (SECTION BY SECTION, with a review pause after each section)
+  └─ for each section: paste/adapt the HTML → JSON structure → CLI submit →
+     content images (search + upload) → fake data → lint/format/typecheck check → pause
 
-Étape 10 : Assemblage final des pages
-  └─ attach-section (avec link-id si besoin), order-sections, toggle-section-status
+Step 10: Final page assembly
+  └─ attach-section (with link-id if needed), order-sections, toggle-section-status
 ```
 
-Ne jamais sauter l'ordre : chaque étape qui touche la base de données (2, 3, 4, 5, 7, 8, 10) doit être validée par l'utilisateur avant exécution des commandes CLI correspondantes — pas de retour en arrière simple sur ce type d'opération. L'étape 9 marque une pause après chaque section pour permettre une correction avant de propager une erreur sur les suivantes. L'étape 10 (attachement) est volontairement placée en toute fin de workflow, une fois que toutes les sections concernées ont leur structure et leurs fake data validées — pas d'attachement progressif section par section.
+Never skip the order: every step that touches the database (2, 3, 4, 5, 7, 8, 10) must be validated by the user before the corresponding CLI commands are executed — there's no simple undo for this kind of operation. Step 9 pauses after each section to allow a correction before an error propagates to the next ones. Step 10 (attachment) is deliberately placed at the very end of the workflow, once all the sections involved have their structure and fake data validated — no progressive section-by-section attachment.
 
 ---
 
-## Étape 1 — Découpage du template
+## Step 1 — Template splitting
 
-1. Localiser le template HTML source dans `.creopse/html_template/`.
-2. Déplacer tous les assets (`css/`, `js/`, `img/`, fonts, etc.) vers `public/assets` du projet Laravel, en conservant l'arborescence relative interne (`assets/css/plugins/...`, `assets/js/plugins/...`).
-3. Adapter `app.blade.php` (ou l'équivalent trouvé dans le projet) pour y intégrer les balises `<link>`/`<script>` correspondant aux assets déplacés, **sans casser** le bloc meta/OG/Inertia déjà en place (`@vite`, `@routes`, `@inertiaHead`, `@inertia`, le bloc `<title>`/`og:*`/`twitter:*` conditionné par `$page['props']['meta']`).
-   - Les CSS de plugins vont dans le `<head>`, avant `@vite(...)`.
-   - Les JS de plugins vont juste avant `</body>`, après `@inertia`.
-   - Voir `references/cli-reference.md` pour un exemple complet de `app.blade.php` cible.
+1. Locate the source HTML template in `.creopse/html_template/`.
+2. Move all assets (`css/`, `js/`, `img/`, fonts, etc.) into the Laravel project's `public/assets`, preserving the internal relative tree (`assets/css/plugins/...`, `assets/js/plugins/...`).
+3. Adapt `app.blade.php` (or the equivalent found in the project) to integrate the `<link>`/`<script>` tags matching the moved assets, **without breaking** the meta/OG/Inertia block already in place (`@vite`, `@routes`, `@inertiaHead`, `@inertia`, the `<title>`/`og:*`/`twitter:*` block conditioned on `$page['props']['meta']`).
+   - Plugin CSS goes in the `<head>`, before `@vite(...)`.
+   - Plugin JS goes right before `</body>`, after `@inertia`.
+   - See `references/cli-reference.md` for a complete example of a target `app.blade.php`.
 
-Cette étape est mécanique — pas de point de validation nécessaire, sauf si des conflits de nommage d'assets sont détectés (deux fichiers `main.css` par exemple), auquel cas demander arbitrage.
-
----
-
-## Étape 2 — Médias réels
-
-Objectif : remplacer, pour les assets de marque réels déposés par l'utilisateur dans `.creopse/media/source/` (logo, favicon, éventuellement photos officielles du client), les placeholders par de vrais médias uploadés — avant de renseigner les informations de base à l'étape 3, qui en a besoin.
-
-Voir `references/media-conventions.md` (obligatoire à lire avant cette étape) pour : l'arborescence `media/source/`/`media/generated/`/`manifest.json`, comment récupérer le chemin définitif en base après upload, et le format du `manifest.json`. Ne jamais aller chercher ces assets dans `.creopse/html_template/assets/` — ce sont les visuels de démonstration du thème source, pas des assets de marque réels.
-
-Pas de pause de validation systématique ici (opération peu risquée, réversible), sauf si `.creopse/media/source/` est vide ou ambigu (plusieurs fichiers pourraient être le logo) — dans ce cas, demander confirmation avant upload.
+This step is mechanical — no validation pause needed, unless asset naming conflicts are detected (two `main.css` files, for example), in which case ask for arbitration.
 
 ---
 
-## Étape 3 — Informations de base
+## Step 2 — Real media
 
-Objectif : peupler les informations globales du site (`base-info`) consommées par quasi tous les composants (`getAppInformationValue('logo'|'phone'|'email'|'address'|'name'|'description'|réseaux sociaux)`), à partir de `.creopse/context.md` et des médias uploadés à l'étape 2.
+Objective: for the real brand assets deposited by the user in `.creopse/media/source/` (logo, favicon, possibly official client photos), replace placeholders with real uploaded media — before filling in the base information in step 3, which needs it.
 
-Voir `references/base-info-conventions.md` (obligatoire à lire avant cette étape) pour la liste des clés, leur correspondance avec `context.md`, et la syntaxe `creopse base-info update`.
+See `references/media-conventions.md` (mandatory reading before this step) for: the `media/source/`/`media/generated/`/`manifest.json` tree, how to retrieve the final DB path after upload, and the `manifest.json` format. Never fetch these assets from `.creopse/html_template/assets/` — those are the source theme's demo visuals, not real brand assets.
 
-Ne pas générer de valeurs fictives pour les clés `base-info` — ce sont des informations réelles du client. Si `context.md` ne les fournit pas toutes, demander les valeurs manquantes plutôt que d'inventer un numéro de téléphone ou une adresse.
-
----
-
-## Étape 4 — Pages
-
-Objectif : créer les pages du site telles que listées dans la section dédiée de `.creopse/context.md` — y compris les pages de détail (`service-details`, `project-details`, `news-details`...), qui sont des pages normales comme les autres à ce stade.
-
-Voir `references/pages-conventions.md` (obligatoire à lire avant cette étape) pour le format attendu de cette section dans `context.md`, la syntaxe `creopse page add`, et le traitement particulier des pages de détail (pas d'entrée de menu à l'étape 6, rattachement par permalink à l'étape 8).
-
-**Point de validation obligatoire** : présenter à l'utilisateur la liste des pages déduites de `context.md` (nom, titre par locale, position) avant d'exécuter la moindre commande `creopse page add` — ces commandes créent des entrées en base. Si `context.md` ne liste aucune page, demander la liste avant de continuer plutôt que d'en déduire une depuis le template HTML seul.
-
-Cette étape ne fait que créer les pages elles-mêmes (coquilles vides) — l'attachement des sections se fait en toute fin de workflow, à l'étape 10, une fois les sections scaffoldées (étape 5) et complétées (étape 9).
+No systematic validation pause here (low-risk, reversible operation), unless `.creopse/media/source/` is empty or ambiguous (several files could be the logo) — in that case, ask for confirmation before uploading.
 
 ---
 
-## Étape 5 — Scaffolding des sections et widgets
+## Step 3 — Base information
 
-### 5.1 Analyse et classification
+Objective: populate the site's global information (`base-info`) consumed by nearly every component (`getAppInformationValue('logo'|'phone'|'email'|'address'|'name'|'description'|social networks)`), from `.creopse/context.md` and the media uploaded in step 2.
 
-Parcourir l'intégralité du `<body>` de chaque fichier HTML de `.creopse/html_template/` et lister tous les blocs candidats à devenir une section ou un widget.
+See `references/base-info-conventions.md` (mandatory reading before this step) for the list of keys, their correspondence with `context.md`, and the `creopse base-info update` syntax.
 
-**Repérage des frontières de bloc** :
+Do not generate fictitious values for `base-info` keys — these are real client details. If `context.md` doesn't provide all of them, ask for the missing values rather than inventing a phone number or address.
 
-- Si le HTML contient des commentaires de démarcation (`<!--===== NOM STARTS =======-->` / `... ENDS ...`), s'appuyer dessus.
-- **Sinon**, inférer les frontières via heuristiques structurelles : balises sémantiques (`<header>`, `<footer>`, `<nav>`, `<section>`), ruptures de classes racine thématiques (`hero-*`, `about-*`, `services-*`...), changements de contenu évidents. Dans ce cas, déduire le nom PascalCase du contenu visible (titre, classes CSS, contexte) plutôt que d'un commentaire absent.
+---
 
-**Classification section vs widget** :
+## Step 4 — Pages
 
-- **Section** = contenu éditable/gérable par un admin (Header, Hero, Features, Services, Testimonials, Footer, Contact...) → nécessite une structure de données.
-- **Widget** = bloc HTML statique sans besoin de gestion de contenu (Preloader, scroll-progress bar, cookie banner statique...) → **aucune structure de données**, HTML/Vue pur.
+Objective: create the site's pages as listed in the dedicated section of `.creopse/context.md` — including detail pages (`service-details`, `project-details`, `news-details`...), which are normal pages like any other at this stage.
 
-**Détection de doublons cross-fichiers** : si un bloc identique ou quasi identique (Header, Footer typiquement) apparaît dans plusieurs fichiers HTML du template, il ne doit être scaffoldé **qu'une seule fois**. Le signaler explicitement dans la liste proposée à l'utilisateur.
+See `references/pages-conventions.md` (mandatory reading before this step) for the expected format of this section in `context.md`, the `creopse page add` syntax, and the special handling of detail pages (no menu entry in step 6, attached via permalink in step 8).
 
-### 5.2 Validation avant scaffolding
+**Mandatory validation point**: present the user with the list of pages inferred from `context.md` (name, title per locale, position) before running a single `creopse page add` command — these commands create database entries. If `context.md` lists no pages, ask for the list before continuing rather than inferring one from the HTML template alone.
 
-Présenter à l'utilisateur la liste complète : nom PascalCase proposé, classification (section/widget), fichier(s) source(s), et signalement des doublons détectés. **Attendre confirmation avant d'exécuter la moindre commande CLI** — ces commandes créent des entrées en base de données, pas de retour en arrière simple.
+This step only creates the pages themselves (empty shells) — section attachment happens at the very end of the workflow, in step 10, once sections have been scaffolded (step 5) and completed (step 9).
 
-### 5.3 Exécution en lot
+---
 
-Une fois validé, exécuter les commandes CLI en lot (voir `references/cli-reference.md` pour la syntaxe complète) :
+## Step 5 — Scaffolding sections and widgets
+
+### 5.1 Analysis and classification
+
+Walk through the entire `<body>` of every HTML file in `.creopse/html_template/` and list all block candidates for becoming a section or a widget.
+
+**Identifying block boundaries**:
+
+- If the HTML contains demarcation comments (`<!--===== NAME STARTS =======-->` / `... ENDS ...`), rely on them.
+- **Otherwise**, infer boundaries via structural heuristics: semantic tags (`<header>`, `<footer>`, `<nav>`, `<section>`), breaks in thematic root classes (`hero-*`, `about-*`, `services-*`...), obvious content changes. In this case, derive the PascalCase name from the visible content (heading, CSS classes, context) rather than from an absent comment.
+
+**Section vs widget classification**:
+
+- **Section** = content editable/manageable by an admin (Header, Hero, Features, Services, Testimonials, Footer, Contact...) → requires a data structure.
+- **Widget** = static HTML block with no content-management need (Preloader, scroll-progress bar, static cookie banner...) → **no data structure**, pure HTML/Vue.
+
+**Cross-file duplicate detection**: if an identical or near-identical block (typically Header, Footer) appears across several HTML files of the template, it must be scaffolded **only once**. Flag this explicitly in the list presented to the user.
+
+### 5.2 Validation before scaffolding
+
+Present the user with the complete list: proposed PascalCase name, classification (section/widget), source file(s), and any detected duplicates flagged. **Wait for confirmation before running a single CLI command** — these commands create database entries, no simple undo.
+
+### 5.3 Bulk execution
+
+Once validated, run the CLI commands in bulk (see `references/cli-reference.md` for the complete syntax):
 
 ```bash
 creopse section add Header Hero Features Services Testimonials Footer Contact
 creopse widget add Preloader ScrollProgress
 ```
 
-Chaque section générée place son composant dans `resources/js/Sections/<NomSection>.vue` (stack Vue). **Pour une stack React, vérifier le chemin et l'extension (`.tsx`) réellement générés par `creopse section add` sur ce projet plutôt que de supposer un chemin identique** — ce chemin n'a pas été confirmé en conditions réelles côté React, contrairement au chemin Vue ci-dessus qui reflète un usage observé.
-Chaque widget généré place son composant dans `resources/js/Widgets/<NomWidget>.vue` (`.tsx` en React, même remarque).
+Each generated section places its component at `resources/js/Sections/<SectionName>.vue` (Vue stack). **For a React stack, verify the path and extension (`.tsx`) actually generated by `creopse section add` on this project rather than assuming an identical path** — this path has not been confirmed under real-world conditions on the React side, unlike the Vue path above, which reflects observed usage.
+Each generated widget places its component at `resources/js/Widgets/<WidgetName>.vue` (`.tsx` in React, same caveat).
 
 ---
 
-## Étape 6 — Navigation (menus)
+## Step 6 — Navigation (menus)
 
-Objectif : créer réellement les locations, menu(s) et items consommés par les composants Header/Footer (`getMenuItems()`, `getMenuItemsByLocation('footer')`, résolution `menu-item-link` via `getLinkFromMenuItemId`/`getMenuHref`) — sans cette étape, un Header scaffoldé n'a rien à afficher en dev.
+Objective: actually create the locations, menu(s), and items consumed by the Header/Footer components (`getMenuItems()`, `getMenuItemsByLocation('footer')`, `menu-item-link` resolution via `getLinkFromMenuItemId`/`getMenuHref`) — without this step, a scaffolded Header has nothing to display in dev.
 
-Voir `references/menu-conventions.md` (obligatoire à lire avant cette étape) pour la correspondance locations/emplacements de composants, la syntaxe `menu location-add` / `menu add` / `menu item-add`, et la distinction avec les permalinks de l'étape 8.
+See `references/menu-conventions.md` (mandatory reading before this step) for the correspondence between locations/component placements, the `menu location-add` / `menu add` / `menu item-add` syntax, and the distinction from the permalinks in step 8.
 
-Les items pointent vers les pages créées à l'étape 4 (`--page <n>` / `--target-type page-link`) — cette étape doit donc bien venir après l'étape 4. **Ne pas créer d'item de menu pour les pages de détail** (`service-details`, `project-details`...) : elles sont atteintes via le permalink de l'étape 8, pas via le menu.
+Items point to the pages created in step 4 (`--page <n>` / `--target-type page-link`) — this step must therefore come after step 4. **Do not create a menu item for detail pages** (`service-details`, `project-details`...): they're reached via the permalink from step 8, not via the menu.
 
-**Point de validation** : présenter la structure de menu proposée (locations, items, hiérarchie/dropdowns) avant exécution.
-
----
-
-## Étape 7 — Modèles de contenu
-
-Objectif : créer les modèles de contenu référencés par des champs `content-model-item`/`content-model-items` dans les sections à venir (Services, Projects, Team, offres de formation, etc.), avant de câbler leurs permalinks à l'étape 8 puis de compléter les sections qui les consomment à l'étape 9 — pour que la fake data générée transite réellement par la CLI au lieu de rester à l'état de fichiers morts.
-
-Voir `references/content-models-conventions.md` (obligatoire à lire avant cette étape) pour :
-- Le choix `intent`/`access-scope` selon le type de contenu (contenu géré uniquement depuis l'administration vs contenu soumis par les utilisateurs).
-- La structure de dossier `.creopse/content-models/<NomModele>/`.
-- La syntaxe `content-model add` puis `content-model item-add --data @...`.
-- Ce que `--has-permalink true` fait et ne fait pas (voir étape 8).
-
-**Point de validation** : présenter la liste des modèles détectés comme nécessaires (déduits de l'inventaire des sections de l'étape 5.1, ou explicitement demandés par l'utilisateur) avant création.
+**Validation point**: present the proposed menu structure (locations, items, hierarchy/dropdowns) before execution.
 
 ---
 
-## Étape 8 — Permalinks
+## Step 7 — Content models
 
-Objectif : câbler chaque modèle de contenu créé à l'étape 7 avec `--has-permalink true` (et le type de contenu natif `news-article` si le projet a des articles) vers la page de détail correspondante, créée à l'étape 4 — sans cette étape, `getContentPath(item)` ne mène jamais à `ServiceDetails.vue`/`ProjectDetails.vue`/`NewsDetails.vue`, même une fois ces sections parfaitement codées et attachées à l'étape 10.
+Objective: create the content models referenced by `content-model-item`/`content-model-items` fields in upcoming sections (Services, Projects, Team, training offerings, etc.), before wiring their permalinks in step 8 and then completing the sections that consume them in step 9 — so the generated fake data actually flows through the CLI instead of remaining dead files.
 
-Voir `references/permalinks-conventions.md` (obligatoire à lire avant cette étape) pour :
-- Pourquoi `--has-permalink true` seul ne suffit pas.
-- Le choix de `--content-param` selon le type de contenu (`id` par défaut pour `content-model`, `slug` pour `news-article`/`news-category`/`news-tag`).
-- La syntaxe `creopse permalink add`/`edit`/`remove`.
-- Le format de suivi dans `.creopse/permalinks/<nom>.json`.
+See `references/content-models-conventions.md` (mandatory reading before this step) for:
+- The `intent`/`access-scope` choice depending on the content type (admin-only managed content vs user-submitted content).
+- The `.creopse/content-models/<ModelName>/` folder structure.
+- The `content-model add` then `content-model item-add --data @...` syntax.
+- What `--has-permalink true` does and does not do (see step 8).
 
-Cette étape vient nécessairement après l'étape 4 (la page cible doit exister) et l'étape 7 (le modèle de contenu cible doit exister) — jamais avant.
-
-**Point de validation** : présenter la liste des permalinks à créer (préfixe, contenu ciblé, page de détail associée) avant exécution — ces commandes déterminent le routing public du site.
+**Validation point**: present the list of models detected as necessary (inferred from the section inventory of step 5.1, or explicitly requested by the user) before creation.
 
 ---
 
-## Étape 9 — Complétion, section par section
+## Step 8 — Permalinks
 
-Traiter une seule section à la fois, dans cet ordre, puis marquer une pause avant de passer à la suivante :
+Objective: wire each content model created in step 7 with `--has-permalink true` (and the native `news-article` content type if the project has articles) to the corresponding detail page created in step 4 — without this step, `getContentPath(item)` never leads to `ServiceDetails.vue`/`ProjectDetails.vue`/`NewsDetails.vue`, even once those sections are perfectly coded and attached in step 10.
 
-1. **Coller le bloc HTML brut** correspondant dans le `<template>` du composant Vue généré (`resources/js/Sections/<NomSection>.vue`).
-2. **Adapter aux conventions Creopse du framework détecté** — voir `references/vue-conventions.md` (stack Vue) ou `references/react-conventions.md` (stack React), l'un des deux étant obligatoire à lire avant cette étape selon la stack du projet (voir "Détection de la stack frontend" en tête de ce document) — et `references/section-patterns.md` pour le pattern le plus proche du type de section traité (header, footer, slider, testimonials, news, contact, etc.). **`section-patterns.md` documente la logique de données** (quel composable/hook appeler, quels champs vérifier, dans quel ordre) **valable pour les deux stacks** — ses extraits de code sont écrits en Vue, à traduire syntaxiquement vers React via les tables de `react-conventions.md` sur un projet React, sans changer la logique elle-même. Pour la signature exacte de tout composable/hook utilisé (`useHelper()`, `useContent()`, `useMenu()`, `useNews()`, etc.) ou de tout helper pur (`formatDate`, `hexToRgba`, etc.), consulter `references/vue-api-reference.md` ou `references/react-api-reference.md` (selon la stack) et `references/utils-api-reference.md` (commun aux deux) plutôt que de se fier uniquement aux extraits déjà cités dans les fichiers de conventions/patterns — ces derniers documentent des *patterns*, les fichiers `*-api-reference.md` documentent la *surface d'API* réelle des packages et font foi en cas de doute ou de signature non citée ailleurs.
-3. **Définir la structure de données** (singletons `index` + collections, et `settings` si la section a des réglages d'affichage) — voir `references/field-types.md` pour la liste des types de champs disponibles, et notamment la règle de choix `menu-item-link` (type hybride, supporte item de menu **et** URL brute) vs `text`. Écrire le résultat dans :
-   - `.creopse/sections/<NomSection>/data-structure.json`
-   - `.creopse/sections/<NomSection>/settings.json` (si applicable)
-4. **Soumettre la structure via la CLI**, en passant les fichiers (pas de JSON inline en argument shell — trop fragile à l'échappement) :
+See `references/permalinks-conventions.md` (mandatory reading before this step) for:
+- Why `--has-permalink true` alone is not enough.
+- The `--content-param` choice depending on content type (`id` by default for `content-model`, `slug` for `news-article`/`news-category`/`news-tag`).
+- The `creopse permalink add`/`edit`/`remove` syntax.
+- The tracking format in `.creopse/permalinks/<name>.json`.
+
+This step necessarily comes after step 4 (the target page must exist) and step 7 (the target content model must exist) — never before.
+
+**Validation point**: present the list of permalinks to create (prefix, targeted content, associated detail page) before execution — these commands determine the site's public routing.
+
+---
+
+## Step 9 — Completion, section by section
+
+Process one section at a time, in this order, then pause before moving to the next:
+
+1. **Paste the matching raw HTML block** into the `<template>` of the generated Vue component (`resources/js/Sections/<SectionName>.vue`).
+2. **Adapt it to the Creopse conventions of the detected framework** — see `references/vue-conventions.md` (Vue stack) or `references/react-conventions.md` (React stack), one of the two being mandatory reading before this step depending on the project's stack (see "Frontend stack detection" at the top of this document) — and `references/section-patterns.md` for the pattern closest to the type of section being handled (header, footer, slider, testimonials, news, contact, etc.). **`section-patterns.md` documents the data logic** (which composable/hook to call, which fields to check, in what order) **valid for both stacks** — its code excerpts are written in Vue, to be syntactically translated to React via the tables in `react-conventions.md` on a React project, without changing the logic itself. For the exact signature of any composable/hook used (`useHelper()`, `useContent()`, `useMenu()`, `useNews()`, etc.) or any pure helper (`formatDate`, `hexToRgba`, etc.), consult `references/vue-api-reference.md` or `references/react-api-reference.md` (depending on the stack) and `references/utils-api-reference.md` (common to both) rather than relying solely on the excerpts already quoted in the conventions/patterns files — the latter document *patterns*, the `*-api-reference.md` files document the actual *API surface* of the packages and are authoritative whenever there's doubt or a signature not quoted elsewhere.
+3. **Define the data structure** (`index` singletons + collections, and `settings` if the section has display settings) — see `references/field-types.md` for the list of available field types, and in particular the `menu-item-link` (hybrid type, supports both menu item **and** raw URL) vs `text` choice rule. Write the result to:
+   - `.creopse/sections/<SectionName>/data-structure.json`
+   - `.creopse/sections/<SectionName>/settings.json` (if applicable)
+4. **Submit the structure via the CLI**, passing files (no inline JSON as a shell argument — too fragile to escaping):
    ```bash
-   creopse section edit NomSection --data-structure @.creopse/sections/NomSection/data-structure.json --settings-structure @.creopse/sections/NomSection/settings.json
+   creopse section edit SectionName --data-structure @.creopse/sections/SectionName/data-structure.json --settings-structure @.creopse/sections/SectionName/settings.json
    ```
-   Le préfixe `@` est obligatoire pour indiquer à la CLI qu'il s'agit d'un chemin à lire, pas du JSON littéral (voir `references/cli-reference.md`).
-5. **Générer les fausses données** bilingues (FR/EN) cohérentes avec `.creopse/context.md`, et les écrire dans `.creopse/sections/<NomSection>/fake-data.json` — voir `references/fake-data-conventions.md` pour le format de sortie détaillé (snake_case, cohérence inter-sections, contenu éditorial, règle de régénération complète en cas de correction). Pour chaque champ `image`/`gallery`, rechercher et uploader une vraie image plutôt que d'utiliser `picsum.photos` par défaut — voir `references/media-conventions.md` (section "Images de contenu") pour la procédure complète (sources autorisées, `.creopse/media/generated/`, upload, `manifest.json`) et le repli picsum en dernier recours. Les champs `content-model-item`/`content-model-items` référencent les items créés à l'étape 7 ; les champs `menu-item-link` référencent les items créés à l'étape 6 — plus besoin de "signaler un besoin non résolu" à ce stade, ces entités existent déjà.
-6. **Vérifier la qualité du code modifié** avant de passer à la suivante : exécuter les commandes de lint/format/typecheck du projet (gestionnaire de paquets et noms de commandes identifiés une fois pour toutes en tête de ce document, voir "Détection de l'environnement Node") sur les fichiers touchés par la section en cours, et corriger toute erreur avant la pause.
-7. **Pause** : présenter le composant, la structure et les fake data à l'utilisateur avant de passer à la section suivante — signaler explicitement tout repli picsum (point 5) survenu faute d'image adéquate trouvée.
+   The `@` prefix is mandatory to tell the CLI it's a path to read, not literal JSON (see `references/cli-reference.md`).
+5. **Generate bilingual (FR/EN) fake data** consistent with `.creopse/context.md`, and write it to `.creopse/sections/<SectionName>/fake-data.json` — see `references/fake-data-conventions.md` for the detailed output format (snake_case, cross-section consistency, editorial content, the full-regeneration rule in case of correction). For every `image`/`gallery` field, search for and upload a real image instead of defaulting to `picsum.photos` — see `references/media-conventions.md` ("Content images" section) for the complete procedure (allowed sources, `.creopse/media/generated/`, upload, `manifest.json`) and the picsum fallback as a last resort. `content-model-item`/`content-model-items` fields reference the items created in step 7; `menu-item-link` fields reference the items created in step 6 — no more need to "flag an unresolved dependency" at this stage, these entities already exist.
+6. **Check the quality of the modified code** before moving to the next section: run the project's lint/format/typecheck commands (package manager and command names identified once and for all at the top of this document, see "Node environment detection") on the files touched by the current section, and fix any error before pausing.
+7. **Pause**: present the component, the structure, and the fake data to the user before moving to the next section — explicitly flag any picsum fallback (point 5) that occurred for lack of a suitable image found.
 
-Les widgets ne suivent que les points 1, 2 et 6 (pas de structure de données, pas de fake data).
+Widgets only follow points 1, 2, and 6 (no data structure, no fake data).
 
 ---
 
-## Étape 10 — Assemblage final des pages
+## Step 10 — Final page assembly
 
-Une fois toutes les sections d'une page traitées à l'étape 9, assembler la page :
+Once all the sections of a page have been processed in step 9, assemble the page:
 
-1. **Attacher les sections** à chaque page créée à l'étape 4, avec les fake data de l'étape 9 :
+1. **Attach the sections** to each page created in step 4, with the fake data from step 9:
    ```bash
    creopse page attach-section home Hero --link-id top --data @.creopse/sections/Hero/fake-data.json
    ```
-   Utiliser `--link-id` distinct si une même section (ex. Testimonials) doit apparaître avec des données différentes sur plusieurs pages/emplacements.
-2. **Ordonner les sections** de chaque page dans l'ordre voulu (`page order-sections`).
-3. **Activer/désactiver des instances** si besoin (`page toggle-section-status`), par exemple pour une section présente en base mais pas encore prête à être publiée.
+   Use a distinct `--link-id` if the same section (e.g. Testimonials) needs to appear with different data on several pages/locations.
+2. **Order the sections** of each page in the desired order (`page order-sections`).
+3. **Enable/disable instances** if needed (`page toggle-section-status`), for example for a section present in the database but not yet ready to be published.
 
-Voir `references/pages-conventions.md` pour la syntaxe complète et les cas d'usage de `set-section-source` (mutualiser les données d'une instance de section entre deux pages, ex. un Footer identique partout).
+See `references/pages-conventions.md` for the complete syntax and use cases of `set-section-source` (sharing a section instance's data across two pages, e.g. an identical Footer everywhere).
 
-**Point de validation** : présenter l'ordre final des sections par page avant exécution — ces commandes déterminent ce qui est visible en production/dev sur chaque page.
+**Validation point**: present the final section order per page before execution — these commands determine what's visible in production/dev on each page.

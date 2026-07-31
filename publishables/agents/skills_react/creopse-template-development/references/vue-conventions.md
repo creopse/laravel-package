@@ -1,13 +1,13 @@
-# Conventions Vue/Creopse
+# Vue/Creopse conventions
 
-Lecture obligatoire avant l'étape 9.2 (adaptation du HTML collé). Ces règles s'appliquent systématiquement, quel que soit le type de section. Ce fichier documente des **patterns d'usage** (quel composable pour quel besoin, quelle convention de rendu) — pour la **signature exacte** d'un composable/helper/composant cité ici, voir `vue-api-reference.md` (packages `@creopse/vue`) et `utils-api-reference.md` (packages `@creopse/utils`, communs à tous les templates).
+Mandatory reading before step 9.2 (adapting the pasted HTML). These rules apply systematically, regardless of the section type. This file documents **usage patterns** (which composable for which need, which rendering convention) — for the **exact signature** of a composable/helper/component cited here, see `vue-api-reference.md` (`@creopse/vue` packages) and `utils-api-reference.md` (`@creopse/utils` packages, common to all templates).
 
-## Interdictions strictes
+## Strict prohibitions
 
-- **Aucun Bootstrap JS.** Tous les comportements interactifs du template HTML source (carousels, modals, accordéons, tabs, dropdowns) doivent être ré-implémentés en Vue natif : `ref`, `computed`, `<Transition>`, `<Teleport to="body">`, gestionnaires `@click`/`@mouseenter`/`@mouseleave`. Si le HTML source utilise `data-bs-toggle="modal"` ou équivalent, le composant final ne doit contenir aucune trace de cet attribut fonctionnel (le laisser serait un carousel/modal mort).
-- **Aucun markup Swiper vanille.** Toujours passer par `swiper/vue` (`<Swiper>` / `<SwiperSlide>`) avec les modules adaptés (`Navigation`, `Pagination`, `Autoplay`), jamais le HTML brut `swiper-container`/`swiper-slide` du template source tel quel.
+- **No Bootstrap JS whatsoever.** Every interactive behavior of the source HTML template (carousels, modals, accordions, tabs, dropdowns) must be re-implemented in native Vue: `ref`, `computed`, `<Transition>`, `<Teleport to="body">`, `@click`/`@mouseenter`/`@mouseleave` handlers. If the source HTML uses `data-bs-toggle="modal"` or an equivalent, the final component must contain no trace of that functional attribute (leaving it would be a dead carousel/modal).
+- **No vanilla Swiper markup.** Always go through `swiper/vue` (`<Swiper>` / `<SwiperSlide>`) with the appropriate modules (`Navigation`, `Pagination`, `Autoplay`), never the raw `swiper-container`/`swiper-slide` HTML from the source template as-is.
 
-## Composables et helpers de base
+## Base composables and helpers
 
 ```ts
 const { tr, rHtml } = useHelper()
@@ -18,16 +18,16 @@ const someCollection = getSectionData(props.sectionKey)?.someCollection ?? []
 const sectionSettings = getSectionSettings(props.sectionKey)
 ```
 
-- `tr(field)` → traduction d'un champ `i18n-text`.
-- `rHtml(field)` → rendu HTML d'un champ `i18n-editor`, toujours via `v-html="rHtml(field)"`.
-- `fileUrl(field)` → URL absolue d'un champ `image`/`gallery`/`file`.
-- `trans('Clé statique')` → traduction d'une chaîne fixe de l'interface (pas issue du CMS).
+- `tr(field)` → translation of an `i18n-text` field.
+- `rHtml(field)` → HTML rendering of an `i18n-editor` field, always via `v-html="rHtml(field)"`.
+- `fileUrl(field)` → absolute URL of an `image`/`gallery`/`file` field.
+- `trans('Static key')` → translation of a fixed interface string (not sourced from the CMS).
 
-## Patterns d'implémentation obligatoires
+## Mandatory implementation patterns
 
-### Carousels / sliders (hors Swiper)
+### Carousels / sliders (outside Swiper)
 
-`setInterval` géré dans `onMounted`/`onUnmounted`, jamais de timer qui fuit :
+`setInterval` managed in `onMounted`/`onUnmounted`, never a leaking timer:
 
 ```ts
 let autoplayTimer: ReturnType<typeof setInterval> | null = null
@@ -43,49 +43,49 @@ onUnmounted(() => stopAutoplay())
 <Teleport to="body">
   <div v-if="showModal" class="..." @click.self="showModal = false">
     <Transition name="modal-fade">
-      <!-- contenu -->
+      <!-- content -->
     </Transition>
   </div>
 </Teleport>
 ```
 
-### Galeries / lightbox
+### Galleries / lightbox
 
-Toujours `n-image-group` de Naive UI, jamais une lightbox JS tierce du template source :
+Always Naive UI's `n-image-group`, never a third-party JS lightbox from the source template:
 
 ```vue
 <n-image-group v-model:show="showGallery" v-model:current="currentIndex" :src-list="images.map(fileUrl)" />
 ```
 
-### Compteurs animés
+### Animated counters
 
-`useIntersectionObserver` (VueUse) + `setInterval` count-up, déclenché une seule fois via un guard :
+`useIntersectionObserver` (VueUse) + `setInterval` count-up, triggered only once via a guard:
 
 ```ts
 const hasAnimated = ref(false)
 useIntersectionObserver(targetRef, ([{ isIntersecting }]) => {
   if (isIntersecting && !hasAnimated.value) {
     hasAnimated.value = true
-    // lancer le count-up
+    // start the count-up
   }
 })
 ```
 
-### Vidéos
+### Videos
 
-Computed `embedUrl` qui convertit automatiquement les formats YouTube watch/short/shorts en format embed.
+A computed `embedUrl` that automatically converts YouTube watch/short/shorts formats into embed format.
 
-### Conditionnels de rendu
+### Rendering conditionals
 
-Quand une paire de champs doit être entièrement renseignée pour être affichée (ex : bouton avec label + URL) :
+When a pair of fields must be fully populated to be displayed (e.g. a button with a label + a URL):
 
 ```vue
 <a v-if="data?.btnUrl && tr(data?.btnText)" :href="data.btnUrl">{{ tr(data.btnText) }}</a>
 ```
 
-### Boutons CTA en `menu-item-link` (`getLinkFromMenuItemId` + `openLink`)
+### CTA buttons as `menu-item-link` (`getLinkFromMenuItemId` + `openLink`)
 
-Pattern de rendu pour un bouton/CTA dont le champ est de type `menu-item-link` (résolution hybride ID de menu ou URL brute) : `href` résolu via `getLinkFromMenuItemId(champ)` (`useMenu()`), navigation gérée via `openLink(champ)` (`useHelper()`) plutôt que le comportement natif du lien — permet à `openLink` de gérer uniformément les deux cas (ID de menu vs URL brute) sans dupliquer la logique de résolution :
+Rendering pattern for a button/CTA whose field is of type `menu-item-link` (hybrid resolution: menu ID or raw URL): `href` resolved via `getLinkFromMenuItemId(field)` (`useMenu()`), navigation handled via `openLink(field)` (`useHelper()`) rather than the link's native behavior — this lets `openLink` handle both cases (menu ID vs raw URL) uniformly without duplicating the resolution logic:
 
 ```vue
 <a
@@ -97,21 +97,21 @@ Pattern de rendu pour un bouton/CTA dont le champ est de type `menu-item-link` (
 </a>
 ```
 
-À distinguer du cas `text` (CTA autonome type Testimonials `btnUrl`, Projects `moreLinkUrl`) où le `href` consomme directement la chaîne brute sans passer par `getLinkFromMenuItemId` — voir `field-types.md` règle 9 pour le critère de choix.
+To be distinguished from the `text` case (standalone CTA such as Testimonials `btnUrl`, Projects `moreLinkUrl`) where the `href` consumes the raw string directly without going through `getLinkFromMenuItemId` — see `field-types.md` rule 9 for the choice criterion.
 
-### Rendu de liens de menu (pattern transverse Header/Footer/sous-menus)
+### Rendering menu links (cross-cutting Header/Footer/sub-menu pattern)
 
-Tout lien issu du système de menu (item principal, sous-menu, quick-links de footer) se rend systématiquement avec la même paire `href`/`click`, jamais un `href` en dur ni un `router-link` direct :
+Any link coming from the menu system (main item, sub-menu, footer quick-links) is systematically rendered with the same `href`/`click` pair, never a hardcoded `href` nor a direct `router-link`:
 
 ```vue
 <a :href="getMenuHref(item)" @click.prevent="openMenu(item)">{{ tr(item.title) }}</a>
 ```
 
-`getMenuHref`/`openMenu` viennent de `useMenu()`. C'est le même pattern qu'il s'agisse du menu principal, d'un sous-menu (`item.subMenuItems`), ou d'une liste positionnée (`getMenuItemsByLocation('footer', true)`).
+`getMenuHref`/`openMenu` come from `useMenu()`. It's the same pattern whether it's the main menu, a sub-menu (`item.subMenuItems`), or a location-scoped list (`getMenuItemsByLocation('footer', true)`).
 
-### Sélecteur de langue (Header)
+### Header language selector
 
-`languages` et `updateLang(code)` viennent de `useHelper()`. `getActiveLanguage()` (valeur courante du `<select>`) n'est **pas** un composable Creopse : c'est une fonction auto-importée du package `laravel-vue-i18n`, à utiliser directement sans destructuring depuis `useHelper()` ni aucun autre composable :
+`languages` and `updateLang(code)` come from `useHelper()`. `getActiveLanguage()` (the `<select>`'s current value) is **not** a Creopse composable: it's a function auto-imported from the `laravel-vue-i18n` package, to be used directly without destructuring it from `useHelper()` or any other composable:
 
 ```vue
 <select :value="getActiveLanguage()" @change="updateLang(($event.target as HTMLSelectElement)?.value)">
@@ -119,11 +119,11 @@ Tout lien issu du système de menu (item principal, sous-menu, quick-links de fo
 </select>
 ```
 
-Conditionné par `headerSettings?.displayRules?.displayLangSelector` (cf. `section-patterns.md#header`).
+Gated by `headerSettings?.displayRules?.displayLangSelector` (see `section-patterns.md#header`).
 
-### Accordéons (FAQ, contenu détaillé)
+### Accordions (FAQ, detailed content)
 
-Même logique Vue-native que les modals — pas de `data-bs-toggle="collapse"` fonctionnel. État = index ouvert (pas un tableau de booléens) :
+Same native-Vue logic as modals — no functional `data-bs-toggle="collapse"`. State = open index (not an array of booleans):
 
 ```ts
 const openIndex = ref<number | null>(0)
@@ -134,34 +134,34 @@ const toggle = (i: number) => { openIndex.value = openIndex.value === i ? null :
 <div class="accordion-collapse" :class="{ collapse: openIndex !== i, show: openIndex === i }">
 ```
 
-### Formatage de date
+### Date formatting
 
-`formatDate()` local (`toLocaleDateString('fr-FR', ...)`) est remplacé par le helper officiel `formatDate(date, options?: { outPattern?; locale? })` de `@creopse/utils`/`@creopse/utils/helpers` — ne plus réécrire de logique de formatage de date à la main, importer et appeler ce helper avec l'`outPattern`/`locale` voulus à chaque fois qu'un champ `text` contient une date brute à afficher proprement.
+The local `formatDate()` (`toLocaleDateString('fr-FR', ...)`) is replaced by the official `formatDate(date, options?: { outPattern?; locale? })` helper from `@creopse/utils`/`@creopse/utils/helpers` — stop hand-writing date-formatting logic, import and call this helper with the desired `outPattern`/`locale` whenever a `text` field holds a raw date that needs to be displayed cleanly.
 
-### `getAppInformationValue` avant tout champ de section redondant
+### `getAppInformationValue` before any redundant section field
 
-Voir `field-types.md` règle 8 pour la liste exhaustive des clés disponibles (`AppInformationKey`). Ne jamais recréer un champ de section pour l'une de ces valeurs.
+See `field-types.md` rule 8 for the exhaustive list of available keys (`AppInformationKey`). Never recreate a section field for one of these values.
 
-## Classes Tailwind vs Bootstrap/thème
+## Tailwind vs Bootstrap/theme classes
 
-Le projet mixe Bootstrap 5 (venant du template source) et Tailwind (`tw:` prefix). En cas de conflit de spécificité CSS, utiliser `tw:!` (important) sur la classe Tailwind, ou préférer du CSS scoped classique si le conflit persiste.
+The project mixes Bootstrap 5 (from the source template) and Tailwind (`tw:` prefix). In case of CSS specificity conflict, use `tw:!` (important) on the Tailwind class, or prefer classic scoped CSS if the conflict persists.
 
-## Formulaires
+## Forms
 
-- Soumission via `submitUserContentModelItem('', 'nom-du-modele', { ...form }, {}, onSuccess, onError)`.
-- Les champs du formulaire (`form.name`, `form.email`, etc.) sont des `text`/`checkbox` bruts côté structure de données — jamais `i18n-*` (cf. `field-types.md`).
+- Submission via `submitUserContentModelItem('', 'model-name', { ...form }, {}, onSuccess, onError)`.
+- Form fields (`form.name`, `form.email`, etc.) are raw `text`/`checkbox` on the data-structure side — never `i18n-*` (see `field-types.md`).
 
-## Footer / Header (patterns transverses)
+## Footer / Header (cross-cutting patterns)
 
-- Footer : liens via `getMenuItemsByLocation('footer', true)`, réseaux sociaux via `useHelper().socialNetworks`, copyright via `new Date().getFullYear()`.
-- Header : injection globale de `--thm-base` en CSS variable dans `onMounted` (`document.documentElement.style.setProperty`) à partir de la couleur primaire. Pour toute variante avec transparence (ex. `--thm-base-rgb`/valeur rgba dérivée), utiliser `hexToRgba(hex, alpha)` de `@creopse/utils`/`@creopse/utils/helpers` — renvoie directement une chaîne `rgba(...)` complète, pas de parseur RGB local à écrire.
+- Footer: links via `getMenuItemsByLocation('footer', true)`, social networks via `useHelper().socialNetworks`, copyright via `new Date().getFullYear()`.
+- Header: global injection of `--thm-base` as a CSS variable in `onMounted` (`document.documentElement.style.setProperty`) from the primary color. For any variant involving transparency (e.g. `--thm-base-rgb`/a derived rgba value), use `hexToRgba(hex, alpha)` from `@creopse/utils`/`@creopse/utils/helpers` — it directly returns a complete `rgba(...)` string, no local RGB parser to write.
 
-## Détails de contenu (pages Detail)
+## Content details (Detail pages)
 
-- Accès aux données via `useProps()` puis `contentModelItem.contentModelData` pour un modèle de contenu générique, ou `contentProps?.article` spécifiquement pour un article de news.
-- News/blog : toujours passer par `useNews()` → `loadArticles({ pageSize, page, categories, tags })` qui retourne `{ articles, meta }`.
-- Pagination serveur : `getPaginatedContentModelItems(name, page, pageSize, filterByIsActive, query, dataFilters)`, filtrage catégorie via l'opérateur `json_contains`.
+- Data access via `useProps()` then `contentModelItem.contentModelData` for a generic content model, or `contentProps?.article` specifically for a news article.
+- News/blog: always go through `useNews()` → `loadArticles({ pageSize, page, categories, tags })`, which returns `{ articles, meta }`.
+- Server-side pagination: `getPaginatedContentModelItems(name, page, pageSize, filterByIsActive, query, dataFilters)`, category filtering via the `json_contains` operator.
 
-## Bilinguisme
+## Bilingualism
 
-Tout le contenu généré (composant + fake data) est bilingue FR/EN par défaut, sans exception, même si le template HTML source n'est fourni que dans une langue.
+All generated content (component + fake data) is bilingual FR/EN by default, no exceptions, even if the source HTML template is only provided in one language.

@@ -1,26 +1,26 @@
-# Référence API — `@creopse/react`
+# API reference — `@creopse/react`
 
-Toolkit React 19 + Inertia. Ce document décrit l'API publique du package
-(`packages/react/src`). Les identifiants de code sont conservés en anglais.
+React 19 + Inertia toolkit. This document describes the package's public API
+(`packages/react/src`). Code identifiers are kept in English.
 
-> Ce skill (`creopse-template-development`) cible la stack **Vue 3 + TypeScript + Laravel/Inertia** — ce fichier est fourni pour référence croisée et pour une éventuelle réutilisation future sur un template React, mais n'est pas consommé par le workflow Vue décrit dans `SKILL.md`. Pour la stack active, voir `vue-api-reference.md`.
+> This skill (`creopse-template-development`) targets the **Vue 3 + TypeScript + Laravel/Inertia** stack — this file is provided for cross-reference and possible future reuse on a React template, but is not consumed by the Vue workflow described in `SKILL.md`. For the active stack, see `vue-api-reference.md`.
 
-**Exports du package (`package.json`)**
+**Package exports (`package.json`)**
 
-- `.` : provider, composants et types
-- `./hooks` : tous les hooks (`useApi`, `useNews`, `useMenu`, `useProps`, `useVideo`, `useConfig`, `useHelper`, `useContent`, `useNewsletter`, `useSetup`)
-- `./*` : sous-chemins additionnels
+- `.`: provider, components, and types
+- `./hooks`: all hooks (`useApi`, `useNews`, `useMenu`, `useProps`, `useVideo`, `useConfig`, `useHelper`, `useContent`, `useNewsletter`, `useSetup`)
+- `./*`: additional sub-paths
 
 ---
 
-## Fournisseur (Provider)
+## Provider
 
 ### `CreopseProvider`
 
-Composant racine à placer autour de l'application. Il initialise le `PropsManager`,
-connecte le routeur Inertia pour synchroniser les props, et fournit les contextes
-(router, config, sections, props). Lève une erreur si `initialProps`, `config` ou
-`resolveSections` sont absents.
+Root component to place around the application. It initializes the `PropsManager`,
+connects the Inertia router to synchronize props, and provides the contexts
+(router, config, sections, props). Throws an error if `initialProps`, `config`, or
+`resolveSections` are missing.
 
 ```tsx
 interface CreopseProviderProps {
@@ -29,84 +29,84 @@ interface CreopseProviderProps {
 }
 ```
 
-Voir `PluginOptions` et `PluginConfig` dans la section [Types](#types).
+See `PluginOptions` and `PluginConfig` in the [Types](#types) section.
 
 ---
 
 ## Hooks
 
-Importés depuis `@creopse/react/hooks` (ou `@creopse/react` pour ceux ré-exportés
-indirectement).
+Imported from `@creopse/react/hooks` (or `@creopse/react` for those re-exported
+indirectly).
 
 ### `useApi`
 
-Fournit des méthodes pour effectuer des requêtes API (via axios). Renvoie un objet
-contenant :
+Provides methods for making API requests (via axios). Returns an object
+containing:
 
-| Méthode | Signature | Retour |
+| Method | Signature | Return |
 | --- | --- | --- |
-| `request` | `<T = any>(payload: Payload, accessForbiddenCallback?: () => void) => Promise<Response<T>>` | Requête générique selon `payload`. En cas de 401, appelle `accessForbiddenCallback`. |
+| `request` | `<T = any>(payload: Payload, accessForbiddenCallback?: () => void) => Promise<Response<T>>` | Generic request based on `payload`. On a 401, calls `accessForbiddenCallback`. |
 | `getItemRequest` | `<T = any>(payload: Payload) => Promise<Response<T>>` | `GET /{routeBase}/{id}` |
 | `getAllItemsRequest` | `<T = any>(payload: Payload) => Promise<Response<T>>` | `GET /{routeBase}` |
 | `postItemRequest` | `<T = any>(payload: Payload) => Promise<Response<T>>` | `POST /{routeBase}` |
 | `putItemRequest` | `<T = any>(payload: Payload) => Promise<Response<T>>` | `PUT /{routeBase}/{id}` |
 | `deleteItemRequest` | `<T = any>(payload: Payload) => Promise<Response<T>>` | `DELETE /{routeBase}/{id}` |
-| `handleError` | `(error: AxiosError) => void` | Loggue l'erreur si `debug` est actif. |
+| `handleError` | `(error: AxiosError) => void` | Logs the error if `debug` is enabled. |
 
-`Payload` et `Response<T>` sont décrits dans [Types](#types). Les URLs sont
-construites à partir de `config.apiUrl` (ou `config.apiBaseUrl` si `payload.useApiBaseUrl`).
+`Payload` and `Response<T>` are described in [Types](#types). URLs are
+built from `config.apiUrl` (or `config.apiBaseUrl` if `payload.useApiBaseUrl`).
 
 ### `useNews`
 
-Accès aux articles, catégories, tags et commentaires d'actualités. Renvoie :
+Access to news articles, categories, tags, and comments. Returns:
 
-| Propriété | Type | Description |
+| Property | Type | Description |
 | --- | --- | --- |
-| `isLoading` | `boolean` | `true` pendant une requête. |
-| `loadCategories` | `(filterByIsVisible?: boolean = true) => Promise<NewsCategoryModel[]>` | Catégories (`/news-categories`), filtrées par `isActive`. |
-| `loadTags` | `(filterByIsVisible?: boolean = true) => Promise<NewsTagModel[]>` | Tags (`/news-tags`), filtrés par `isActive`. |
-| `loadArticles` | `(params: ArticlesQueryParams) => Promise<PaginatedArticles>` | Articles paginés (`/news-articles?...`). |
-| `loadArticlesMonths` | `() => Promise<string[]>` | Mois ayant au moins un article (`/news-articles/list/months`). |
-| `loadArticlesCount` | `() => Promise<number>` | Nombre total d'articles (`/count/news-articles`). |
-| `loadArticlesCountByStatus` | `(status: NewsArticleStatus) => Promise<number>` | Nombre d'articles par statut. |
-| `loadArticlesCountByAuthor` | `(id: number) => Promise<number>` | Nombre d'articles par auteur. |
-| `loadComments` | `(params: CommentsQueryParams) => Promise<PaginatedComments>` | Commentaires paginés (`/news-comments?...`). |
+| `isLoading` | `boolean` | `true` during a request. |
+| `loadCategories` | `(filterByIsVisible?: boolean = true) => Promise<NewsCategoryModel[]>` | Categories (`/news-categories`), filtered by `isActive`. |
+| `loadTags` | `(filterByIsVisible?: boolean = true) => Promise<NewsTagModel[]>` | Tags (`/news-tags`), filtered by `isActive`. |
+| `loadArticles` | `(params: ArticlesQueryParams) => Promise<PaginatedArticles>` | Paginated articles (`/news-articles?...`). |
+| `loadArticlesMonths` | `() => Promise<string[]>` | Months with at least one article (`/news-articles/list/months`). |
+| `loadArticlesCount` | `() => Promise<number>` | Total article count (`/count/news-articles`). |
+| `loadArticlesCountByStatus` | `(status: NewsArticleStatus) => Promise<number>` | Article count by status. |
+| `loadArticlesCountByAuthor` | `(id: number) => Promise<number>` | Article count by author. |
+| `loadComments` | `(params: CommentsQueryParams) => Promise<PaginatedComments>` | Paginated comments (`/news-comments?...`). |
 | `addComment` | `(comment: NewsCommentModel, successCallback?: () => void, errorCallback?: (errorData: any) => void) => Promise<Response<any>>` | `POST /news-comments`. |
 
 ### `useVideo`
 
-Accès aux vidéos et catégories vidéo. Renvoie :
+Access to videos and video categories. Returns:
 
-| Propriété | Type | Description |
+| Property | Type | Description |
 | --- | --- | --- |
-| `isLoading` | `boolean` | `true` pendant une requête. |
-| `loadCategories` | `(filterByIsVisible?: boolean = true) => Promise<VideoCategoryModel[]>` | Catégories vidéo (`/video-categories`). |
-| `loadVideoItems` | `(params: VideoItemsQueryParams) => Promise<PaginatedVideoItems>` | Éléments vidéo paginés (`/video-items?...`). |
+| `isLoading` | `boolean` | `true` during a request. |
+| `loadCategories` | `(filterByIsVisible?: boolean = true) => Promise<VideoCategoryModel[]>` | Video categories (`/video-categories`). |
+| `loadVideoItems` | `(params: VideoItemsQueryParams) => Promise<PaginatedVideoItems>` | Paginated video items (`/video-items?...`). |
 
 ### `useMenu`
 
-Récupération et manipulation des menus/menu items. Renvoie :
+Retrieval and manipulation of menus/menu items. Returns:
 
-| Méthode | Signature | Description |
+| Method | Signature | Description |
 | --- | --- | --- |
-| `getMenu` | `(name: string, activeOnly?: boolean = true, nested?: boolean = true) => MenuModel \| undefined` | Menu par nom, trié par position, optionnellement imbriqué. |
-| `getMenuByLocation` | `(name: string, activeOnly?: boolean = true, nested?: boolean = true) => MenuModel \| undefined` | Menu par nom de localisation. |
-| `getMenuItems` | `(name: string, visibleOnly?: boolean = true, nested?: boolean = true) => MenuItemModel[] \| undefined` | Items d'un menu par nom. |
-| `getMenuItemById` | `(id: number) => MenuItemModel \| undefined` | Item par ID (tous les menus). |
-| `getMenuItemsByLocation` | `(name: string, visibleOnly?: boolean = true, nested?: boolean = true) => MenuItemModel[] \| undefined` | Items par localisation de menu. |
-| `getMenuGroups` | `(name: string, byLocation?: boolean = false, visibleOnly?: boolean = true) => MenuItemGroupModel[]` | Groupes d'items du menu. |
-| `getMenuItemsByGroup` | `(name: string, groupId: number, byLocation?: boolean = false, visibleOnly?: boolean = true, nested?: boolean = true) => MenuItemModel[] \| undefined` | Items filtrés par groupe. |
-| `getMenuGroupedItems` | `(name: string, byLocation?: boolean = false, visibleOnly?: boolean = true, nested?: boolean = true) => { group: MenuItemGroupModel; items: MenuItemModel[] \| undefined }[]` | Items regroupés par groupe. |
-| `getMenuUngroupedItems` | `(name: string, byLocation?: boolean = false, visibleOnly?: boolean = true, nested?: boolean = true) => MenuItemModel[] \| undefined` | Items sans groupe. |
-| `openMenu` | `(menu?: MenuItemModel) => void` | Navigue selon `targetType` (lien externe, page, ou contenu via permalink). |
-| `getLinkFromMenuItemId` | `(id: any) => string` | Renvoie l'URL (externe/page) ou l'ID. |
-| `getMenuHref` | `(menu: MenuItemModel) => string` | `url` (externe) ou `path` (page). |
+| `getMenu` | `(name: string, activeOnly?: boolean = true, nested?: boolean = true) => MenuModel \| undefined` | Menu by name, sorted by position, optionally nested. |
+| `getMenuByLocation` | `(name: string, activeOnly?: boolean = true, nested?: boolean = true) => MenuModel \| undefined` | Menu by location name. |
+| `getMenuItems` | `(name: string, visibleOnly?: boolean = true, nested?: boolean = true) => MenuItemModel[] \| undefined` | Items of a menu by name. |
+| `getMenuItemById` | `(id: number) => MenuItemModel \| undefined` | Item by ID (all menus). |
+| `getMenuItemsByLocation` | `(name: string, visibleOnly?: boolean = true, nested?: boolean = true) => MenuItemModel[] \| undefined` | Items by menu location. |
+| `getMenuGroups` | `(name: string, byLocation?: boolean = false, visibleOnly?: boolean = true) => MenuItemGroupModel[]` | Menu item groups. |
+| `getMenuItemsByGroup` | `(name: string, groupId: number, byLocation?: boolean = false, visibleOnly?: boolean = true, nested?: boolean = true) => MenuItemModel[] \| undefined` | Items filtered by group. |
+| `getMenuGroupedItems` | `(name: string, byLocation?: boolean = false, visibleOnly?: boolean = true, nested?: boolean = true) => { group: MenuItemGroupModel; items: MenuItemModel[] \| undefined }[]` | Items grouped by group. |
+| `getMenuUngroupedItems` | `(name: string, byLocation?: boolean = false, visibleOnly?: boolean = true, nested?: boolean = true) => MenuItemModel[] \| undefined` | Ungrouped items. |
+| `openMenu` | `(menu?: MenuItemModel) => void` | Navigates based on `targetType` (external link, page, or content via permalink). |
+| `getLinkFromMenuItemId` | `(id: any) => string` | Returns the URL (external/page) or the ID. |
+| `getMenuHref` | `(menu: MenuItemModel) => string` | `url` (external) or `path` (page). |
 
 ### `useProps`
 
-Renvoie les props de la page synchronisés via le `PropsManager` (s'abonne aux
-mises à jour). En production sans provider, retourne les props Inertia natifs.
-Lève une erreur en dev si `CreopseProvider` est absent.
+Returns the page props synchronized via the `PropsManager` (subscribes to
+updates). In production without a provider, returns the native Inertia props.
+Throws an error in dev if `CreopseProvider` is missing.
 
 ```ts
 export const useProps = <T extends Props = Props>(): T
@@ -114,109 +114,108 @@ export const useProps = <T extends Props = Props>(): T
 
 ### `useConfig`
 
-Renvoie la configuration du plugin (objet `PluginConfig` enrichi de `apiBaseUrl`
-et `apiUrl`). Lève une erreur si `CreopseProvider` est absent.
+Returns the plugin configuration (`PluginConfig` object enriched with `apiBaseUrl`
+and `apiUrl`). Throws an error if `CreopseProvider` is missing.
 
 ```ts
 export const useConfig = () => PluginConfig & {
-  apiBaseUrl: string   // appUrl sans slash final
+  apiBaseUrl: string   // appUrl with no trailing slash
   apiUrl: string       // `${apiBaseUrl}/api`
 }
 ```
 
 ### `useHelper`
 
-Collection de fonctions/valeurs utilitaires. Renvoie :
+Collection of utility functions/values. Returns:
 
-| Propriété | Type | Description |
+| Property | Type | Description |
 | --- | --- | --- |
 | `is2XlScreen` | `boolean` | Media query `≥ 1536px`. |
 | `isXlScreen` | `boolean` | Media query `1280–1535px`. |
 | `isLgScreen` | `boolean` | Media query `1024–1279px`. |
 | `isMdScreen` | `boolean` | Media query `768–1023px`. |
 | `isSmScreen` | `boolean` | Media query `< 767px`. |
-| `getTranslation` | `(data: any, lang?: string) => string` | Traduit un JSON `{ LANG: value }` selon la langue active. |
-| `tr` | `(data: any, lang?: string) => string` | Alias de `getTranslation`. |
-| `resolveHtmlLinks` | `(data: string \| null \| undefined, lang?: string) => string` | Traduit et résout les placeholders `{{BASE_URL}}`, `[audio]`/`[video]`. |
-| `rHtml` | `(data: string \| null \| undefined, lang?: string) => string` | Alias de `resolveHtmlLinks`. |
-| `resolveUrl` | `(path: string) => string` | Résout une URL (complète ou chemin) vers une URL absolue. |
-| `fileUrl` | `(path: string) => string` | URL de fichier (`{apiBaseUrl}/storage/{path}`). |
-| `getImage` | `(path: string, size?: 'small' \| 'medium' \| 'large' \| 'original' = 'original') => Promise<string>` | URL d'image, en testant les thumbnails disponibles. |
-| `getVideoThumbnail` | `(path: string) => string` | URL de la miniature vidéo. |
-| `updateLang` | `(val: string, reload?: boolean = true, updateUserPrefs?: boolean = true) => Promise<void>` | Change la langue (localStorage, préférences user, rechargement). |
-| `getLangageLabel` | `(value: string) => string \| undefined` | Libellé d'une langue depuis sa valeur. |
-| `getLanguageValue` | `(label: string) => string \| undefined` | Valeur d'une langue depuis son libellé. |
-| `languages` | `Language[]` | Liste des langues (`fr`, `en`). |
-| `detectSocialNetwork` | `(url: string) => { name: string; icon: string } \| null` | Détecte un réseau social depuis une URL. |
-| `socialNetworks` | `{ name: string; icon: string }[]` | Liste des réseaux sociaux supportés. |
-| `ckEditorToolbarItems` | `string[]` | Items de la toolbar CKEditor. |
-| `displayFormErrors` | `(errors: any, displayError: (message: string) => void) => void` | Itère et affiche les erreurs de formulaire. |
-| `currentRoutePath` | `string` | URL courante de la page Inertia. |
-| `openLink` | `(entity: string \| number) => void` | Ouvre un lien/route (ID de menu, URL externe, ou chemin interne). |
+| `getTranslation` | `(data: any, lang?: string) => string` | Translates a `{ LANG: value }` JSON object according to the active language. |
+| `tr` | `(data: any, lang?: string) => string` | Alias for `getTranslation`. |
+| `resolveHtmlLinks` | `(data: string \| null \| undefined, lang?: string) => string` | Translates and resolves `{{BASE_URL}}`, `[audio]`/`[video]` placeholders. |
+| `rHtml` | `(data: string \| null \| undefined, lang?: string) => string` | Alias for `resolveHtmlLinks`. |
+| `resolveUrl` | `(path: string) => string` | Resolves a URL (full or path) into an absolute URL. |
+| `fileUrl` | `(path: string) => string` | File URL (`{apiBaseUrl}/storage/{path}`). |
+| `getImage` | `(path: string, size?: 'small' \| 'medium' \| 'large' \| 'original' = 'original') => Promise<string>` | Image URL, checking available thumbnails. |
+| `getVideoThumbnail` | `(path: string) => string` | Video thumbnail URL. |
+| `updateLang` | `(val: string, reload?: boolean = true, updateUserPrefs?: boolean = true) => Promise<void>` | Changes the language (localStorage, user preferences, optional reload). |
+| `getLangageLabel` | `(value: string) => string \| undefined` | Label of a language from its value. |
+| `getLanguageValue` | `(label: string) => string \| undefined` | Value of a language from its label. |
+| `languages` | `Language[]` | List of languages (`fr`, `en`). |
+| `detectSocialNetwork` | `(url: string) => { name: string; icon: string } \| null` | Detects a social network from a URL. |
+| `socialNetworks` | `{ name: string; icon: string }[]` | List of supported social networks. |
+| `ckEditorToolbarItems` | `string[]` | CKEditor toolbar items. |
+| `displayFormErrors` | `(errors: any, displayError: (message: string) => void) => void` | Iterates over and displays form errors. |
+| `currentRoutePath` | `string` | Current URL of the Inertia page. |
+| `openLink` | `(entity: string \| number) => void` | Opens a link/route (menu ID, external URL, or internal path). |
 
 ### `useContent`
 
-Accès aux données de page, sections, modèles de contenu, permalinks, et
-informations applicatives. Renvoie :
+Access to page, section, content-model, permalink, and app information data. Returns:
 
-| Propriété | Type | Description |
+| Property | Type | Description |
 | --- | --- | --- |
-| `page` | `PageProps` (Inertia) | Objet `usePage()`. |
-| `pageData` | `PageModel \| null` | Données de la page courante. |
-| `newsArticle` | `NewsArticleModel \| undefined \| null` | Article d'actualité courant. |
-| `newsCategory` | `NewsCategoryModel \| undefined \| null` | Catégorie courante. |
-| `newsTag` | `NewsTagModel \| undefined \| null` | Tag courant. |
-| `contentModelItem` | `ContentModelItemModel \| undefined \| null` | Item de modèle de contenu courant. |
-| `getSectionData` | `(key?: string) => object \| any \| null` | Données d'une section via `slug__linkId`. |
-| `getSectionRootData` | `(key?: string) => any` | `data.index` de la section. |
-| `getSectionSettings` | `(key: string \| null \| undefined) => object \| any \| null` | Settings d'une section. |
-| `getSectionSettingsGroup` | `(key: string \| null \| undefined, group: string) => object \| any \| null` | Groupe de settings. |
-| `getSectionSetting` | `(key: string \| null \| undefined, group: string, name: string) => object \| any \| null` | Setting précis. |
-| `getAnySectionData` | `(sectionSlug: string, pageSlug: string, linkId?: string = 'default') => Promise<object \| any \| null>` | Données d'une section depuis n'importe quelle page. |
-| `getContentModel` | `(name: string) => ContentModelModel \| undefined` | Modèle de contenu par nom. |
-| `getContentModelItems` | `(name: string, activeOnly?: boolean = true) => Promise<ContentModelItemModel[]>` | Items d'un modèle de contenu. |
-| `getPaginatedContentModelItems` | `(name: string, page: number, pageSize: number, activeOnly?: boolean = true, query?: string, dataFilters?: DataFilter[], sortBy?: string, sortDirection?: SortDirection, createdByType?: string, createdBy?: string) => Promise<PaginatedContentModelItems>` | Items paginés/filtrés/triés. |
+| `page` | `PageProps` (Inertia) | The `usePage()` object. |
+| `pageData` | `PageModel \| null` | Data of the current page. |
+| `newsArticle` | `NewsArticleModel \| undefined \| null` | Current news article. |
+| `newsCategory` | `NewsCategoryModel \| undefined \| null` | Current category. |
+| `newsTag` | `NewsTagModel \| undefined \| null` | Current tag. |
+| `contentModelItem` | `ContentModelItemModel \| undefined \| null` | Current content model item. |
+| `getSectionData` | `(key?: string) => object \| any \| null` | Data of a section via `slug__linkId`. |
+| `getSectionRootData` | `(key?: string) => any` | The section's `data.index`. |
+| `getSectionSettings` | `(key: string \| null \| undefined) => object \| any \| null` | Settings of a section. |
+| `getSectionSettingsGroup` | `(key: string \| null \| undefined, group: string) => object \| any \| null` | A settings group. |
+| `getSectionSetting` | `(key: string \| null \| undefined, group: string, name: string) => object \| any \| null` | A specific setting. |
+| `getAnySectionData` | `(sectionSlug: string, pageSlug: string, linkId?: string = 'default') => Promise<object \| any \| null>` | Data of a section from any page. |
+| `getContentModel` | `(name: string) => ContentModelModel \| undefined` | Content model by name. |
+| `getContentModelItems` | `(name: string, activeOnly?: boolean = true) => Promise<ContentModelItemModel[]>` | Items of a content model. |
+| `getPaginatedContentModelItems` | `(name: string, page: number, pageSize: number, activeOnly?: boolean = true, query?: string, dataFilters?: DataFilter[], sortBy?: string, sortDirection?: SortDirection, createdByType?: string, createdBy?: string) => Promise<PaginatedContentModelItems>` | Paginated/filtered/sorted items. |
 | `submitUserContentModelItem` | `(title: string, contentModelId: string, singletonsData?: any, collectionsData?: any, successCallback?: () => void, errorCallback?: (errorData: any) => void) => Promise<Response<any>>` | `POST /content-model/user-items`. |
-| `getContentPath` | `(item, force?: boolean = false) => string` | Chemin résolu via permalink (modèle de contenu, article, catégorie ou tag). |
-| `getAppInformationValue` | `(key: AppInformationKey, type?: SettingType = 'string') => any` | Valeur d'une info applicative (`string`/`number`/`boolean`/`object`/`array`). |
-| `formatContentModelItemData` | `(item: ContentModelItemModel) => object` | Reformate `contentModelData` vers `.data`. |
-| `appPrimaryColor` | `string` | `primaryColor` (défaut `#005B97`). |
-| `appSecondaryColor` | `string` | `secondaryColor` (défaut `#1E9CD7`). |
-| `appAccentColor` | `string` | `accentColor` (défaut `#FF6501`). |
-| `icon` | `string` | URL de l'icône applicative. |
-| `logo` | `string` | URL du logo applicatif. |
+| `getContentPath` | `(item, force?: boolean = false) => string` | Path resolved via permalink (content model, article, category, or tag). |
+| `getAppInformationValue` | `(key: AppInformationKey, type?: SettingType = 'string') => any` | Value of an app information entry (`string`/`number`/`boolean`/`object`/`array`). |
+| `formatContentModelItemData` | `(item: ContentModelItemModel) => object` | Reformats `contentModelData` into `.data`. |
+| `appPrimaryColor` | `string` | `primaryColor` (default `#005B97`). |
+| `appSecondaryColor` | `string` | `secondaryColor` (default `#1E9CD7`). |
+| `appAccentColor` | `string` | `accentColor` (default `#FF6501`). |
+| `icon` | `string` | App icon URL. |
+| `logo` | `string` | App logo URL. |
 
 ### `useNewsletter`
 
-Abonnement à la newsletter par email ou téléphone. Renvoie :
+Newsletter subscription by email or phone. Returns:
 
-| Propriété | Type | Description |
+| Property | Type | Description |
 | --- | --- | --- |
 | `subscribeEmail` | `(email: string, successCallback?: () => void, errorCallback?: (errorData: any) => void) => Promise<void>` | `POST newsletter/emails`. |
-| `subscribePhone` | `(phone: string, successCallback?: () => void, errorCallback?: (errorData: any) => void) => Promise<void>` | `POST newsletter/phones` (espaces supprimés). |
-| `isLoading` | `boolean` | `true` pendant une requête. |
+| `subscribePhone` | `(phone: string, successCallback?: () => void, errorCallback?: (errorData: any) => void) => Promise<void>` | `POST newsletter/phones` (spaces stripped). |
+| `isLoading` | `boolean` | `true` during a request. |
 
-> Note : `useNewsletter` expose aussi indirectement `subscribe` (interne).
+> Note: `useNewsletter` also indirectly exposes `subscribe` (internal).
 
 ### `useSetup`
 
-Utilitaires de configuration des sections. Renvoie :
+Section setup utilities. Returns:
 
-| Méthode | Signature | Description |
+| Method | Signature | Description |
 | --- | --- | --- |
-| `getComponents` | `(resolveSections?: () => Record<string, unknown>) => Record<string, any>` | Mappe les composants de sections (depuis `resolveSections`). Lève une erreur si `resolveSections` est absent. |
-| `getSectionsInOrder` | `<T extends Props = Props>(props: T) => SectionModel[]` | Sections ordonnées selon `pageData.sectionsOrder`. |
-| `getFinalPageSections` | `<T extends Props = Props>(props: T) => SectionModel[]` | Sections ordonnées moins celles désactivées (`sectionsDisabled`). |
+| `getComponents` | `(resolveSections?: () => Record<string, unknown>) => Record<string, any>` | Maps section components (from `resolveSections`). Throws an error if `resolveSections` is missing. |
+| `getSectionsInOrder` | `<T extends Props = Props>(props: T) => SectionModel[]` | Sections ordered according to `pageData.sectionsOrder`. |
+| `getFinalPageSections` | `<T extends Props = Props>(props: T) => SectionModel[]` | Ordered sections minus the disabled ones (`sectionsDisabled`). |
 
 ---
 
 ## Core
 
-Modules internes exposés (contextes, gestionnaire de props, instance axios).
+Internal modules exposed (contexts, props manager, axios instance).
 
-### Contextes (`core/contexts.ts`)
+### Contexts (`core/contexts.ts`)
 
-Contextes React exportés :
+Exported React contexts:
 
 - `PropsContext` — `React.Context<PropsManager | null>`
 - `ConfigContext` — `React.Context<PluginConfig | null>`
@@ -225,7 +224,7 @@ Contextes React exportés :
 
 ### `PropsManager` (`core/props-manager.ts`)
 
-Classe singleton (par provider) gérant l'état des props et leur synchronisation.
+Singleton class (per provider) managing prop state and its synchronization.
 
 ```ts
 class PropsManager<T extends Props = Props> {
@@ -233,21 +232,21 @@ class PropsManager<T extends Props = Props> {
   update(payload: T, strategy?: 'merge' | 'override'): void
   getState(): { props: T }
   sync(newProps: T): void
-  subscribe(callback: (props: T) => void): () => void  // renvoie unsubscribe
+  subscribe(callback: (props: T) => void): () => void  // returns unsubscribe
 }
 ```
 
-- `update` : fusion profonde (`merge`, défaut) ou remplacement profond (`override`).
-- `sync` : remplace les props et notifie les abonnés (utilisé par la navigation Inertia et l'éditeur).
+- `update`: deep merge (`merge`, default) or deep replace (`override`).
+- `sync`: replaces the props and notifies subscribers (used by Inertia navigation and the editor).
 
 ### `api` (`core/api.ts`)
 
-Instance axios partagée (export par défaut) :
+Shared axios instance (default export):
 
 - `withCredentials: true`
-- Gère le cookie CSRF (`XSRF-TOKEN`) via un intercepteur de requête.
+- Handles the CSRF cookie (`XSRF-TOKEN`) via a request interceptor.
 
-C'est cette instance qui sous-tend `useApi`.
+This is the instance underlying `useApi`.
 
 ---
 
@@ -255,7 +254,7 @@ C'est cette instance qui sous-tend `useApi`.
 
 ### `Image`
 
-Image avec résolution de thumbnail asynchrone.
+Image with asynchronous thumbnail resolution.
 
 ```ts
 interface ImageProps {
@@ -267,13 +266,13 @@ interface ImageProps {
   loading?: 'lazy' | 'eager'
   style?: React.CSSProperties
   size?: 'small' | 'medium' | 'large' | 'original'
-  sync?: boolean   // si true, rend un <img> synchrone avec src brut
+  sync?: boolean   // if true, renders a synchronous <img> with the raw src
 }
 ```
 
 ### `AsyncImg`
 
-Image dont l'`src` est résolu par une fonction asynchrone (`load`).
+Image whose `src` is resolved by an asynchronous function (`load`).
 
 ```ts
 interface AsyncImgProps {
@@ -289,44 +288,44 @@ interface AsyncImgProps {
 
 ### `CustomTransition`
 
-Wrapper d'animation (framer-motion).
+Animation wrapper (framer-motion).
 
 ```ts
 type Animation = 'fade' | 'slide-fade' | 'bounce'
 type Mode = 'wait' | 'sync' | 'popLayout' | undefined
 
 interface CustomTransitionProps {
-  name?: Animation              // défaut 'fade'
-  mode?: Mode                   // défaut 'wait'
-  appear?: boolean              // défaut false
+  name?: Animation              // default 'fade'
+  mode?: Mode                   // default 'wait'
+  appear?: boolean              // default false
   children?: React.ReactNode
-  contentKey?: string | number  // défaut 'default'
+  contentKey?: string | number  // default 'default'
 }
 ```
 
 ### `MountedTeleport`
 
-Téléporte (`createPortal`) ses enfants vers un élément cible, après montage.
+Teleports (`createPortal`) its children to a target element, after mounting.
 
 ```ts
 interface MountedTeleportProps {
-  to: string | HTMLElement      // sélecteur CSS ou élément
+  to: string | HTMLElement      // CSS selector or element
   children: React.ReactNode
-  disabled?: boolean            // défaut false
+  disabled?: boolean            // default false
 }
 ```
 
 ### `ReadMore`
 
-Tronque un texte et affiche un lien « Read more / Read less ».
+Truncates text and displays a "Read more / Read less" link.
 
 ```ts
 interface ReadMoreProps {
-  moreStr?: string              // défaut 'Read more'
-  lessStr?: string              // défaut 'Read less'
+  moreStr?: string              // default 'Read more'
+  lessStr?: string              // default 'Read less'
   text: string
-  link?: string                 // défaut '#'
-  maxChars?: number             // défaut 100
+  link?: string                 // default '#'
+  maxChars?: number             // default 100
   className?: string
   linkClassName?: string
 }
@@ -334,35 +333,35 @@ interface ReadMoreProps {
 
 ### `StickyBottom`
 
-Rend ses enfants « collants » en bas de l'écran au scroll.
+Renders its children "sticky" to the bottom of the screen on scroll.
 
 ```ts
 interface StickyBottomProps {
-  bottom?: number               // défaut 0
-  zIndex?: number               // défaut 1
+  bottom?: number               // default 0
+  zIndex?: number               // default 1
   className?: string
-  children?: React.ReactNode    // défaut <div>Sticky Bottom</div>
+  children?: React.ReactNode    // default <div>Sticky Bottom</div>
 }
 ```
 
 ### `StickyTop`
 
-Rend ses enfants « collants » en haut de l'écran au scroll.
+Renders its children "sticky" to the top of the screen on scroll.
 
 ```ts
 interface StickyTopProps {
-  top?: number                  // défaut 0
-  zIndex?: number               // défaut 1
+  top?: number                  // default 0
+  zIndex?: number               // default 1
   className?: string
-  children?: React.ReactNode    // défaut <div>Sticky Top</div>
+  children?: React.ReactNode    // default <div>Sticky Top</div>
 }
 ```
 
 ### `RootContainer`
 
-Conteneur racine qui rend les sections de page résolues (`resolveSections`) et
-gère l'édition live (messages `postMessage` avec l'éditeur Creopse). Change de
-`key` à chaque navigation Inertia. S'utilise sans props.
+Root container that renders the resolved page sections (`resolveSections`) and
+handles live editing (`postMessage` messages with the Creopse editor). Changes its
+`key` on every Inertia navigation. Used with no props.
 
 ```tsx
 import { RootContainer } from '@creopse/react'
@@ -380,13 +379,13 @@ type Method = 'get' | 'post' | 'put' | 'delete'
 interface Payload {
   method?: Method
   routeBase?: string
-  responseType?: ResponseType        // depuis axios
+  responseType?: ResponseType        // from axios
   params?: Record<string, any>
   data?: Record<string, any>
   url?: string
   id?: string
   headers?: Record<string, string>
-  useApiBaseUrl?: boolean            // utilise apiBaseUrl au lieu de apiUrl
+  useApiBaseUrl?: boolean            // uses apiBaseUrl instead of apiUrl
 }
 
 interface Response<T> {
@@ -497,13 +496,13 @@ interface PluginConfig {
 
 interface PluginOptions {
   initialProps: Props
-  router?: Router                    // depuis @inertiajs/core
+  router?: Router                    // from @inertiajs/core
   resolveSections: () => Record<string, unknown>
   config: PluginConfig
 }
 ```
 
-Types ré-exportés depuis `@creopse/utils` (utilisés par l'API) : `NewsArticleModel`,
+Types re-exported from `@creopse/utils` (used by the API): `NewsArticleModel`,
 `NewsCategoryModel`, `NewsTagModel`, `NewsCommentModel`, `NewsArticleStatus`,
 `VideoCategoryModel`, `VideoItemModel`, `ContentModelModel`, `ContentModelItemModel`,
 `MenuModel`, `MenuItemModel`, `MenuItemGroupModel`, `PageModel`, `PermalinkModel`,
