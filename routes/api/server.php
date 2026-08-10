@@ -17,5 +17,7 @@ Route::name('server.')
     ->prefix('/server')
     ->withoutMiddleware($excludedMiddleware)
     ->group(function () {
-        Route::post('/configure', [ServerController::class, 'configure'])->name('configure');
+        Route::post('/configure', [ServerController::class, 'configure'])
+            ->middleware('installation.pending')
+            ->name('configure');
     });
