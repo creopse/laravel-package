@@ -1,10 +1,10 @@
 /**
  * Hook to initialize the dataloader.
  *
- * The dataloader is initialized when the component is mounted and will
- * load the tags, categories, and user data.
- *
- * is a function that will be called when the component is mounted.
+ * Exposes `initializeData` to load the tags and categories; the caller
+ * decides when to trigger it (see Container.tsx). Does not auto-run on
+ * mount itself, to match the Vue shell's behavior and avoid double-loading
+ * when a consumer also triggers it in its own effect.
  */
 export const useDataloader = () => {
   const { loadTags, loadCategories } = useNews()
@@ -16,11 +16,6 @@ export const useDataloader = () => {
     setTags(tags)
     setCategories(categories)
   }, [loadTags, loadCategories, setTags, setCategories])
-
-  // Auto-initialize on mount
-  useEffect(() => {
-    initializeData()
-  }, [initializeData])
 
   return {
     initializeData,
