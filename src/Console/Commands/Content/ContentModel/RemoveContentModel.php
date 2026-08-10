@@ -6,6 +6,7 @@ use Creopse\Creopse\Console\Commands\CreopseCommand;
 use Creopse\Creopse\Enums\PermalinkContentType;
 use Creopse\Creopse\Models\ContentModel;
 use Creopse\Creopse\Models\Permalink;
+use Illuminate\Support\Facades\DB;
 
 class RemoveContentModel extends CreopseCommand
 {
@@ -38,15 +39,17 @@ class RemoveContentModel extends CreopseCommand
 
         $contentModelId = $contentModel->id;
 
-        $contentModel->delete();
+        DB::transaction(function () use ($contentModel, $contentModelId) {
+            $contentModel->delete();
 
-        $permalink = Permalink::where('content_type', PermalinkContentType::CONTENT_MODEL->value)
-            ->where('content_id', $contentModelId)
-            ->first();
+            $permalink = Permalink::where('content_type', PermalinkContentType::CONTENT_MODEL->value)
+                ->where('content_id', $contentModelId)
+                ->first();
 
-        if ($permalink) {
-            $permalink->delete();
-        }
+            if ($permalink) {
+                $permalink->delete();
+            }
+        });
 
         $this->info("[{$name}] Content model deleted successfully.");
 
