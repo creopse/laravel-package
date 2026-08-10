@@ -1,0 +1,18 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    - phpstan-baseline.neon
+
+parameters:
+    paths:
+        - src
+
+    level: 5
+
+    tmpDir: build/phpstan
+
+    # No composer.lock is committed (library, not an app), so the exact
+    # dependency versions resolved - and therefore some type-inference
+    # edge cases - can drift slightly between installs. Don't hard-fail
+    # CI when a baselined error doesn't reappear; still fails on anything
+    # genuinely new.
+    reportUnmatchedIgnoredErrors: false

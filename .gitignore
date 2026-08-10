@@ -10,3 +10,4 @@ publishables/files/composer.temp.json
 _ide_helper.php
 composer.lock
 .phpunit.result.cache
+/build
