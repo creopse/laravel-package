@@ -5,3 +5,7 @@
 !.gitignore
 .DS_Store
 publishables/files/composer.temp.json
+
+# Generated files - regenerate locally, don't commit
+_ide_helper.php
+composer.lock

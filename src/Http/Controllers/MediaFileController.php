@@ -192,7 +192,7 @@ class MediaFileController extends Controller
             'size' => $result['size'],
             'extension' => $file->getClientOriginalExtension(),
             'type' => $result['type'],
-            'sender_id' => $request->input('sender_id') ?? (Auth::check() ? Auth::user()->id : null),
+            'sender_id' => Auth::id(),
             'additional_metadata' => $additionalMetadata,
         ]);
 

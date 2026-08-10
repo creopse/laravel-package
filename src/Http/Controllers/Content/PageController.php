@@ -22,7 +22,13 @@ class PageController extends Controller
             return $this->sendResponse(PageBasicResource::collection(Page::orderBy('position')->get()));
         }
 
-        return $this->sendResponse(PageResource::collection(Page::orderBy('position')->get()));
+        $pages = Page::orderBy('position')->get()->load([
+            'sections.pages' => function ($query) {
+                $query->select('pages.id', 'pages.title')->withPivot('link_id');
+            },
+        ]);
+
+        return $this->sendResponse(PageResource::collection($pages));
     }
 
     /**
