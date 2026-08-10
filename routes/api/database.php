@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 Route::name('database.')
     ->prefix('/database')
     ->withoutMiddleware(config('installer.excluded_middleware'))
+    ->middleware('installation.pending')
     ->group(function () {
         Route::get('/', [DatabaseController::class, 'check'])->name('check');
         Route::post('/test', [DatabaseController::class, 'test'])->name('test');

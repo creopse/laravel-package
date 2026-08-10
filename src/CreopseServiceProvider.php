@@ -69,6 +69,7 @@ use Creopse\Creopse\Helpers\Functions;
 use Creopse\Creopse\Http\Middleware\CaptureSessionMetadata;
 use Creopse\Creopse\Http\Middleware\CompressResponse;
 use Creopse\Creopse\Http\Middleware\EnsureEmailIsVerified;
+use Creopse\Creopse\Http\Middleware\EnsureInstallationInProgress;
 use Creopse\Creopse\Http\Middleware\LogSessionHistory;
 use Creopse\Creopse\Http\Resources\Ads\AdIdentifierResource;
 use Creopse\Creopse\Http\Resources\Ads\AdResource;
@@ -247,6 +248,7 @@ class CreopseServiceProvider extends ServiceProvider
         $router->aliasMiddleware('verified', EnsureEmailIsVerified::class);
         $router->aliasMiddleware('abilities', CheckAbilities::class);
         $router->aliasMiddleware('ability', CheckForAnyAbility::class);
+        $router->aliasMiddleware('installation.pending', EnsureInstallationInProgress::class);
 
         // Configure Rate Limiting
         RateLimiter::for('creopse-api', function (Request $request) {
