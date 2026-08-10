@@ -5,13 +5,11 @@ namespace Creopse\Creopse\Tests;
 use Creopse\Creopse\CreopseServiceProvider;
 use Creopse\Creopse\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Orchestra\Testbench\Attributes\UsesVendor;
 use Orchestra\Testbench\TestCase as Orchestra;
 
-// PluginManager (booted unconditionally by CreopseServiceProvider) requires
-// vendor/autoload.php to exist inside the testbench skeleton, which isn't
-// there by default - this symlinks the real vendor/ in for the test run.
-#[UsesVendor]
+use function Orchestra\Testbench\default_skeleton_path;
+use function Orchestra\Testbench\package_path;
+
 abstract class TestCase extends Orchestra
 {
     use RefreshDatabase;
@@ -71,6 +69,19 @@ abstract class TestCase extends Orchestra
 
     protected function setUp(): void
     {
+        // PluginManager (booted unconditionally by CreopseServiceProvider's
+        // register()) does `require base_path('vendor/autoload.php')`. The
+        // testbench skeleton has no vendor/ of its own, so this needs to
+        // exist *before* parent::setUp() boots the application - Testbench's
+        // own #[UsesVendor] attribute and WithWorkbench trait both hook in
+        // too late for that (after the app, and therefore PluginManager,
+        // is already built).
+        $link = default_skeleton_path().'/vendor';
+
+        if (! is_link($link)) {
+            symlink(package_path('vendor'), $link);
+        }
+
         parent::setUp();
 
         $this->withSession([])->withHeader('Origin', 'http://localhost');
