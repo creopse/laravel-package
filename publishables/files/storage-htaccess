@@ -1,0 +1,23 @@
+# Creopse's media library accepts any file type by design. This directory is
+# served directly to the public (via the storage:link symlink), so the only
+# way to keep an unrestricted upload safe is to make sure nothing in here can
+# ever be executed as a script, regardless of what extension it ends up with.
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+<FilesMatch "\.(php|php\d|phtml|pht|phar|cgi|pl|py|asp|aspx|sh|exe|jsp)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>

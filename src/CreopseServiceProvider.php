@@ -664,6 +664,12 @@ class CreopseServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../creopse' => public_path('creopse'),
         ], 'creopse-admin');
+
+        // Publish storage hardening (denies script execution inside the
+        // publicly-served media library disk - see SEC-05 in the audit).
+        $this->publishes([
+            __DIR__.'/../publishables/files/storage-htaccess' => storage_path('app/public/.htaccess'),
+        ], 'creopse-storage-hardening');
     }
 
     public function register()

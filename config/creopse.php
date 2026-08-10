@@ -117,4 +117,25 @@ return [
 
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Media Library Uploads
+    |--------------------------------------------------------------------------
+    |
+    | The media library intentionally accepts any file type - it's a general
+    | purpose asset store, not an image-only uploader. `max_size` is a
+    | disk-exhaustion guard, not a content restriction: it caps how large a
+    | single upload can be, in kilobytes (same unit as Laravel's `max:`
+    | validation rule). The default is generous enough for typical video
+    | assets; raise or lower it via `CREOPSE_UPLOAD_MAX_SIZE_KB` to match
+    | your own hosting limits (php.ini's `upload_max_filesize`/`post_max_size`
+    | still apply on top of this and may need adjusting too).
+    |
+    | Default: 512000 (500 MB)
+    |
+    */
+    'uploads' => [
+        'max_size' => env('CREOPSE_UPLOAD_MAX_SIZE_KB', 512000),
+    ],
+
 ];

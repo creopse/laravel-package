@@ -161,7 +161,7 @@ class MediaFileController extends Controller
     {
         // Validate incoming request data
         $validator = Validator::make($request->all(), [
-            'file' => 'required|file',
+            'file' => ['required', 'file', 'max:'.config('creopse.uploads.max_size')],
         ]);
 
         // If data not valid return error
@@ -214,7 +214,7 @@ class MediaFileController extends Controller
     {
         // Validate incoming request data
         $validator = Validator::make($request->all(), [
-            'file' => 'required|file',
+            'file' => ['required', 'file', 'max:'.config('creopse.uploads.max_size')],
         ]);
 
         // If data not valid return error
