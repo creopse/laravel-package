@@ -46,6 +46,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('content-model/items', ContentModelItemController::class)->except(['index', 'show'])->parameters(['items' => 'contentModelItem'])->names('content-model.items');
 
+    Route::put('content-model-items/position', [ContentModelItemController::class, 'updatePosition'])->name('content-model.items.update.position');
+
     Route::post('content-model-items/list', [ContentModelItemController::class, 'showList'])->name('content-model.items.list');
 
     Route::get('content-model-items/search/{query?}/{contentModelId?}', [ContentModelItemController::class, 'searchItems'])->name('content-model.items.search');

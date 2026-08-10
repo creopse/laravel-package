@@ -105,7 +105,7 @@ class ContentModelItemController extends Controller
             $sortDirection = in_array($sortDirection, ['asc', 'desc']) ? $sortDirection : 'asc';
 
             // Native, whitelisted columns. Add to this list as needed.
-            $sortableColumns = ['title', 'created_at', 'updated_at', 'is_active', 'created_by'];
+            $sortableColumns = ['title', 'position', 'created_at', 'updated_at', 'is_active', 'created_by'];
 
             if ($sortBy) {
                 if (in_array($sortBy, $sortableColumns)) {
@@ -165,6 +165,7 @@ class ContentModelItemController extends Controller
             'title' => $request->input('title'),
             'content_model_data' => $request->input('content_model_data'),
             'is_active' => $request->input('is_active'),
+            'position' => $request->input('position', 0),
             'content_model_id' => $request->input('content_model_id'),
             'created_by_type' => $request->input('created_by_type'),
             'created_by' => $request->input('created_by'),
@@ -357,6 +358,26 @@ class ContentModelItemController extends Controller
             new ContentModelItemResource($contentModelItem),
             ResponseStatusCode::OK,
             'ContentModelItem related items updated successfully'
+        );
+    }
+
+    /**
+     * Update the position of a content model item.
+     */
+    public function updatePosition(Request $request)
+    {
+        $items = $request->input('items');
+
+        foreach ($items as $index => $item) {
+            ContentModelItem::where('id', $item['id'])->update([
+                'position' => $index,
+            ]);
+        }
+
+        return $this->sendResponse(
+            null,
+            ResponseStatusCode::OK,
+            'ContentModelItem position updated successfully'
         );
     }
 
