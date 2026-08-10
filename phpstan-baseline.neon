@@ -1,0 +1,3295 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\ContentModel\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Console/Commands/Content/ContentModel/MakeContentModel.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\ContentModel\\MakeContentModel\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/ContentModel/MakeContentModel.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\ContentModel\\MakeContentModelItem\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/ContentModel/MakeContentModelItem.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\ContentModel\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Console/Commands/Content/ContentModel/UpdateContentModel.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\ContentModel\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Console/Commands/Content/ContentModel/UpdateContentModel.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\ContentModel\\UpdateContentModel\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/ContentModel/UpdateContentModel.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\ContentModel\\UpdateContentModelItem\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/ContentModel/UpdateContentModelItem.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Menu\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Console/Commands/Content/Menu/MakeMenu.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Menu\\MakeMenu\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Menu/MakeMenu.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Menu\\MakeMenuItem\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Menu/MakeMenuItem.php
+
+		-
+			message: '#^Parameter \#1 \$contentType of method Creopse\\Creopse\\Console\\Commands\\Content\\Menu\\MakeMenuItem\:\:resolveContentId\(\) expects Creopse\\Creopse\\Enums\\ContentType, BackedEnum given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Console/Commands/Content/Menu/MakeMenuItem.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Menu\\MakeMenuItemGroup\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Menu/MakeMenuItemGroup.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Menu\\MakeMenuItemType\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Menu/MakeMenuItemType.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Menu\\MakeMenuLocation\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Menu/MakeMenuLocation.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Menu\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Console/Commands/Content/Menu/UpdateMenu.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Menu\\UpdateMenu\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Menu/UpdateMenu.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Menu\\UpdateMenuItem\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Menu/UpdateMenuItem.php
+
+		-
+			message: '#^Parameter \#1 \$contentType of method Creopse\\Creopse\\Console\\Commands\\Content\\Menu\\UpdateMenuItem\:\:resolveContentId\(\) expects Creopse\\Creopse\\Enums\\ContentType, BackedEnum given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Console/Commands/Content/Menu/UpdateMenuItem.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Menu\\UpdateMenuItemGroup\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Menu/UpdateMenuItemGroup.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Menu\\UpdateMenuItemType\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Menu/UpdateMenuItemType.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Menu\\UpdateMenuLocation\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Menu/UpdateMenuLocation.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Page\\MakePage\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Page/MakePage.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Section\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Console/Commands/Content/Page/OrderPageSections.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Section\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Console/Commands/Content/Page/TogglePageSectionStatus.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Page\\UpdatePage\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Page/UpdatePage.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Page\\UpdatePageSectionContent\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Page/UpdatePageSectionContent.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Permalink\\MakePermalink\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Permalink/MakePermalink.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Permalink\:\:\$path_prefix\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Console/Commands/Content/Permalink/RemovePermalink.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Permalink\\RemovePermalink\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Permalink/RemovePermalink.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Permalink\\UpdatePermalink\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Permalink/UpdatePermalink.php
+
+		-
+			message: '#^If condition is always false\.$#'
+			identifier: if.alwaysFalse
+			count: 1
+			path: src/Console/Commands/Content/Section/MakeSection.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Section\\MakeSection\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Section/MakeSection.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Section\\RemoveSection\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Section/RemoveSection.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Section\\UpdateSection\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Section/UpdateSection.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\UpdateBaseInformation\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/UpdateBaseInformation.php
+
+		-
+			message: '#^If condition is always false\.$#'
+			identifier: if.alwaysFalse
+			count: 1
+			path: src/Console/Commands/Content/Widget/MakeWidget.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Widget\\MakeWidget\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Widget/MakeWidget.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Widget\\RemoveWidget\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Content/Widget/RemoveWidget.php
+
+		-
+			message: '#^Command "creopse\:add\-content\-model" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:add\-content\-model\-item" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:add\-media" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:add\-menu" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:add\-menu\-item" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:add\-menu\-item\-group" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:add\-menu\-item\-type" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:add\-menu\-location" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:add\-page" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:add\-permalink" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:add\-section" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:add\-widget" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:attach\-page\-section" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:edit\-app\-info" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:edit\-base\-info" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:edit\-content\-model" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:edit\-content\-model\-item" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:edit\-menu" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:edit\-menu\-item" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:edit\-menu\-item\-group" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:edit\-menu\-item\-type" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:edit\-menu\-location" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:edit\-page" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:edit\-page\-section\-content" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:edit\-permalink" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:edit\-section" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:install" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:make\-content\-model" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:make\-content\-model\-item" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:make\-menu" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:make\-menu\-item" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:make\-menu\-item\-group" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:make\-menu\-item\-type" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:make\-menu\-location" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:make\-page" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:make\-permalink" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:make\-section" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:make\-widget" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:migrate\-sections\-data" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:migrate\-sections\-data\-icon" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:order\-page\-sections" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:replace\-media" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:restore\-media\-record" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:scheduled\-command" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:set\-page\-section\-source" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:toggle\-page\-section\-status" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:update\-app\-info" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:update\-base\-info" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:update\-content\-model" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:update\-content\-model\-item" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:update\-menu" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:update\-menu\-item" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:update\-menu\-item\-group" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:update\-menu\-item\-type" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:update\-menu\-location" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:update\-page" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:update\-page\-section\-content" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:update\-permalink" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:update\-section" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^Command "creopse\:upload\-media" does not have option "force"\.$#'
+			identifier: larastan.console.undefinedOption
+			count: 1
+			path: src/Console/Commands/CreopseCommand.php
+
+		-
+			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Media\\MakeMediaFile\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Console/Commands/Media/MakeMediaFile.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MediaFile\:\:\$path\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Console/Commands/Media/ReplaceMediaFile.php
+
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 5
+			path: src/Console/Commands/Migrations/MigrateSectionsData.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$data\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Console/Commands/Migrations/MigrateSectionsDataIcon.php
+
+		-
+			message: '#^Parameter \#2 \$callback of function preg_replace_callback expects callable\(array\<string\>\)\: string, Closure\(mixed\)\: float given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Console/Commands/Migrations/MigrateSectionsDataIcon.php
+
+		-
+			message: '#^Access to an undefined property Spatie\\Permission\\Models\\Permission\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Console/Commands/SyncPermissions.php
+
+		-
+			message: '#^Access to an undefined property Spatie\\Permission\\Models\\Permission\:\:\$display_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Console/Commands/SyncPermissions.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/CreopseServiceProvider.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Menu\:\:\$items\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/CreopseServiceProvider.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoSetting\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/CreopseServiceProvider.php
+
+		-
+			message: '#^Class App\\Http\\Middleware\\EncryptCookies not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/CreopseServiceProvider.php
+
+		-
+			message: '#^Class App\\Http\\Middleware\\VerifyCsrfToken not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/CreopseServiceProvider.php
+
+		-
+			message: '#^Method Creopse\\Creopse\\Enums\\ContentType\:\:getModelClass\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: src/Enums/ContentType.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Exceptions/Handler.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Menu\:\:\$items\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Exceptions/Handler.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoSetting\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Exceptions/Handler.php
+
+		-
+			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 1
+			path: src/Helpers/Functions.php
+
+		-
+			message: '#^Method Creopse\\Creopse\\Helpers\\Functions\:\:convertKeysToCamelCase\(\) should return array but returns null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Helpers/Functions.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$arr with type mixed is not subtype of native type array\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: src/Helpers/Functions.php
+
+		-
+			message: '#^Offset 0 on non\-empty\-list\<string\> on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Helpers/IpLocation/Core/Aggregator.php
+
+		-
+			message: '#^Call to function is_numeric\(\) with float will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Helpers/IpLocation/GeoPluginApi.php
+
+		-
+			message: '#^Parameter \#1 \$string of function urlencode expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Helpers/IpLocation/GeoPluginApi.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Foundation\\Auth\\User\:\:permissions\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Access/PermissionController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Foundation\\Auth\\User\:\:roles\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Access/RoleController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Foundation\\Auth\\User\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/Auth/EmailChangeController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Foundation\\Auth\\User\:\:\$email_verified_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/Auth/EmailChangeController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/Auth/EmailVerificationController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$account_status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/Auth/LoginController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Foundation\\Auth\\User\:\:createToken\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Auth/LoginController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Foundation\\Auth\\User\:\:tokens\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Auth/LoginController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Foundation\\Auth\\User\:\:currentAccessToken\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Auth/LogoutController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/Auth/PasswordResetController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Foundation\\Auth\\User\:\:\$password\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Auth/PasswordResetController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/Auth/ProviderController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$account_status\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Http/Controllers/Auth/ProviderController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$profile\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/Auth/ProviderController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$verification_code\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Auth/ProviderController.php
+
+		-
+			message: '#^Call to an undefined method Creopse\\Creopse\\Http\\Controllers\\Auth\\ProviderController\:\:isMobileRequest\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Auth/ProviderController.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 2
+			path: src/Http/Controllers/Auth/ProviderController.php
+
+		-
+			message: '#^Offset 0 on non\-empty\-list\<string\> on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Http/Controllers/Auth/ProviderController.php
+
+		-
+			message: '#^Parameter \#1 \$key of static method phpseclib3\\Crypt\\Common\\AsymmetricKey\:\:load\(\) expects string, array\<string, phpseclib3\\Math\\BigInteger\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/Auth/ProviderController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\|Illuminate\\Database\\Eloquent\\Collection\<int, Creopse\\Creopse\\Models\\User\>\:\:\$profile\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Auth/RegistrationController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\|Illuminate\\Database\\Eloquent\\Collection\<int, Creopse\\Creopse\\Models\\User\>\:\:\$profile_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/Auth/RegistrationController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\|Illuminate\\Database\\Eloquent\\Collection\<int, Creopse\\Creopse\\Models\\User\>\:\:\$profile_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/Auth/RegistrationController.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 3
+			path: src/Http/Controllers/Auth/RegistrationController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Foundation\\Auth\\User\:\:createToken\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Auth/TokenController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Foundation\\Auth\\User\:\:tokens\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Http/Controllers/Auth/TokenController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Foundation\\Auth\\User\:\:\$username\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/Auth/UsernameChangeController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\ContentModel\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Content/ContentModelController.php
+
+		-
+			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\ContentModel\:\:restore\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Content/ContentModelController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\ContentModel\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/Content/ContentModelController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\ContentModel\:\:\$access_scope\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Http/Controllers/Content/ContentModelItemController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\ContentModelItem\:\:\$content_model_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Content/ContentModelItemController.php
+
+		-
+			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\ContentModelItem\:\:restore\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Content/ContentModelItemController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\ContentModelItem\>\:\:paginate\(\) expects int\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/Content/ContentModelItemController.php
+
+		-
+			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\Menu\:\:restore\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Content/MenuController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\Menu\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/Content/MenuController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MenuItem\:\:\$content\.$#'
+			identifier: property.notFound
+			count: 4
+			path: src/Http/Controllers/Content/MenuItemController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MenuItem\:\:\$content_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Content/MenuItemController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MenuItem\:\:\$content_type\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Content/MenuItemController.php
+
+		-
+			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\MenuItem\:\:restore\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Content/MenuItemController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\MenuItem\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/Content/MenuItemController.php
+
+		-
+			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\MenuItemGroup\:\:restore\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Content/MenuItemGroupController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\MenuItemGroup\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/Content/MenuItemGroupController.php
+
+		-
+			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\MenuItemType\:\:restore\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Content/MenuItemTypeController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\MenuItemType\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/Content/MenuItemTypeController.php
+
+		-
+			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\MenuLocation\:\:restore\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Content/MenuLocationController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\MenuLocation\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/Content/MenuLocationController.php
+
+		-
+			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\MenuSetting\:\:restore\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Content/MenuSettingController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\MenuSetting\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/Content/MenuSettingController.php
+
+		-
+			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\Permalink\:\:restore\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Content/PermalinkController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\Permalink\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/Content/PermalinkController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$data\.$#'
+			identifier: property.notFound
+			count: 4
+			path: src/Http/Controllers/Content/SectionController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$data_source_link_id\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Http/Controllers/Content/SectionController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$data_source_page_id\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Http/Controllers/Content/SectionController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$link_title\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Content/SectionController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$settings\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Content/SectionController.php
+
+		-
+			message: '#^Relation ''pages'' is not found in Creopse\\Creopse\\Models\\Section model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/Http/Controllers/Content/SectionController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoCategoryResource\:\:\$subCategories\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/Content/VideoCategoryController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/Content/VideoCategoryController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoCategory\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/Content/VideoCategoryController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoCategory\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/Content/VideoCategoryController.php
+
+		-
+			message: '#^Method Creopse\\Creopse\\Http\\Controllers\\Content\\VideoCategoryController\:\:showCategoryItems\(\) has invalid return type Inertia\\Inertia\\Response\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Http/Controllers/Content/VideoCategoryController.php
+
+		-
+			message: '#^Method Creopse\\Creopse\\Http\\Controllers\\Content\\VideoCategoryController\:\:showCategoryItems\(\) should return Inertia\\Inertia\\Response but returns Inertia\\Response\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Http/Controllers/Content/VideoCategoryController.php
+
+		-
+			message: '#^Relation ''categories'' is not found in Creopse\\Creopse\\Models\\VideoItem model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: src/Http/Controllers/Content/VideoCategoryController.php
+
+		-
+			message: '#^Relation ''items'' is not found in Creopse\\Creopse\\Models\\VideoCategory model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/Http/Controllers/Content/VideoCategoryController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoItem\:\:\$publisher_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Content/VideoItemController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoSetting\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/Content/VideoItemController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\VideoItem\>\:\:paginate\(\) expects int\|null, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Http/Controllers/Content/VideoItemController.php
+
+		-
+			message: '#^Relation ''categories'' is not found in Creopse\\Creopse\\Models\\VideoItem model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/Http/Controllers/Content/VideoItemController.php
+
+		-
+			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\DataChange\:\:restore\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/DataChangeController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\DataChange\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/DataChangeController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CategoryResource\:\:\$subCategories\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/DynamicPageController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Http/Controllers/DynamicPageController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$published_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/DynamicPageController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/DynamicPageController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$summary\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/DynamicPageController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/DynamicPageController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsCategory\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/DynamicPageController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsCategory\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/DynamicPageController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsTag\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/DynamicPageController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsTag\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/DynamicPageController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Permalink\:\:\$content_param\.$#'
+			identifier: property.notFound
+			count: 4
+			path: src/Http/Controllers/DynamicPageController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Permalink\:\:\$content_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/DynamicPageController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Permalink\:\:\$page_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/DynamicPageController.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: src/Http/Controllers/DynamicPageController.php
+
+		-
+			message: '#^Relation ''categories'' is not found in Creopse\\Creopse\\Models\\NewsArticle model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: src/Http/Controllers/DynamicPageController.php
+
+		-
+			message: '#^Relation ''tags'' is not found in Creopse\\Creopse\\Models\\NewsArticle model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: src/Http/Controllers/DynamicPageController.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 4
+			path: src/Http/Controllers/DynamicPageController.php
+
+		-
+			message: '#^Call to method store\(\) on an unknown class Creopse\\Creopse\\Http\\Controllers\\UploadedFile\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Http/Controllers/EmailController.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$file contains unknown class Creopse\\Creopse\\Http\\Controllers\\UploadedFile\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Http/Controllers/EmailController.php
+
+		-
+			message: '#^Variable \$file in PHPDoc tag @var does not match assigned variable \$newFile\.$#'
+			identifier: varTag.differentVariable
+			count: 1
+			path: src/Http/Controllers/FileController.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: src/Http/Controllers/InstallController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MediaFile\:\:\$path\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/MediaFileController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\MediaFile\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/MediaFileController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/News/ArticleController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$published_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/News/ArticleController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/News/ArticleController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/News/ArticleController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$summary\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/News/ArticleController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/News/ArticleController.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: src/Http/Controllers/News/ArticleController.php
+
+		-
+			message: '#^Method Creopse\\Creopse\\Http\\Controllers\\News\\ArticleController\:\:getFeedItems\(\) should return Illuminate\\Http\\Resources\\Json\\AnonymousResourceCollection but returns Illuminate\\Database\\Eloquent\\Collection\<int, Creopse\\Creopse\\Models\\NewsArticle\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Http/Controllers/News/ArticleController.php
+
+		-
+			message: '#^Method Creopse\\Creopse\\Http\\Controllers\\News\\ArticleController\:\:searchArticles\(\) should return Inertia\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Http/Controllers/News/ArticleController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\NewsArticle\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Http/Controllers/News/ArticleController.php
+
+		-
+			message: '#^Relation ''categories'' is not found in Creopse\\Creopse\\Models\\NewsArticle model\.$#'
+			identifier: larastan.relationExistence
+			count: 4
+			path: src/Http/Controllers/News/ArticleController.php
+
+		-
+			message: '#^Relation ''tags'' is not found in Creopse\\Creopse\\Models\\NewsArticle model\.$#'
+			identifier: larastan.relationExistence
+			count: 4
+			path: src/Http/Controllers/News/ArticleController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CategoryResource\:\:\$subCategories\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/News/CategoryController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/News/CategoryController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsCategory\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/News/CategoryController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsCategory\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/News/CategoryController.php
+
+		-
+			message: '#^Method Creopse\\Creopse\\Http\\Controllers\\News\\CategoryController\:\:showCategoryArticles\(\) has invalid return type Inertia\\Inertia\\Response\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Http/Controllers/News/CategoryController.php
+
+		-
+			message: '#^Method Creopse\\Creopse\\Http\\Controllers\\News\\CategoryController\:\:showCategoryArticles\(\) should return Inertia\\Inertia\\Response but returns Inertia\\Response\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Http/Controllers/News/CategoryController.php
+
+		-
+			message: '#^Relation ''articles'' is not found in Creopse\\Creopse\\Models\\NewsCategory model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/Http/Controllers/News/CategoryController.php
+
+		-
+			message: '#^Relation ''categories'' is not found in Creopse\\Creopse\\Models\\NewsArticle model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: src/Http/Controllers/News/CategoryController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\NewsComment\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/News/CommentController.php
+
+		-
+			message: '#^Relation ''article'' is not found in Creopse\\Creopse\\Models\\NewsComment model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/Http/Controllers/News/CommentController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/News/TagController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsTag\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/News/TagController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsTag\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/News/TagController.php
+
+		-
+			message: '#^Method Creopse\\Creopse\\Http\\Controllers\\News\\TagController\:\:showTagArticles\(\) has invalid return type Inertia\\Inertia\\Response\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Http/Controllers/News/TagController.php
+
+		-
+			message: '#^Method Creopse\\Creopse\\Http\\Controllers\\News\\TagController\:\:showTagArticles\(\) should return Inertia\\Inertia\\Response but returns Inertia\\Response\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Http/Controllers/News/TagController.php
+
+		-
+			message: '#^Relation ''tags'' is not found in Creopse\\Creopse\\Models\\NewsArticle model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: src/Http/Controllers/News/TagController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Foundation\\Auth\\User\:\:notifications\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Http/Controllers/NotificationController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Foundation\\Auth\\User\:\:readNotifications\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/NotificationController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Foundation\\Auth\\User\:\:unreadNotifications\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Http/Controllers/NotificationController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Foundation\\Auth\\User\:\:\$tokens\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/SessionController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Foundation\\Auth\\User\:\:tokens\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Http/Controllers/SessionController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/UserController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$account_status\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/UserController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$profile_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/UserController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$profile_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/UserController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Foundation\\Auth\\User\:\:\$roles\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/UserController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Foundation\\Auth\\User\:\:devices\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/UserController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Foundation\\Auth\\User\:\:permissions\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/UserController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Foundation\\Auth\\User\:\:place\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/UserController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Foundation\\Auth\\User\:\:sessions\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/UserController.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 2
+			path: src/Http/Controllers/UserController.php
+
+		-
+			message: '#^Method Creopse\\Creopse\\Http\\Controllers\\UserController\:\:searchUsers\(\) should return Inertia\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Http/Controllers/UserController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\User\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/UserController.php
+
+		-
+			message: '#^Relation ''profile'' is not found in Creopse\\Creopse\\Models\\User model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: src/Http/Controllers/UserController.php
+
+		-
+			message: '#^Relation ''Creopse\\Creopse\\Models\\User'' is not found in Creopse\\Creopse\\Models\\UserDevice model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: src/Http/Controllers/UserDeviceController.php
+
+		-
+			message: '#^Relation ''Creopse\\Creopse\\Models\\User'' is not found in Creopse\\Creopse\\Models\\UserPlace model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: src/Http/Controllers/UserPlaceController.php
+
+		-
+			message: '#^Relation ''Creopse\\Creopse\\Models\\User'' is not found in Creopse\\Creopse\\Models\\UserSession model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: src/Http/Controllers/UserSessionController.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageDataResource\:\:\$sections\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Menu\:\:\$items\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MenuItem\:\:\$page\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MenuItem\:\:\$section_key\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MenuItem\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Permalink\:\:\$page\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoSetting\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Relation ''page'' is not found in Creopse\\Creopse\\Models\\MenuItem model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Relation ''page'' is not found in Creopse\\Creopse\\Models\\Permalink model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\UserSession\:\:\$last_activity\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Middleware/LogSessionHistory.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdIdentifierResource\:\:\$ads\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdIdentifierResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdIdentifierResource\:\:\$ads_count\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdIdentifierResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdIdentifierResource\:\:\$content_size\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdIdentifierResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdIdentifierResource\:\:\$content_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdIdentifierResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdIdentifierResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdIdentifierResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdIdentifierResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdIdentifierResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdIdentifierResource\:\:\$params\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdIdentifierResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdIdentifierResource\:\:\$reusable\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdIdentifierResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdIdentifierResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdIdentifierResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdResource\:\:\$adIdentifier\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdResource\:\:\$broadcast_end\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdResource\:\:\$broadcast_start\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdResource\:\:\$content\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdResource\:\:\$content_url\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdResource\:\:\$data\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdResource\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdResource\:\:\$display\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdResource\:\:\$pid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdResource\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Ads/AdResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\ContentModelResource\:\:\$access_scope\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/ContentModelResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\ContentModelResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/ContentModelResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\ContentModelResource\:\:\$data_structure\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/ContentModelResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\ContentModelResource\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/ContentModelResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\ContentModelResource\:\:\$has_permalink\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/ContentModelResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\ContentModelResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/ContentModelResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\ContentModelResource\:\:\$image\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/ContentModelResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\ContentModelResource\:\:\$image_url\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/ContentModelResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\ContentModelResource\:\:\$intent\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/ContentModelResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\ContentModelResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/ContentModelResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\ContentModelResource\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/ContentModelResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\ContentModelResource\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/ContentModelResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\ContentModelResource\:\:\$title_field_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/ContentModelResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\ContentModelResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/ContentModelResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageBasicResource\:\:\$content\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageBasicResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageBasicResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageBasicResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageBasicResource\:\:\$position\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageBasicResource\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageBasicResource\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageBasicResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageDataResource\:\:\$content\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageDataResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageDataResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageDataResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageDataResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageDataResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageDataResource\:\:\$position\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageDataResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageDataResource\:\:\$sections\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageDataResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageDataResource\:\:\$sections_disabled\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageDataResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageDataResource\:\:\$sections_order\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageDataResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageDataResource\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageDataResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageDataResource\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageDataResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageResource\:\:\$content\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageResource\:\:\$pages\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageResource\:\:\$pivot\.$#'
+			identifier: property.notFound
+			count: 8
+			path: src/Http/Resources/Content/PageResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageResource\:\:\$position\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageResource\:\:\$sections\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageResource\:\:\$sections_disabled\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageResource\:\:\$sections_order\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageResource\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageResource\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageResource.php
+
+		-
+			message: '#^Call to an undefined method Creopse\\Creopse\\Http\\Resources\\Content\\PageResource\:\:relationLoaded\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Resources/Content/PageResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionBasicResource\:\:\$content\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionBasicResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionBasicResource\:\:\$data_structure\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionBasicResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionBasicResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionBasicResource\:\:\$pages\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Resources/Content/SectionBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionBasicResource\:\:\$pivot\.$#'
+			identifier: property.notFound
+			count: 8
+			path: src/Http/Resources/Content/SectionBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionBasicResource\:\:\$settings_structure\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionBasicResource\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionBasicResource\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionBasicResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionBasicResource.php
+
+		-
+			message: '#^Call to an undefined method Creopse\\Creopse\\Http\\Resources\\Content\\SectionBasicResource\:\:relationLoaded\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionBasicResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionDataResource\:\:\$content\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionDataResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionDataResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Resources/Content/SectionDataResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionDataResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionDataResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionDataResource\:\:\$pages\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionDataResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionDataResource\:\:\$pivot\.$#'
+			identifier: property.notFound
+			count: 12
+			path: src/Http/Resources/Content/SectionDataResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionDataResource\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionDataResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionDataResource\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionDataResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$data\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionDataResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$settings\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionDataResource.php
+
+		-
+			message: '#^Call to an undefined method Creopse\\Creopse\\Http\\Resources\\Content\\SectionDataResource\:\:relationLoaded\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionDataResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionResource\:\:\$content\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionResource\:\:\$data_structure\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Resources/Content/SectionResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionResource\:\:\$pages\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Resources/Content/SectionResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionResource\:\:\$pivot\.$#'
+			identifier: property.notFound
+			count: 12
+			path: src/Http/Resources/Content/SectionResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionResource\:\:\$settings_structure\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionResource\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionResource\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$data\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$settings\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionResource.php
+
+		-
+			message: '#^Call to an undefined method Creopse\\Creopse\\Http\\Resources\\Content\\SectionResource\:\:relationLoaded\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Resources/Content/SectionResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoCategoryResource\:\:\$color\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoCategoryResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoCategoryResource\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoCategoryResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoCategoryResource\:\:\$image\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoCategoryResource\:\:\$image_url\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoCategoryResource\:\:\$is_active\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoCategoryResource\:\:\$items\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoCategoryResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoCategoryResource\:\:\$parent\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoCategoryResource\:\:\$parent_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoCategoryResource\:\:\$position\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoCategoryResource\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoCategoryResource\:\:\$subCategories\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoCategoryResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoItemResource\:\:\$categories\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoItemResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoItemResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoItemResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoItemResource\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoItemResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoItemResource\:\:\$display_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoItemResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoItemResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoItemResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoItemResource\:\:\$is_visible\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoItemResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoItemResource\:\:\$path\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoItemResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoItemResource\:\:\$published_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoItemResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoItemResource\:\:\$publisher\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoItemResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoItemResource\:\:\$publisher_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoItemResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoItemResource\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoItemResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoItemResource\:\:\$source\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoItemResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoItemResource\:\:\$thumbnail\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoItemResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoItemResource\:\:\$thumbnail_url\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoItemResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoItemResource\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoItemResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoItemResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoItemResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoItemResource\:\:\$url\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoItemResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoItemResource\:\:\$user_metadata\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/Content/VideoItemResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\MediaFileResource\:\:\$additional_metadata\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/MediaFileResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\MediaFileResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/MediaFileResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\MediaFileResource\:\:\$deleted_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/MediaFileResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\MediaFileResource\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/MediaFileResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\MediaFileResource\:\:\$extension\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/MediaFileResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\MediaFileResource\:\:\$foreign_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/MediaFileResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\MediaFileResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/MediaFileResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\MediaFileResource\:\:\$media_url\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/MediaFileResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\MediaFileResource\:\:\$mime_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/MediaFileResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\MediaFileResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/MediaFileResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\MediaFileResource\:\:\$path\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/MediaFileResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\MediaFileResource\:\:\$sender\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/MediaFileResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\MediaFileResource\:\:\$sender_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/MediaFileResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\MediaFileResource\:\:\$size\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/MediaFileResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\MediaFileResource\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/MediaFileResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\MediaFileResource\:\:\$type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/MediaFileResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\MediaFileResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/MediaFileResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$allow_comments\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$author\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$author_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$categories\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$comments\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$content\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$featured_image\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$featured_image_url\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$is_headline\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$legend\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$published_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$publisher\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$publisher_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$summary\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$tags\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\ArticleResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/ArticleResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CategoryResource\:\:\$articles\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CategoryResource\:\:\$color\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CategoryResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CategoryResource\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CategoryResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CategoryResource\:\:\$image\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CategoryResource\:\:\$image_url\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CategoryResource\:\:\$is_active\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CategoryResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CategoryResource\:\:\$parent\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CategoryResource\:\:\$parent_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CategoryResource\:\:\$position\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CategoryResource\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CategoryResource\:\:\$subCategories\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CategoryResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CategoryResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CommentResource\:\:\$article\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CommentResource\:\:\$author\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CommentResource\:\:\$content\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CommentResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CommentResource\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CommentResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CommentResource\:\:\$is_active\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CommentResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CommentResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/CommentResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\TagResource\:\:\$articles\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/TagResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\TagResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/TagResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\TagResource\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/TagResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\TagResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/TagResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\TagResource\:\:\$is_active\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/TagResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\TagResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/TagResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\TagResource\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/TagResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\TagResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/News/TagResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$account_status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$address\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$auth_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$avatar\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$avatar_url\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$devices\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$email_verified_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$firstname\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$fullname\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$hasAdminProfile\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$last_logged_in_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$lastname\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$location\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$newsArticles\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$newsComments\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$phone\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$place\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$preferences\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$profile\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$profile_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$profile_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$uid\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$username\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Call to an undefined method Creopse\\Creopse\\Http\\Resources\\UserResource\:\:getAllPermissions\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Call to an undefined method Creopse\\Creopse\\Http\\Resources\\UserResource\:\:roles\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$last_logged_in_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Listeners/AuthSubscriber.php
+
+		-
+			message: '#^Instanceof between Creopse\\Creopse\\Models\\User and Illuminate\\Contracts\\Auth\\MustVerifyEmail will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/Listeners/AuthSubscriber.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Ad\:\:\$content\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Ad.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\ContentModel\:\:\$image\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/ContentModel.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MediaFile\:\:\$foreign_url\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/MediaFile.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MediaFile\:\:\$path\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/MediaFile.php
+
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 2
+			path: src/Models/MediaFile.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MenuItem\:\:\$image\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/MenuItem.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$fullname\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/NewsArticle.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$author\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Models/NewsArticle.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$categories\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/NewsArticle.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$content\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/NewsArticle.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$featured_image\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/NewsArticle.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$publisher\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/NewsArticle.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/NewsArticle.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$summary\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/NewsArticle.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$tags\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/NewsArticle.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/NewsArticle.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/NewsArticle.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsCategory\:\:\$image\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/NewsCategory.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property Creopse\\Creopse\\Models\\Page\:\:\$with is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$with\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Models/Page.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$avatar\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/User.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$firstname\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/User.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$lastname\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/User.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$profile_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/User.php
+
+		-
+			message: '#^PHPDoc tag @method for method Creopse\\Creopse\\Models\\User\:\:factory\(\) return type contains unknown class Database\\Factories\\UserFactory\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Models/User.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property Creopse\\Creopse\\Models\\User\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Models/User.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property Creopse\\Creopse\\Models\\User\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Models/User.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property Creopse\\Creopse\\Models\\User\:\:\$with is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$with\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Models/User.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoCategory\:\:\$image\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/VideoCategory.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoItem\:\:\$path\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/VideoItem.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoItem\:\:\$publisher\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/VideoItem.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoItem\:\:\$thumbnail\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/VideoItem.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Notifications/UserAccountActivated.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsComment\:\:\$article\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Notifications/UserCreateComment.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsComment\:\:\$user\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Notifications/UserCreateComment.php
+
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 1
+			path: src/Notifications/UserCreateComment.php
+
+		-
+			message: '#^Property Creopse\\Creopse\\Notifications\\UserCreateComment\:\:\$articleId is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Notifications/UserCreateComment.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\ContentModel\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Notifications/UserEntryContent.php
+
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 1
+			path: src/Notifications/UserEntryContent.php
+
+		-
+			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Notifications/WelcomeUser.php

@@ -39,7 +39,8 @@
         "pre-autoload-dump": "Google\\Task\\Composer::cleanup",
         "test": "pest",
         "format": "pint",
-        "format:test": "pint --test"
+        "format:test": "pint --test",
+        "analyse": "phpstan analyse"
     },
     "require": {
         "php": "^8.2 || ^8.3 || ^8.4 || ^8.5",
@@ -83,7 +84,8 @@
         "spatie/laravel-ignition": "^2.0",
         "orchestra/canvas": "^9.2 || ^10.0 || ^11.0",
         "orchestra/testbench": "^9.0 || ^10.0 || ^11.0",
-        "barryvdh/laravel-ide-helper": "^3.6"
+        "barryvdh/laravel-ide-helper": "^3.6",
+        "larastan/larastan": "^3.10"
     },
     "config": {
         "allow-plugins": {
