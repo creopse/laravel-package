@@ -310,6 +310,14 @@ class Install extends CreopseCommand
         $this->info('Linking storage folder to public folder...');
         $this->call('storage:link');
 
+        // Step 23b: Harden the now-public storage disk against uploaded
+        // files being executed as scripts (Apache only - see README for
+        // the Nginx equivalent).
+        $this->info('Hardening the public storage disk against script execution...');
+        $this->call('vendor:publish', [
+            '--tag' => 'creopse-storage-hardening',
+        ]);
+
         // Step 24: Clear cache
         $this->info('Clearing cache...');
         $this->call('cache:clear');

@@ -36,6 +36,22 @@ Before starting, ensure your environment meets the following prerequisites:
 > to your own project's `composer.json`, or set `config.policy.advisories.block` to
 > `false`. Upgrading to Laravel 12.60+/13.10+ resolves it without any config changes.
 
+> **Media library uploads.** The media library intentionally accepts any file type and
+> size (up to `CREOPSE_UPLOAD_MAX_SIZE_KB`, default 500 MB — a disk-exhaustion guard,
+> not a content restriction). Because uploads are served straight from the public
+> storage disk, `creopse:install` publishes a `storage/app/public/.htaccess` that
+> disables script execution in that directory on **Apache** hosts. On **Nginx**, add
+> the equivalent yourself in the server block covering your storage path:
+> ```nginx
+> location ^~ /storage/ {
+>     location ~ \.(php|phtml|pht|phar|cgi|pl|py|asp|aspx|sh|exe|jsp)$ {
+>         deny all;
+>     }
+> }
+> ```
+> Already installed and upgrading? Re-run `php artisan vendor:publish --tag=creopse-storage-hardening`
+> to add the `.htaccess` to an existing install.
+
 ---
 
 ## 🛠️ Installation Guide
