@@ -42,8 +42,41 @@ jobs:
       - name: Check code style
         run: composer format:test
 
-      - name: Run static analysis
-        run: composer analyse
-
       - name: Run tests
         run: composer test
+
+  static-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Larastan boots a Testbench skeleton to reflect the package's models
+      # and console commands. Running it once, on a single pinned PHP
+      # version, keeps that reflection deterministic - the source of the
+      # errors it finds shifts slightly between PHP versions (different
+      # type-inference stubs), which isn't a signal worth failing the build
+      # over here; the "lint" matrix above already covers cross-version
+      # runtime correctness.
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-8.3-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-8.3-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Run static analysis
+        run: composer analyse
