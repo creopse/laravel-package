@@ -2,7 +2,7 @@
 
 namespace Creopse\Creopse\Helpers;
 
-use App\Models\User;
+use Creopse\Creopse\Models\User;
 use Illuminate\Support\Str;
 
 class UsernameGenerator

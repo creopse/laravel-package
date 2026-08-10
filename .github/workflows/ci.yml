@@ -42,5 +42,5 @@ jobs:
       - name: Check code style
         run: composer format:test
 
-      # No automated tests exist yet (see REL-01 in the reliability audit).
-      # Once tests/pest.php lands, add a step here running `composer test`.
+      - name: Run tests
+        run: composer test
