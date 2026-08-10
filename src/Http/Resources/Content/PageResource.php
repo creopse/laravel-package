@@ -22,7 +22,7 @@ class PageResource extends JsonResource
             'title' => $this->title,
             'position' => $this->position,
             'content' => $this->content,
-            'sections' => SectionBasicResource::collection($this->sections->load([
+            'sections' => SectionBasicResource::collection($this->sections->loadMissing([
                 'pages' => function ($query) {
                     $query->select('pages.id', 'pages.title')->withPivot('link_id');
                 },

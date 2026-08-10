@@ -31,7 +31,10 @@
         ]
     },
     "scripts": {
-        "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
+        "pre-autoload-dump": "Google\\Task\\Composer::cleanup",
+        "test": "pest",
+        "format": "pint",
+        "format:test": "pint --test"
     },
     "require": {
         "php": "^8.2 || ^8.3 || ^8.4 || ^8.5",
