@@ -21,7 +21,8 @@ class EmailChangeController extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'email' => ['required', 'email', 'unique:users'],
+            // See RegisterRequest for why the regex is here (CVE-2026-48019).
+            'email' => ['required', 'email', 'regex:/^[^\r\n]*$/', 'unique:users'],
         ]);
 
         // If data not valid return error

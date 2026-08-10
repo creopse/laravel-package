@@ -83,6 +83,15 @@
         "allow-plugins": {
             "pestphp/pest-plugin": false
         },
-        "process-timeout": 600
+        "process-timeout": 600,
+        "policy": {
+            "advisories": {
+                "ignore-id": {
+                    "PKSA-m5cs-t1y6-qpcs": "Signed-URL path confusion (GHSA-crmm-hgp2-wgrp), unfixed on the 11.x line. Not applicable: Creopse does not use Laravel's temporary signed URLs.",
+                    "PKSA-3r5d-mb8f-1qw9": "CVE-2026-48019, CRLF injection via the email validation rule, unfixed on the 11.x line. Mitigated in this package's own email-accepting endpoints (RegisterRequest, EmailChangeController, PasswordResetController) with the same regex check Laravel's own 12.60.0/13.10.0 patch added.",
+                    "PKSA-mdq4-51ck-6kdq": "Duplicate advisory entry for CVE-2026-48019 (see PKSA-3r5d-mb8f-1qw9)."
+                }
+            }
+        }
     }
 }

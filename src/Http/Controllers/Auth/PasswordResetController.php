@@ -28,7 +28,8 @@ class PasswordResetController extends Controller
     public function send(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
+            // See RegisterRequest for why the regex is here (CVE-2026-48019).
+            'email' => ['required', 'email', 'regex:/^[^\r\n]*$/'],
         ]);
 
         // If data not valid return error
@@ -70,7 +71,8 @@ class PasswordResetController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'token' => 'required',
-            'email' => 'required|email',
+            // See RegisterRequest for why the regex is here (CVE-2026-48019).
+            'email' => ['required', 'email', 'regex:/^[^\r\n]*$/'],
             'password' => 'required|min:8|confirmed',
         ]);
 
@@ -186,7 +188,8 @@ class PasswordResetController extends Controller
     {
         $request->validate([
             'token' => 'required',
-            'email' => 'required|email',
+            // See RegisterRequest for why the regex is here (CVE-2026-48019).
+            'email' => ['required', 'email', 'regex:/^[^\r\n]*$/'],
             'password' => 'required|min:8|confirmed',
         ]);
 

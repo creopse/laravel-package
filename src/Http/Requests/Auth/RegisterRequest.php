@@ -30,7 +30,12 @@ class RegisterRequest extends FormRequest
             'username' => ['sometimes', 'unique:users'],
             'lastname' => ['required'],
             'firstname' => ['required'],
-            'email' => ['required', 'email', 'unique:users'],
+            // The trailing regex is a compensating control for CVE-2026-48019
+            // (CRLF injection via the email rule) - fixed upstream in Laravel
+            // 12.60.0/13.10.0 but not backported to 11.x, which this package
+            // still supports. Mirrors the exact check Laravel's own patch
+            // added to validateEmail().
+            'email' => ['required', 'email', 'regex:/^[^\r\n]*$/', 'unique:users'],
             'password' => [
                 'required',
                 'confirmed',
