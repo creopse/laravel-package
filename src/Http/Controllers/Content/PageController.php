@@ -10,6 +10,7 @@ use Creopse\Creopse\Http\Resources\Content\PageResource;
 use Creopse\Creopse\Models\Page;
 use Creopse\Creopse\Models\PageSection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PageController extends Controller
 {
@@ -38,42 +39,46 @@ class PageController extends Controller
     {
         $request->validated();
 
-        $page = Page::create([
-            'name' => $request->input('name'),
-            'title' => $request->input('title'),
-            'content' => $request->input('content'),
-            'position' => $request->input('position', 0),
-            'sections_order' => $request->input('sections_order'),
-            'sections_disabled' => $request->input('sections_disabled'),
-        ]);
+        $page = DB::transaction(function () use ($request) {
+            $page = Page::create([
+                'name' => $request->input('name'),
+                'title' => $request->input('title'),
+                'content' => $request->input('content'),
+                'position' => $request->input('position', 0),
+                'sections_order' => $request->input('sections_order'),
+                'sections_disabled' => $request->input('sections_disabled'),
+            ]);
 
-        if ($request->has('sections')) {
-            $sectionIds = collect($request->input('sections'))->pluck('id');
+            if ($request->has('sections')) {
+                $sectionIds = collect($request->input('sections'))->pluck('id');
 
-            $pivotData = [];
+                $pivotData = [];
 
-            foreach ($sectionIds as $sectionId) {
-                $pivotData[$sectionId] = [
-                    'data_source_page_id' => $page->id,
-                ];
+                foreach ($sectionIds as $sectionId) {
+                    $pivotData[$sectionId] = [
+                        'data_source_page_id' => $page->id,
+                    ];
+                }
+
+                $page->sections()->sync($pivotData);
             }
 
-            $page->sections()->sync($pivotData);
-        }
+            if ($request->has('sections_ids')) {
+                $sectionIds = $request->input('sections_ids');
 
-        if ($request->has('sections_ids')) {
-            $sectionIds = $request->input('sections_ids');
+                $pivotData = [];
 
-            $pivotData = [];
+                foreach ($sectionIds as $sectionId) {
+                    $pivotData[$sectionId] = [
+                        'data_source_page_id' => $page->id,
+                    ];
+                }
 
-            foreach ($sectionIds as $sectionId) {
-                $pivotData[$sectionId] = [
-                    'data_source_page_id' => $page->id,
-                ];
+                $page->sections()->sync($pivotData);
             }
 
-            $page->sections()->sync($pivotData);
-        }
+            return $page;
+        });
 
         return $this->sendResponse(
             new PageResource($page),
@@ -95,48 +100,50 @@ class PageController extends Controller
      */
     public function update(Request $request, Page $page)
     {
-        $page->update($request->except(['sections', 'sections_ids', 'removed_sections_ids']));
+        DB::transaction(function () use ($request, $page) {
+            $page->update($request->except(['sections', 'sections_ids', 'removed_sections_ids']));
 
-        $attachSections = function ($sectionIds) use ($page) {
-            $existingSections = $page->sections()->pluck('section_id')->toArray();
+            $attachSections = function ($sectionIds) use ($page) {
+                $existingSections = $page->sections()->pluck('section_id')->toArray();
 
-            $newSections = array_diff($sectionIds, $existingSections);
+                $newSections = array_diff($sectionIds, $existingSections);
 
-            $pivotData = [];
+                $pivotData = [];
 
-            foreach ($newSections as $sectionId) {
-                $pivotData[$sectionId] = [
-                    'data_source_page_id' => $page->id,
-                ];
+                foreach ($newSections as $sectionId) {
+                    $pivotData[$sectionId] = [
+                        'data_source_page_id' => $page->id,
+                    ];
+                }
+
+                if (count($pivotData) > 0) {
+                    $page->sections()->attach($pivotData);
+                }
+
+                $page->sections()->sync($sectionIds);
+            };
+
+            if ($request->has('sections')) {
+                $sectionIds = collect($request->input('sections'))->pluck('id')->toArray();
+                $attachSections($sectionIds);
             }
 
-            if (count($pivotData) > 0) {
-                $page->sections()->attach($pivotData);
+            if ($request->has('sections_ids')) {
+                $sectionIds = $request->input('sections_ids');
+                $attachSections($sectionIds);
             }
 
-            $page->sections()->sync($sectionIds);
-        };
+            if ($request->has('removed_sections_ids')) {
+                $removedSectionsIds = $request->input('removed_sections_ids');
 
-        if ($request->has('sections')) {
-            $sectionIds = collect($request->input('sections'))->pluck('id')->toArray();
-            $attachSections($sectionIds);
-        }
-
-        if ($request->has('sections_ids')) {
-            $sectionIds = $request->input('sections_ids');
-            $attachSections($sectionIds);
-        }
-
-        if ($request->has('removed_sections_ids')) {
-            $removedSectionsIds = $request->input('removed_sections_ids');
-
-            foreach ($removedSectionsIds as $sectionId) {
-                PageSection::where('page_id', $page->id)
-                    ->where('section_id', $sectionId['id'])
-                    ->where('link_id', $sectionId['link_id'])
-                    ->delete();
+                foreach ($removedSectionsIds as $sectionId) {
+                    PageSection::where('page_id', $page->id)
+                        ->where('section_id', $sectionId['id'])
+                        ->where('link_id', $sectionId['link_id'])
+                        ->delete();
+                }
             }
-        }
+        });
 
         return $this->sendResponse(
             new PageResource($page),

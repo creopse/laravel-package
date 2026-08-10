@@ -23,6 +23,19 @@ Before starting, ensure your environment meets the following prerequisites:
 - **Composer**: To manage dependencies.
 - **pnpm**: Required to manage and build frontend assets.
 
+> **Running on Laravel 11.x?** Every current Laravel 11.x release is affected by
+> [CVE-2026-48019](https://github.com/advisories/GHSA-5vg9-5847-vvmq) (CRLF injection
+> via the `email` validation rule) and a signed-URL path confusion issue
+> ([GHSA-crmm-hgp2-wgrp](https://github.com/advisories/GHSA-crmm-hgp2-wgrp)), neither of
+> which Laravel has backported a fix for to the 11.x line (fixed starting at 12.60.0 /
+> 13.10.0 only). Creopse's own email-accepting endpoints are mitigated against the CRLF
+> issue regardless of your Laravel version. Composer 2.9+ blocks resolving to an affected
+> version by default, so `composer require`/`composer update` on Laravel 11.x may fail
+> with a security-advisory error. If you intend to stay on 11.x, add the same
+> `config.policy.advisories.ignore-id` entries this package uses (see its `composer.json`)
+> to your own project's `composer.json`, or set `config.policy.advisories.block` to
+> `false`. Upgrading to Laravel 12.60+/13.10+ resolves it without any config changes.
+
 ---
 
 ## 🛠️ Installation Guide

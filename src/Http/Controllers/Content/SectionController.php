@@ -11,6 +11,7 @@ use Creopse\Creopse\Models\Page;
 use Creopse\Creopse\Models\PageSection;
 use Creopse\Creopse\Models\Section;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SectionController extends Controller
 {
@@ -116,48 +117,50 @@ class SectionController extends Controller
      */
     public function update(Request $request, Section $section)
     {
-        $section->update($request->except(['data_source_page_id', 'data_source_link_id', 'data', 'settings', 'link_title', 'link_id', 'page_id']));
+        DB::transaction(function () use ($request, $section) {
+            $section->update($request->except(['data_source_page_id', 'data_source_link_id', 'data', 'settings', 'link_title', 'link_id', 'page_id']));
 
-        $sectionData = $request->input('data');
-        $sectionLinkId = $request->input('data_source_link_id');
-        $sectionPageId = $request->input('data_source_page_id');
-        $sectionSettings = $request->input('settings');
+            $sectionData = $request->input('data');
+            $sectionLinkId = $request->input('data_source_link_id');
+            $sectionPageId = $request->input('data_source_page_id');
+            $sectionSettings = $request->input('settings');
 
-        if ($request->has('data')) {
-            $dataSourcePageSection = PageSection::where('section_id', $section->id)
-                ->where('page_id', $sectionPageId)
-                ->where('link_id', $sectionLinkId)
-                ->first();
+            if ($request->has('data')) {
+                $dataSourcePageSection = PageSection::where('section_id', $section->id)
+                    ->where('page_id', $sectionPageId)
+                    ->where('link_id', $sectionLinkId)
+                    ->first();
 
-            if ($dataSourcePageSection) {
-                $dataSourcePageSection->data = $sectionData;
-                $dataSourcePageSection->save();
+                if ($dataSourcePageSection) {
+                    $dataSourcePageSection->data = $sectionData;
+                    $dataSourcePageSection->save();
+                }
             }
-        }
 
-        if ($request->has('settings')) {
-            $dataSourcePageSection = PageSection::where('section_id', $section->id)
-                ->where('page_id', $sectionPageId)
-                ->where('link_id', $sectionLinkId)
-                ->first();
+            if ($request->has('settings')) {
+                $dataSourcePageSection = PageSection::where('section_id', $section->id)
+                    ->where('page_id', $sectionPageId)
+                    ->where('link_id', $sectionLinkId)
+                    ->first();
 
-            if ($dataSourcePageSection && isset($sectionSettings) && is_array($sectionSettings)) {
-                $dataSourcePageSection->settings = $sectionSettings;
-                $dataSourcePageSection->save();
+                if ($dataSourcePageSection && isset($sectionSettings) && is_array($sectionSettings)) {
+                    $dataSourcePageSection->settings = $sectionSettings;
+                    $dataSourcePageSection->save();
+                }
             }
-        }
 
-        if ($request->has('link_title') && $request->has('link_id') && $request->has('page_id')) {
-            $pageSection = PageSection::where('section_id', $section->id)
-                ->where('page_id', $request->input('page_id'))
-                ->where('link_id', $request->input('link_id'))
-                ->first();
+            if ($request->has('link_title') && $request->has('link_id') && $request->has('page_id')) {
+                $pageSection = PageSection::where('section_id', $section->id)
+                    ->where('page_id', $request->input('page_id'))
+                    ->where('link_id', $request->input('link_id'))
+                    ->first();
 
-            if ($pageSection) {
-                $pageSection->link_title = $request->input('link_title');
-                $pageSection->save();
+                if ($pageSection) {
+                    $pageSection->link_title = $request->input('link_title');
+                    $pageSection->save();
+                }
             }
-        }
+        });
 
         return $this->sendResponse(
             new SectionResource($section),

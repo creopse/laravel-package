@@ -18,6 +18,10 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
+     *
+     * One-way: this recreates an empty `sections_data` column but does not
+     * restore the data dropped in up(). Rolling back after this migration
+     * has run on an install with existing data will not bring it back.
      */
     public function down(): void
     {

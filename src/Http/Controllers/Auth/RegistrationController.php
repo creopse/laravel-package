@@ -23,6 +23,7 @@ use Creopse\Creopse\Traits\DetectsMobileRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -52,15 +53,21 @@ class RegistrationController extends Controller
         $validated['auth_type'] = AuthType::EMAIL_PASSWORD->value;
         $validated['uid'] = Functions::generateUid();
 
-        $user = User::create($validated);
+        $user = DB::transaction(function () use ($validated, $request) {
+            $user = User::create($validated);
 
-        if ($user) {
-            if (User::count() === 1) {
-                $user->assignRole(UserRole::SUPER_ADMIN->value);
-            } elseif ($request->input('is_user')) {
-                $user->assignRole(UserRole::USER->value);
+            if ($user) {
+                if (User::count() === 1) {
+                    $user->assignRole(UserRole::SUPER_ADMIN->value);
+                } elseif ($request->input('is_user')) {
+                    $user->assignRole(UserRole::USER->value);
+                }
             }
 
+            return $user;
+        });
+
+        if ($user) {
             event(new UserRegisteredEvent($user->id));
 
             Auth::login($user);

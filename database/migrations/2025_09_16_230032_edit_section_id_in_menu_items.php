@@ -20,6 +20,11 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
+     *
+     * One-way: this recreates an empty `section_id` column but does not
+     * backfill it from `section_key`. Rolling back after this migration
+     * has run on an install with existing data will not restore the old
+     * foreign-key values.
      */
     public function down(): void
     {
