@@ -656,7 +656,7 @@ Models are mostly classes (`Model`) with a constructor, but some are interfaces.
 
 ### `ContentModelItemModel`
 
-`id?`, `contentModelId?`, `title: string`, `contentModelData: any | null`, `data?: { [key: string]: any } | null`, `isActive: boolean`, `createdByType?: ItemCreatorType`, `createdBy?`, `createdAt?`, `updatedAt?` + relations `createdByUser?`, `contentModel?`, `relatedItems?`, `relatedTo?`.
+`id?`, `contentModelId?`, `title: string`, `contentModelData: any | null`, `data?: { [key: string]: any } | null`, `isActive: boolean`, `position?: number`, `createdByType?: ItemCreatorType`, `createdBy?`, `createdAt?`, `updatedAt?` + relations `createdByUser?`, `contentModel?`, `relatedItems?`, `relatedTo?`.
 
 > Two forms of the same content: `contentModelData` (accessed via `.index.field` — used on detail pages via `useProps()`) and `data` (accessed via `.field` directly — used on items coming from a list, e.g. `storeToRefs(useContentStore())` or `getContentModelItems`). Consistent with the patterns already documented in `section-patterns.md`.
 

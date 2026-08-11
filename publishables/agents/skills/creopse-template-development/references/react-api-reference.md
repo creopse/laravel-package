@@ -173,7 +173,7 @@ Access to page, section, content-model, permalink, and app information data. Ret
 | `getSectionSetting` | `(key: string \| null \| undefined, group: string, name: string) => object \| any \| null` | A specific setting. |
 | `getAnySectionData` | `(sectionSlug: string, pageSlug: string, linkId?: string = 'default') => Promise<object \| any \| null>` | Data of a section from any page. |
 | `getContentModel` | `(name: string) => ContentModelModel \| undefined` | Content model by name. |
-| `getContentModelItems` | `(name: string, activeOnly?: boolean = true) => Promise<ContentModelItemModel[]>` | Items of a content model. |
+| `getContentModelItems` | `(name: string, activeOnly?: boolean = true, sortBy?: string, sortDirection?: SortDirection) => Promise<ContentModelItemModel[]>` | Items of a content model. Pass `sortBy: 'position'` to respect the admin's drag-and-drop order. |
 | `getPaginatedContentModelItems` | `(name: string, page: number, pageSize: number, activeOnly?: boolean = true, query?: string, dataFilters?: DataFilter[], sortBy?: string, sortDirection?: SortDirection, createdByType?: string, createdBy?: string) => Promise<PaginatedContentModelItems>` | Paginated/filtered/sorted items. |
 | `submitUserContentModelItem` | `(title: string, contentModelId: string, singletonsData?: any, collectionsData?: any, successCallback?: () => void, errorCallback?: (errorData: any) => void) => Promise<Response<any>>` | `POST /content-model/user-items`. |
 | `getContentPath` | `(item, force?: boolean = false) => string` | Path resolved via permalink (content model, article, category, or tag). |

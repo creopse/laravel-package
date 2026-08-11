@@ -127,8 +127,8 @@ A content model defines a structure; items are the actual records.
 - `intent`: `editorial-content` or `user-data`. `access-scope`: `internal` or `user-editable`. **See `references/content-models-conventions.md` for the pair to use depending on content type — a convention specific to this project, not to be inferred from the option names alone.**
 - `add` options: `--title`/`--description` (repeatable), `--image <value>`, `--data-structure <json|@path>`, `--title-field-name <value>`, `--has-permalink <bool>`.
 - `edit` options: same as `add`, plus `--intent`, `--access-scope`.
-- `item-add` options: `--title` (repeatable), `--data <json|@path>`, `--is-active <bool>` (default `true`), `--created-by-type <value>` (`user`/`admin`/`system`, default `system`).
-- `item-edit` options: `--content-model <name>` (move the item), `--title` (repeatable), `--data <json|@path>`, `--is-active <bool>`, `--created-by-type <value>`.
+- `item-add` options: `--title` (repeatable), `--data <json|@path>`, `--is-active <bool>` (default `true`), `--position <number>` (default `0`), `--created-by-type <value>` (`user`/`admin`/`system`, default `system`).
+- `item-edit` options: `--content-model <name>` (move the item), `--title` (repeatable), `--data <json|@path>`, `--is-active <bool>`, `--position <number>`, `--created-by-type <value>`.
 
 ```bash
 creopse content-model add service editorial-content internal \
