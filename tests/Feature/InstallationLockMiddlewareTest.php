@@ -59,3 +59,11 @@ it('lets the install/database endpoints through while installation is still pend
 
     $response->assertStatus(422);
 });
+
+it('lets the database connectivity check through regardless of installation lock state', function () {
+    File::delete(installLockPath());
+    $this->getJson('/api/database')->assertOk();
+
+    File::put(installLockPath(), '');
+    $this->getJson('/api/database')->assertOk();
+});

@@ -10,12 +10,19 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
+// Connectivity check only - read-only, no user-supplied credentials, and
+// polled from the login/auth pages themselves (before a session can exist)
+// to surface DB outages before an auth attempt is even made. Must stay
+// reachable regardless of installation lock state or auth.
+Route::withoutMiddleware(config('installer.excluded_middleware'))
+    ->get('/database', [DatabaseController::class, 'check'])
+    ->name('database.check');
+
 Route::name('database.')
     ->prefix('/database')
     ->withoutMiddleware(config('installer.excluded_middleware'))
     ->middleware('installation.pending')
     ->group(function () {
-        Route::get('/', [DatabaseController::class, 'check'])->name('check');
         Route::post('/test', [DatabaseController::class, 'test'])->name('test');
         Route::post('/create', [DatabaseController::class, 'create'])->name('create');
         Route::get('/migrate', [DatabaseController::class, 'migrate'])->name('migrate');
