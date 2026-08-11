@@ -19,6 +19,7 @@ class MakeContentModelItem extends CreopseCommand
         {--title=* : Locale:value pair for the title, e.g. --title="en:First Article". Repeatable, optional.}
         {--data= : JSON for content_model_data, inline or @path/to/file.json}
         {--is-active=true : Whether the item is active (true/false)}
+        {--position=0 : Display/ordering position of the item}
         {--created-by-type=system : user, admin, or system}
         {--alias=creopse:add-content-model-item}';
 
@@ -56,6 +57,11 @@ class MakeContentModelItem extends CreopseCommand
             return self::FAILURE;
         }
 
+        $position = $this->resolveIntegerOption('position');
+        if ($position === null) {
+            return self::FAILURE;
+        }
+
         $createdByType = $this->resolveEnum($this->option('created-by-type'), ItemCreatorType::class, '--created-by-type');
         if ($createdByType === null) {
             return self::FAILURE;
@@ -75,6 +81,7 @@ class MakeContentModelItem extends CreopseCommand
             'title' => $title,
             'content_model_data' => $data,
             'is_active' => $isActive,
+            'position' => $position,
             'content_model_id' => $contentModel->id,
             'created_by_type' => $createdByType->value,
             'created_by' => null,
