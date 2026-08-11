@@ -162,6 +162,30 @@ abstract class CreopseCommand extends Command
     }
 
     /**
+     * Resolve an integer option from an explicit textual value. Returns null
+     * if the option was not passed, or null with an error printed if the
+     * value isn't a valid integer — callers must check
+     * $this->option($option) !== null to distinguish "not provided" from
+     * "invalid".
+     */
+    protected function resolveIntegerOption(string $option): ?int
+    {
+        $raw = $this->option($option);
+
+        if ($raw === null) {
+            return null;
+        }
+
+        if (! is_numeric($raw) || (int) $raw != $raw) {
+            $this->error("[--{$option}] Invalid integer value '{$raw}'.");
+
+            return null;
+        }
+
+        return (int) $raw;
+    }
+
+    /**
      * Resolve a raw value against a backed enum's cases. Returns the
      * matching case, or null with an error printed if no case matches.
      *

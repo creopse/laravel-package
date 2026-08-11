@@ -20,6 +20,7 @@ class UpdateContentModelItem extends CreopseCommand
         {--title=* : Locale:value pair for the title, e.g. --title="fr:Article 1". Repeatable.}
         {--data= : JSON for content_model_data, inline or @path/to/file.json}
         {--is-active= : Whether the item is active (true/false)}
+        {--position= : Display/ordering position of the item}
         {--created-by-type= : user, admin, or system}
         {--alias=creopse:edit-content-model-item}';
 
@@ -87,6 +88,14 @@ class UpdateContentModelItem extends CreopseCommand
                 return self::FAILURE;
             }
             $payload['is_active'] = $isActive;
+        }
+
+        if ($this->option('position') !== null) {
+            $position = $this->resolveIntegerOption('position');
+            if ($position === null) {
+                return self::FAILURE;
+            }
+            $payload['position'] = $position;
         }
 
         if ($this->option('created-by-type') !== null) {
