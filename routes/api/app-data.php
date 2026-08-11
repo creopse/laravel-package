@@ -10,6 +10,21 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
+// Public reads: needed to render branding (logo, colors, auth page
+// background) before a session can exist - the login page itself depends
+// on them. app-information has nothing sensitive in it at all, so its
+// whole index is public; app-settings also holds real secrets (translation
+// API keys), so only an explicit, hand-picked allowlist of keys is exposed
+// here - see AppSettingController::publicIndex(). Everything else in both
+// resources, including writes, stays behind auth:sanctum below.
+Route::prefix('/app-settings')->group(function () {
+    Route::get('/public', [AppSettingController::class, 'publicIndex'])->name('app-settings.public');
+});
+
+Route::prefix('/app-information')->group(function () {
+    Route::get('/', [AppInformationController::class, 'index'])->name('app-information.index');
+});
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('/app-settings')->group(function () {
         // App Settings
@@ -20,8 +35,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('/app-information')->group(function () {
         // App Information
-        Route::get('/', [AppInformationController::class, 'index'])->name('app-information.index');
-
         Route::put('/', [AppInformationController::class, 'update'])->name('app-information.update');
     });
 });
