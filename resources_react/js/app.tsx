@@ -1,5 +1,5 @@
 import { CreopseProvider  } from '@creopse/react'
-import type {PluginOptions} from '@creopse/react';
+import type { PluginOptions } from '@creopse/react'
 import type { SharedProps } from '@creopse/utils'
 import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
@@ -20,6 +20,7 @@ createInertiaApp({
 
   progress: {
     delay: 250,
+    color: document.querySelector('meta[name="inertia-progress-color"]')?.getAttribute('content') || '#29d',
     includeCSS: true,
     showSpinner: false,
   },
