@@ -20,7 +20,8 @@ createInertiaApp({
 
   progress: {
     delay: 250,
-    includeCSS: false,
+    color: document.querySelector('meta[name="inertia-progress-color"]')?.getAttribute('content') || '#29d',
+    includeCSS: true,
     showSpinner: false,
   },
 
