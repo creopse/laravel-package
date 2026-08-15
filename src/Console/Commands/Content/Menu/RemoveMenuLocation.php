@@ -4,9 +4,12 @@ namespace Creopse\Creopse\Console\Commands\Content\Menu;
 
 use Creopse\Creopse\Console\Commands\CreopseCommand;
 use Creopse\Creopse\Models\MenuLocation;
+use Creopse\Creopse\Traits\HasRemoveNamedLookupCommand;
 
 class RemoveMenuLocation extends CreopseCommand
 {
+    use HasRemoveNamedLookupCommand;
+
     protected $signature = 'creopse:remove-menu-location
         {name : The name of the menu location to remove}
         {--force : Skip the confirmation prompt}
@@ -16,28 +19,13 @@ class RemoveMenuLocation extends CreopseCommand
 
     protected $description = 'Delete a menu location.';
 
-    public function handle()
+    protected function namedLookupModelClass(): string
     {
-        $name = $this->argument('name');
+        return MenuLocation::class;
+    }
 
-        $menuLocation = MenuLocation::where('name', $name)->first();
-
-        if (! $menuLocation) {
-            $this->error("Menu location '{$name}' not found.");
-
-            return self::FAILURE;
-        }
-
-        if (! $this->confirmDestruction("menu location '{$name}'")) {
-            $this->warn('Aborted.');
-
-            return self::FAILURE;
-        }
-
-        $menuLocation->delete();
-
-        $this->info("[{$name}] Menu location deleted successfully.");
-
-        return self::SUCCESS;
+    protected function namedLookupLabel(): string
+    {
+        return 'menu location';
     }
 }

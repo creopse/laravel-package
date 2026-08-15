@@ -4,9 +4,12 @@ namespace Creopse\Creopse\Console\Commands\Content\Menu;
 
 use Creopse\Creopse\Console\Commands\CreopseCommand;
 use Creopse\Creopse\Models\MenuItemGroup;
+use Creopse\Creopse\Traits\HasRemoveNamedLookupCommand;
 
 class RemoveMenuItemGroup extends CreopseCommand
 {
+    use HasRemoveNamedLookupCommand;
+
     protected $signature = 'creopse:remove-menu-item-group
         {name : The name of the menu item group to remove}
         {--force : Skip the confirmation prompt}
@@ -16,28 +19,13 @@ class RemoveMenuItemGroup extends CreopseCommand
 
     protected $description = 'Delete a menu item group.';
 
-    public function handle()
+    protected function namedLookupModelClass(): string
     {
-        $name = $this->argument('name');
+        return MenuItemGroup::class;
+    }
 
-        $group = MenuItemGroup::where('name', $name)->first();
-
-        if (! $group) {
-            $this->error("Menu item group '{$name}' not found.");
-
-            return self::FAILURE;
-        }
-
-        if (! $this->confirmDestruction("menu item group '{$name}'")) {
-            $this->warn('Aborted.');
-
-            return self::FAILURE;
-        }
-
-        $group->delete();
-
-        $this->info("[{$name}] Menu item group deleted successfully.");
-
-        return self::SUCCESS;
+    protected function namedLookupLabel(): string
+    {
+        return 'menu item group';
     }
 }
