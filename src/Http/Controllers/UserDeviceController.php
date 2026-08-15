@@ -41,6 +41,13 @@ class UserDeviceController extends Controller
             );
         }
 
+        // SEC-10: user_id came straight from client input with no check -
+        // any authenticated caller could register/overwrite a device under
+        // any other user's account.
+        if ($unauthorized = $this->rejectUnlessOwnedOrPermitted((int) $request->input('user_id'))) {
+            return $unauthorized;
+        }
+
         $userDevice = UserDevice::updateOrCreate(
             [
                 'user_id' => $request->input('user_id'),
@@ -80,7 +87,11 @@ class UserDeviceController extends Controller
             return $unauthorized;
         }
 
-        $userDevice->update($request->all());
+        // SEC-10: user_id must never be mass-assignable here - there is no
+        // legitimate "transfer this device to another user" feature, and
+        // allowing it would let the ownership check above be bypassed via
+        // the update payload itself.
+        $userDevice->update($request->except('user_id'));
 
         return $this->sendResponse(
             $userDevice,
