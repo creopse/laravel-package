@@ -9,6 +9,7 @@ use Creopse\Creopse\Http\Requests\News\CommentRequest;
 use Creopse\Creopse\Http\Resources\News\CommentResource;
 use Creopse\Creopse\Models\NewsComment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -59,13 +60,17 @@ class CommentController extends Controller
     {
         $request->validated();
 
+        // SEC-10: this route is public - author_id and is_active used to be
+        // taken straight from request input, letting any anonymous visitor
+        // post a pre-approved comment under someone else's identity.
+        // author_id now only ever reflects the actual caller (null for a
+        // guest), and is_active is left to the model's own default.
         $newsComment = NewsComment::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'content' => $request->input('content'),
-            'is_active' => $request->input('is_active'),
             'article_id' => $request->input('article_id'),
-            'author_id' => $request->input('author_id'),
+            'author_id' => Auth::id(),
         ]);
 
         event(new CommentCreatedEvent($newsComment->id, $request->input('article_id')));
@@ -90,7 +95,10 @@ class CommentController extends Controller
      */
     public function update(Request $request, NewsComment $newsComment)
     {
-        $newsComment->update($request->all());
+        // SEC-10: author_id must never be mass-assignable here - open
+        // assignment let any authenticated caller reassign an existing
+        // comment's authorship to impersonate someone else.
+        $newsComment->update($request->only(['name', 'email', 'content', 'is_active', 'article_id']));
 
         return $this->sendResponse(
             new CommentResource($newsComment),
