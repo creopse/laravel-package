@@ -19,22 +19,32 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('/auth')->group(function () {
+    // SEC-12: these unauthenticated, credential/identity-sensitive endpoints
+    // used to rely solely on the app-wide API rate limit (60-600 req/min per
+    // IP, shared with all other traffic), which is far too loose to slow
+    // down brute-force/credential-stuffing or registration/reset-email spam.
     Route::post('/login', LoginController::class)
+        ->middleware('throttle:5,1')
         ->name('login');
 
     Route::post('/register', [RegistrationController::class, 'registerUser'])
+        ->middleware('throttle:5,1')
         ->name('register');
 
     Route::post('/google', [ProviderController::class, 'authWithGoogle'])
+        ->middleware('throttle:5,1')
         ->name('provider.google');
 
     Route::post('/apple', [ProviderController::class, 'authWithApple'])
+        ->middleware('throttle:5,1')
         ->name('provider.apple');
 
     Route::post('/phone', [ProviderController::class, 'authWithPhone'])
+        ->middleware('throttle:5,1')
         ->name('provider.phone');
 
     Route::post('/phone/verify', [ProviderController::class, 'verifyPhoneAuth'])
+        ->middleware('throttle:5,1')
         ->name('provider.phone.verify');
 
     Route::post('/profile', [RegistrationController::class, 'registerProfile'])
@@ -46,9 +56,11 @@ Route::prefix('/auth')->group(function () {
         ->name('profile.update');
 
     Route::post('/send-password-link', [PasswordResetController::class, 'send'])
+        ->middleware('throttle:5,1')
         ->name('password.send.link');
 
     Route::post('/reset-password', [PasswordResetController::class, 'reset'])
+        ->middleware('throttle:5,1')
         ->name('password.reset.link');
 
     Route::post('/edit-password', [PasswordResetController::class, 'edit'])
