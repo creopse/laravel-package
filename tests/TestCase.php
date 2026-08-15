@@ -6,6 +6,9 @@ use Creopse\Creopse\CreopseServiceProvider;
 use Creopse\Creopse\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+use Spatie\Permission\Middleware\RoleMiddleware;
+use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
 
 use function Orchestra\Testbench\default_skeleton_path;
 use function Orchestra\Testbench\package_path;
@@ -62,6 +65,15 @@ abstract class TestCase extends Orchestra
         // sanctum.stateful) - exactly like a real browser request from the
         // admin panel would. Match that here instead of faking it.
         $app['config']->set('sanctum.stateful', ['*']);
+
+        // Unlike CreopseServiceProvider's own aliases (verified, abilities,
+        // ability...), the permission/role aliases are left to the host
+        // app to register - creopse:install publishes them via
+        // publishables/bootstrap/app.php. Replicate that here so routes
+        // using 'permission:'/'role:' middleware are testable at all.
+        $app['router']->aliasMiddleware('permission', PermissionMiddleware::class);
+        $app['router']->aliasMiddleware('role', RoleMiddleware::class);
+        $app['router']->aliasMiddleware('role_or_permission', RoleOrPermissionMiddleware::class);
     }
 
     // No defineDatabaseMigrations() override needed - CreopseServiceProvider

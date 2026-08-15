@@ -4,19 +4,21 @@ namespace Creopse\Creopse\Http\Controllers;
 
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
-use Creopse\Creopse\Models\User;
 use Creopse\Creopse\Models\UserDevice;
+use Creopse\Creopse\Traits\AuthorizesOwnUserData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class UserDeviceController extends Controller
 {
+    use AuthorizesOwnUserData;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return $this->sendResponse(UserDevice::with(User::class)->get());
+        return $this->sendResponse(UserDevice::with('user')->get());
     }
 
     /**
@@ -62,7 +64,11 @@ class UserDeviceController extends Controller
      */
     public function show(UserDevice $userDevice)
     {
-        return $this->sendResponse($userDevice::with(User::class)->get());
+        if ($unauthorized = $this->rejectUnlessOwnedOrPermitted($userDevice->user_id)) {
+            return $unauthorized;
+        }
+
+        return $this->sendResponse($userDevice->load('user'));
     }
 
     /**
@@ -70,6 +76,10 @@ class UserDeviceController extends Controller
      */
     public function update(Request $request, UserDevice $userDevice)
     {
+        if ($unauthorized = $this->rejectUnlessOwnedOrPermitted($userDevice->user_id)) {
+            return $unauthorized;
+        }
+
         $userDevice->update($request->all());
 
         return $this->sendResponse(
@@ -84,6 +94,10 @@ class UserDeviceController extends Controller
      */
     public function destroy(UserDevice $userDevice)
     {
+        if ($unauthorized = $this->rejectUnlessOwnedOrPermitted($userDevice->user_id)) {
+            return $unauthorized;
+        }
+
         $userDevice->delete();
 
         return $this->sendResponse(

@@ -4,19 +4,21 @@ namespace Creopse\Creopse\Http\Controllers;
 
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
-use Creopse\Creopse\Models\User;
 use Creopse\Creopse\Models\UserPlace;
+use Creopse\Creopse\Traits\AuthorizesOwnUserData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class UserPlaceController extends Controller
 {
+    use AuthorizesOwnUserData;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return $this->sendResponse(UserPlace::with(User::class)->get());
+        return $this->sendResponse(UserPlace::with('user')->get());
     }
 
     /**
@@ -70,7 +72,11 @@ class UserPlaceController extends Controller
      */
     public function show(UserPlace $userPlace)
     {
-        return $this->sendResponse($userPlace::with(User::class)->get());
+        if ($unauthorized = $this->rejectUnlessOwnedOrPermitted($userPlace->user_id)) {
+            return $unauthorized;
+        }
+
+        return $this->sendResponse($userPlace->load('user'));
     }
 
     /**
@@ -78,6 +84,10 @@ class UserPlaceController extends Controller
      */
     public function update(Request $request, UserPlace $userPlace)
     {
+        if ($unauthorized = $this->rejectUnlessOwnedOrPermitted($userPlace->user_id)) {
+            return $unauthorized;
+        }
+
         $userPlace->update($request->all());
 
         return $this->sendResponse(
@@ -92,6 +102,10 @@ class UserPlaceController extends Controller
      */
     public function destroy(UserPlace $userPlace)
     {
+        if ($unauthorized = $this->rejectUnlessOwnedOrPermitted($userPlace->user_id)) {
+            return $unauthorized;
+        }
+
         $userPlace->delete();
 
         return $this->sendResponse(
