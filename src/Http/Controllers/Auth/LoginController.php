@@ -14,10 +14,18 @@ use Creopse\Creopse\Models\User;
 use Creopse\Creopse\Traits\DetectsMobileRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
     use DetectsMobileRequest;
+
+    /**
+     * A precomputed bcrypt hash with no known matching password, used to keep
+     * the failure path for an unknown identifier as slow as a real password
+     * check (see SEC-11 below).
+     */
+    private const DUMMY_PASSWORD_HASH = '$2y$10$AkgWUHWghFnZ1EwWIqfhQ.ueFcvVCvDn5n8t5i49wDdZ5AeZQ2tqa';
 
     /**
      * Handle an incoming authentication request.
@@ -32,14 +40,29 @@ class LoginController extends Controller
 
         $userFound = User::where('email', $credentials['id'])->orWhere('username', $credentials['id'])->first();
 
-        if (! $userFound) {
+        // SEC-11: credentials are verified before anything about the
+        // account (existence or disabled status) is revealed. Returning a
+        // distinct "user not found" / "wrong password" / "user disabled"
+        // response ahead of the password check let an attacker enumerate
+        // valid and disabled accounts without ever knowing a password. A
+        // dummy hash check keeps the "unknown identifier" path taking as
+        // long as a real one, closing the timing side-channel too.
+        if ($userFound) {
+            $credentialsValid = Auth::attempt([
+                'email' => $userFound->email,
+                'password' => $credentials['password'],
+            ], $credentials['remember'] ?? false);
+        } else {
+            Hash::check($credentials['password'], self::DUMMY_PASSWORD_HASH);
+            $credentialsValid = false;
+        }
 
-            // When the user is not found
+        if (! $credentialsValid) {
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::FORBIDDEN,
-                'User not found',
-                ResponseErrorCode::AUTH_USER_NOT_FOUND,
+                'Invalid credentials',
+                ResponseErrorCode::AUTH_INVALID_CREDENTIALS,
             );
         }
 
@@ -51,20 +74,6 @@ class LoginController extends Controller
                 ResponseStatusCode::FORBIDDEN,
                 'User disabled',
                 ResponseErrorCode::AUTH_USER_DISABLED,
-            );
-        }
-
-        if (! Auth::attempt([
-            'email' => $userFound->email,
-            'password' => $credentials['password'],
-        ], $credentials['remember'] ?? false)) {
-
-            // When the password is wrong
-            return $this->sendResponse(
-                null,
-                ResponseStatusCode::FORBIDDEN,
-                'Wrong password',
-                ResponseErrorCode::AUTH_WRONG_PASSWORD,
             );
         }
 

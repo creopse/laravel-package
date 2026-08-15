@@ -17,6 +17,7 @@ enum ResponseErrorCode: string
     case AUTH_REGISTRATION_FAILED = 'auth/registration_failed';
     case AUTH_MISSING_DATA = 'auth/missing_data';
     case AUTH_WRONG_PASSWORD = 'auth/wrong_password';
+    case AUTH_INVALID_CREDENTIALS = 'auth/invalid_credentials';
     case AUTH_USER_DISABLED = 'auth/user_disabled';
     case AUTH_USER_NOT_FOUND = 'auth/user_not_found';
     case AUTH_PROFILE_TYPE_NOT_FOUND = 'auth/profile_type_not_found';
