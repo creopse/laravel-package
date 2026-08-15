@@ -559,38 +559,20 @@ parameters:
 			path: src/Http/Controllers/Content/ContentModelItemController.php
 
 		-
-			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\Menu\:\:restore\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Http/Controllers/Content/MenuController.php
-
-		-
-			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\Menu\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Http/Controllers/Content/MenuController.php
-
-		-
 			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MenuItem\:\:\$content\.$#'
 			identifier: property.notFound
-			count: 4
+			count: 2
 			path: src/Http/Controllers/Content/MenuItemController.php
 
 		-
 			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MenuItem\:\:\$content_id\.$#'
 			identifier: property.notFound
-			count: 2
+			count: 1
 			path: src/Http/Controllers/Content/MenuItemController.php
 
 		-
 			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MenuItem\:\:\$content_type\.$#'
 			identifier: property.notFound
-			count: 2
-			path: src/Http/Controllers/Content/MenuItemController.php
-
-		-
-			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\MenuItem\:\:restore\(\)\.$#'
-			identifier: method.notFound
 			count: 1
 			path: src/Http/Controllers/Content/MenuItemController.php
 
@@ -599,54 +581,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Http/Controllers/Content/MenuItemController.php
-
-		-
-			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\MenuItemGroup\:\:restore\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Http/Controllers/Content/MenuItemGroupController.php
-
-		-
-			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\MenuItemGroup\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Http/Controllers/Content/MenuItemGroupController.php
-
-		-
-			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\MenuItemType\:\:restore\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Http/Controllers/Content/MenuItemTypeController.php
-
-		-
-			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\MenuItemType\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Http/Controllers/Content/MenuItemTypeController.php
-
-		-
-			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\MenuLocation\:\:restore\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Http/Controllers/Content/MenuLocationController.php
-
-		-
-			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\MenuLocation\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Http/Controllers/Content/MenuLocationController.php
-
-		-
-			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\MenuSetting\:\:restore\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Http/Controllers/Content/MenuSettingController.php
-
-		-
-			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\MenuSetting\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Http/Controllers/Content/MenuSettingController.php
 
 		-
 			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\Permalink\:\:restore\(\)\.$#'
@@ -893,12 +827,6 @@ parameters:
 			identifier: class.notFound
 			count: 1
 			path: src/Http/Controllers/EmailController.php
-
-		-
-			message: '#^Variable \$file in PHPDoc tag @var does not match assigned variable \$newFile\.$#'
-			identifier: varTag.differentVariable
-			count: 1
-			path: src/Http/Controllers/FileController.php
 
 		-
 			message: '#^If condition is always true\.$#'
@@ -1195,21 +1123,21 @@ parameters:
 			path: src/Http/Controllers/UserController.php
 
 		-
-			message: '#^Relation ''Creopse\\Creopse\\Models\\User'' is not found in Creopse\\Creopse\\Models\\UserDevice model\.$#'
+			message: '#^Relation ''user'' is not found in Creopse\\Creopse\\Models\\UserDevice model\.$#'
 			identifier: larastan.relationExistence
-			count: 2
+			count: 1
 			path: src/Http/Controllers/UserDeviceController.php
 
 		-
-			message: '#^Relation ''Creopse\\Creopse\\Models\\User'' is not found in Creopse\\Creopse\\Models\\UserPlace model\.$#'
+			message: '#^Relation ''user'' is not found in Creopse\\Creopse\\Models\\UserPlace model\.$#'
 			identifier: larastan.relationExistence
-			count: 2
+			count: 1
 			path: src/Http/Controllers/UserPlaceController.php
 
 		-
-			message: '#^Relation ''Creopse\\Creopse\\Models\\User'' is not found in Creopse\\Creopse\\Models\\UserSession model\.$#'
+			message: '#^Relation ''user'' is not found in Creopse\\Creopse\\Models\\UserSession model\.$#'
 			identifier: larastan.relationExistence
-			count: 2
+			count: 1
 			path: src/Http/Controllers/UserSessionController.php
 
 		-

@@ -3,17 +3,19 @@
 namespace Creopse\Creopse\Http\Controllers;
 
 use Creopse\Creopse\Enums\ResponseStatusCode;
-use Creopse\Creopse\Models\User;
 use Creopse\Creopse\Models\UserSession;
+use Creopse\Creopse\Traits\AuthorizesOwnUserData;
 
 class UserSessionController extends Controller
 {
+    use AuthorizesOwnUserData;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return $this->sendResponse(UserSession::with(User::class)->get());
+        return $this->sendResponse(UserSession::with('user')->get());
     }
 
     /**
@@ -21,7 +23,11 @@ class UserSessionController extends Controller
      */
     public function show(UserSession $userSession)
     {
-        return $this->sendResponse($userSession::with(User::class)->get());
+        if ($unauthorized = $this->rejectUnlessOwnedOrPermitted($userSession->user_id)) {
+            return $unauthorized;
+        }
+
+        return $this->sendResponse($userSession->load('user'));
     }
 
     /**
@@ -29,6 +35,10 @@ class UserSessionController extends Controller
      */
     public function destroy(UserSession $userSession)
     {
+        if ($unauthorized = $this->rejectUnlessOwnedOrPermitted($userSession->user_id)) {
+            return $unauthorized;
+        }
+
         $userSession->delete();
 
         return $this->sendResponse(

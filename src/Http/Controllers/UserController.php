@@ -4,6 +4,7 @@ namespace Creopse\Creopse\Http\Controllers;
 
 use Creopse\Creopse\Enums\AccountStatus;
 use Creopse\Creopse\Enums\AuthType;
+use Creopse\Creopse\Enums\PermissionList;
 use Creopse\Creopse\Enums\ProfileType;
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
@@ -16,6 +17,7 @@ use Creopse\Creopse\Mail\CommonMail;
 use Creopse\Creopse\Models\AdminProfile;
 use Creopse\Creopse\Models\AppInformation;
 use Creopse\Creopse\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -253,6 +255,10 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        if ($unauthorized = $this->authorizeViewingUser($user)) {
+            return $unauthorized;
+        }
+
         return $this->sendResponse(
             new UserResource($user->load(['profile', 'roles', 'permissions']))
         );
@@ -387,6 +393,10 @@ class UserController extends Controller
     public function userPermissions(?User $user = null)
     {
         if ($user) {
+            if ($unauthorized = $this->authorizeViewingUser($user)) {
+                return $unauthorized;
+            }
+
             return $this->sendResponse($user->permissions()->get());
         }
 
@@ -399,6 +409,10 @@ class UserController extends Controller
     public function userPlace(?User $user = null)
     {
         if ($user) {
+            if ($unauthorized = $this->authorizeViewingUser($user)) {
+                return $unauthorized;
+            }
+
             return $this->sendResponse($user->place());
         }
 
@@ -411,6 +425,10 @@ class UserController extends Controller
     public function userDevices(?User $user = null)
     {
         if ($user) {
+            if ($unauthorized = $this->authorizeViewingUser($user)) {
+                return $unauthorized;
+            }
+
             return $this->sendResponse($user->devices());
         }
 
@@ -423,6 +441,10 @@ class UserController extends Controller
     public function userSessions(?User $user = null)
     {
         if ($user) {
+            if ($unauthorized = $this->authorizeViewingUser($user)) {
+                return $unauthorized;
+            }
+
             return $this->sendResponse($user->sessions());
         }
 
@@ -435,6 +457,10 @@ class UserController extends Controller
     public function userRoles(?User $user = null)
     {
         if ($user) {
+            if ($unauthorized = $this->authorizeViewingUser($user)) {
+                return $unauthorized;
+            }
+
             return $this->sendResponse($user->roles);
         }
 
@@ -448,6 +474,14 @@ class UserController extends Controller
     {
         $user = User::whereEmail($email)->first();
 
+        if (! $user) {
+            return $this->sendResponse(null, ResponseStatusCode::NOT_FOUND, 'User not found');
+        }
+
+        if ($unauthorized = $this->authorizeViewingUser($user)) {
+            return $unauthorized;
+        }
+
         return $this->sendResponse(
             new UserResource($user->load(['profile', 'roles', 'permissions']))
         );
@@ -459,6 +493,14 @@ class UserController extends Controller
     public function userByUsername($username)
     {
         $user = User::whereUsername($username)->first();
+
+        if (! $user) {
+            return $this->sendResponse(null, ResponseStatusCode::NOT_FOUND, 'User not found');
+        }
+
+        if ($unauthorized = $this->authorizeViewingUser($user)) {
+            return $unauthorized;
+        }
 
         return $this->sendResponse(
             new UserResource($user->load(['profile', 'roles', 'permissions']))
@@ -472,8 +514,38 @@ class UserController extends Controller
     {
         $user = User::wherePhone($phone)->first();
 
+        if (! $user) {
+            return $this->sendResponse(null, ResponseStatusCode::NOT_FOUND, 'User not found');
+        }
+
+        if ($unauthorized = $this->authorizeViewingUser($user)) {
+            return $unauthorized;
+        }
+
         return $this->sendResponse(
             new UserResource($user->load(['profile', 'roles', 'permissions']))
+        );
+    }
+
+    /**
+     * SEC-07: reads of another user's data (PII, sessions, devices, place,
+     * roles/permissions) used to be reachable by any authenticated account,
+     * with no scoping at all - a self-registered user could enumerate and
+     * dump every other user's data. Every caller can still always view their
+     * own data; viewing someone else's now requires the view-users
+     * permission, matching PermissionList::VIEW_USERS (already granted to
+     * the admin role by the base permissions migration).
+     */
+    private function authorizeViewingUser(User $user): ?JsonResponse
+    {
+        if (Auth::id() === $user->id || Auth::user()->can(PermissionList::VIEW_USERS->value)) {
+            return null;
+        }
+
+        return $this->sendResponse(
+            null,
+            ResponseStatusCode::FORBIDDEN,
+            'You are not allowed to view this user\'s data',
         );
     }
 }
