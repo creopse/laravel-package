@@ -87,6 +87,7 @@ use Creopse\Creopse\Models\MenuItemGroup;
 use Creopse\Creopse\Models\MenuLocation;
 use Creopse\Creopse\Models\VideoSetting;
 use Creopse\Creopse\Traits\DetectsLaravelVersion;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Config\Repository;
 use Illuminate\Console\Scheduling\Schedule;
@@ -94,8 +95,10 @@ use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Database\Seeder;
 use Illuminate\Foundation\Exceptions\Handler;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\Router;
 use Illuminate\Session\Middleware\StartSession;
@@ -105,12 +108,15 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Inertia\Inertia;
 use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
 use TomLerendu\LaravelConvertCaseMiddleware\ConvertRequestToSnakeCase;
 use TomLerendu\LaravelConvertCaseMiddleware\ConvertResponseToCamelCase;
 
@@ -243,6 +249,39 @@ class CreopseServiceProvider extends ServiceProvider
                     ])->toResponse($request)->setStatusCode(404);
                 }
             });
+
+        // SEC-15: Laravel's default exception rendering embeds the exception
+        // class, file path, line number, and full stack trace in JSON
+        // responses whenever APP_DEBUG is enabled - API clients should never
+        // see server filesystem paths or stack traces, regardless of the
+        // app's debug configuration. Every exception on an API request is
+        // rendered through this safe envelope instead, unless it already
+        // carries its own pre-built response (ValidationException,
+        // HttpResponseException), which is left to Laravel's default
+        // handling so that response is honored as-is.
+        $exceptionHandler->renderable(function (Throwable $e, Request $request) {
+            if (! Functions::isApiRequest($request)) {
+                return null;
+            }
+
+            if ($e instanceof ValidationException || $e instanceof HttpResponseException) {
+                return null;
+            }
+
+            $statusCode = match (true) {
+                $e instanceof HttpExceptionInterface => $e->getStatusCode(),
+                $e instanceof AuthenticationException => 401,
+                default => 500,
+            };
+
+            $message = match (true) {
+                $e instanceof HttpExceptionInterface => $e->getMessage() ?: (Response::$statusTexts[$statusCode] ?? 'Error'),
+                $e instanceof AuthenticationException => $e->getMessage() ?: 'Unauthenticated.',
+                default => 'Server error',
+            };
+
+            return response()->json(['message' => $message], $statusCode);
+        });
 
         // Register middleware aliases
         $router->aliasMiddleware('verified', EnsureEmailIsVerified::class);
