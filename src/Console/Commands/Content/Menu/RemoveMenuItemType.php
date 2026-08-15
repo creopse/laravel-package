@@ -4,9 +4,12 @@ namespace Creopse\Creopse\Console\Commands\Content\Menu;
 
 use Creopse\Creopse\Console\Commands\CreopseCommand;
 use Creopse\Creopse\Models\MenuItemType;
+use Creopse\Creopse\Traits\HasRemoveNamedLookupCommand;
 
 class RemoveMenuItemType extends CreopseCommand
 {
+    use HasRemoveNamedLookupCommand;
+
     protected $signature = 'creopse:remove-menu-item-type
         {name : The name of the menu item type to remove}
         {--force : Skip the confirmation prompt}
@@ -16,28 +19,13 @@ class RemoveMenuItemType extends CreopseCommand
 
     protected $description = 'Delete a menu item type.';
 
-    public function handle()
+    protected function namedLookupModelClass(): string
     {
-        $name = $this->argument('name');
+        return MenuItemType::class;
+    }
 
-        $type = MenuItemType::where('name', $name)->first();
-
-        if (! $type) {
-            $this->error("Menu item type '{$name}' not found.");
-
-            return self::FAILURE;
-        }
-
-        if (! $this->confirmDestruction("menu item type '{$name}'")) {
-            $this->warn('Aborted.');
-
-            return self::FAILURE;
-        }
-
-        $type->delete();
-
-        $this->info("[{$name}] Menu item type deleted successfully.");
-
-        return self::SUCCESS;
+    protected function namedLookupLabel(): string
+    {
+        return 'menu item type';
     }
 }

@@ -4,9 +4,12 @@ namespace Creopse\Creopse\Console\Commands\Content\Menu;
 
 use Creopse\Creopse\Console\Commands\CreopseCommand;
 use Creopse\Creopse\Models\MenuItemType;
+use Creopse\Creopse\Traits\HasUpdateNamedLookupCommand;
 
 class UpdateMenuItemType extends CreopseCommand
 {
+    use HasUpdateNamedLookupCommand;
+
     /**
      * The name and signature of the console command.
      *
@@ -32,53 +35,13 @@ class UpdateMenuItemType extends CreopseCommand
      */
     protected $description = 'Update a menu item type\'s name and/or description.';
 
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    protected function namedLookupModelClass(): string
     {
-        $name = $this->argument('name');
+        return MenuItemType::class;
+    }
 
-        $type = MenuItemType::where('name', $name)->first();
-
-        if (! $type) {
-            $this->error("Menu item type '{$name}' not found.");
-
-            return self::FAILURE;
-        }
-
-        $payload = [];
-
-        if ($this->option('new-name') !== null) {
-            $newName = $this->option('new-name');
-
-            if (MenuItemType::where('name', $newName)->where('id', '!=', $type->id)->exists()) {
-                $this->error("A menu item type named '{$newName}' already exists.");
-
-                return self::FAILURE;
-            }
-
-            $payload['name'] = $newName;
-        }
-
-        $currentDescription = json_decode($type->description ?? '{}', true) ?: [];
-        $description = $this->mergeLocalizedOption($currentDescription, 'description');
-        if ($description !== null) {
-            $payload['description'] = $description;
-        }
-
-        if (empty($payload)) {
-            $this->warn('No attribute provided. Use --new-name and/or --description.');
-
-            return self::FAILURE;
-        }
-
-        $type->update($payload);
-
-        foreach (array_keys($payload) as $attribute) {
-            $this->info("[{$name}] '{$attribute}' updated successfully.");
-        }
-
-        return self::SUCCESS;
+    protected function namedLookupLabel(): string
+    {
+        return 'menu item type';
     }
 }

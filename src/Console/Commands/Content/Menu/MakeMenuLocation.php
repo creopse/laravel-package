@@ -4,9 +4,12 @@ namespace Creopse\Creopse\Console\Commands\Content\Menu;
 
 use Creopse\Creopse\Console\Commands\CreopseCommand;
 use Creopse\Creopse\Models\MenuLocation;
+use Creopse\Creopse\Traits\HasMakeNamedLookupCommand;
 
 class MakeMenuLocation extends CreopseCommand
 {
+    use HasMakeNamedLookupCommand;
+
     /**
      * The name and signature of the console command.
      *
@@ -31,26 +34,13 @@ class MakeMenuLocation extends CreopseCommand
      */
     protected $description = 'Create a menu location (e.g. header, footer) that a menu can be assigned to.';
 
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    protected function namedLookupModelClass(): string
     {
-        $name = $this->argument('name');
+        return MenuLocation::class;
+    }
 
-        if (MenuLocation::where('name', $name)->exists()) {
-            $this->warn("[{$name}] A menu location with this name already exists, skipping.");
-
-            return self::FAILURE;
-        }
-
-        MenuLocation::create([
-            'name' => $name,
-            'description' => $this->mergeLocalizedOption([], 'description'),
-        ]);
-
-        $this->info("[{$name}] Menu location created successfully.");
-
-        return self::SUCCESS;
+    protected function namedLookupLabel(): string
+    {
+        return 'menu location';
     }
 }

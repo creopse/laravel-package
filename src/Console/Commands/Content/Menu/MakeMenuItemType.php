@@ -4,9 +4,12 @@ namespace Creopse\Creopse\Console\Commands\Content\Menu;
 
 use Creopse\Creopse\Console\Commands\CreopseCommand;
 use Creopse\Creopse\Models\MenuItemType;
+use Creopse\Creopse\Traits\HasMakeNamedLookupCommand;
 
 class MakeMenuItemType extends CreopseCommand
 {
+    use HasMakeNamedLookupCommand;
+
     /**
      * The name and signature of the console command.
      *
@@ -31,26 +34,13 @@ class MakeMenuItemType extends CreopseCommand
      */
     protected $description = 'Create a menu item type.';
 
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    protected function namedLookupModelClass(): string
     {
-        $name = $this->argument('name');
+        return MenuItemType::class;
+    }
 
-        if (MenuItemType::where('name', $name)->exists()) {
-            $this->warn("[{$name}] A menu item type with this name already exists, skipping.");
-
-            return self::FAILURE;
-        }
-
-        MenuItemType::create([
-            'name' => $name,
-            'description' => $this->mergeLocalizedOption([], 'description'),
-        ]);
-
-        $this->info("[{$name}] Menu item type created successfully.");
-
-        return self::SUCCESS;
+    protected function namedLookupLabel(): string
+    {
+        return 'menu item type';
     }
 }

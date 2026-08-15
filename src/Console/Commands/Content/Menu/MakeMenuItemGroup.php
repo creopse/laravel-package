@@ -4,9 +4,12 @@ namespace Creopse\Creopse\Console\Commands\Content\Menu;
 
 use Creopse\Creopse\Console\Commands\CreopseCommand;
 use Creopse\Creopse\Models\MenuItemGroup;
+use Creopse\Creopse\Traits\HasMakeNamedLookupCommand;
 
 class MakeMenuItemGroup extends CreopseCommand
 {
+    use HasMakeNamedLookupCommand;
+
     /**
      * The name and signature of the console command.
      *
@@ -31,26 +34,13 @@ class MakeMenuItemGroup extends CreopseCommand
      */
     protected $description = 'Create a menu item group.';
 
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    protected function namedLookupModelClass(): string
     {
-        $name = $this->argument('name');
+        return MenuItemGroup::class;
+    }
 
-        if (MenuItemGroup::where('name', $name)->exists()) {
-            $this->warn("[{$name}] A menu item group with this name already exists, skipping.");
-
-            return self::FAILURE;
-        }
-
-        MenuItemGroup::create([
-            'name' => $name,
-            'description' => $this->mergeLocalizedOption([], 'description'),
-        ]);
-
-        $this->info("[{$name}] Menu item group created successfully.");
-
-        return self::SUCCESS;
+    protected function namedLookupLabel(): string
+    {
+        return 'menu item group';
     }
 }
