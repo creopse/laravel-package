@@ -2,56 +2,35 @@
 
 namespace Creopse\Creopse\Http\Controllers\Content;
 
-use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Requests\Content\MenuLocationRequest;
 use Creopse\Creopse\Http\Resources\Content\MenuLocationResource;
 use Creopse\Creopse\Models\MenuLocation;
+use Creopse\Creopse\Traits\HasResourceCrud;
 use Illuminate\Http\Request;
 
 class MenuLocationController extends Controller
 {
-    /**
-     * Display a paginated listing of the resource with search query.
-     */
-    public function index(Request $request)
+    use HasResourceCrud;
+
+    protected function crudModelClass(): string
     {
-        $pageSize = $request->query('pageSize');
-        $query = $request->query('query');
+        return MenuLocation::class;
+    }
 
-        if ($pageSize) {
+    protected function crudResourceClass(): string
+    {
+        return MenuLocationResource::class;
+    }
 
-            $items = MenuLocation::query();
+    protected function crudResourceName(): string
+    {
+        return 'MenuLocation';
+    }
 
-            if ($query) {
-                $items = $items->where(function ($q) use ($query) {
-                    $q->where('name', 'like', '%'.$query.'%')
-                        ->orWhere('description', 'like', '%'.$query.'%');
-                });
-            }
-
-            $items = $items->paginate($pageSize);
-
-            return $this->sendResponse([
-                'items' => MenuLocationResource::collection($items),
-                'meta' => [
-                    'links' => [
-                        'first' => $items->url(1),
-                        'last' => $items->url($items->lastPage()),
-                        'prev' => $items->previousPageUrl(),
-                        'next' => $items->nextPageUrl(),
-                    ],
-                    'currentPage' => $items->currentPage(),
-                    'perPage' => $items->perPage(),
-                    'total' => $items->total(),
-                    'lastPage' => $items->lastPage(),
-                ],
-            ]);
-        }
-
-        return $this->sendResponse(
-            MenuLocationResource::collection(MenuLocation::all())
-        );
+    protected function crudSearchableColumns(): array
+    {
+        return ['name', 'description'];
     }
 
     /**
@@ -61,16 +40,10 @@ class MenuLocationController extends Controller
     {
         $request->validated();
 
-        $menuLocation = MenuLocation::create([
+        return $this->crudStore([
             'name' => $request->input('name'),
             'description' => $request->input('description'),
         ]);
-
-        return $this->sendResponse(
-            new MenuLocationResource($menuLocation),
-            ResponseStatusCode::CREATED,
-            'MenuLocation created successfully'
-        );
     }
 
     /**
@@ -78,7 +51,7 @@ class MenuLocationController extends Controller
      */
     public function show(MenuLocation $menuLocation)
     {
-        return $this->sendResponse(new MenuLocationResource($menuLocation));
+        return $this->crudShow($menuLocation);
     }
 
     /**
@@ -86,13 +59,7 @@ class MenuLocationController extends Controller
      */
     public function update(Request $request, MenuLocation $menuLocation)
     {
-        $menuLocation->update($request->all());
-
-        return $this->sendResponse(
-            new MenuLocationResource($menuLocation),
-            ResponseStatusCode::OK,
-            'MenuLocation updated successfully'
-        );
+        return $this->crudUpdate($menuLocation, $request->all());
     }
 
     /**
@@ -100,13 +67,7 @@ class MenuLocationController extends Controller
      */
     public function destroy(MenuLocation $menuLocation)
     {
-        $menuLocation->delete();
-
-        return $this->sendResponse(
-            null,
-            ResponseStatusCode::OK,
-            'MenuLocation deleted successfully'
-        );
+        return $this->crudDestroy($menuLocation);
     }
 
     /**
@@ -114,13 +75,7 @@ class MenuLocationController extends Controller
      */
     public function forceDestroy(MenuLocation $menuLocation)
     {
-        $menuLocation->forceDelete();
-
-        return $this->sendResponse(
-            null,
-            ResponseStatusCode::OK,
-            'MenuLocation deleted permanently successfully'
-        );
+        return $this->crudForceDestroy($menuLocation);
     }
 
     /**
@@ -128,12 +83,6 @@ class MenuLocationController extends Controller
      */
     public function restore(MenuLocation $menuLocation)
     {
-        $menuLocation->restore();
-
-        return $this->sendResponse(
-            new MenuLocationResource($menuLocation),
-            ResponseStatusCode::OK,
-            'MenuLocation restored successfully'
-        );
+        return $this->crudRestore($menuLocation);
     }
 }

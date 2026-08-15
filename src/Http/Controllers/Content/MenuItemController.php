@@ -9,10 +9,55 @@ use Creopse\Creopse\Http\Requests\Content\MenuItemRequest;
 use Creopse\Creopse\Http\Resources\Content\MenuItemResource;
 use Creopse\Creopse\Models\Menu;
 use Creopse\Creopse\Models\MenuItem;
+use Creopse\Creopse\Traits\HasResourceCrud;
 use Illuminate\Http\Request;
 
 class MenuItemController extends Controller
 {
+    use HasResourceCrud;
+
+    protected function crudModelClass(): string
+    {
+        return MenuItem::class;
+    }
+
+    protected function crudResourceClass(): string
+    {
+        return MenuItemResource::class;
+    }
+
+    protected function crudResourceName(): string
+    {
+        return 'MenuItem';
+    }
+
+    protected function crudSearchableColumns(): array
+    {
+        return ['title', 'description'];
+    }
+
+    /**
+     * Resolves the polymorphic `content` relation (news article/category/tag,
+     * content model item...) referenced by content_type/content_id, if any.
+     */
+    private function resolveItemContent(MenuItem $item): MenuItem
+    {
+        if ($item->content_type && $item->content_id) {
+            try {
+                $contentType = ContentType::from($item->content_type);
+                $modelClass = $contentType->getModelClass();
+
+                if (class_exists($modelClass)) {
+                    $item->content = $modelClass::find($item->content_id);
+                }
+            } catch (\ValueError $e) {
+                $item->content = null;
+            }
+        }
+
+        return $item;
+    }
+
     /**
      * Display a paginated listing of the resource with search query.
      */
@@ -43,22 +88,7 @@ class MenuItemController extends Controller
 
             $items = $items->orderBy('position')->paginate($pageSize);
 
-            $items->getCollection()->transform(function ($item) {
-                if ($item->content_type && $item->content_id) {
-                    try {
-                        $contentType = ContentType::from($item->content_type);
-                        $modelClass = $contentType->getModelClass();
-
-                        if (class_exists($modelClass)) {
-                            $item->content = $modelClass::find($item->content_id);
-                        }
-                    } catch (\ValueError $e) {
-                        $item->content = null;
-                    }
-                }
-
-                return $item;
-            });
+            $items->getCollection()->transform(fn ($item) => $this->resolveItemContent($item));
 
             return $this->sendResponse([
                 'items' => MenuItemResource::collection($items),
@@ -88,22 +118,7 @@ class MenuItemController extends Controller
             $items = MenuItem::orderBy('position')->get();
         }
 
-        $items->transform(function ($item) {
-            if ($item->content_type && $item->content_id) {
-                try {
-                    $contentType = ContentType::from($item->content_type);
-                    $modelClass = $contentType->getModelClass();
-
-                    if (class_exists($modelClass)) {
-                        $item->content = $modelClass::find($item->content_id);
-                    }
-                } catch (\ValueError $e) {
-                    $item->content = null;
-                }
-            }
-
-            return $item;
-        });
+        $items->transform(fn ($item) => $this->resolveItemContent($item));
 
         return $this->sendResponse(
             MenuItemResource::collection($items)
@@ -117,7 +132,7 @@ class MenuItemController extends Controller
     {
         $request->validated();
 
-        $menuItem = MenuItem::create([
+        return $this->crudStore([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'path' => $request->input('path'),
@@ -139,12 +154,6 @@ class MenuItemController extends Controller
             'content_type' => $request->input('content_type'),
             'content_id' => $request->input('content_id'),
         ]);
-
-        return $this->sendResponse(
-            new MenuItemResource($menuItem),
-            ResponseStatusCode::CREATED,
-            'MenuItem created successfully'
-        );
     }
 
     /**
@@ -152,7 +161,7 @@ class MenuItemController extends Controller
      */
     public function show(MenuItem $menuItem)
     {
-        return $this->sendResponse(new MenuItemResource($menuItem));
+        return $this->crudShow($menuItem);
     }
 
     /**
@@ -160,13 +169,7 @@ class MenuItemController extends Controller
      */
     public function update(Request $request, MenuItem $menuItem)
     {
-        $menuItem->update($request->all());
-
-        return $this->sendResponse(
-            new MenuItemResource($menuItem),
-            ResponseStatusCode::OK,
-            'MenuItem updated successfully'
-        );
+        return $this->crudUpdate($menuItem, $request->all());
     }
 
     /**
@@ -200,13 +203,7 @@ class MenuItemController extends Controller
             $child->delete();
         }
 
-        $menuItem->delete();
-
-        return $this->sendResponse(
-            null,
-            ResponseStatusCode::OK,
-            'MenuItem deleted successfully'
-        );
+        return $this->crudDestroy($menuItem);
     }
 
     /**
@@ -220,13 +217,7 @@ class MenuItemController extends Controller
             $child->forceDelete();
         }
 
-        $menuItem->forceDelete();
-
-        return $this->sendResponse(
-            null,
-            ResponseStatusCode::OK,
-            'MenuItem deleted permanently successfully'
-        );
+        return $this->crudForceDestroy($menuItem);
     }
 
     /**
@@ -234,12 +225,6 @@ class MenuItemController extends Controller
      */
     public function restore(MenuItem $menuItem)
     {
-        $menuItem->restore();
-
-        return $this->sendResponse(
-            new MenuItemResource($menuItem),
-            ResponseStatusCode::OK,
-            'MenuItem restored successfully'
-        );
+        return $this->crudRestore($menuItem);
     }
 }

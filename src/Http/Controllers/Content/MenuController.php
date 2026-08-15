@@ -2,56 +2,56 @@
 
 namespace Creopse\Creopse\Http\Controllers\Content;
 
-use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Requests\Content\MenuRequest;
 use Creopse\Creopse\Http\Resources\Content\MenuResource;
 use Creopse\Creopse\Models\Menu;
+use Creopse\Creopse\Traits\HasResourceCrud;
 use Illuminate\Http\Request;
 
 class MenuController extends Controller
 {
-    /**
-     * Display a paginated listing of the resource with search query.
-     */
-    public function index(Request $request)
+    use HasResourceCrud;
+
+    protected function crudModelClass(): string
     {
-        $pageSize = $request->query('pageSize');
-        $query = $request->query('query');
+        return Menu::class;
+    }
 
-        if ($pageSize) {
+    protected function crudResourceClass(): string
+    {
+        return MenuResource::class;
+    }
 
-            $items = Menu::query();
+    protected function crudResourceName(): string
+    {
+        return 'Menu';
+    }
 
-            if ($query) {
-                $items = $items->where(function ($q) use ($query) {
-                    $q->where('title', 'like', '%'.$query.'%')
-                        ->orWhere('description', 'like', '%'.$query.'%');
-                });
-            }
+    protected function crudSearchableColumns(): array
+    {
+        return ['title', 'description'];
+    }
 
-            $items = $items->paginate($pageSize);
-
-            return $this->sendResponse([
-                'items' => MenuResource::collection($items),
-                'meta' => [
-                    'links' => [
-                        'first' => $items->url(1),
-                        'last' => $items->url($items->lastPage()),
-                        'prev' => $items->previousPageUrl(),
-                        'next' => $items->nextPageUrl(),
-                    ],
-                    'currentPage' => $items->currentPage(),
-                    'perPage' => $items->perPage(),
-                    'total' => $items->total(),
-                    'lastPage' => $items->lastPage(),
-                ],
-            ]);
+    /**
+     * A menu location can only be assigned to one menu at a time: stealing
+     * it from whichever menu currently holds it before assigning it here.
+     */
+    private function syncMenuLocation(Request $request, Menu $menu): void
+    {
+        if (! $request->has('menu_location_id')) {
+            return;
         }
 
-        return $this->sendResponse(
-            MenuResource::collection(Menu::all())
-        );
+        $menuLocationId = $request->input('menu_location_id');
+
+        $existingMenu = Menu::where('menu_location_id', $menuLocationId)->first();
+
+        if ($existingMenu && $existingMenu->id !== $menu->id) {
+            $existingMenu->update(['menu_location_id' => null]);
+        }
+
+        $menu->update(['menu_location_id' => $menuLocationId]);
     }
 
     /**
@@ -68,23 +68,9 @@ class MenuController extends Controller
             'data' => $request->input('data'),
         ]);
 
-        if ($request->has('menu_location_id')) {
-            $menuLocationId = $request->input('menu_location_id');
+        $this->syncMenuLocation($request, $menu);
 
-            $existingMenu = Menu::where('menu_location_id', $menuLocationId)->first();
-
-            if ($existingMenu && $existingMenu->id !== $menu->id) {
-                $existingMenu->update(['menu_location_id' => null]);
-            }
-
-            $menu->update(['menu_location_id' => $menuLocationId]);
-        }
-
-        return $this->sendResponse(
-            new MenuResource($menu),
-            ResponseStatusCode::CREATED,
-            'Menu created successfully'
-        );
+        return $this->crudCreatedResponse($menu);
     }
 
     /**
@@ -92,7 +78,7 @@ class MenuController extends Controller
      */
     public function show(Menu $menu)
     {
-        return $this->sendResponse(new MenuResource($menu));
+        return $this->crudShow($menu);
     }
 
     /**
@@ -102,23 +88,9 @@ class MenuController extends Controller
     {
         $menu->update($request->except(['menu_location_id']));
 
-        if ($request->has('menu_location_id')) {
-            $menuLocationId = $request->input('menu_location_id');
+        $this->syncMenuLocation($request, $menu);
 
-            $existingMenu = Menu::where('menu_location_id', $menuLocationId)->first();
-
-            if ($existingMenu && $existingMenu->id !== $menu->id) {
-                $existingMenu->update(['menu_location_id' => null]);
-            }
-
-            $menu->update(['menu_location_id' => $menuLocationId]);
-        }
-
-        return $this->sendResponse(
-            new MenuResource($menu),
-            ResponseStatusCode::OK,
-            'Menu updated successfully'
-        );
+        return $this->crudUpdatedResponse($menu);
     }
 
     /**
@@ -126,13 +98,7 @@ class MenuController extends Controller
      */
     public function destroy(Menu $menu)
     {
-        $menu->delete();
-
-        return $this->sendResponse(
-            null,
-            ResponseStatusCode::OK,
-            'Menu deleted successfully'
-        );
+        return $this->crudDestroy($menu);
     }
 
     /**
@@ -140,13 +106,7 @@ class MenuController extends Controller
      */
     public function forceDestroy(Menu $menu)
     {
-        $menu->forceDelete();
-
-        return $this->sendResponse(
-            null,
-            ResponseStatusCode::OK,
-            'Menu deleted permanently successfully'
-        );
+        return $this->crudForceDestroy($menu);
     }
 
     /**
@@ -154,12 +114,6 @@ class MenuController extends Controller
      */
     public function restore(Menu $menu)
     {
-        $menu->restore();
-
-        return $this->sendResponse(
-            new MenuResource($menu),
-            ResponseStatusCode::OK,
-            'Menu restored successfully'
-        );
+        return $this->crudRestore($menu);
     }
 }
