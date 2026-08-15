@@ -9,7 +9,6 @@
 
 use Creopse\Creopse\Enums\PermissionList;
 use Creopse\Creopse\Models\User;
-use Illuminate\Http\UploadedFile;
 use Laravel\Sanctum\Sanctum;
 
 it('refuses every plugin route to a guest', function (string $method, string $url) {
