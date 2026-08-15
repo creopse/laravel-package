@@ -2,56 +2,35 @@
 
 namespace Creopse\Creopse\Http\Controllers\Content;
 
-use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Requests\Content\MenuSettingRequest;
 use Creopse\Creopse\Http\Resources\Content\MenuSettingResource;
 use Creopse\Creopse\Models\MenuSetting;
+use Creopse\Creopse\Traits\HasResourceCrud;
 use Illuminate\Http\Request;
 
 class MenuSettingController extends Controller
 {
-    /**
-     * Display a paginated listing of the resource with search query.
-     */
-    public function index(Request $request)
+    use HasResourceCrud;
+
+    protected function crudModelClass(): string
     {
-        $pageSize = $request->query('pageSize');
-        $query = $request->query('query');
+        return MenuSetting::class;
+    }
 
-        if ($pageSize) {
+    protected function crudResourceClass(): string
+    {
+        return MenuSettingResource::class;
+    }
 
-            $items = MenuSetting::query();
+    protected function crudResourceName(): string
+    {
+        return 'MenuSetting';
+    }
 
-            if ($query) {
-                $items = $items->where(function ($q) use ($query) {
-                    $q->where('key', 'like', '%'.$query.'%')
-                        ->orWhere('description', 'like', '%'.$query.'%');
-                });
-            }
-
-            $items = $items->paginate($pageSize);
-
-            return $this->sendResponse([
-                'items' => MenuSettingResource::collection($items),
-                'meta' => [
-                    'links' => [
-                        'first' => $items->url(1),
-                        'last' => $items->url($items->lastPage()),
-                        'prev' => $items->previousPageUrl(),
-                        'next' => $items->nextPageUrl(),
-                    ],
-                    'currentPage' => $items->currentPage(),
-                    'perPage' => $items->perPage(),
-                    'total' => $items->total(),
-                    'lastPage' => $items->lastPage(),
-                ],
-            ]);
-        }
-
-        return $this->sendResponse(
-            MenuSettingResource::collection(MenuSetting::all())
-        );
+    protected function crudSearchableColumns(): array
+    {
+        return ['key', 'description'];
     }
 
     /**
@@ -61,17 +40,11 @@ class MenuSettingController extends Controller
     {
         $request->validated();
 
-        $menuSetting = MenuSetting::create([
+        return $this->crudStore([
             'key' => $request->input('key'),
             'default_value' => $request->input('default_value'),
             'description' => $request->input('description'),
         ]);
-
-        return $this->sendResponse(
-            new MenuSettingResource($menuSetting),
-            ResponseStatusCode::CREATED,
-            'MenuSetting created successfully'
-        );
     }
 
     /**
@@ -79,7 +52,7 @@ class MenuSettingController extends Controller
      */
     public function show(MenuSetting $menuSetting)
     {
-        return $this->sendResponse(new MenuSettingResource($menuSetting));
+        return $this->crudShow($menuSetting);
     }
 
     /**
@@ -87,13 +60,7 @@ class MenuSettingController extends Controller
      */
     public function update(Request $request, MenuSetting $menuSetting)
     {
-        $menuSetting->update($request->all());
-
-        return $this->sendResponse(
-            new MenuSettingResource($menuSetting),
-            ResponseStatusCode::OK,
-            'MenuSetting updated successfully'
-        );
+        return $this->crudUpdate($menuSetting, $request->all());
     }
 
     /**
@@ -101,13 +68,7 @@ class MenuSettingController extends Controller
      */
     public function destroy(MenuSetting $menuSetting)
     {
-        $menuSetting->delete();
-
-        return $this->sendResponse(
-            null,
-            ResponseStatusCode::OK,
-            'MenuSetting deleted successfully'
-        );
+        return $this->crudDestroy($menuSetting);
     }
 
     /**
@@ -115,13 +76,7 @@ class MenuSettingController extends Controller
      */
     public function forceDestroy(MenuSetting $menuSetting)
     {
-        $menuSetting->forceDelete();
-
-        return $this->sendResponse(
-            null,
-            ResponseStatusCode::OK,
-            'MenuSetting deleted permanently successfully'
-        );
+        return $this->crudForceDestroy($menuSetting);
     }
 
     /**
@@ -129,12 +84,6 @@ class MenuSettingController extends Controller
      */
     public function restore(MenuSetting $menuSetting)
     {
-        $menuSetting->restore();
-
-        return $this->sendResponse(
-            new MenuSettingResource($menuSetting),
-            ResponseStatusCode::OK,
-            'MenuSetting restored successfully'
-        );
+        return $this->crudRestore($menuSetting);
     }
 }
