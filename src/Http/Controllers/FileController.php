@@ -5,10 +5,13 @@ namespace Creopse\Creopse\Http\Controllers;
 use Creopse\Creopse\Enums\MediaFileType;
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
+use Creopse\Creopse\Models\MediaFile;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
@@ -35,7 +38,13 @@ class FileController extends Controller
         /** @var UploadedFile $file */
         $file = $request->file('file');
 
-        $path = $file->store($request->input('folder') ?? 'uploads', 'public');
+        // SEC-06: generic uploads used to land in the same 'uploads' folder
+        // the tracked media library defaults to, and any authenticated user
+        // could then target any path on the disk via replace/delete/download
+        // /check below - including other users' media-library files. Each
+        // generic upload now gets its own unguessable folder, so a future
+        // caller can't stumble onto (or enumerate) another caller's file.
+        $path = $file->store('generic/'.Str::uuid(), 'public');
 
         $fileType = MediaFileController::determineFileType($file);
 
@@ -87,7 +96,7 @@ class FileController extends Controller
     {
         // Validate incoming request data
         $validator = Validator::make($request->all(), [
-            'current_path' => 'required',
+            'current_path' => 'required|string',
             'file' => ['required', 'file', 'max:'.config('creopse.uploads.max_size')],
         ]);
 
@@ -101,13 +110,25 @@ class FileController extends Controller
             );
         }
 
-        if (Storage::disk('public')->delete($request->input('current_path'))) {
-            /** @var UploadedFile $file */
+        $path = $request->input('current_path');
+
+        if ($unmanageable = $this->rejectUnmanageablePath($path)) {
+            return $unmanageable;
+        }
+
+        if (Storage::disk('public')->delete($path)) {
+            /** @var UploadedFile $newFile */
             $newFile = $request->file('file');
 
-            $path = $request->input('current_path');
-
-            Storage::disk('public')->put($path, $newFile, 'public');
+            // put() silently redirects File/UploadedFile instances to
+            // putFile(), which treats $path as a *directory* and picks its
+            // own hashed filename inside it instead of writing to $path
+            // itself. Passing a raw stream keeps the exact path intact.
+            $stream = fopen($newFile->getRealPath(), 'r');
+            Storage::disk('public')->put($path, $stream, 'public');
+            if (is_resource($stream)) {
+                fclose($stream);
+            }
 
             return $this->sendResponse(
                 ['path' => $path, 'url' => Storage::disk('public')->url($path)],
@@ -127,7 +148,7 @@ class FileController extends Controller
     {
         // Validate incoming request data
         $validator = Validator::make($request->all(), [
-            'path' => 'required',
+            'path' => 'required|string',
         ]);
 
         // If data not valid return error
@@ -140,13 +161,19 @@ class FileController extends Controller
             );
         }
 
-        $deleted = Storage::disk('public')->delete($request->input('path'));
+        $path = $request->input('path');
+
+        if ($unmanageable = $this->rejectUnmanageablePath($path)) {
+            return $unmanageable;
+        }
+
+        $deleted = Storage::disk('public')->delete($path);
 
         if ($deleted) {
             return $this->sendResponse(
                 [
-                    'path' => $request->input('path'),
-                    'url' => Storage::disk('public')->url($request->input('path')),
+                    'path' => $path,
+                    'url' => Storage::disk('public')->url($path),
                 ],
                 ResponseStatusCode::OK,
                 'File deleted successfully',
@@ -164,7 +191,7 @@ class FileController extends Controller
     {
         // Validate incoming request data
         $validator = Validator::make($request->all(), [
-            'path' => 'required',
+            'path' => 'required|string',
         ]);
 
         // If data not valid return error
@@ -177,8 +204,14 @@ class FileController extends Controller
             );
         }
 
+        $path = $request->input('path');
+
+        if ($unmanageable = $this->rejectUnmanageablePath($path)) {
+            return $unmanageable;
+        }
+
         // Check if file exists
-        if (! Storage::disk('public')->exists($request->input('path'))) {
+        if (! Storage::disk('public')->exists($path)) {
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::NOT_FOUND,
@@ -187,14 +220,14 @@ class FileController extends Controller
         }
 
         // Return response with file
-        return response()->file(Storage::disk('public')->path($request->input('path')));
+        return response()->file(Storage::disk('public')->path($path));
     }
 
     public function check(Request $request)
     {
         // Validate incoming request data
         $validator = Validator::make($request->all(), [
-            'path' => 'required',
+            'path' => 'required|string',
         ]);
 
         // If data not valid return error
@@ -207,8 +240,14 @@ class FileController extends Controller
             );
         }
 
+        $path = $request->input('path');
+
+        if ($unmanageable = $this->rejectUnmanageablePath($path)) {
+            return $unmanageable;
+        }
+
         // Check if file exists
-        if (! Storage::disk('public')->exists($request->input('path'))) {
+        if (! Storage::disk('public')->exists($path)) {
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::NOT_FOUND,
@@ -218,11 +257,38 @@ class FileController extends Controller
 
         return $this->sendResponse(
             [
-                'path' => $request->input('path'),
-                'url' => Storage::disk('public')->url($request->input('path')),
+                'path' => $path,
+                'url' => Storage::disk('public')->url($path),
             ],
             ResponseStatusCode::OK,
             'File exists',
+        );
+    }
+
+    /**
+     * SEC-06: replace/delete/download/check used to accept any path on the
+     * public disk, letting any authenticated user read, overwrite, or
+     * delete files that were never uploaded through this generic-file
+     * system - tracked media-library files and generated thumbnails
+     * included. Reject anything that isn't a plain path under this
+     * controller's own control.
+     */
+    private function rejectUnmanageablePath(string $path): ?JsonResponse
+    {
+        $isUnmanageable = $path === ''
+            || str_starts_with($path, '/')
+            || str_starts_with($path, 'thumbnails/')
+            || preg_match('#(^|[\\\\/])\.\.([\\\\/]|$)#', $path) === 1
+            || MediaFile::where('path', $path)->exists();
+
+        if (! $isUnmanageable) {
+            return null;
+        }
+
+        return $this->sendResponse(
+            null,
+            ResponseStatusCode::NOT_FOUND,
+            'File not found',
         );
     }
 }
