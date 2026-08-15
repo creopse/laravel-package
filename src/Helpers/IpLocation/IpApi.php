@@ -2,6 +2,8 @@
 
 namespace Creopse\Creopse\Helpers\IpLocation;
 
+use Creopse\Creopse\Helpers\IpLocation\Core\HasHttpFetch;
+
 /**
  * IpApi
  *
@@ -12,6 +14,8 @@ namespace Creopse\Creopse\Helpers\IpLocation;
  */
 class IpApi
 {
+    use HasHttpFetch;
+
     // HTTPS endpoint — {IP} is replaced at runtime
     public $host = 'https://ipapi.co/{IP}/json/';
 
@@ -113,42 +117,8 @@ class IpApi
         $this->org = $data['org'] ?? null;
     }
 
-    /**
-     * Perform an HTTP GET request.
-     *
-     * @param  string  $url
-     * @return string|null
-     */
-    private function fetch($url)
+    protected function driverUserAgent(): string
     {
-        if (function_exists('curl_init')) {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-            curl_setopt($ch, CURLOPT_USERAGENT, 'Espoerc/IpApi-Driver');
-            $response = curl_exec($ch);
-            $error = curl_errno($ch);
-            curl_close($ch);
-
-            if ($error || $response === false) {
-                return null;
-            }
-
-            return $response;
-        }
-
-        if (ini_get('allow_url_fopen')) {
-            $response = @file_get_contents($url);
-
-            return $response !== false ? $response : null;
-        }
-
-        trigger_error(
-            'IpApi: cannot fetch data. Compile PHP with cURL or enable allow_url_fopen.',
-            E_USER_WARNING
-        );
-
-        return null;
+        return 'Espoerc/IpApi-Driver';
     }
 }
