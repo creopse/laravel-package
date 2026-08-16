@@ -100,7 +100,7 @@ class DataChangeController extends Controller
      */
     public function update(Request $request, DataChange $dataChange)
     {
-        $dataChange->update($request->all());
+        $dataChange->update($request->only(['table_name', 'change_id']));
 
         return $this->sendResponse(
             new DataChangeResource($dataChange),

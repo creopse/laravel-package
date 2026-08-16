@@ -330,7 +330,12 @@ class ContentModelItemController extends Controller
         $contentModel = ContentModel::where('id', $contentModelItem->content_model_id)->first();
 
         if ($contentModel && $contentModel->access_scope == AccessScope::USER_EDITABLE->value) {
-            $contentModelItem->update($request->except(['related_items']));
+            // SEC: this route is public - open mass assignment let an
+            // anonymous caller flip is_active to bypass moderation, spoof
+            // created_by_type/created_by, or reassign content_model_id to
+            // move the item into a different (possibly internal) content
+            // model after this very check had already passed.
+            $contentModelItem->update($request->only(['title', 'content_model_data']));
 
             if ($request->has('related_items')) {
                 $this->attachRelationships($contentModelItem, $request->input('related_items'));
