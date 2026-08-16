@@ -29,5 +29,13 @@ Route::name('database.')
         Route::get('/seed', [DatabaseController::class, 'seed'])->name('seed');
     });
 
-Route::apiResource('data-changes', DataChangeController::class);
+// SEC: reads stay public - clients poll change_id to know when to
+// invalidate their local cache, before a session necessarily exists.
+// Writes used to have no auth at all, letting anyone tamper with the
+// ledger those reads rely on.
+Route::apiResource('data-changes', DataChangeController::class)->only(['index', 'show']);
 Route::get('data-changes/table/{tableName}', [DataChangeController::class, 'showByTableName'])->name('data-changes.show.by-table-name');
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('data-changes', DataChangeController::class)->except(['index', 'show']);
+});
