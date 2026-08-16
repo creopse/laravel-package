@@ -1,5 +1,6 @@
 <?php
 
+use Creopse\Creopse\Enums\PermissionList;
 use Creopse\Creopse\Http\Controllers\News\ArticleController;
 use Creopse\Creopse\Http\Controllers\News\CategoryController;
 use Creopse\Creopse\Http\Controllers\News\CommentController;
@@ -12,7 +13,10 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::middleware('auth:sanctum')->group(function () {
+// SEC: these writes used to only require auth:sanctum - any authenticated
+// account, including a self-registered one with zero permissions, could
+// reach them.
+Route::middleware(['auth:sanctum', 'permission:'.PermissionList::MANAGE_NEWS->value])->group(function () {
     // Articles
     Route::apiResource('news-articles', ArticleController::class)->except(['index', 'show']);
     Route::delete('news-articles/force/{newsArticle}', [ArticleController::class, 'forceDestroy'])->name('articles.force.destroy')->withTrashed();

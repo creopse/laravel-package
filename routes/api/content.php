@@ -1,5 +1,6 @@
 <?php
 
+use Creopse\Creopse\Enums\PermissionList;
 use Creopse\Creopse\Http\Controllers\Content\ContentModelController;
 use Creopse\Creopse\Http\Controllers\Content\ContentModelItemController;
 use Creopse\Creopse\Http\Controllers\Content\MenuController;
@@ -19,7 +20,10 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::middleware('auth:sanctum')->group(function () {
+// SEC: these writes used to only require auth:sanctum - any authenticated
+// account, including a self-registered one with zero permissions, could
+// reach them.
+Route::middleware(['auth:sanctum', 'permission:'.PermissionList::MANAGE_CONTENT->value])->group(function () {
     Route::put('pages/position', [PageController::class, 'updatePosition'])->name('pages.update.position');
 
     Route::apiResource('pages', PageController::class)->except(['index', 'show']);

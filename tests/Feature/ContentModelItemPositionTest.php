@@ -1,12 +1,15 @@
 <?php
 
+use Creopse\Creopse\Enums\PermissionList;
 use Creopse\Creopse\Models\ContentModel;
 use Creopse\Creopse\Models\ContentModelItem;
 use Creopse\Creopse\Models\User;
 use Laravel\Sanctum\Sanctum;
 
 it('reorders content model items and persists the new position', function () {
-    Sanctum::actingAs(User::factory()->create(), ['*']);
+    $user = User::factory()->create();
+    $user->givePermissionTo(PermissionList::MANAGE_CONTENT->value);
+    Sanctum::actingAs($user, ['*']);
 
     $contentModel = ContentModel::create([
         'name' => 'articles',
