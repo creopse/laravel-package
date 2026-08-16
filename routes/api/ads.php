@@ -1,5 +1,6 @@
 <?php
 
+use Creopse\Creopse\Enums\PermissionList;
 use Creopse\Creopse\Http\Controllers\Ads\AdController;
 use Creopse\Creopse\Http\Controllers\Ads\AdIdentifierController;
 use Illuminate\Support\Facades\Route;
@@ -10,7 +11,10 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::middleware('auth:sanctum')->group(function () {
+// SEC: these writes used to only require auth:sanctum - any authenticated
+// account, including a self-registered one with zero permissions, could
+// reach them.
+Route::middleware(['auth:sanctum', 'permission:'.PermissionList::MANAGE_CONTENT->value])->group(function () {
     // Ads
     Route::apiResource('ads', AdController::class)->except(['index', 'show']);
 

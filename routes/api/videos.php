@@ -1,5 +1,6 @@
 <?php
 
+use Creopse\Creopse\Enums\PermissionList;
 use Creopse\Creopse\Http\Controllers\Content\VideoCategoryController;
 use Creopse\Creopse\Http\Controllers\Content\VideoItemController;
 use Creopse\Creopse\Http\Controllers\Settings\VideoSettingController;
@@ -11,7 +12,10 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::middleware('auth:sanctum')->group(function () {
+// SEC: these writes used to only require auth:sanctum - any authenticated
+// account, including a self-registered one with zero permissions, could
+// reach them.
+Route::middleware(['auth:sanctum', 'permission:'.PermissionList::MANAGE_CONTENT->value])->group(function () {
     // Video items
     Route::apiResource('video-items', VideoItemController::class)->except(['index', 'show']);
 

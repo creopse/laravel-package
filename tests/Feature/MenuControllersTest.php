@@ -11,6 +11,7 @@
 // single-holder menu_location_id constraint, and MenuItem's content
 // resolution, position ordering, and cascading delete to its children.
 
+use Creopse\Creopse\Enums\PermissionList;
 use Creopse\Creopse\Models\Menu;
 use Creopse\Creopse\Models\MenuItem;
 use Creopse\Creopse\Models\MenuItemGroup;
@@ -20,6 +21,15 @@ use Creopse\Creopse\Models\MenuSetting;
 use Creopse\Creopse\Models\NewsTag;
 use Creopse\Creopse\Models\User;
 use Laravel\Sanctum\Sanctum;
+
+function actingAsContentManager(): User
+{
+    $user = User::factory()->create();
+    $user->givePermissionTo(PermissionList::MANAGE_CONTENT->value);
+    Sanctum::actingAs($user, ['*']);
+
+    return $user;
+}
 
 // --- Shared CRUD behavior, exercised through MenuLocation (representative
 // of MenuLocation/MenuItemGroup/MenuItemType/MenuSetting, which are all
@@ -48,7 +58,7 @@ it('lists menu locations, with search and pagination', function () {
 });
 
 it('creates, updates and deletes a menu location when authenticated', function () {
-    Sanctum::actingAs(User::factory()->create(), ['*']);
+    actingAsContentManager();
 
     $created = $this->postJson('/api/menu-locations', ['name' => 'Header']);
     $created->assertCreated();
@@ -72,7 +82,7 @@ it('rejects menu location writes for a guest', function () {
 });
 
 it('creates and deletes a menu item group when authenticated', function () {
-    Sanctum::actingAs(User::factory()->create(), ['*']);
+    actingAsContentManager();
 
     $created = $this->postJson('/api/menu-item-groups', ['name' => 'Primary']);
     $created->assertCreated();
@@ -83,7 +93,7 @@ it('creates and deletes a menu item group when authenticated', function () {
 });
 
 it('creates and deletes a menu item type when authenticated', function () {
-    Sanctum::actingAs(User::factory()->create(), ['*']);
+    actingAsContentManager();
 
     $created = $this->postJson('/api/menu-item-types', ['name' => 'Dropdown']);
     $created->assertCreated();
@@ -94,7 +104,7 @@ it('creates and deletes a menu item type when authenticated', function () {
 });
 
 it('creates and deletes a menu setting when authenticated', function () {
-    Sanctum::actingAs(User::factory()->create(), ['*']);
+    actingAsContentManager();
 
     $created = $this->postJson('/api/menu-settings', ['key' => 'maxDepth', 'default_value' => '2']);
     $created->assertCreated();
@@ -118,7 +128,7 @@ it('searches menu settings on key and description', function () {
 // logic kept out of the shared trait) ---
 
 it('creates a menu, with menu location, and deletes it', function () {
-    Sanctum::actingAs(User::factory()->create(), ['*']);
+    actingAsContentManager();
 
     $created = $this->postJson('/api/menus', ['name' => 'main', 'title' => 'Main Menu']);
     $created->assertCreated();
@@ -129,7 +139,7 @@ it('creates a menu, with menu location, and deletes it', function () {
 });
 
 it('reassigns a menu location to only one menu at a time', function () {
-    Sanctum::actingAs(User::factory()->create(), ['*']);
+    actingAsContentManager();
 
     $location = MenuLocation::create(['name' => 'Header']);
 
@@ -179,7 +189,7 @@ it('lists menu items ordered by position and resolves their content relation', f
 });
 
 it('creates a menu item and updates it', function () {
-    Sanctum::actingAs(User::factory()->create(), ['*']);
+    actingAsContentManager();
 
     $menu = Menu::create(['name' => 'main', 'title' => 'Main Menu']);
 
@@ -208,7 +218,7 @@ it('creates a menu item and updates it', function () {
 });
 
 it('reorders menu items via the position endpoint', function () {
-    Sanctum::actingAs(User::factory()->create(), ['*']);
+    actingAsContentManager();
 
     $menu = Menu::create(['name' => 'main', 'title' => 'Main Menu']);
     $itemA = MenuItem::create(['menu_id' => $menu->id, 'title' => 'A', 'position' => 0]);
@@ -227,7 +237,7 @@ it('reorders menu items via the position endpoint', function () {
 });
 
 it('deletes a menu item and cascades to its children', function () {
-    Sanctum::actingAs(User::factory()->create(), ['*']);
+    actingAsContentManager();
 
     $menu = Menu::create(['name' => 'main', 'title' => 'Main Menu']);
     $parent = MenuItem::create(['menu_id' => $menu->id, 'title' => 'Parent']);

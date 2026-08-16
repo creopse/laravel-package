@@ -7,6 +7,7 @@
 // comment's authorship. author_id now only ever reflects Auth::id() and is
 // never accepted from the update payload.
 
+use Creopse\Creopse\Enums\PermissionList;
 use Creopse\Creopse\Models\NewsArticle;
 use Creopse\Creopse\Models\NewsComment;
 use Creopse\Creopse\Models\User;
@@ -62,6 +63,7 @@ it('refuses to let an update reassign a comment\'s author_id', function () {
         'is_active' => true,
     ]);
 
+    $impersonator->givePermissionTo(PermissionList::MANAGE_NEWS->value);
     Sanctum::actingAs($impersonator, ['*']);
 
     $this->putJson("/api/news-comments/{$comment->id}", [
