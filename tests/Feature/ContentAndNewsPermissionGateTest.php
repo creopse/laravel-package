@@ -1,13 +1,14 @@
 <?php
 
 // SEC: writes on the ads, content (menus/permalinks/content-models/video
-// settings/video categories), and news/newsletter modules used to only
+// settings/video categories/newsletter), and news modules used to only
 // require auth:sanctum - any authenticated account, including a
 // self-registered one with zero permissions (see RegistrationController -
 // a fresh registration issues a working Sanctum token regardless of
 // account_status or assigned role), could reach them. They now require
 // manage-content or manage-news, matching what the admin frontend already
-// gates the corresponding pages behind.
+// gates the corresponding pages behind (newsletter lives on the Content
+// Management page, not News Management, hence manage-content).
 
 use Creopse\Creopse\Enums\PermissionList;
 use Creopse\Creopse\Models\User;
@@ -41,7 +42,7 @@ it('refuses these writes to an authenticated caller without the matching permiss
     'newsletter-campaigns index' => ['GET', '/api/newsletter/campaigns'],
 ]);
 
-it('lets a caller with manage-content through the ads and video-settings gates', function () {
+it('lets a caller with manage-content through the ads, video-settings and newsletter gates', function () {
     $manager = User::factory()->create();
     $manager->givePermissionTo(PermissionList::MANAGE_CONTENT->value);
     Sanctum::actingAs($manager, ['*']);
@@ -50,13 +51,15 @@ it('lets a caller with manage-content through the ads and video-settings gates',
     // - validation runs (past the permission gate) and fails.
     $this->postJson('/api/ads', [])->assertStatus(422);
     $this->putJson('/api/video-settings', ['theme' => 'dark'])->assertOk();
+    // Newsletter (campaigns/emails/phones) lives on the admin's Content
+    // Management page, so it's gated by manage-content, not manage-news.
+    $this->getJson('/api/newsletter/campaigns')->assertOk();
 });
 
-it('lets a caller with manage-news through the news and newsletter gates', function () {
+it('lets a caller with manage-news through the news gate', function () {
     $manager = User::factory()->create();
     $manager->givePermissionTo(PermissionList::MANAGE_NEWS->value);
     Sanctum::actingAs($manager, ['*']);
 
     $this->postJson('/api/news-tags', ['name' => 'Tech', 'is_active' => true])->assertCreated();
-    $this->getJson('/api/newsletter/campaigns')->assertOk();
 });
