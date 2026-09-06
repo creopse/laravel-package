@@ -37,6 +37,10 @@ return [
         'redirect' => env('GOOGLE_REDIRECT'),
     ],
 
+    'apple' => [
+        'client_id' => env('APPLE_CLIENT_ID'),
+    ],
+
     'twilio' => [
         'sid' => env('TWILIO_SID'),
         'token' => env('TWILIO_TOKEN'),

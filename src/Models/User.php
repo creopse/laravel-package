@@ -34,6 +34,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon|null $email_verified_at
  * @property mixed $password
  * @property string|null $remember_token
+ * @property string|null $verification_code
+ * @property Carbon|null $verification_code_expires_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
@@ -99,6 +101,7 @@ class User extends Authenticatable implements Authorizable, CanResetPassword, Ha
     protected $casts = [
         'email_verified_at' => 'datetime',
         'last_logged_in_at' => 'datetime',
+        'verification_code_expires_at' => 'datetime',
         'preferences' => 'array',
         'location' => 'array',
     ];

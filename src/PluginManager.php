@@ -4,8 +4,12 @@ namespace Creopse\Creopse;
 
 use Composer\Autoload\ClassLoader;
 use Creopse\Creopse\Contracts\PluginInterface;
+use Creopse\Creopse\Enums\AccessGuard;
 use Creopse\Creopse\Exceptions\PluginException;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Facades\Schema;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 class PluginManager
 {
@@ -128,6 +132,44 @@ class PluginManager
     public function addHook(string $event, callable $callback): void
     {
         \Event::listen($event, $callback);
+    }
+
+    /**
+     * Let a plugin declare its own named permissions, synced into the same
+     * spatie/laravel-permission table as the core's (same `admin` guard as
+     * PermissionList - see UserRole::defaultPermissions()), so a plugin route
+     * can be protected with the standard `permission:vendor.some-permission`
+     * middleware and the permission shows up in GET /permissions and the
+     * Roles screen exactly like a core one.
+     *
+     * Each entry: ['name' => 'vendor.some-permission', 'display_name' => ..., 'description' => ...].
+     * Deferred to `booted()` since it needs the database, which isn't
+     * guaranteed to be migrated yet while plugins are being registered.
+     *
+     * @param  array<int, array{name: string, display_name?: string, description?: string}>  $permissions
+     */
+    public function registerPermissions(array $permissions): void
+    {
+        $this->app->booted(function () use ($permissions) {
+            if (! Schema::hasTable('permissions')) {
+                return;
+            }
+
+            foreach ($permissions as $permission) {
+                Permission::firstOrCreate(
+                    [
+                        'name' => $permission['name'],
+                        'guard_name' => AccessGuard::ADMIN->value,
+                    ],
+                    [
+                        'display_name' => $permission['display_name'] ?? $permission['name'],
+                        'description' => $permission['description'] ?? null,
+                    ]
+                );
+            }
+
+            $this->app[PermissionRegistrar::class]->forgetCachedPermissions();
+        });
     }
 
     // -------------------------------------------------------------------------

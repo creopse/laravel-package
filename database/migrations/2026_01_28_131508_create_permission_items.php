@@ -53,6 +53,10 @@ return new class extends Migration
             'guard_name' => AccessGuard::ADMIN->value,
         ]);
 
+        // Same guard as the other two roles and as every seeded permission -
+        // a role and the permissions synced onto it must share a guard_name,
+        // so this used to make syncPermissions() below throw GuardDoesNotMatch
+        // the moment USER was given any real permission.
         $userRole = Role::firstOrCreate([
             'name' => UserRole::USER->value,
             'display_name' => '{"fr": "Utilisateur", "en": "User"}',
@@ -60,40 +64,16 @@ return new class extends Migration
                 "fr": "Accès standard aux fonctionnalités publiques et personnelles du système.",
                 "en": "Standard access to public and personal features of the system."
             }',
-            'guard_name' => AccessGuard::WEB->value,
+            'guard_name' => AccessGuard::ADMIN->value,
         ]);
 
-        // Assign permissions to base roles
-        // Super Admin: all permissions
-        $superAdminRole->syncPermissions(Permission::all()->pluck('name')->toArray());
-
-        // Admin: limited permissions (based on old config)
-        $adminRole->syncPermissions([
-            PermissionList::VIEW_DASHBOARD->value,
-            PermissionList::VIEW_ACCOUNT->value,
-            PermissionList::EDIT_ACCOUNT->value,
-            PermissionList::VIEW_NOTIFICATIONS->value,
-            PermissionList::MANAGE_NOTIFICATIONS->value,
-            PermissionList::VIEW_ABOUT->value,
-            PermissionList::MANAGE_APP_SETTINGS->value,
-            PermissionList::VIEW_USERS->value,
-            PermissionList::CREATE_USER->value,
-            PermissionList::EDIT_USER->value,
-            PermissionList::DELETE_USER->value,
-            PermissionList::CREATE_ARTICLE->value,
-            PermissionList::EDIT_ARTICLE->value,
-            PermissionList::DELETE_ARTICLE->value,
-            PermissionList::MANAGE_NEWS->value,
-            PermissionList::VIEW_MEDIA->value,
-            PermissionList::UPLOAD_MEDIA->value,
-            PermissionList::DELETE_MEDIA->value,
-            PermissionList::VIEW_CONTENT->value,
-            PermissionList::MANAGE_CONTENT->value,
-            PermissionList::USE_VISUAL_EDITOR->value,
-        ]);
-
-        // User: minimal access
-        $userRole->syncPermissions([]);
+        // Assign permissions to base roles - UserRole::defaultPermissions() is
+        // the single source of truth for this mapping (also read by the
+        // permissions:sync command), so the three roles can no longer drift
+        // out of sync with each other or with what that command re-applies.
+        $superAdminRole->syncPermissions(UserRole::SUPER_ADMIN->defaultPermissions());
+        $adminRole->syncPermissions(UserRole::ADMIN->defaultPermissions());
+        $userRole->syncPermissions(UserRole::USER->defaultPermissions());
     }
 
     /**

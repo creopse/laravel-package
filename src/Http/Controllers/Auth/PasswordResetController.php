@@ -4,6 +4,7 @@ namespace Creopse\Creopse\Http\Controllers\Auth;
 
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
+use Creopse\Creopse\Helpers\PasswordPolicy;
 use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Models\AppInformation;
 use Creopse\Creopse\Models\User;
@@ -73,7 +74,7 @@ class PasswordResetController extends Controller
             'token' => 'required',
             // See RegisterRequest for why the regex is here (CVE-2026-48019).
             'email' => ['required', 'email', 'regex:/^[^\r\n]*$/'],
-            'password' => 'required|min:8|confirmed',
+            'password' => ['required', 'confirmed', PasswordPolicy::complexity()],
         ]);
 
         // If data not valid return error
@@ -123,7 +124,7 @@ class PasswordResetController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'current_password' => 'required',
-            'new_password' => 'required|min:8|confirmed',
+            'new_password' => ['required', 'confirmed', PasswordPolicy::complexity()],
         ]);
 
         // If data not valid return error
@@ -190,7 +191,7 @@ class PasswordResetController extends Controller
             'token' => 'required',
             // See RegisterRequest for why the regex is here (CVE-2026-48019).
             'email' => ['required', 'email', 'regex:/^[^\r\n]*$/'],
-            'password' => 'required|min:8|confirmed',
+            'password' => ['required', 'confirmed', PasswordPolicy::complexity()],
         ]);
 
         // Here we will attempt to reset the user's password. If it is successful we

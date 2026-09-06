@@ -2,12 +2,12 @@
 
 namespace Creopse\Creopse\Http\Controllers\Auth;
 
+use Creopse\Creopse\Actions\Auth\ProvisionSocialUserAction;
 use Creopse\Creopse\Enums\AccountStatus;
 use Creopse\Creopse\Enums\AuthType;
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Enums\TokenAbility;
-use Creopse\Creopse\Enums\UserRole;
 use Creopse\Creopse\Events\Auth\UserLoggedInEvent;
 use Creopse\Creopse\Events\Auth\UserRegisteredEvent;
 use Creopse\Creopse\Helpers\Functions;
@@ -16,6 +16,7 @@ use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Resources\UserResource;
 use Creopse\Creopse\Models\AppInformation;
 use Creopse\Creopse\Models\User;
+use Creopse\Creopse\Traits\DetectsMobileRequest;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Google\Client as GoogleClient;
@@ -34,6 +35,8 @@ use Twilio\Rest\Client as TwilioClient;
 
 class ProviderController extends Controller
 {
+    use DetectsMobileRequest;
+
     private function loginUser(Request $request, User $user, bool $isRegistration): JsonResponse
     {
         Auth::login($user);
@@ -136,9 +139,9 @@ class ProviderController extends Controller
                     'email' => $payload['email'],
                     'password' => Hash::make(Str::password(8, true, true, false)),
                     'uid' => Functions::generateUid(),
-                    'account_status' => $request->input('account_status')
-                        ? $request->input('account_status')
-                        : (User::count() > 0 ? AccountStatus::DISABLED->value : AccountStatus::ENABLED->value),
+                    // account_status is never taken from client input - see
+                    // RegistrationController::registerUser for why.
+                    'account_status' => ProvisionSocialUserAction::defaultAccountStatus(),
                     'auth_type' => AuthType::GOOGLE->value,
                     'preferences' => $request->input('preferences'),
                 ]);
@@ -151,11 +154,7 @@ class ProviderController extends Controller
                         $user->refresh();
                     }
 
-                    if (User::count() === 1) {
-                        $user->assignRole(UserRole::SUPER_ADMIN->value);
-                    } else {
-                        $user->assignRole(UserRole::USER->value);
-                    }
+                    ProvisionSocialUserAction::assignInitialRole($user);
 
                     return $this->loginUser($request, $user, true);
                 } else {
@@ -305,10 +304,10 @@ class ProviderController extends Controller
             throw new \Exception("Invalid token issuer. Expected: {$expectedIssuer}");
         }
 
-        // $clientId = config('services.apple.client_id');
-        // if (($payload['aud'] ?? null) !== $clientId) {
-        //     throw new \Exception("Invalid audience. Expected: {$clientId}");
-        // }
+        $clientId = config('services.apple.client_id');
+        if (($payload['aud'] ?? null) !== $clientId) {
+            throw new \Exception("Invalid audience. Expected: {$clientId}");
+        }
 
         if (isset($payload['exp']) && $payload['exp'] < time()) {
             throw new \Exception('Token has expired');
@@ -356,9 +355,7 @@ class ProviderController extends Controller
             'email' => $email,
             'password' => Hash::make(Str::random(32)),
             'uid' => Functions::generateUid(),
-            'account_status' => $request->input('account_status')
-                ? $request->input('account_status')
-                : (User::count() > 0 ? AccountStatus::DISABLED->value : AccountStatus::ENABLED->value),
+            'account_status' => ProvisionSocialUserAction::defaultAccountStatus(),
             'auth_type' => AuthType::APPLE->value,
             'preferences' => $request->input('preferences', []),
         ]);
@@ -369,11 +366,7 @@ class ProviderController extends Controller
             $user->save();
             $user->refresh();
 
-            if (User::count() === 1) {
-                $user->assignRole(UserRole::SUPER_ADMIN->value);
-            } else {
-                $user->assignRole(UserRole::USER->value);
-            }
+            ProvisionSocialUserAction::assignInitialRole($user);
 
             return $this->loginUser($request, $user, true);
         } else {
@@ -419,7 +412,7 @@ class ProviderController extends Controller
         }
 
         $phone = str_replace(' ', '', $request->input('phone'));
-        $verificationCode = mt_rand(100000, 999999);
+        $verificationCode = random_int(100000, 999999);
 
         $userDoesntExist = User::wherePhone($phone)->doesntExist();
 
@@ -433,18 +426,12 @@ class ProviderController extends Controller
                 'phone' => $phone,
                 'password' => Hash::make(Str::password(8, true, true, false)),
                 'uid' => Functions::generateUid(),
-                'account_status' => $request->input('account_status')
-                    ? $request->input('account_status')
-                    : (User::count() > 0 ? AccountStatus::DISABLED->value : AccountStatus::ENABLED->value),
+                'account_status' => ProvisionSocialUserAction::defaultAccountStatus(),
                 'auth_type' => AuthType::PHONE->value,
                 'preferences' => $request->input('preferences'),
             ]);
 
-            if (User::count() === 1) {
-                $user->assignRole(UserRole::SUPER_ADMIN->value);
-            } else {
-                $user->assignRole(UserRole::USER->value);
-            }
+            ProvisionSocialUserAction::assignInitialRole($user);
 
             event(new UserRegisteredEvent($user->id));
         }
@@ -453,7 +440,8 @@ class ProviderController extends Controller
 
         if ($user) {
 
-            $user->verification_code = $verificationCode;
+            $user->verification_code = (string) $verificationCode;
+            $user->verification_code_expires_at = now()->addMinutes(10);
             $user->save();
 
             try {
@@ -552,7 +540,10 @@ class ProviderController extends Controller
         if ($user) {
             try {
                 if ($request->input('provider') === 'wassa_sms') {
-                    if ($user->verification_code !== $request->input('code')) {
+                    $codeExpired = $user->verification_code_expires_at === null
+                        || $user->verification_code_expires_at->isPast();
+
+                    if ($codeExpired || ! hash_equals((string) $user->verification_code, (string) $request->input('code'))) {
                         throw new \Exception('Invalid code!');
                     }
                 } else {
@@ -590,7 +581,7 @@ class ProviderController extends Controller
             );
         }
 
-        if ($user->account_status != AccountStatus::DISABLED->value || $user->profile === null) {
+        if ($user->account_status !== AccountStatus::DISABLED->value) {
 
             return $this->loginUser($request, $user, false);
         } else {
