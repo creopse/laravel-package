@@ -49,7 +49,7 @@ class SyncPermissions extends CreopseCommand
         foreach (PermissionList::cases() as $permEnum) {
             $permission = Permission::firstOrNew([
                 'name' => $permEnum->value,
-                'guard_name' => AccessGuard::WEB->value,
+                'guard_name' => AccessGuard::ADMIN->value,
             ]);
 
             $isNew = ! $permission->exists;
@@ -72,7 +72,7 @@ class SyncPermissions extends CreopseCommand
 
         // Detect orphaned permissions
         $definedPermissions = collect(PermissionList::cases())->pluck('value');
-        $dbPermissions = Permission::where('guard_name', AccessGuard::WEB->value)->pluck('name');
+        $dbPermissions = Permission::where('guard_name', AccessGuard::ADMIN->value)->pluck('name');
         $orphaned = $dbPermissions->diff($definedPermissions);
 
         $this->newLine();
@@ -113,7 +113,7 @@ class SyncPermissions extends CreopseCommand
     protected function checkPermissions(): int
     {
         $definedPermissions = collect(PermissionList::cases());
-        $dbPermissions = Permission::where('guard_name', AccessGuard::WEB->value)->get()->keyBy('name');
+        $dbPermissions = Permission::where('guard_name', AccessGuard::ADMIN->value)->get()->keyBy('name');
 
         $missing = [];
         $present = [];

@@ -2,10 +2,10 @@
 
 namespace Creopse\Creopse\Http\Requests\Auth;
 
+use Creopse\Creopse\Helpers\PasswordPolicy;
 use Creopse\Creopse\Traits\RequestValidationException;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
 class RegisterRequest extends FormRequest
 {
@@ -39,17 +39,17 @@ class RegisterRequest extends FormRequest
             'password' => [
                 'required',
                 'confirmed',
-                Password::min(8)
-                    ->letters()
-                    ->numbers(),
+                PasswordPolicy::complexity(),
                 // ->uncompromised()
             ],
-            'account_status' => ['sometimes'],
             'preferences' => ['sometimes', 'array'],
             'avatar' => ['sometimes'],
             'device_name' => ['sometimes', 'string'],
             'device_id' => ['sometimes', 'string'],
-            'guard' => ['sometimes', 'string', 'in:api,web,admin,mobile'],
+            // Only guards actually configured in config/auth.php - 'api'/'mobile'
+            // are Spatie permission guard_name tags, not real Laravel auth
+            // guards, and Auth::shouldUse() would error on either.
+            'guard' => ['sometimes', 'string', 'in:web,admin'],
         ];
     }
 }

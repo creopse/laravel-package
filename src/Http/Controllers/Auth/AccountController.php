@@ -2,6 +2,7 @@
 
 namespace Creopse\Creopse\Http\Controllers\Auth;
 
+use Creopse\Creopse\Enums\AccountStatus;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Models\User;
@@ -16,7 +17,7 @@ class AccountController extends Controller
     public function disableAccount(Request $request): JsonResponse
     {
         User::where('id', $request->user()->id)->update([
-            'account_status' => 0,
+            'account_status' => AccountStatus::DISABLED->value,
         ]);
 
         return $this->sendResponse(

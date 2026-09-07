@@ -9,10 +9,17 @@ enum UserRole: string
     case ADMIN = 'admin';
     case USER = 'user';
 
+    /**
+     * The single source of truth for the role->permission mapping, read by
+     * both the permission-seeding migration and the `permissions:sync`
+     * command so they can no longer drift apart.
+     *
+     * @return array<int, string> permission values (PermissionList::value)
+     */
     public function defaultPermissions(): array
     {
         return match ($this) {
-            self::SUPER_ADMIN => PermissionList::cases(), // All
+            self::SUPER_ADMIN => array_map(fn (PermissionList $permission) => $permission->value, PermissionList::cases()), // All
             self::ADMIN => [
                 PermissionList::VIEW_DASHBOARD->value,
                 PermissionList::VIEW_ACCOUNT->value,

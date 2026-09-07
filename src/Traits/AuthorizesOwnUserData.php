@@ -13,11 +13,11 @@ trait AuthorizesOwnUserData
      * SEC-07: UserSession/UserDevice/UserPlace records used to be readable
      * and deletable by any authenticated caller regardless of who they
      * belong to. A caller can always access their own record; accessing
-     * someone else's requires the view-users permission.
+     * someone else's requires the given permission (view-users by default).
      */
-    private function rejectUnlessOwnedOrPermitted(?int $ownerId): ?JsonResponse
+    private function rejectUnlessOwnedOrPermitted(?int $ownerId, PermissionList $permission = PermissionList::VIEW_USERS): ?JsonResponse
     {
-        if ($ownerId === Auth::id() || Auth::user()->can(PermissionList::VIEW_USERS->value)) {
+        if ($ownerId === Auth::id() || Auth::user()->can($permission->value)) {
             return null;
         }
 

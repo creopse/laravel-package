@@ -2,8 +2,9 @@
 
 namespace Creopse\Creopse\Http\Controllers\Auth;
 
-use Creopse\Creopse\Enums\AccountStatus;
+use Creopse\Creopse\Actions\Auth\ProvisionSocialUserAction;
 use Creopse\Creopse\Enums\AuthType;
+use Creopse\Creopse\Enums\PermissionList;
 use Creopse\Creopse\Enums\ProfileType;
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
@@ -19,6 +20,7 @@ use Creopse\Creopse\Http\Requests\Auth\RegisterRequest;
 use Creopse\Creopse\Http\Resources\UserResource;
 use Creopse\Creopse\Models\AdminProfile;
 use Creopse\Creopse\Models\User;
+use Creopse\Creopse\Traits\AuthorizesOwnUserData;
 use Creopse\Creopse\Traits\DetectsMobileRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -30,7 +32,7 @@ use Illuminate\Validation\ValidationException;
 
 class RegistrationController extends Controller
 {
-    use DetectsMobileRequest;
+    use AuthorizesOwnUserData, DetectsMobileRequest;
 
     /**
      * Handle an incoming registration request.
@@ -47,9 +49,10 @@ class RegistrationController extends Controller
 
         $validated['username'] = $validated['username'] ?? UsernameGenerator::generate($validated['firstname'], $validated['lastname']);
         $validated['password'] = Hash::make($validated['password']);
-        $validated['account_status'] = isset($validated['account_status'])
-            ? $validated['account_status']
-            : (User::count() > 0 ? AccountStatus::DISABLED->value : AccountStatus::ENABLED->value);
+        // account_status is never taken from client input - a self-registering
+        // caller must not be able to skip the pending-approval workflow (see
+        // AccountActivatedEvent) by simply sending account_status=1.
+        $validated['account_status'] = ProvisionSocialUserAction::defaultAccountStatus();
         $validated['auth_type'] = AuthType::EMAIL_PASSWORD->value;
         $validated['uid'] = Functions::generateUid();
 
@@ -135,6 +138,13 @@ class RegistrationController extends Controller
             );
         }
 
+        // A caller can always provision their own profile (the post-registration
+        // self-service flow); provisioning one for someone else requires the
+        // same permission UserController::store already requires for that.
+        if ($unauthorized = $this->rejectUnlessOwnedOrPermitted((int) $request->input('id'), PermissionList::CREATE_USER)) {
+            return $unauthorized;
+        }
+
         $user = User::find($request->input('id'));
 
         // Check if user already has profile
@@ -150,17 +160,9 @@ class RegistrationController extends Controller
         if ($user) {
             switch ($request->input('type')) {
                 case ProfileType::ADMIN->value:
-                    $adminValidator = Validator::make($request->input('profile_data'), []);
-
-                    if ($adminValidator->fails()) {
-                        return $this->sendResponse(
-                            $validator->errors(),
-                            ResponseStatusCode::UNPROCESSABLE_ENTITY,
-                            'Validation failed',
-                            ResponseErrorCode::FORM_INVALID_DATA
-                        );
-                    }
-
+                    // admin_profiles has no columns beyond id/timestamps - it's
+                    // a pure marker record, so profile_data has nothing to
+                    // validate against or persist here.
                     $adminProfile = AdminProfile::create([]);
 
                     if ($adminProfile) {
@@ -234,6 +236,7 @@ class RegistrationController extends Controller
         }
 
         $profile = null;
+        $ownerId = null;
 
         switch ($request->input('type')) {
             case ProfileType::ADMIN->value:
@@ -241,7 +244,9 @@ class RegistrationController extends Controller
                 $profile = AdminProfile::find($id);
 
                 if ($profile) {
-                    $profile->update($request->input('profile_data'));
+                    $ownerId = User::where('profile_type', ProfileType::ADMIN->value)
+                        ->where('profile_id', $profile->id)
+                        ->value('id');
                 }
                 break;
 
@@ -255,7 +260,16 @@ class RegistrationController extends Controller
                 );
         }
 
+        // Same owner-or-permission rule as registerProfile(), checked against
+        // whichever user this profile actually belongs to (not the profile's
+        // own id, which has no relation to a user id).
+        if ($unauthorized = $this->rejectUnlessOwnedOrPermitted($ownerId, PermissionList::EDIT_USER)) {
+            return $unauthorized;
+        }
+
         if ($profile) {
+            $profile->update($request->input('profile_data'));
+
             event(new ProfileUpdatedEvent($profile, $request->input('type')));
 
             return $this->sendResponse(

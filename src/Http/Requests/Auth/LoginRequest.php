@@ -31,7 +31,10 @@ class LoginRequest extends FormRequest
             'remember' => ['sometimes', 'boolean'],
             'device_name' => ['sometimes', 'string'],
             'device_id' => ['sometimes', 'string'],
-            'guard' => ['sometimes', 'string', 'in:api,web,admin,mobile'],
+            // Only guards actually configured in config/auth.php - 'api'/'mobile'
+            // are Spatie permission guard_name tags, not real Laravel auth
+            // guards, and Auth::shouldUse() would error on either.
+            'guard' => ['sometimes', 'string', 'in:web,admin'],
         ];
     }
 }
