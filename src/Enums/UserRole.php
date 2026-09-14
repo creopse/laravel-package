@@ -27,6 +27,7 @@ enum UserRole: string
                 PermissionList::VIEW_NOTIFICATIONS->value,
                 PermissionList::MANAGE_NOTIFICATIONS->value,
                 PermissionList::VIEW_ABOUT->value,
+                PermissionList::MANAGE_PLUGINS->value,
                 PermissionList::MANAGE_APP_SETTINGS->value,
                 PermissionList::VIEW_USERS->value,
                 PermissionList::CREATE_USER->value,

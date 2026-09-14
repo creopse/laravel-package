@@ -41,7 +41,7 @@ class PermissionController extends Controller
             'name' => $validated['name'],
             'display_name' => $validated['display_name'],
             'description' => $validated['description'],
-            'guard_name' => $validated['guard_name'] ?? AccessGuard::WEB->value,
+            'guard_name' => $validated['guard_name'] ?? AccessGuard::ADMIN->value,
         ]);
 
         return $this->sendResponse(
