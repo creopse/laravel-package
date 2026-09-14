@@ -3,6 +3,7 @@
 namespace Creopse\Creopse\Models;
 
 use Creopse\Creopse\Casts\Json;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class PageSection extends Pivot
@@ -32,7 +33,10 @@ class PageSection extends Pivot
         return $query;
     }
 
-    public function dataSourcePage()
+    /**
+     * @return BelongsTo<Page, $this>
+     */
+    public function dataSourcePage(): BelongsTo
     {
         return $this->belongsTo(Page::class, 'data_source_page_id');
     }

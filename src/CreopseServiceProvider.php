@@ -85,6 +85,7 @@ use Creopse\Creopse\Models\ContentModel;
 use Creopse\Creopse\Models\Menu;
 use Creopse\Creopse\Models\MenuItemGroup;
 use Creopse\Creopse\Models\MenuLocation;
+use Creopse\Creopse\Models\User;
 use Creopse\Creopse\Models\VideoSetting;
 use Creopse\Creopse\Traits\DetectsLaravelVersion;
 use Illuminate\Auth\AuthenticationException;
@@ -197,7 +198,7 @@ class CreopseServiceProvider extends ServiceProvider
                     return Inertia::render('NotFound', [
                         'appLocale' => app()->getLocale(),
                         'appFallbackLocale' => app()->getFallbackLocale(),
-                        'userData' => $request->user() ? new UserResource($request->user()->load(['profile', 'roles', 'permissions'])) : null,
+                        'userData' => $request->user() instanceof User ? new UserResource($request->user()->load(['profile', 'roles', 'permissions'])) : null,
                         'isUserLoggedIn' => $request->user() !== null,
                         'appInformation' => AppInformation::all(),
                         'url' => $request->url(),
@@ -224,11 +225,11 @@ class CreopseServiceProvider extends ServiceProvider
                                                 $modelClass = $contentType->getModelClass();
 
                                                 if (class_exists($modelClass)) {
-                                                    $item->content = $modelClass::find($item->content_id);
+                                                    $item->setAttribute('content', $modelClass::find($item->content_id));
                                                 }
                                             } catch (\ValueError $e) {
                                                 // Handle invalid content_type gracefully
-                                                $item->content = null;
+                                                $item->setAttribute('content', null);
                                             }
                                         }
 

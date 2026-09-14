@@ -6,6 +6,7 @@ use Creopse\Creopse\Casts\Json;
 use Creopse\Creopse\Observers\DataChangeObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -25,7 +26,10 @@ class Section extends Model
         'settings_structure' => Json::class,
     ];
 
-    public function pages()
+    /**
+     * @return BelongsToMany<Page, $this, PageSection>
+     */
+    public function pages(): BelongsToMany
     {
         return $this->belongsToMany(Page::class)
             ->using(PageSection::class)

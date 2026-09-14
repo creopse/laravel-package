@@ -8,6 +8,9 @@ parameters:
 
     level: 5
 
+    databaseMigrationsPath:
+        - database/migrations
+
     tmpDir: build/phpstan
 
     # No composer.lock is committed (library, not an app), so the exact
@@ -16,3 +19,15 @@ parameters:
     # CI when a baselined error doesn't reappear; still fails on anything
     # genuinely new.
     reportUnmatchedIgnoredErrors: false
+
+    ignoreErrors:
+        # The package's own views are loaded under the `creopse::` namespace,
+        # but creopse:install publishes them straight into the host app's
+        # resources/views - which is what `emails.common` resolves against at
+        # runtime (and where host apps customise it). Larastan only sees the
+        # package, so it can't find the view. Switching to
+        # `creopse::emails.common` would silently ignore those customisations.
+        -
+            identifier: argument.type
+            message: '#^Parameter \$markdown of class Illuminate\\Mail\\Mailables\\Content constructor expects view-string\|null, string given\.$#'
+            path: src/Mail/CommonMail.php

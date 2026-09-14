@@ -3,6 +3,7 @@
 namespace Creopse\Creopse\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int|null $user_id
@@ -17,7 +18,10 @@ class UserDevice extends Model
         'is_active' => 'boolean',
     ];
 
-    public function user()
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

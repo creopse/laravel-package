@@ -6,6 +6,9 @@ use Creopse\Creopse\Helpers\Functions;
 use Creopse\Creopse\Http\Resources\UserResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -33,22 +36,34 @@ class NewsArticle extends Model implements Feedable
         'allow_comments' => 'boolean',
     ];
 
-    public function categories()
+    /**
+     * @return BelongsToMany<NewsCategory, $this>
+     */
+    public function categories(): BelongsToMany
     {
         return $this->belongsToMany(NewsCategory::class);
     }
 
-    public function tags()
+    /**
+     * @return BelongsToMany<NewsTag, $this>
+     */
+    public function tags(): BelongsToMany
     {
         return $this->belongsToMany(NewsTag::class);
     }
 
-    public function comments()
+    /**
+     * @return HasMany<NewsComment, $this>
+     */
+    public function comments(): HasMany
     {
         return $this->hasMany(NewsComment::class, 'article_id');
     }
 
-    public function author()
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author_id');
     }
@@ -58,7 +73,10 @@ class NewsArticle extends Model implements Feedable
         return $this->author ? $this->author->name : null;
     }
 
-    public function publisher()
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function publisher(): BelongsTo
     {
         return $this->belongsTo(User::class, 'publisher_id');
     }

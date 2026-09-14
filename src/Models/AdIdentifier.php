@@ -5,6 +5,7 @@ namespace Creopse\Creopse\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AdIdentifier extends Model
 {
@@ -30,7 +31,10 @@ class AdIdentifier extends Model
         });
     }
 
-    public function ads()
+    /**
+     * @return HasMany<Ad, $this>
+     */
+    public function ads(): HasMany
     {
         return $this->hasMany(Ad::class, 'pid', 'id');
     }

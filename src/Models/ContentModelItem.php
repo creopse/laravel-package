@@ -5,6 +5,8 @@ namespace Creopse\Creopse\Models;
 use Creopse\Creopse\Casts\Json;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ContentModelItem extends Model
 {
@@ -24,18 +26,27 @@ class ContentModelItem extends Model
         'content_model_data' => Json::class,
     ];
 
-    public function contentModel()
+    /**
+     * @return BelongsTo<ContentModel, $this>
+     */
+    public function contentModel(): BelongsTo
     {
         return $this->belongsTo(ContentModel::class, 'content_model_id');
     }
 
-    public function createdByUser()
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function createdByUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
     // Define the relationship to link items
-    public function relatedItems()
+    /**
+     * @return BelongsToMany<self, $this>
+     */
+    public function relatedItems(): BelongsToMany
     {
         return $this->belongsToMany(
             self::class,
@@ -46,7 +57,10 @@ class ContentModelItem extends Model
     }
 
     // Optionally define reverse relation (related to this item)
-    public function relatedTo()
+    /**
+     * @return BelongsToMany<self, $this>
+     */
+    public function relatedTo(): BelongsToMany
     {
         return $this->belongsToMany(
             self::class,

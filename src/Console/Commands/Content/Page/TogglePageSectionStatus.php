@@ -56,7 +56,6 @@ class TogglePageSectionStatus extends CreopseCommand
 
         $key = "{$section->slug}__{$linkId}";
         $current = $page->sections_disabled ?? [];
-        $current = is_array($current) ? $current : [];
 
         if ($disabled) {
             if (! in_array($key, $current, true)) {

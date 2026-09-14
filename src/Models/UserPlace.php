@@ -3,6 +3,7 @@
 namespace Creopse\Creopse\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int|null $user_id
@@ -12,7 +13,10 @@ class UserPlace extends Model
 {
     protected $guarded = [];
 
-    public function user()
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

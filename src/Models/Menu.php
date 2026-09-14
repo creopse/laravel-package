@@ -4,6 +4,8 @@ namespace Creopse\Creopse\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Menu extends Model
 {
@@ -17,12 +19,18 @@ class Menu extends Model
 
     protected $with = ['location'];
 
-    public function items()
+    /**
+     * @return HasMany<MenuItem, $this>
+     */
+    public function items(): HasMany
     {
         return $this->hasMany(MenuItem::class, 'menu_id');
     }
 
-    public function location()
+    /**
+     * @return BelongsTo<MenuLocation, $this>
+     */
+    public function location(): BelongsTo
     {
         return $this->belongsTo(MenuLocation::class, 'menu_location_id');
     }

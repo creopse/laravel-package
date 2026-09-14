@@ -24,6 +24,7 @@ use Creopse\Creopse\Models\MenuItemGroup;
 use Creopse\Creopse\Models\MenuLocation;
 use Creopse\Creopse\Models\Page;
 use Creopse\Creopse\Models\Permalink;
+use Creopse\Creopse\Models\User;
 use Creopse\Creopse\Models\VideoSetting;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Http\Request;
@@ -132,7 +133,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'appLocale' => app()->getLocale(),
             'appFallbackLocale' => app()->getFallbackLocale(),
-            'userData' => $request->user() ? new UserResource($request->user()->load(['profile', 'roles', 'permissions'])) : null,
+            'userData' => $request->user() instanceof User ? new UserResource($request->user()->load(['profile', 'roles', 'permissions'])) : null,
             'appInformation' => $appInformation,
             'isUserLoggedIn' => $request->user() !== null,
             'pageData' => $pageData,
@@ -160,11 +161,11 @@ class HandleInertiaRequests extends Middleware
                                     $modelClass = $contentType->getModelClass();
 
                                     if (class_exists($modelClass)) {
-                                        $item->content = Functions::convertKeysToCamelCase($modelClass::find($item->content_id));
+                                        $item->setAttribute('content', Functions::convertKeysToCamelCase($modelClass::find($item->content_id)));
                                     }
                                 } catch (\ValueError $e) {
                                     // Handle invalid content_type gracefully
-                                    $item->content = null;
+                                    $item->setAttribute('content', null);
                                 }
                             }
 

@@ -4,6 +4,7 @@ namespace Creopse\Creopse\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -20,7 +21,10 @@ class Ad extends Model
 
     protected $with = ['adIdentifier'];
 
-    public function adIdentifier()
+    /**
+     * @return BelongsTo<AdIdentifier, $this>
+     */
+    public function adIdentifier(): BelongsTo
     {
         return $this->belongsTo(AdIdentifier::class, 'pid', 'id');
     }
