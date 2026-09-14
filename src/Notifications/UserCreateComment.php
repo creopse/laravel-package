@@ -42,12 +42,13 @@ class UserCreateComment extends Notification
      */
     private function getData(): array
     {
-        $comment = NewsComment::find($this->commentId)->with(['author', 'publisher'])->first();
+        $comment = NewsComment::with(['author', 'article'])->findOrFail($this->commentId);
 
         return [
             'comment' => $comment,
             'title' => __('creopse::notifications.user_create_comment.title', ['title' => Functions::trans($comment->article->title)]),
-            'content' => __('creopse::notifications.user_create_comment.content', ['name' => $comment->user->fullname]),
+            // Guest comments have no author: fall back to the name they typed
+            'content' => __('creopse::notifications.user_create_comment.content', ['name' => (string) ($comment->author->fullname ?? $comment->name)]),
         ];
     }
 
