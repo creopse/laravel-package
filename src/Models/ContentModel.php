@@ -5,6 +5,7 @@ namespace Creopse\Creopse\Models;
 use Creopse\Creopse\Casts\Json;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Spatie\Sluggable\HasSlug;
@@ -26,7 +27,10 @@ class ContentModel extends Model
         'has_permalink' => 'boolean',
     ];
 
-    public function items()
+    /**
+     * @return HasMany<ContentModelItem, $this>
+     */
+    public function items(): HasMany
     {
         return $this->hasMany(ContentModelItem::class, 'content_model_id');
     }

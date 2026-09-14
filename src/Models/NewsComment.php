@@ -4,6 +4,7 @@ namespace Creopse\Creopse\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class NewsComment extends Model
@@ -23,12 +24,18 @@ class NewsComment extends Model
         'is_active' => 'boolean',
     ];
 
-    public function author()
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author_id');
     }
 
-    public function article()
+    /**
+     * @return BelongsTo<NewsArticle, $this>
+     */
+    public function article(): BelongsTo
     {
         return $this->belongsTo(NewsArticle::class, 'article_id');
     }

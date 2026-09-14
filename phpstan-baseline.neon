@@ -1,12 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\ContentModel\:\:\$slug\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Console/Commands/Content/ContentModel/MakeContentModel.php
-
-		-
 			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\ContentModel\\MakeContentModel\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
 			identifier: property.phpDocType
 			count: 1
@@ -19,18 +13,6 @@ parameters:
 			path: src/Console/Commands/Content/ContentModel/MakeContentModelItem.php
 
 		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\ContentModel\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 2
-			path: src/Console/Commands/Content/ContentModel/UpdateContentModel.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\ContentModel\:\:\$slug\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Console/Commands/Content/ContentModel/UpdateContentModel.php
-
-		-
 			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\ContentModel\\UpdateContentModel\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
 			identifier: property.phpDocType
 			count: 1
@@ -41,12 +23,6 @@ parameters:
 			identifier: property.phpDocType
 			count: 1
 			path: src/Console/Commands/Content/ContentModel/UpdateContentModelItem.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Menu\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Console/Commands/Content/Menu/MakeMenu.php
 
 		-
 			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Menu\\MakeMenu\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
@@ -83,12 +59,6 @@ parameters:
 			identifier: property.phpDocType
 			count: 1
 			path: src/Console/Commands/Content/Menu/MakeMenuLocation.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Menu\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 3
-			path: src/Console/Commands/Content/Menu/UpdateMenu.php
 
 		-
 			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Menu\\UpdateMenu\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
@@ -133,18 +103,6 @@ parameters:
 			path: src/Console/Commands/Content/Page/MakePage.php
 
 		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Section\:\:\$slug\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Console/Commands/Content/Page/OrderPageSections.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Section\:\:\$slug\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Console/Commands/Content/Page/TogglePageSectionStatus.php
-
-		-
 			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Page\\UpdatePage\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
 			identifier: property.phpDocType
 			count: 1
@@ -161,12 +119,6 @@ parameters:
 			identifier: property.phpDocType
 			count: 1
 			path: src/Console/Commands/Content/Permalink/MakePermalink.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Permalink\:\:\$path_prefix\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Console/Commands/Content/Permalink/RemovePermalink.php
 
 		-
 			message: '#^PHPDoc type array of property Creopse\\Creopse\\Console\\Commands\\Content\\Permalink\\RemovePermalink\:\:\$aliases is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Console\\Command\:\:\$aliases\.$#'
@@ -235,22 +187,10 @@ parameters:
 			path: src/Console/Commands/Media/MakeMediaFile.php
 
 		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MediaFile\|Illuminate\\Database\\Eloquent\\Collection\<int, Creopse\\Creopse\\Models\\MediaFile\>\:\:\$path\.$#'
-			identifier: property.notFound
-			count: 2
-			path: src/Console/Commands/Media/ReplaceMediaFile.php
-
-		-
 			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
 			identifier: larastan.noEnvCallsOutsideOfConfig
 			count: 5
 			path: src/Console/Commands/Migrations/MigrateSectionsData.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$data\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Console/Commands/Migrations/MigrateSectionsDataIcon.php
 
 		-
 			message: '#^Parameter \#2 \$callback of function preg_replace_callback expects callable\(array\<string\>\)\: string, Closure\(mixed\)\: float given\.$#'
@@ -271,24 +211,6 @@ parameters:
 			path: src/Console/Commands/SyncPermissions.php
 
 		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 2
-			path: src/CreopseServiceProvider.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Menu\:\:\$items\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/CreopseServiceProvider.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoSetting\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/CreopseServiceProvider.php
-
-		-
 			message: '#^Class App\\Http\\Middleware\\EncryptCookies not found\.$#'
 			identifier: class.notFound
 			count: 1
@@ -305,24 +227,6 @@ parameters:
 			identifier: return.unusedType
 			count: 1
 			path: src/Enums/ContentType.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 2
-			path: src/Exceptions/Handler.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Menu\:\:\$items\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Exceptions/Handler.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoSetting\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Exceptions/Handler.php
 
 		-
 			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
@@ -373,30 +277,6 @@ parameters:
 			path: src/Http/Controllers/Access/RoleController.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Foundation\\Auth\\User\:\:\$email\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/Auth/EmailChangeController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Foundation\\Auth\\User\:\:\$email_verified_at\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/Auth/EmailChangeController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/Auth/EmailVerificationController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$account_status\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/Auth/LoginController.php
-
-		-
 			message: '#^Call to an undefined method Illuminate\\Foundation\\Auth\\User\:\:createToken\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -413,48 +293,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: src/Http/Controllers/Auth/LogoutController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/Auth/PasswordResetController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Foundation\\Auth\\User\:\:\$password\.$#'
-			identifier: property.notFound
-			count: 2
-			path: src/Http/Controllers/Auth/PasswordResetController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/Auth/ProviderController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$account_status\.$#'
-			identifier: property.notFound
-			count: 3
-			path: src/Http/Controllers/Auth/ProviderController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$profile\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/Auth/ProviderController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$verification_code\.$#'
-			identifier: property.notFound
-			count: 2
-			path: src/Http/Controllers/Auth/ProviderController.php
-
-		-
-			message: '#^Call to an undefined method Creopse\\Creopse\\Http\\Controllers\\Auth\\ProviderController\:\:isMobileRequest\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Http/Controllers/Auth/ProviderController.php
 
 		-
 			message: '#^If condition is always true\.$#'
@@ -475,24 +313,6 @@ parameters:
 			path: src/Http/Controllers/Auth/ProviderController.php
 
 		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\|Illuminate\\Database\\Eloquent\\Collection\<int, Creopse\\Creopse\\Models\\User\>\:\:\$profile\.$#'
-			identifier: property.notFound
-			count: 2
-			path: src/Http/Controllers/Auth/RegistrationController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\|Illuminate\\Database\\Eloquent\\Collection\<int, Creopse\\Creopse\\Models\\User\>\:\:\$profile_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/Auth/RegistrationController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\|Illuminate\\Database\\Eloquent\\Collection\<int, Creopse\\Creopse\\Models\\User\>\:\:\$profile_type\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/Auth/RegistrationController.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 3
@@ -511,18 +331,6 @@ parameters:
 			path: src/Http/Controllers/Auth/TokenController.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Foundation\\Auth\\User\:\:\$username\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/Auth/UsernameChangeController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\ContentModel\:\:\$slug\.$#'
-			identifier: property.notFound
-			count: 2
-			path: src/Http/Controllers/Content/ContentModelController.php
-
-		-
 			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\ContentModel\:\:restore\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -533,18 +341,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Http/Controllers/Content/ContentModelController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\ContentModel\:\:\$access_scope\.$#'
-			identifier: property.notFound
-			count: 3
-			path: src/Http/Controllers/Content/ContentModelItemController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\ContentModelItem\:\:\$content_model_id\.$#'
-			identifier: property.notFound
-			count: 2
-			path: src/Http/Controllers/Content/ContentModelItemController.php
 
 		-
 			message: '#^Call to an undefined method Creopse\\Creopse\\Models\\ContentModelItem\:\:restore\(\)\.$#'
@@ -562,18 +358,6 @@ parameters:
 			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MenuItem\:\:\$content\.$#'
 			identifier: property.notFound
 			count: 2
-			path: src/Http/Controllers/Content/MenuItemController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MenuItem\:\:\$content_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/Content/MenuItemController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MenuItem\:\:\$content_type\.$#'
-			identifier: property.notFound
-			count: 1
 			path: src/Http/Controllers/Content/MenuItemController.php
 
 		-
@@ -595,61 +379,7 @@ parameters:
 			path: src/Http/Controllers/Content/PermalinkController.php
 
 		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$data\.$#'
-			identifier: property.notFound
-			count: 4
-			path: src/Http/Controllers/Content/SectionController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$data_source_link_id\.$#'
-			identifier: property.notFound
-			count: 3
-			path: src/Http/Controllers/Content/SectionController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$data_source_page_id\.$#'
-			identifier: property.notFound
-			count: 3
-			path: src/Http/Controllers/Content/SectionController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$link_title\.$#'
-			identifier: property.notFound
-			count: 2
-			path: src/Http/Controllers/Content/SectionController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$settings\.$#'
-			identifier: property.notFound
-			count: 2
-			path: src/Http/Controllers/Content/SectionController.php
-
-		-
-			message: '#^Relation ''pages'' is not found in Creopse\\Creopse\\Models\\Section model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: src/Http/Controllers/Content/SectionController.php
-
-		-
 			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\VideoCategoryResource\:\:\$subCategories\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/Content/VideoCategoryController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/Content/VideoCategoryController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoCategory\:\:\$description\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/Content/VideoCategoryController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoCategory\:\:\$name\.$#'
 			identifier: property.notFound
 			count: 1
 			path: src/Http/Controllers/Content/VideoCategoryController.php
@@ -667,39 +397,9 @@ parameters:
 			path: src/Http/Controllers/Content/VideoCategoryController.php
 
 		-
-			message: '#^Relation ''categories'' is not found in Creopse\\Creopse\\Models\\VideoItem model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: src/Http/Controllers/Content/VideoCategoryController.php
-
-		-
-			message: '#^Relation ''items'' is not found in Creopse\\Creopse\\Models\\VideoCategory model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: src/Http/Controllers/Content/VideoCategoryController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoItem\:\:\$publisher_id\.$#'
-			identifier: property.notFound
-			count: 2
-			path: src/Http/Controllers/Content/VideoItemController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoSetting\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/Content/VideoItemController.php
-
-		-
 			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\VideoItem\>\:\:paginate\(\) expects int\|null, string given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Http/Controllers/Content/VideoItemController.php
-
-		-
-			message: '#^Relation ''categories'' is not found in Creopse\\Creopse\\Models\\VideoItem model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
 			path: src/Http/Controllers/Content/VideoItemController.php
 
 		-
@@ -721,93 +421,9 @@ parameters:
 			path: src/Http/Controllers/DynamicPageController.php
 
 		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 3
-			path: src/Http/Controllers/DynamicPageController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$published_at\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/DynamicPageController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$status\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/DynamicPageController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$summary\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/DynamicPageController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$title\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/DynamicPageController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsCategory\:\:\$description\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/DynamicPageController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsCategory\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/DynamicPageController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsTag\:\:\$description\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/DynamicPageController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsTag\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/DynamicPageController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Permalink\:\:\$content_param\.$#'
-			identifier: property.notFound
-			count: 4
-			path: src/Http/Controllers/DynamicPageController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Permalink\:\:\$content_type\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/DynamicPageController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Permalink\:\:\$page_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/DynamicPageController.php
-
-		-
 			message: '#^Expression on left side of \?\? is not nullable\.$#'
 			identifier: nullCoalesce.expr
 			count: 1
-			path: src/Http/Controllers/DynamicPageController.php
-
-		-
-			message: '#^Relation ''categories'' is not found in Creopse\\Creopse\\Models\\NewsArticle model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: src/Http/Controllers/DynamicPageController.php
-
-		-
-			message: '#^Relation ''tags'' is not found in Creopse\\Creopse\\Models\\NewsArticle model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
 			path: src/Http/Controllers/DynamicPageController.php
 
 		-
@@ -835,52 +451,10 @@ parameters:
 			path: src/Http/Controllers/InstallController.php
 
 		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MediaFile\:\:\$path\.$#'
-			identifier: property.notFound
-			count: 2
-			path: src/Http/Controllers/MediaFileController.php
-
-		-
 			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\MediaFile\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Http/Controllers/MediaFileController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/News/ArticleController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$published_at\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/News/ArticleController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$slug\.$#'
-			identifier: property.notFound
-			count: 2
-			path: src/Http/Controllers/News/ArticleController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$status\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/News/ArticleController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$summary\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/News/ArticleController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$title\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/News/ArticleController.php
 
 		-
 			message: '#^Expression on left side of \?\? is not nullable\.$#'
@@ -907,37 +481,7 @@ parameters:
 			path: src/Http/Controllers/News/ArticleController.php
 
 		-
-			message: '#^Relation ''categories'' is not found in Creopse\\Creopse\\Models\\NewsArticle model\.$#'
-			identifier: larastan.relationExistence
-			count: 4
-			path: src/Http/Controllers/News/ArticleController.php
-
-		-
-			message: '#^Relation ''tags'' is not found in Creopse\\Creopse\\Models\\NewsArticle model\.$#'
-			identifier: larastan.relationExistence
-			count: 4
-			path: src/Http/Controllers/News/ArticleController.php
-
-		-
 			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\News\\CategoryResource\:\:\$subCategories\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/News/CategoryController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/News/CategoryController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsCategory\:\:\$description\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/News/CategoryController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsCategory\:\:\$name\.$#'
 			identifier: property.notFound
 			count: 1
 			path: src/Http/Controllers/News/CategoryController.php
@@ -955,46 +499,10 @@ parameters:
 			path: src/Http/Controllers/News/CategoryController.php
 
 		-
-			message: '#^Relation ''articles'' is not found in Creopse\\Creopse\\Models\\NewsCategory model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: src/Http/Controllers/News/CategoryController.php
-
-		-
-			message: '#^Relation ''categories'' is not found in Creopse\\Creopse\\Models\\NewsArticle model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: src/Http/Controllers/News/CategoryController.php
-
-		-
 			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<Creopse\\Creopse\\Models\\NewsComment\>\:\:paginate\(\) expects int\|null, \(array\|string\) given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Http/Controllers/News/CommentController.php
-
-		-
-			message: '#^Relation ''article'' is not found in Creopse\\Creopse\\Models\\NewsComment model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: src/Http/Controllers/News/CommentController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/News/TagController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsTag\:\:\$description\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/News/TagController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsTag\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/News/TagController.php
 
 		-
 			message: '#^Method Creopse\\Creopse\\Http\\Controllers\\News\\TagController\:\:showTagArticles\(\) has invalid return type Inertia\\Inertia\\Response\.$#'
@@ -1006,12 +514,6 @@ parameters:
 			message: '#^Method Creopse\\Creopse\\Http\\Controllers\\News\\TagController\:\:showTagArticles\(\) should return Inertia\\Inertia\\Response but returns Inertia\\Response\.$#'
 			identifier: return.type
 			count: 1
-			path: src/Http/Controllers/News/TagController.php
-
-		-
-			message: '#^Relation ''tags'' is not found in Creopse\\Creopse\\Models\\NewsArticle model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
 			path: src/Http/Controllers/News/TagController.php
 
 		-
@@ -1043,30 +545,6 @@ parameters:
 			identifier: method.notFound
 			count: 2
 			path: src/Http/Controllers/SessionController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 2
-			path: src/Http/Controllers/UserController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$account_status\.$#'
-			identifier: property.notFound
-			count: 2
-			path: src/Http/Controllers/UserController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$profile_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/UserController.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$profile_type\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Controllers/UserController.php
 
 		-
 			message: '#^Access to an undefined property Illuminate\\Foundation\\Auth\\User\:\:\$roles\.$#'
@@ -1117,94 +595,10 @@ parameters:
 			path: src/Http/Controllers/UserController.php
 
 		-
-			message: '#^Relation ''profile'' is not found in Creopse\\Creopse\\Models\\User model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: src/Http/Controllers/UserController.php
-
-		-
-			message: '#^Relation ''user'' is not found in Creopse\\Creopse\\Models\\UserDevice model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: src/Http/Controllers/UserDeviceController.php
-
-		-
-			message: '#^Relation ''user'' is not found in Creopse\\Creopse\\Models\\UserPlace model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: src/Http/Controllers/UserPlaceController.php
-
-		-
-			message: '#^Relation ''user'' is not found in Creopse\\Creopse\\Models\\UserSession model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: src/Http/Controllers/UserSessionController.php
-
-		-
 			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\PageDataResource\:\:\$sections\.$#'
 			identifier: property.notFound
 			count: 1
 			path: src/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 3
-			path: src/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Menu\:\:\$items\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MenuItem\:\:\$page\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MenuItem\:\:\$section_key\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MenuItem\:\:\$title\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Permalink\:\:\$page\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoSetting\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Relation ''page'' is not found in Creopse\\Creopse\\Models\\MenuItem model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: src/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Relation ''page'' is not found in Creopse\\Creopse\\Models\\Permalink model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: src/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\UserSession\:\:\$last_activity\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Middleware/LogSessionHistory.php
 
 		-
 			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Ads\\AdIdentifierResource\:\:\$ads\.$#'
@@ -1723,18 +1117,6 @@ parameters:
 			path: src/Http/Resources/Content/SectionDataResource.php
 
 		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$data\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Resources/Content/SectionDataResource.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$settings\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Resources/Content/SectionDataResource.php
-
-		-
 			message: '#^Call to an undefined method Creopse\\Creopse\\Http\\Resources\\Content\\SectionDataResource\:\:relationLoaded\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -1802,18 +1184,6 @@ parameters:
 
 		-
 			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\Content\\SectionResource\:\:\$updated_at\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Resources/Content/SectionResource.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$data\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Http/Resources/Content/SectionResource.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\PageSection\:\:\$settings\.$#'
 			identifier: property.notFound
 			count: 1
 			path: src/Http/Resources/Content/SectionResource.php
@@ -2617,40 +1987,10 @@ parameters:
 			path: src/Http/Resources/UserResource.php
 
 		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$last_logged_in_at\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Listeners/AuthSubscriber.php
-
-		-
 			message: '#^Instanceof between Creopse\\Creopse\\Models\\User and Illuminate\\Contracts\\Auth\\MustVerifyEmail will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
 			path: src/Listeners/AuthSubscriber.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\Ad\:\:\$content\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/Ad.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\ContentModel\:\:\$image\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/ContentModel.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MediaFile\:\:\$foreign_url\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/MediaFile.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MediaFile\:\:\$path\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/MediaFile.php
 
 		-
 			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
@@ -2659,112 +1999,16 @@ parameters:
 			path: src/Models/MediaFile.php
 
 		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\MenuItem\:\:\$image\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/MenuItem.php
-
-		-
 			message: '#^Access to an undefined property Creopse\\Creopse\\Http\\Resources\\UserResource\:\:\$fullname\.$#'
 			identifier: property.notFound
 			count: 1
 			path: src/Models/NewsArticle.php
 
 		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$author\.$#'
-			identifier: property.notFound
-			count: 2
-			path: src/Models/NewsArticle.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$categories\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/NewsArticle.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$content\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/NewsArticle.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$featured_image\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/NewsArticle.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$publisher\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/NewsArticle.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$slug\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/NewsArticle.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$summary\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/NewsArticle.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$tags\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/NewsArticle.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$title\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/NewsArticle.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsArticle\:\:\$updated_at\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/NewsArticle.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsCategory\:\:\$image\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/NewsCategory.php
-
-		-
 			message: '#^PHPDoc type array\<int, string\> of property Creopse\\Creopse\\Models\\Page\:\:\$with is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$with\.$#'
 			identifier: property.phpDocType
 			count: 1
 			path: src/Models/Page.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$avatar\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/User.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$firstname\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/User.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$lastname\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/User.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\User\:\:\$profile_type\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/User.php
 
 		-
 			message: '#^PHPDoc tag @method for method Creopse\\Creopse\\Models\\User\:\:factory\(\) return type contains unknown class Database\\Factories\\UserFactory\.$#'
@@ -2791,42 +2035,6 @@ parameters:
 			path: src/Models/User.php
 
 		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoCategory\:\:\$image\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/VideoCategory.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoItem\:\:\$path\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/VideoItem.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoItem\:\:\$publisher\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/VideoItem.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\VideoItem\:\:\$thumbnail\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Models/VideoItem.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Notifications/UserAccountActivated.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsComment\:\:\$article\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Notifications/UserCreateComment.php
-
-		-
 			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\NewsComment\:\:\$user\.$#'
 			identifier: property.notFound
 			count: 1
@@ -2845,19 +2053,7 @@ parameters:
 			path: src/Notifications/UserCreateComment.php
 
 		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\ContentModel\:\:\$title\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Notifications/UserEntryContent.php
-
-		-
 			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
 			identifier: larastan.noEnvCallsOutsideOfConfig
 			count: 1
 			path: src/Notifications/UserEntryContent.php
-
-		-
-			message: '#^Access to an undefined property Creopse\\Creopse\\Models\\AppInformation\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Notifications/WelcomeUser.php

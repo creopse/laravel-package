@@ -5,6 +5,9 @@ namespace Creopse\Creopse\Models;
 use Creopse\Creopse\Helpers\Functions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -26,17 +29,26 @@ class NewsCategory extends Model
         'is_active' => 'boolean',
     ];
 
-    public function articles()
+    /**
+     * @return BelongsToMany<NewsArticle, $this>
+     */
+    public function articles(): BelongsToMany
     {
         return $this->belongsToMany(NewsArticle::class);
     }
 
-    public function parent()
+    /**
+     * @return BelongsTo<static, $this>
+     */
+    public function parent(): BelongsTo
     {
         return $this->belongsTo(static::class, 'parent_id');
     }
 
-    public function subCategories()
+    /**
+     * @return HasMany<static, $this>
+     */
+    public function subCategories(): HasMany
     {
         return $this->hasMany(static::class, 'parent_id');
     }

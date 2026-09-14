@@ -4,6 +4,8 @@ namespace Creopse\Creopse\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -37,32 +39,50 @@ class MenuItem extends Model
         return null;
     }
 
-    public function menu()
+    /**
+     * @return BelongsTo<Menu, $this>
+     */
+    public function menu(): BelongsTo
     {
         return $this->belongsTo(Menu::class, 'menu_id');
     }
 
-    public function page()
+    /**
+     * @return BelongsTo<Page, $this>
+     */
+    public function page(): BelongsTo
     {
         return $this->belongsTo(Page::class, 'page_id');
     }
 
-    public function type()
+    /**
+     * @return BelongsTo<MenuItemType, $this>
+     */
+    public function type(): BelongsTo
     {
         return $this->belongsTo(MenuItemType::class, 'menu_item_type_id');
     }
 
-    public function group()
+    /**
+     * @return BelongsTo<MenuItemGroup, $this>
+     */
+    public function group(): BelongsTo
     {
         return $this->belongsTo(MenuItemGroup::class, 'menu_item_group_id');
     }
 
-    public function parent()
+    /**
+     * @return BelongsTo<static, $this>
+     */
+    public function parent(): BelongsTo
     {
         return $this->belongsTo(static::class, 'parent_id');
     }
 
-    public function subMenuItems()
+    /**
+     * @return HasMany<static, $this>
+     */
+    public function subMenuItems(): HasMany
     {
         return $this->hasMany(static::class, 'parent_id');
     }

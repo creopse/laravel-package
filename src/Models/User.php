@@ -12,6 +12,9 @@ use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\DatabaseNotification;
@@ -124,7 +127,7 @@ class User extends Authenticatable implements Authorizable, CanResetPassword, Ha
     /**
      * Get the profile associated with the user.
      */
-    public function profile()
+    public function profile(): MorphTo
     {
         return $this->morphTo();
     }
@@ -132,7 +135,7 @@ class User extends Authenticatable implements Authorizable, CanResetPassword, Ha
     /**
      * Get the place associated with the user.
      */
-    public function place()
+    public function place(): HasOne
     {
         return $this->hasOne(UserPlace::class);
     }
@@ -140,7 +143,7 @@ class User extends Authenticatable implements Authorizable, CanResetPassword, Ha
     /**
      * Get all of the devices for the user.
      */
-    public function devices()
+    public function devices(): HasMany
     {
         return $this->hasMany(UserDevice::class);
     }
@@ -148,7 +151,7 @@ class User extends Authenticatable implements Authorizable, CanResetPassword, Ha
     /**
      * Get all of the sessions for the user.
      */
-    public function sessions()
+    public function sessions(): HasMany
     {
         return $this->hasMany(UserSession::class);
     }
@@ -156,7 +159,7 @@ class User extends Authenticatable implements Authorizable, CanResetPassword, Ha
     /**
      * Get all of the news comments for the user.
      */
-    public function newsComments()
+    public function newsComments(): HasMany
     {
         return $this->hasMany(NewsComment::class);
     }
@@ -164,7 +167,7 @@ class User extends Authenticatable implements Authorizable, CanResetPassword, Ha
     /**
      * Get all of the news articles for the user.
      */
-    public function newsArticles()
+    public function newsArticles(): HasMany
     {
         return $this->hasMany(NewsArticle::class);
     }

@@ -5,6 +5,8 @@ namespace Creopse\Creopse\Models;
 use Creopse\Creopse\Helpers\Functions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -24,12 +26,18 @@ class VideoItem extends Model
         'user_metadata' => 'array',
     ];
 
-    public function categories()
+    /**
+     * @return BelongsToMany<VideoCategory, $this>
+     */
+    public function categories(): BelongsToMany
     {
         return $this->belongsToMany(VideoCategory::class);
     }
 
-    public function publisher()
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function publisher(): BelongsTo
     {
         return $this->belongsTo(User::class, 'publisher_id');
     }

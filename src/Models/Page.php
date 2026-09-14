@@ -4,6 +4,8 @@ namespace Creopse\Creopse\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -30,7 +32,10 @@ class Page extends Model
      */
     protected $with = ['sections'];
 
-    public function sections()
+    /**
+     * @return BelongsToMany<Section, $this, PageSection>
+     */
+    public function sections(): BelongsToMany
     {
         return $this->belongsToMany(Section::class)
             ->using(PageSection::class)
@@ -38,7 +43,10 @@ class Page extends Model
             ->withTimestamps();
     }
 
-    public function permalinks()
+    /**
+     * @return HasMany<Permalink, $this>
+     */
+    public function permalinks(): HasMany
     {
         return $this->hasMany(Permalink::class, 'page_id');
     }

@@ -5,6 +5,7 @@ namespace Creopse\Creopse\Models;
 use Creopse\Creopse\Helpers\Functions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
@@ -24,7 +25,10 @@ class NewsTag extends Model
         'is_active' => 'boolean',
     ];
 
-    public function articles()
+    /**
+     * @return BelongsToMany<NewsArticle, $this>
+     */
+    public function articles(): BelongsToMany
     {
         return $this->belongsToMany(NewsArticle::class);
     }
