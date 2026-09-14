@@ -63,6 +63,7 @@ use Creopse\Creopse\Console\Commands\Plugins\PluginMakeModel;
 use Creopse\Creopse\Console\Commands\Plugins\PluginMakeRequest;
 use Creopse\Creopse\Console\Commands\Plugins\PluginMakeSeeder;
 use Creopse\Creopse\Console\Commands\ScheduledCommand;
+use Creopse\Creopse\Console\Commands\SyncPermissions;
 use Creopse\Creopse\Database\Seeders\DatabaseSeeder;
 use Creopse\Creopse\Enums\ContentType;
 use Creopse\Creopse\Helpers\Functions;
@@ -352,6 +353,7 @@ class CreopseServiceProvider extends ServiceProvider
                 Install::class,
                 ScheduledCommand::class,
                 GenerateThumbnails::class,
+                SyncPermissions::class,
                 // Content Model commands
                 UpdateBaseInformation::class,
                 // Content Content Model commands
