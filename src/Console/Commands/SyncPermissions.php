@@ -4,7 +4,10 @@ namespace Creopse\Creopse\Console\Commands;
 
 use Creopse\Creopse\Enums\AccessGuard;
 use Creopse\Creopse\Enums\PermissionList;
+use Creopse\Creopse\PluginManager;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 
@@ -70,31 +73,29 @@ class SyncPermissions extends CreopseCommand
             }
         }
 
-        // Detect orphaned permissions
-        $definedPermissions = collect(PermissionList::cases())->pluck('value');
-        $dbPermissions = Permission::where('guard_name', AccessGuard::ADMIN->value)->pluck('name');
-        $orphaned = $dbPermissions->diff($definedPermissions);
+        [$pluginPermissions, $orphaned] = $this->extraPermissions();
 
         $this->newLine();
         $this->info('  Summary:');
         $this->line("   • Permissions created: <fg=green>{$created}</>");
         $this->line("   • Permissions updated: <fg=yellow>{$updated}</>");
 
+        if ($pluginPermissions->isNotEmpty()) {
+            $this->line("   • Plugin permissions (kept): <fg=cyan>{$pluginPermissions->count()}</>");
+        }
+
         if ($orphaned->isNotEmpty()) {
             $this->newLine();
-            $this->warn('  Orphaned permissions detected (in DB but not in code):');
+            $this->warn('  Orphaned permissions detected (not defined by the core or a loaded plugin):');
             foreach ($orphaned as $orphan) {
                 $this->line("   • {$orphan}");
             }
 
             // Option to clean
             if ($this->option('clean')) {
-                if ($this->confirm('Do you want to delete these orphaned permissions?', false)) {
-                    Permission::whereIn('name', $orphaned)->delete();
-                    $this->info('Orphaned permissions deleted.');
-                }
+                $this->cleanOrphanedPermissions($orphaned);
             } else {
-                $this->line("\n Use <fg=cyan>--clean</> to delete them.");
+                $this->line("\n Use <fg=cyan>--clean</> to delete the ones no role or user holds.");
             }
         }
 
@@ -135,7 +136,7 @@ class SyncPermissions extends CreopseCommand
             }
         }
 
-        $orphaned = $dbPermissions->keys()->diff($definedPermissions->pluck('value'));
+        [$pluginPermissions, $orphaned] = $this->extraPermissions();
 
         // Display
         $this->info(' Permissions status:');
@@ -159,6 +160,10 @@ class SyncPermissions extends CreopseCommand
             }
         }
 
+        if ($pluginPermissions->isNotEmpty()) {
+            $this->line('<fg=cyan>  Plugin permissions: '.$pluginPermissions->count().'</>');
+        }
+
         if ($orphaned->isNotEmpty()) {
             $this->newLine();
             $this->line('<fg=yellow>  Orphaned: '.$orphaned->count().'</>');
@@ -171,5 +176,64 @@ class SyncPermissions extends CreopseCommand
         $this->line(' Run <fg=cyan>php artisan permissions:sync</> to synchronize.');
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * Split the admin-guard permissions the core doesn't define into those
+     * declared by a loaded plugin and the remaining orphans.
+     *
+     * @return array{0: Collection<int, string>, 1: Collection<int, string>}
+     */
+    protected function extraPermissions(): array
+    {
+        $extra = Permission::where('guard_name', AccessGuard::ADMIN->value)
+            ->whereNotIn('name', collect(PermissionList::cases())->pluck('value'))
+            ->pluck('name');
+
+        $pluginNames = app(PluginManager::class)->getRegisteredPermissions();
+
+        [$plugin, $orphaned] = $extra->partition(fn (string $name) => in_array($name, $pluginNames, true));
+
+        return [$plugin->values(), $orphaned->values()];
+    }
+
+    /**
+     * Delete only the orphans no role or user holds. An orphan can still be a
+     * permission created from the admin panel, or one declared by a plugin
+     * that is disabled (or not booted, e.g. with cached routes): deleting it
+     * while granted would silently strip those grants through the pivot
+     * tables' cascade.
+     *
+     * @param  Collection<int, string>  $orphaned
+     */
+    protected function cleanOrphanedPermissions(Collection $orphaned): void
+    {
+        $tables = config('permission.table_names');
+        $pivotKey = config('permission.column_names.permission_pivot_key') ?? 'permission_id';
+
+        $deletable = Permission::where('guard_name', AccessGuard::ADMIN->value)
+            ->whereIn('name', $orphaned)
+            ->whereNotIn('id', DB::table($tables['role_has_permissions'])->select($pivotKey))
+            ->whereNotIn('id', DB::table($tables['model_has_permissions'])->select($pivotKey))
+            ->pluck('name');
+
+        $kept = $orphaned->diff($deletable);
+
+        if ($kept->isNotEmpty()) {
+            $this->newLine();
+            $this->warn('  Kept because still granted to a role or user:');
+            foreach ($kept as $name) {
+                $this->line("   • {$name}");
+            }
+        }
+
+        if ($deletable->isEmpty()) {
+            return;
+        }
+
+        if ($this->confirm("Do you want to delete the {$deletable->count()} unassigned orphaned permission(s)?", false)) {
+            Permission::where('guard_name', AccessGuard::ADMIN->value)->whereIn('name', $deletable)->delete();
+            $this->info('Orphaned permissions deleted.');
+        }
     }
 }

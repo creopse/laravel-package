@@ -16,6 +16,9 @@ class PluginManager
     /** @var PluginInterface[] */
     protected array $plugins = [];
 
+    /** @var string[] names declared through registerPermissions() */
+    protected array $registeredPermissions = [];
+
     protected ClassLoader $autoloader;
 
     public function __construct(protected Application $app)
@@ -150,6 +153,10 @@ class PluginManager
      */
     public function registerPermissions(array $permissions): void
     {
+        foreach ($permissions as $permission) {
+            $this->registeredPermissions[] = $permission['name'];
+        }
+
         $this->app->booted(function () use ($permissions) {
             if (! Schema::hasTable('permissions')) {
                 return;
@@ -202,6 +209,18 @@ class PluginManager
     public function getAll(): array
     {
         return $this->plugins;
+    }
+
+    /**
+     * Permission names declared by the plugins booted in this process.
+     * Disabled plugins never boot, so this is not the full list of plugin
+     * permissions stored in the database.
+     *
+     * @return string[]
+     */
+    public function getRegisteredPermissions(): array
+    {
+        return array_values(array_unique($this->registeredPermissions));
     }
 
     public function readManifest(string $pluginPath): array
