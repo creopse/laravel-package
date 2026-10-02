@@ -10,6 +10,13 @@
 
 use Creopse\Creopse\Models\User;
 
+beforeEach(function () {
+    config([
+        'services.wassa_sms.token' => 'test-token',
+        'services.wassa_sms.endpoint' => 'http://127.0.0.1:1',
+    ]);
+});
+
 it('refuses to log in a disabled account with no profile via phone verification', function () {
     $user = User::factory()->disabled()->create([
         'phone' => '+15005550002',
@@ -21,7 +28,6 @@ it('refuses to log in a disabled account with no profile via phone verification'
     $this->postJson('/api/auth/phone/verify', [
         'phone' => '+15005550002',
         'code' => '123456',
-        'provider' => 'wassa_sms',
     ])->assertStatus(403);
 });
 
@@ -35,7 +41,6 @@ it('logs in an enabled account via phone verification with the correct, unexpire
     $this->postJson('/api/auth/phone/verify', [
         'phone' => '+15005550003',
         'code' => '123456',
-        'provider' => 'wassa_sms',
     ])->assertOk();
 });
 
@@ -49,6 +54,5 @@ it('refuses an expired verification code', function () {
     $this->postJson('/api/auth/phone/verify', [
         'phone' => '+15005550004',
         'code' => '123456',
-        'provider' => 'wassa_sms',
-    ])->assertStatus(500);
+    ])->assertStatus(422);
 });
