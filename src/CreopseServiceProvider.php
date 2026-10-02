@@ -69,6 +69,7 @@ use Creopse\Creopse\Enums\ContentType;
 use Creopse\Creopse\Helpers\Functions;
 use Creopse\Creopse\Http\Middleware\CaptureSessionMetadata;
 use Creopse\Creopse\Http\Middleware\CompressResponse;
+use Creopse\Creopse\Http\Middleware\EnsureAccountIsActive;
 use Creopse\Creopse\Http\Middleware\EnsureEmailIsVerified;
 use Creopse\Creopse\Http\Middleware\EnsureInstallationInProgress;
 use Creopse\Creopse\Http\Middleware\LogSessionHistory;
@@ -310,6 +311,7 @@ class CreopseServiceProvider extends ServiceProvider
                 SubstituteBindings::class,
                 ConvertRequestToSnakeCase::class,
                 ConvertResponseToCamelCase::class,
+                EnsureAccountIsActive::class,
                 LogSessionHistory::class,
                 CaptureSessionMetadata::class,
                 CompressResponse::class,
@@ -328,6 +330,7 @@ class CreopseServiceProvider extends ServiceProvider
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
+                EnsureAccountIsActive::class,
                 LogSessionHistory::class,
                 CaptureSessionMetadata::class,
                 class_exists('App\Http\Middleware\HandleInertiaRequests') ? HandleInertiaRequests::class : Http\Middleware\HandleInertiaRequests::class,

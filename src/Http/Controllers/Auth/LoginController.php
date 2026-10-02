@@ -47,11 +47,15 @@ class LoginController extends Controller
         // valid and disabled accounts without ever knowing a password. A
         // dummy hash check keeps the "unknown identifier" path taking as
         // long as a real one, closing the timing side-channel too.
+        //
+        // The password is checked against the account found above rather
+        // than through Auth::attempt(), which looked the account up again
+        // by email: for an account without one (phone sign-up), that
+        // matched whichever email-less account came first. Auth::attempt()
+        // also opened the session before the disabled check below, so a
+        // refused login still left a disabled account signed in.
         if ($userFound) {
-            $credentialsValid = Auth::attempt([
-                'email' => $userFound->email,
-                'password' => $credentials['password'],
-            ], $credentials['remember'] ?? false);
+            $credentialsValid = Hash::check($credentials['password'], (string) $userFound->password);
         } else {
             Hash::check($credentials['password'], self::DUMMY_PASSWORD_HASH);
             $credentialsValid = false;
@@ -78,7 +82,9 @@ class LoginController extends Controller
         }
 
         // When the user is authenticated
-        $user = Auth::user();
+        Auth::login($userFound, $credentials['remember'] ?? false);
+
+        $user = $userFound;
 
         event(new UserLoggedInEvent($user->id));
 

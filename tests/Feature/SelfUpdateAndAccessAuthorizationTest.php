@@ -27,7 +27,7 @@ function actingAsRegisteredUser(): User
     // caller isn't it.
     User::factory()->create();
 
-    $user = User::factory()->create(['account_status' => AccountStatus::DISABLED->value]);
+    $user = User::factory()->create();
     $user->assignRole(UserRole::USER->value);
     Sanctum::actingAs($user, ['*']);
 
@@ -42,7 +42,7 @@ it('ignores roles, account status and password on a self update', function () {
         'firstname' => 'Updated',
         'preferences' => ['locale' => 'fr'],
         'roles' => [UserRole::SUPER_ADMIN->value],
-        'account_status' => AccountStatus::ENABLED->value,
+        'account_status' => AccountStatus::DISABLED->value,
         'password' => 'newpassword1',
         'send_credentials_email' => true,
     ])->assertOk();
@@ -52,7 +52,7 @@ it('ignores roles, account status and password on a self update', function () {
     expect($user->firstname)->toBe('Updated')
         ->and($user->preferences['locale'] ?? null)->toBe('fr')
         ->and($user->getRoleNames()->all())->toBe([UserRole::USER->value])
-        ->and($user->account_status)->toBe(AccountStatus::DISABLED->value)
+        ->and($user->account_status)->toBe(AccountStatus::ENABLED->value)
         ->and($user->password)->toBe($passwordHash);
 });
 
