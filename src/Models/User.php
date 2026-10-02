@@ -22,6 +22,7 @@ use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
@@ -154,6 +155,23 @@ class User extends Authenticatable implements Authorizable, CanResetPassword, Ha
     public function sessions(): HasMany
     {
         return $this->hasMany(UserSession::class);
+    }
+
+    /**
+     * Sign the user out everywhere: delete their API tokens and, when
+     * sessions are stored in the database, their web sessions. Sessions
+     * kept by another driver can't be listed per user - they are still
+     * refused by EnsureAccountIsActive once the account is disabled.
+     */
+    public function revokeAllSessions(): void
+    {
+        $this->tokens()->delete();
+
+        if (config('session.driver') === 'database') {
+            DB::table(config('session.table', 'sessions'))
+                ->where('user_id', $this->id)
+                ->delete();
+        }
     }
 
     /**

@@ -16,9 +16,13 @@ class AccountController extends Controller
      */
     public function disableAccount(Request $request): JsonResponse
     {
-        User::where('id', $request->user()->id)->update([
+        $user = User::findOrFail($request->user()->id);
+
+        $user->update([
             'account_status' => AccountStatus::DISABLED->value,
         ]);
+
+        $user->revokeAllSessions();
 
         return $this->sendResponse(
             null,

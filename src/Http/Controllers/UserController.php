@@ -356,6 +356,10 @@ class UserController extends Controller
 
             $user->account_status = $request->input('account_status');
             $user->save();
+
+            if ($user->account_status == AccountStatus::DISABLED->value) {
+                $user->revokeAllSessions();
+            }
         }
 
         if ($request->input('roles') && is_array($request->input('roles'))) {
