@@ -9,6 +9,7 @@ use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Enums\UserRole;
 use Creopse\Creopse\Events\Auth\UserRegisteredEvent;
 use Creopse\Creopse\Helpers\Functions;
+use Creopse\Creopse\Helpers\PasswordPolicy;
 use Creopse\Creopse\Helpers\UsernameGenerator;
 use Creopse\Creopse\Http\Resources\UserResource;
 use Creopse\Creopse\Models\User;
@@ -31,7 +32,7 @@ class InstallController extends Controller
             'lastname' => 'required',
             'firstname' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:8',
+            'password' => ['required', PasswordPolicy::complexity()],
             'preferences' => 'sometimes|array',
         ]);
 

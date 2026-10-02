@@ -162,14 +162,20 @@ class User extends Authenticatable implements Authorizable, CanResetPassword, Ha
      * sessions are stored in the database, their web sessions. Sessions
      * kept by another driver can't be listed per user - they are still
      * refused by EnsureAccountIsActive once the account is disabled.
+     *
+     * The session and token the current request uses can be kept, so a
+     * user changing their own password stays signed in where they are.
      */
-    public function revokeAllSessions(): void
+    public function revokeAllSessions(?string $exceptSessionId = null, ?int $exceptTokenId = null): void
     {
-        $this->tokens()->delete();
+        $this->tokens()
+            ->when($exceptTokenId, fn ($query) => $query->whereKeyNot($exceptTokenId))
+            ->delete();
 
         if (config('session.driver') === 'database') {
             DB::table(config('session.table', 'sessions'))
                 ->where('user_id', $this->id)
+                ->when($exceptSessionId, fn ($query) => $query->where('id', '!=', $exceptSessionId))
                 ->delete();
         }
     }

@@ -90,8 +90,11 @@ try {
 Route::get('/editor-page/s/{slug}', [DynamicPageController::class, 'getEditorPage'])
     ->middleware('auth:admin')->name('editor-page');
 
+// The link in the verification email is signed. Without checking it, the
+// id and sha1(email) in the URL were enough to verify any address - one
+// the caller doesn't own included.
 Route::get('/verify-email/{id}/{hash}', [EmailVerificationController::class, 'verifyManually'])
-    ->middleware('guest')->name('verification.verify');
+    ->middleware(['guest', 'signed'])->name('verification.verify');
 
 Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])
     ->middleware('guest')->name('password.reset');

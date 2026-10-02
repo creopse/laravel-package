@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class PasswordResetController extends Controller
 {
@@ -46,22 +47,17 @@ class PasswordResetController extends Controller
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
-        $status = Password::sendResetLink(
+        Password::sendResetLink(
             $request->only('email')
         );
 
-        if ($status != Password::RESET_LINK_SENT) {
-            return $this->sendResponse(
-                null,
-                ResponseStatusCode::INTERNAL_SERVER_ERROR,
-                __($status)
-            );
-        }
-
+        // The same answer whatever happened: a distinct "we can't find a
+        // user with that email address" error used to tell anyone which
+        // addresses have an account.
         return $this->sendResponse(
             null,
             ResponseStatusCode::OK,
-            __($status)
+            __(Password::RESET_LINK_SENT)
         );
     }
 
@@ -97,6 +93,11 @@ class PasswordResetController extends Controller
                     'password' => Hash::make($request->password),
                     'remember_token' => Str::random(60),
                 ])->save();
+
+                // Whoever had access before the reset - possibly the reason
+                // for it - is signed out. The broker's model is the host
+                // app's, hence the lookup.
+                User::findOrFail($user->getAuthIdentifier())->revokeAllSessions();
 
                 event(new PasswordReset($user));
             }
@@ -152,6 +153,15 @@ class PasswordResetController extends Controller
         $user->password = Hash::make($request->new_password);
         $user->save();
 
+        // Other sessions and tokens used to keep working with the old
+        // password. The ones this request uses are kept.
+        $currentToken = $request->bearerToken() ? PersonalAccessToken::findToken($request->bearerToken()) : null;
+
+        User::findOrFail($user->id)->revokeAllSessions(
+            $request->hasSession() ? $request->session()->getId() : null,
+            $currentToken?->id,
+        );
+
         return $this->sendResponse(
             null,
             ResponseStatusCode::OK,
@@ -205,6 +215,8 @@ class PasswordResetController extends Controller
                 ])->setRememberToken(Str::random(60));
 
                 $user->save();
+
+                $user->revokeAllSessions();
 
                 event(new PasswordReset($user));
             }
