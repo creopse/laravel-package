@@ -6,6 +6,7 @@
 // readable without auth:sanctum. Everything else - including all writes -
 // stays gated.
 
+use Creopse\Creopse\Enums\PermissionList;
 use Creopse\Creopse\Models\AppInformation;
 use Creopse\Creopse\Models\AppSetting;
 use Creopse\Creopse\Models\User;
@@ -53,8 +54,8 @@ it('still requires authentication to update app settings', function () {
     $response->assertStatus(401);
 });
 
-it('lets an authenticated user read the full app settings index, secrets included', function () {
-    Sanctum::actingAs(User::factory()->create(), ['*']);
+it('lets an editor read the full app settings index, secrets included', function () {
+    Sanctum::actingAs(User::factory()->create()->givePermissionTo(PermissionList::MANAGE_CONTENT->value), ['*']);
 
     AppSetting::create(['key' => 'translation.googleTranslate.apiKey', 'value' => 'super-secret']);
 
@@ -63,4 +64,16 @@ it('lets an authenticated user read the full app settings index, secrets include
     $response->assertOk();
     expect(collect($response->json('data'))->pluck('key'))
         ->toContain('translation.googleTranslate.apiKey');
+});
+
+it('hides the translation API keys from an account that does not edit content', function () {
+    Sanctum::actingAs(User::factory()->create(), ['*']);
+
+    AppSetting::create(['key' => 'translation.googleTranslate.apiKey', 'value' => 'super-secret']);
+    AppSetting::create(['key' => 'primaryColor', 'value' => '#000000']);
+
+    $keys = collect($this->getJson('/api/app-settings')->assertOk()->json('data'))->pluck('key');
+
+    expect($keys)->toContain('primaryColor')
+        ->not->toContain('translation.googleTranslate.apiKey');
 });

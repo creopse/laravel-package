@@ -1,5 +1,6 @@
 <?php
 
+use Creopse\Creopse\Enums\PermissionList;
 use Creopse\Creopse\Http\Controllers\AppInformationController;
 use Creopse\Creopse\Http\Controllers\Settings\AppSettingController;
 use Illuminate\Support\Facades\Route;
@@ -30,11 +31,15 @@ Route::middleware('auth:sanctum')->group(function () {
         // App Settings
         Route::get('/', [AppSettingController::class, 'index'])->name('app-settings.index');
 
-        Route::put('/', [AppSettingController::class, 'update'])->name('app-settings.update');
+        Route::put('/', [AppSettingController::class, 'update'])
+            ->middleware('permission:'.PermissionList::MANAGE_APP_SETTINGS->value)
+            ->name('app-settings.update');
     });
 
     Route::prefix('/app-information')->group(function () {
         // App Information
-        Route::put('/', [AppInformationController::class, 'update'])->name('app-information.update');
+        Route::put('/', [AppInformationController::class, 'update'])
+            ->middleware('permission:'.PermissionList::MANAGE_APP_SETTINGS->value)
+            ->name('app-information.update');
     });
 });

@@ -2,10 +2,12 @@
 
 namespace Creopse\Creopse\Http\Controllers\Settings;
 
+use Creopse\Creopse\Enums\PermissionList;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Models\AppSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class AppSettingController extends Controller
@@ -19,9 +21,28 @@ class AppSettingController extends Controller
      */
     private const PUBLIC_KEYS = ['basePath', 'adminProfileTypeLabel', 'displayAdminProfileType', 'allowRegistration'];
 
+    /**
+     * Permissions whose screens use the translation API keys.
+     */
+    private const TRANSLATION_KEY_PERMISSIONS = [
+        PermissionList::MANAGE_APP_SETTINGS->value,
+        PermissionList::MANAGE_CONTENT->value,
+        PermissionList::MANAGE_NEWS->value,
+        PermissionList::CREATE_ARTICLE->value,
+        PermissionList::EDIT_ARTICLE->value,
+    ];
+
     public function index()
     {
-        return $this->sendResponse(AppSetting::all());
+        // The translation API keys are used client-side by the admin's
+        // multilingual inputs, which only content, news and settings
+        // editors see. Any other account - including one self-registered
+        // from a public template - used to get them too.
+        if (Auth::user()->canAny(self::TRANSLATION_KEY_PERMISSIONS)) {
+            return $this->sendResponse(AppSetting::all());
+        }
+
+        return $this->sendResponse(AppSetting::where('key', 'not like', 'translation.%')->get());
     }
 
     public function publicIndex()

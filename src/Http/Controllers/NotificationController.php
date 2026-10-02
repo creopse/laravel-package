@@ -60,9 +60,9 @@ class NotificationController extends Controller
     /**
      * Mark notification as read.
      */
-    public function mark(Notification $notification)
+    public function mark(string $notification)
     {
-        $notification->markAsRead();
+        $this->findOwnNotification($notification)->markAsRead();
 
         return $this->sendResponse(null, ResponseStatusCode::OK, 'Notification marked as read');
     }
@@ -80,10 +80,20 @@ class NotificationController extends Controller
     /**
      * Delete notification.
      */
-    public function destroy(Notification $notification)
+    public function destroy(string $notification)
     {
-        $notification->delete();
+        $this->findOwnNotification($notification)->delete();
 
         return $this->sendResponse(null, ResponseStatusCode::OK, 'Notification deleted successfully');
+    }
+
+    /**
+     * Notifications used to be resolved by id alone, so any account could
+     * mark as read or delete someone else's. Only the caller's own are
+     * found now; anyone else's is a 404, like an unknown id.
+     */
+    private function findOwnNotification(string $id): Notification
+    {
+        return Notification::whereMorphedTo('notifiable', Auth::user())->findOrFail($id);
     }
 }
