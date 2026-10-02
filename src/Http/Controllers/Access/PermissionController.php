@@ -8,10 +8,13 @@ use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Requests\Access\PermissionRequest;
 use Creopse\Creopse\Models\Permission;
 use Creopse\Creopse\Models\User;
+use Creopse\Creopse\Traits\AuthorizesOwnUserData;
 use Illuminate\Support\Facades\Auth;
 
 class PermissionController extends Controller
 {
+    use AuthorizesOwnUserData;
+
     /**
      * Display a listing of the resource.
      */
@@ -26,6 +29,10 @@ class PermissionController extends Controller
     public function indexUser(?User $user = null)
     {
         $user = $user ?? Auth::user();
+
+        if ($unauthorized = $this->rejectUnlessOwnedOrPermitted($user->id)) {
+            return $unauthorized;
+        }
 
         return $this->sendResponse($user->permissions()->get());
     }
