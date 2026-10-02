@@ -4,6 +4,7 @@
 // intentionally accepts any file type, so the only thing enforced here is a
 // configurable size ceiling.
 
+use Creopse\Creopse\Enums\PermissionList;
 use Creopse\Creopse\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -12,7 +13,7 @@ use Laravel\Sanctum\Sanctum;
 it('accepts an upload within the configured size limit', function () {
     Storage::fake('public');
     config(['creopse.uploads.max_size' => 100]);
-    Sanctum::actingAs(User::factory()->create(), ['*']);
+    Sanctum::actingAs(User::factory()->create()->givePermissionTo(PermissionList::UPLOAD_MEDIA->value), ['*']);
 
     $response = $this->postJson('/api/media-files/upload', [
         'file' => UploadedFile::fake()->create('report.pdf', 50, 'application/pdf'),
@@ -24,7 +25,7 @@ it('accepts an upload within the configured size limit', function () {
 it('rejects an upload exceeding the configured size limit', function () {
     Storage::fake('public');
     config(['creopse.uploads.max_size' => 10]);
-    Sanctum::actingAs(User::factory()->create(), ['*']);
+    Sanctum::actingAs(User::factory()->create()->givePermissionTo(PermissionList::UPLOAD_MEDIA->value), ['*']);
 
     $response = $this->postJson('/api/media-files/upload', [
         'file' => UploadedFile::fake()->create('report.pdf', 50, 'application/pdf'),

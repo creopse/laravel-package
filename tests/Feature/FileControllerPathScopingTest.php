@@ -7,6 +7,7 @@
 // now blocks all of that, and upload() gives every new generic file its own
 // unguessable 'generic/{uuid}' folder instead of the shared 'uploads' one.
 
+use Creopse\Creopse\Enums\PermissionList;
 use Creopse\Creopse\Models\MediaFile;
 use Creopse\Creopse\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -15,7 +16,9 @@ use Laravel\Sanctum\Sanctum;
 
 beforeEach(function () {
     Storage::fake('public');
-    Sanctum::actingAs(User::factory()->create(), ['*']);
+    $user = User::factory()->create();
+    $user->givePermissionTo(PermissionList::UPLOAD_MEDIA->value, PermissionList::DELETE_MEDIA->value);
+    Sanctum::actingAs($user, ['*']);
 });
 
 it('stores each generic upload under its own unguessable folder', function () {

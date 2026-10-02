@@ -6,6 +6,7 @@ use Creopse\Creopse\Enums\MediaFileType;
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Models\MediaFile;
+use Creopse\Creopse\Rules\SafeUpload;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -22,7 +23,7 @@ class FileController extends Controller
     {
         // Validate incoming request data
         $validator = Validator::make($request->all(), [
-            'file' => ['required', 'file', 'max:'.config('creopse.uploads.max_size')],
+            'file' => ['required', 'file', 'max:'.config('creopse.uploads.max_size'), new SafeUpload],
         ]);
 
         // If data not valid return error
@@ -97,7 +98,7 @@ class FileController extends Controller
         // Validate incoming request data
         $validator = Validator::make($request->all(), [
             'current_path' => 'required|string',
-            'file' => ['required', 'file', 'max:'.config('creopse.uploads.max_size')],
+            'file' => ['required', 'file', 'max:'.config('creopse.uploads.max_size'), new SafeUpload],
         ]);
 
         // If data not valid return error
