@@ -115,6 +115,26 @@ it('lets a viewer read roles and permissions but not change them', function () {
     $this->deleteJson("/api/roles/{$role->id}")->assertStatus(403);
 });
 
+it('lets user managers read roles but not change them', function (PermissionList $permission) {
+    $user = actingAsRegisteredUser();
+    $user->givePermissionTo($permission->value);
+    $role = Role::where('name', UserRole::USER->value)->first();
+
+    $this->getJson('/api/roles')->assertOk();
+    $this->getJson("/api/roles/{$role->id}")->assertOk();
+    $this->putJson("/api/roles/{$role->id}", [
+        'name' => $role->name,
+        'display_name' => 'x',
+        'description' => 'x',
+        'guard_name' => $role->guard_name,
+    ])->assertStatus(403);
+    $this->getJson('/api/permissions')->assertStatus(403);
+})->with([
+    'view-users' => PermissionList::VIEW_USERS,
+    'create-user' => PermissionList::CREATE_USER,
+    'edit-user' => PermissionList::EDIT_USER,
+]);
+
 it('lets a role manager edit a role', function () {
     $user = actingAsRegisteredUser();
     $user->givePermissionTo(PermissionList::MANAGE_ROLES->value);
