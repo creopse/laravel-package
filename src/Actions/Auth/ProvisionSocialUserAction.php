@@ -2,9 +2,12 @@
 
 namespace Creopse\Creopse\Actions\Auth;
 
+use Creopse\Creopse\Enums\AccessGuard;
 use Creopse\Creopse\Enums\AccountStatus;
 use Creopse\Creopse\Enums\UserRole;
+use Creopse\Creopse\Models\AppSetting;
 use Creopse\Creopse\Models\User;
+use Illuminate\Http\Request;
 
 /**
  * The two account-provisioning decisions shared by every registration path
@@ -14,6 +17,39 @@ use Creopse\Creopse\Models\User;
  */
 class ProvisionSocialUserAction
 {
+    /**
+     * Setting that opens sign-up from the admin panel (requests made with
+     * the admin guard).
+     */
+    public const ADMIN_REGISTRATION_SETTING = 'allowRegistration';
+
+    /**
+     * Setting that opens sign-up from a site built on a template, or any
+     * other client: every request not made with the admin guard, including
+     * Google, Apple and phone sign-up.
+     */
+    public const SITE_REGISTRATION_SETTING = 'allowSiteRegistration';
+
+    /**
+     * Whether this request may create a new account. Both settings are
+     * closed by default, and used to be enforced only by the admin
+     * frontend hiding its sign-up form - the API accepted any registration.
+     * The very first account can always be created, since that is how the
+     * platform gets its super-admin. Call this BEFORE creating the user.
+     */
+    public static function registrationIsOpen(Request $request): bool
+    {
+        if (! User::query()->exists()) {
+            return true;
+        }
+
+        $setting = $request->input('guard') === AccessGuard::ADMIN->value
+            ? self::ADMIN_REGISTRATION_SETTING
+            : self::SITE_REGISTRATION_SETTING;
+
+        return in_array(AppSetting::where('key', $setting)->value('value'), ['1', 'true'], true);
+    }
+
     /**
      * account_status is always computed server-side, never taken from
      * client input: disabled by default once at least one account already

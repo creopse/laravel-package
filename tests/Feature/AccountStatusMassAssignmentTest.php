@@ -8,10 +8,12 @@
 // taken from the request.
 
 use Creopse\Creopse\Enums\AccountStatus;
+use Creopse\Creopse\Models\AppSetting;
 use Creopse\Creopse\Models\User;
 
 it('ignores a client-supplied account_status on registration once other users already exist', function () {
     User::factory()->create();
+    AppSetting::updateOrCreate(['key' => 'allowSiteRegistration'], ['value' => '1']);
 
     $this->postJson('/api/auth/register', [
         'firstname' => 'New',
@@ -28,6 +30,7 @@ it('ignores a client-supplied account_status on registration once other users al
 
 it('ignores a client-supplied account_status on phone registration once other users already exist', function () {
     User::factory()->create();
+    AppSetting::updateOrCreate(['key' => 'allowSiteRegistration'], ['value' => '1']);
 
     $this->postJson('/api/auth/phone', [
         'phone' => '+15005550001',
