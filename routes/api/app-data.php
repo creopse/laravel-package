@@ -38,8 +38,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('/app-information')->group(function () {
         // App Information
+        // Edited from the admin's Content screen, not from App Settings.
         Route::put('/', [AppInformationController::class, 'update'])
-            ->middleware('permission:'.PermissionList::MANAGE_APP_SETTINGS->value)
+            ->middleware('permission:'.PermissionList::MANAGE_CONTENT->value)
             ->name('app-information.update');
     });
 });

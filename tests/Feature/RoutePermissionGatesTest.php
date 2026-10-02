@@ -73,6 +73,7 @@ it('lets the matching permission through', function (PermissionList $permission,
     expect($this->json($method, $uri)->status())->not->toBe(403);
 })->with([
     'settings' => [PermissionList::MANAGE_APP_SETTINGS, 'put', '/api/app-settings'],
+    'app information' => [PermissionList::MANAGE_CONTENT, 'put', '/api/app-information'],
     'email' => [PermissionList::MANAGE_CONTENT, 'post', '/api/email'],
     'sms' => [PermissionList::MANAGE_CONTENT, 'post', '/api/sms'],
     'media list' => [PermissionList::VIEW_MEDIA, 'get', '/api/media-files'],
@@ -122,4 +123,10 @@ it('only lets a user mark as read or delete their own notifications', function (
 
     expect($user->notifications()->count())->toBe(0)
         ->and(User::find(User::max('id'))->notifications()->whereNull('read_at')->count())->toBe(1);
+});
+
+it('keeps app information and app settings under separate permissions', function () {
+    actingAsAccountWith(PermissionList::MANAGE_APP_SETTINGS);
+
+    $this->putJson('/api/app-information')->assertStatus(403);
 });
