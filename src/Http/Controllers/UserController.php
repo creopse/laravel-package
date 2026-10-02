@@ -28,6 +28,19 @@ use Inertia\Response;
 class UserController extends Controller
 {
     /**
+     * Fields a user may change on their own record through updateSelf().
+     */
+    private const SELF_EDITABLE_FIELDS = [
+        'avatar',
+        'firstname',
+        'lastname',
+        'phone',
+        'address',
+        'location',
+        'preferences',
+    ];
+
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
@@ -307,15 +320,26 @@ class UserController extends Controller
     {
         $authUser = Auth::user();
 
-        if ($authUser->id === $user->id) {
-            return $this->update($request, $user);
-        } else {
+        if ($authUser->id !== $user->id) {
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::FORBIDDEN,
                 'You cannot update another user\'s data',
             );
         }
+
+        // This used to delegate to update(), the admin-only endpoint, which
+        // also applies roles/account_status/password: any account could
+        // grant itself super-admin or activate its own pending account.
+        // Only plain profile fields are self-editable; email, username and
+        // password have their own /auth endpoints with their own checks.
+        $user->update($request->only(self::SELF_EDITABLE_FIELDS));
+
+        return $this->sendResponse(
+            new UserResource($user->load(['profile', 'roles', 'permissions'])),
+            ResponseStatusCode::OK,
+            'User updated successfully'
+        );
     }
 
     /**
