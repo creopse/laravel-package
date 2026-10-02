@@ -22,8 +22,16 @@ Route::middleware('auth:sanctum')->group(function () {
     // including one self-registered from a public template - could edit
     // its own role's permissions and grant itself full access. Gated the
     // same way the admin frontend gates its Roles/Permissions screens
-    // (creopse.admin/src/router/store.ts).
-    Route::middleware(['permission:'.PermissionList::VIEW_ROLES->value.'|'.PermissionList::MANAGE_ROLES->value])
+    // (creopse.admin/src/router/store.ts). Reading roles is also open to
+    // user managers: the Users screen lists them to filter users and to pick
+    // the roles of a user being created or edited.
+    Route::middleware(['permission:'.implode('|', [
+        PermissionList::VIEW_ROLES->value,
+        PermissionList::MANAGE_ROLES->value,
+        PermissionList::VIEW_USERS->value,
+        PermissionList::CREATE_USER->value,
+        PermissionList::EDIT_USER->value,
+    ])])
         ->apiResource('roles', RoleController::class)->only(['index', 'show']);
     Route::middleware(['permission:'.PermissionList::MANAGE_ROLES->value])
         ->apiResource('roles', RoleController::class)->only(['store', 'update', 'destroy']);
