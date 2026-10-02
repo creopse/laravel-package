@@ -15,6 +15,7 @@ enum ResponseErrorCode: string
     // AUTH ERROR CODES
     case AUTH_LOGIN_FAILED = 'auth/login_failed';
     case AUTH_REGISTRATION_FAILED = 'auth/registration_failed';
+    case AUTH_REGISTRATION_DISABLED = 'auth/registration_disabled';
     case AUTH_MISSING_DATA = 'auth/missing_data';
     case AUTH_WRONG_PASSWORD = 'auth/wrong_password';
     case AUTH_INVALID_CREDENTIALS = 'auth/invalid_credentials';

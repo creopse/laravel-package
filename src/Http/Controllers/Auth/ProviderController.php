@@ -131,6 +131,15 @@ class ProviderController extends Controller
 
                 return $this->loginUser($request, $userFound, false);
             } else {
+                if (! ProvisionSocialUserAction::registrationIsOpen($request)) {
+                    return $this->sendResponse(
+                        null,
+                        ResponseStatusCode::FORBIDDEN,
+                        'Registration disabled',
+                        ResponseErrorCode::AUTH_REGISTRATION_DISABLED
+                    );
+                }
+
                 $user = User::create([
                     'username' => UsernameGenerator::generate($payload['given_name'] ?? $payload['name'] ?? '', $payload['family_name'] ?? ''),
                     'firstname' => $payload['given_name'] ?? $payload['name'] ?? '',
@@ -335,6 +344,15 @@ class ProviderController extends Controller
             return $this->loginUser($request, $user, false);
         }
 
+        if (! ProvisionSocialUserAction::registrationIsOpen($request)) {
+            return $this->sendResponse(
+                null,
+                ResponseStatusCode::FORBIDDEN,
+                'Registration disabled',
+                ResponseErrorCode::AUTH_REGISTRATION_DISABLED
+            );
+        }
+
         $username = explode('@', $email)[0];
         $firstname = null;
         $lastname = null;
@@ -417,6 +435,14 @@ class ProviderController extends Controller
         $userDoesntExist = User::wherePhone($phone)->doesntExist();
 
         if ($userDoesntExist && $request->input('allow_registration')) {
+            if (! ProvisionSocialUserAction::registrationIsOpen($request)) {
+                return $this->sendResponse(
+                    null,
+                    ResponseStatusCode::FORBIDDEN,
+                    'Registration disabled',
+                    ResponseErrorCode::AUTH_REGISTRATION_DISABLED
+                );
+            }
 
             $user = User::create([
                 'username' => UsernameGenerator::generate($request->input('firstname'), $request->input('lastname')),

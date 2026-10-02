@@ -43,6 +43,15 @@ class RegistrationController extends Controller
     {
         $validated = $request->validated();
 
+        if (! ProvisionSocialUserAction::registrationIsOpen($request)) {
+            return $this->sendResponse(
+                null,
+                ResponseStatusCode::FORBIDDEN,
+                'Registration disabled',
+                ResponseErrorCode::AUTH_REGISTRATION_DISABLED
+            );
+        }
+
         if ($request->has('guard')) {
             Auth::shouldUse($request->input('guard'));
         }
