@@ -14,8 +14,8 @@ use Creopse\Creopse\Helpers\Functions;
 use Creopse\Creopse\Helpers\UsernameGenerator;
 use Creopse\Creopse\Http\Controllers\Controller;
 use Creopse\Creopse\Http\Resources\UserResource;
-use Creopse\Creopse\Models\AppInformation;
 use Creopse\Creopse\Models\User;
+use Creopse\Creopse\Services\PhoneVerification\PhoneVerifierResolver;
 use Creopse\Creopse\Traits\DetectsMobileRequest;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -32,7 +32,6 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use phpseclib3\Crypt\RSA;
 use phpseclib3\Math\BigInteger;
-use Twilio\Rest\Client as TwilioClient;
 
 class ProviderController extends Controller
 {
@@ -94,31 +93,6 @@ class ProviderController extends Controller
             'Authentication method disabled',
             ResponseErrorCode::AUTH_METHOD_DISABLED
         );
-    }
-
-    /**
-     * The SMS provider phone authentication uses, or null when none is
-     * configured. Picked by the server (config creopse.phone_auth_provider,
-     * else the first configured one): it used to come from the client,
-     * which could switch to a provider the install doesn't use.
-     */
-    private function phoneProvider(): ?string
-    {
-        $configured = [
-            'twilio' => filled(config('services.twilio.sid'))
-                && filled(config('services.twilio.token'))
-                && filled(config('services.twilio.service')),
-            'wassa_sms' => filled(config('services.wassa_sms.token'))
-                && filled(config('services.wassa_sms.endpoint')),
-        ];
-
-        $preferred = config('creopse.phone_auth_provider');
-
-        if (filled($preferred)) {
-            return ($configured[$preferred] ?? false) ? $preferred : null;
-        }
-
-        return array_key_first(array_filter($configured));
     }
 
     /**
@@ -472,16 +446,14 @@ class ProviderController extends Controller
      *
      * @throws ValidationException
      */
-    public function authWithPhone(Request $request): JsonResponse
+    public function authWithPhone(Request $request, PhoneVerifierResolver $resolver): JsonResponse
     {
-        $provider = $this->phoneProvider();
+        // Picked by the server, never by the client.
+        $verifier = $resolver->resolve();
 
-        if ($provider === null) {
+        if ($verifier === null) {
             return $this->methodDisabled();
         }
-
-        $twilioConfig = config('services.twilio');
-        $wassaSmsConfig = config('services.wassa_sms');
 
         // Validate incoming request data
         $validator = Validator::make($request->all(), [
@@ -543,43 +515,10 @@ class ProviderController extends Controller
             RateLimiter::clear($this->phoneVerificationKey($phone));
 
             try {
-                if ($provider === 'wassa_sms') {
-                    // Only Wassa SMS needs a code of our own: Twilio Verify
-                    // generates and checks its own.
-                    $verificationCode = random_int(100000, 999999);
-
-                    $user->verification_code = (string) $verificationCode;
-                    $user->verification_code_expires_at = now()->addMinutes(10);
-                    $user->save();
-
-                    $appNameItem = AppInformation::where('key', 'name')->first();
-                    $appName = $appNameItem ? $appNameItem->value : config('app.name');
-
-                    $client = new Client;
-                    $client->get(
-                        $wassaSmsConfig['endpoint'],
-                        [
-                            'timeout' => 10,
-                            'query' => [
-                                'access-token' => $wassaSmsConfig['token'],
-                                'sender' => $appName,
-                                'receiver' => str_replace('+', '', $phone),
-                                'text' => __('creopse::auth.verification_code', ['code' => $verificationCode]),
-                                'dlr_url' => '',
-                            ],
-                        ]
-                    );
-                } else {
-                    $twilio = new TwilioClient($twilioConfig['sid'], $twilioConfig['token']);
-
-                    $twilio->verify->v2->services($twilioConfig['service'])
-                        ->verifications
-                        ->create($phone, 'sms');
-                }
+                $verifier->send($phone);
             } catch (\Exception $e) {
-                // The exception used to be returned to the client, and a
-                // failed Wassa SMS request carries its URL - access token
-                // included - in the message.
+                // Logged, never returned: provider errors can carry request
+                // details and credentials.
                 Log::error('Phone verification code sending failed: '.$e->getMessage());
 
                 return $this->sendResponse(
@@ -610,15 +549,13 @@ class ProviderController extends Controller
      *
      * @throws ValidationException
      */
-    public function verifyPhoneAuth(Request $request): JsonResponse
+    public function verifyPhoneAuth(Request $request, PhoneVerifierResolver $resolver): JsonResponse
     {
-        $provider = $this->phoneProvider();
+        $verifier = $resolver->resolve();
 
-        if ($provider === null) {
+        if ($verifier === null) {
             return $this->methodDisabled();
         }
-
-        $twilioConfig = config('services.twilio');
 
         // Validate incoming request data
         $validator = Validator::make($request->all(), [
@@ -653,15 +590,12 @@ class ProviderController extends Controller
             );
         }
 
-        // The route throttle is per IP: without a per-number limit, the
-        // 900,000 possible codes could be tried from many addresses. After
-        // 5 wrong codes the current one is discarded and a new one must be
-        // requested.
+        // The route throttle is per IP: without a per-number limit, codes
+        // could be guessed from many addresses. After 5 wrong codes a new
+        // one must be requested, whatever the provider's own limits.
         $attemptsKey = $this->phoneVerificationKey($phone);
 
         if (RateLimiter::tooManyAttempts($attemptsKey, 5)) {
-            $user->forceFill(['verification_code' => null, 'verification_code_expires_at' => null])->save();
-
             return $this->sendResponse(
                 null,
                 ResponseStatusCode::UNPROCESSABLE_ENTITY,
@@ -671,26 +605,7 @@ class ProviderController extends Controller
         }
 
         try {
-            if ($provider === 'wassa_sms') {
-                $codeExpired = $user->verification_code_expires_at === null
-                    || $user->verification_code_expires_at->isPast();
-
-                $codeValid = ! $codeExpired
-                    && hash_equals((string) $user->verification_code, (string) $request->input('code'));
-            } else {
-                $twilio = new TwilioClient($twilioConfig['sid'], $twilioConfig['token']);
-
-                $verification_check = $twilio->verify->v2->services($twilioConfig['service'])
-                    ->verificationChecks
-                    ->create(
-                        [
-                            'to' => $phone,
-                            'code' => $request->input('code'),
-                        ]
-                    );
-
-                $codeValid = $verification_check->status == 'approved';
-            }
+            $codeValid = $verifier->check($phone, (string) $request->input('code'));
         } catch (\Exception $e) {
             Log::error('Phone verification code check failed: '.$e->getMessage());
 
@@ -708,9 +623,7 @@ class ProviderController extends Controller
             );
         }
 
-        // A code works once: it used to stay valid until it expired.
         RateLimiter::clear($attemptsKey);
-        $user->forceFill(['verification_code' => null, 'verification_code_expires_at' => null])->save();
 
         if ($user->account_status !== AccountStatus::DISABLED->value) {
 

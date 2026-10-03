@@ -46,9 +46,4 @@ return [
         'token' => env('TWILIO_TOKEN'),
         'service' => env('TWILIO_SERVICE'),
     ],
-
-    'wassa_sms' => [
-        'token' => env('WASSA_SMS_TOKEN'),
-        'endpoint' => env('WASSA_SMS_ENDPOINT'),
-    ],
 ];

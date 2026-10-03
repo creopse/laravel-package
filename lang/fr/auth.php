@@ -18,5 +18,4 @@ return [
     'password_reset' => 'Réinitialisation du mot de passe',
     'reset_password' => 'Réinitialiser le mot de passe',
     'throttle' => 'Tentatives de connexion trop nombreuses. Veuillez essayer de nouveau dans :seconds secondes.',
-    'verification_code' => 'Votre code de verification est :code',
 ];

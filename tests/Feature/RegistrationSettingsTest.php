@@ -15,6 +15,7 @@
 use Creopse\Creopse\Enums\ResponseErrorCode;
 use Creopse\Creopse\Models\AppSetting;
 use Creopse\Creopse\Models\User;
+use Creopse\Creopse\Tests\Support\FakePhoneVerifier;
 
 function openRegistration(string $setting): void
 {
@@ -73,8 +74,7 @@ it('keeps the admin and site settings independent', function () {
 
 it('refuses phone sign-up unless allowSiteRegistration is on', function () {
     User::factory()->create();
-    // An unreachable endpoint: sending fails, after the account is created.
-    config(['services.wassa_sms.token' => 'test-token', 'services.wassa_sms.endpoint' => 'http://127.0.0.1:1']);
+    FakePhoneVerifier::install();
 
     $this->postJson('/api/auth/phone', [
         'phone' => '+22990000000',

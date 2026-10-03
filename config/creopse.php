@@ -143,11 +143,12 @@ return [
     | Phone Authentication Provider
     |--------------------------------------------------------------------------
     |
-    | The SMS provider used by /auth/phone: 'twilio' or 'wassa_sms', whose
-    | credentials live in config/services.php. When left empty, the first
-    | configured one is used, Twilio first. Phone authentication answers
-    | only once a provider is configured - like Google and Apple sign-in,
-    | which need GOOGLE_CLIENT_ID and APPLE_CLIENT_ID.
+    | The SMS provider used by /auth/phone, among those PhoneVerifierResolver
+    | knows - currently 'twilio', whose credentials live in
+    | config/services.php. When left empty, the first configured one is
+    | used. Phone authentication answers only once a provider is configured
+    | - like Google and Apple sign-in, which need GOOGLE_CLIENT_ID and
+    | APPLE_CLIENT_ID.
     |
     | Default: null (first configured provider)
     |
