@@ -24,6 +24,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
@@ -101,6 +102,15 @@ class ProviderController extends Controller
     private function phoneVerificationKey(string $phone): string
     {
         return 'phone-verification:'.sha1($phone);
+    }
+
+    /**
+     * Cache key for the sign-up data of a phone number waiting for its
+     * code to be checked.
+     */
+    private function phoneRegistrationKey(string $phone): string
+    {
+        return 'phone-registration:'.sha1($phone);
     }
 
     /**
@@ -478,69 +488,51 @@ class ProviderController extends Controller
 
         $phone = str_replace(' ', '', $request->input('phone'));
 
-        $userDoesntExist = User::wherePhone($phone)->doesntExist();
+        // The account is only created once the code is checked, and the
+        // answer is the same whether the number has an account or not:
+        // creating it here let anyone take someone else's number, and a 404
+        // told whether a number was registered.
+        $userExists = User::wherePhone($phone)->exists();
 
-        if ($userDoesntExist && $request->input('allow_registration')) {
-            if (! ProvisionSocialUserAction::registrationIsOpen($request)) {
-                return $this->sendResponse(
-                    null,
-                    ResponseStatusCode::FORBIDDEN,
-                    'Registration disabled',
-                    ResponseErrorCode::AUTH_REGISTRATION_DISABLED
-                );
+        if (! $userExists) {
+            if (! $request->input('allow_registration') || ! ProvisionSocialUserAction::registrationIsOpen($request)) {
+                return $this->phoneCodeSent();
             }
 
-            $user = User::create([
-                'username' => UsernameGenerator::generate($request->input('firstname'), $request->input('lastname')),
+            Cache::put($this->phoneRegistrationKey($phone), [
                 'firstname' => $request->input('firstname'),
                 'lastname' => $request->input('lastname'),
-                'email' => null,
-                'phone' => $phone,
-                'password' => Hash::make(Str::password(8, true, true, false)),
-                'uid' => Functions::generateUid(),
-                'account_status' => ProvisionSocialUserAction::defaultAccountStatus(),
-                'auth_type' => AuthType::PHONE->value,
                 'preferences' => $request->input('preferences'),
-            ]);
-
-            ProvisionSocialUserAction::assignInitialRole($user);
-
-            event(new UserRegisteredEvent($user->id));
+            ], now()->addMinutes(10));
         }
 
-        $user = User::wherePhone($phone)->first();
+        // A new code gets a fresh set of attempts.
+        RateLimiter::clear($this->phoneVerificationKey($phone));
 
-        if ($user) {
-            // A new code gets a fresh set of attempts.
-            RateLimiter::clear($this->phoneVerificationKey($phone));
-
-            try {
-                $verifier->send($phone);
-            } catch (\Exception $e) {
-                // Logged, never returned: provider errors can carry request
-                // details and credentials.
-                Log::error('Phone verification code sending failed: '.$e->getMessage());
-
-                return $this->sendResponse(
-                    null,
-                    ResponseStatusCode::INTERNAL_SERVER_ERROR,
-                    'Code sending failed',
-                    ResponseErrorCode::AUTH_CODE_SENDING_FAILED
-                );
-            }
+        try {
+            $verifier->send($phone);
+        } catch (\Exception $e) {
+            // Logged, never returned: provider errors can carry request
+            // details and credentials.
+            Log::error('Phone verification code sending failed: '.$e->getMessage());
 
             return $this->sendResponse(
                 null,
-                ResponseStatusCode::OK,
-                'Verification code sent'
+                ResponseStatusCode::INTERNAL_SERVER_ERROR,
+                'Code sending failed',
+                ResponseErrorCode::AUTH_CODE_SENDING_FAILED
             );
         }
 
+        return $this->phoneCodeSent();
+    }
+
+    private function phoneCodeSent(): JsonResponse
+    {
         return $this->sendResponse(
             null,
-            ResponseStatusCode::NOT_FOUND,
-            'User not found',
-            ResponseErrorCode::AUTH_USER_NOT_FOUND
+            ResponseStatusCode::OK,
+            'Verification code sent'
         );
     }
 
@@ -580,15 +572,7 @@ class ProviderController extends Controller
         $phone = str_replace(' ', '', $request->input('phone'));
 
         $user = User::wherePhone($phone)->first();
-
-        if (! $user) {
-            return $this->sendResponse(
-                null,
-                ResponseStatusCode::NOT_FOUND,
-                'User not found',
-                ResponseErrorCode::AUTH_USER_NOT_FOUND
-            );
-        }
+        $registration = $user ? null : Cache::get($this->phoneRegistrationKey($phone));
 
         // The route throttle is per IP: without a per-number limit, codes
         // could be guessed from many addresses. After 5 wrong codes a new
@@ -604,12 +588,16 @@ class ProviderController extends Controller
             );
         }
 
-        try {
-            $codeValid = $verifier->check($phone, (string) $request->input('code'));
-        } catch (\Exception $e) {
-            Log::error('Phone verification code check failed: '.$e->getMessage());
+        // A number with no account and no pending sign-up never got a code:
+        // it fails like a wrong code, without asking the provider.
+        $codeValid = false;
 
-            $codeValid = false;
+        if ($user || $registration) {
+            try {
+                $codeValid = $verifier->check($phone, (string) $request->input('code'));
+            } catch (\Exception $e) {
+                Log::error('Phone verification code check failed: '.$e->getMessage());
+            }
         }
 
         if (! $codeValid) {
@@ -624,6 +612,41 @@ class ProviderController extends Controller
         }
 
         RateLimiter::clear($attemptsKey);
+
+        if (! $user) {
+            Cache::forget($this->phoneRegistrationKey($phone));
+
+            // Settings may have changed since the code was sent.
+            if (! ProvisionSocialUserAction::registrationIsOpen($request)) {
+                return $this->sendResponse(
+                    null,
+                    ResponseStatusCode::FORBIDDEN,
+                    'Registration disabled',
+                    ResponseErrorCode::AUTH_REGISTRATION_DISABLED
+                );
+            }
+
+            $user = User::create([
+                'username' => UsernameGenerator::generate($registration['firstname'], $registration['lastname']),
+                'firstname' => $registration['firstname'],
+                'lastname' => $registration['lastname'],
+                'email' => null,
+                'phone' => $phone,
+                'password' => Hash::make(Str::password(8, true, true, false)),
+                'uid' => Functions::generateUid(),
+                'account_status' => ProvisionSocialUserAction::defaultAccountStatus(),
+                'auth_type' => AuthType::PHONE->value,
+                'preferences' => $registration['preferences'],
+            ]);
+
+            ProvisionSocialUserAction::assignInitialRole($user);
+
+            if ($user->account_status !== AccountStatus::DISABLED->value) {
+                return $this->loginUser($request, $user, true);
+            }
+
+            event(new UserRegisteredEvent($user->id));
+        }
 
         if ($user->account_status !== AccountStatus::DISABLED->value) {
 
