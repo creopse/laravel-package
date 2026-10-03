@@ -30,7 +30,7 @@ it('still requires authentication to update app information', function () {
 it('exposes only the allowlisted app settings without authentication', function () {
     AppSetting::create(['key' => 'appearance.colors.primary', 'value' => '#000000']);
     AppSetting::create(['key' => 'basePath', 'value' => 'creopse']);
-    AppSetting::create(['key' => 'allowRegistration', 'value' => '1']);
+    AppSetting::create(['key' => 'allowAdminRegistration', 'value' => '1']);
     AppSetting::create(['key' => 'translation.googleTranslate.apiKey', 'value' => 'super-secret']);
 
     $response = $this->getJson('/api/app-settings/public');
@@ -38,7 +38,7 @@ it('exposes only the allowlisted app settings without authentication', function 
     $response->assertOk();
     $keys = collect($response->json('data'))->pluck('key');
 
-    expect($keys)->toContain('appearance.colors.primary', 'basePath', 'allowRegistration')
+    expect($keys)->toContain('appearance.colors.primary', 'basePath', 'allowAdminRegistration')
         ->and($keys)->not->toContain('translation.googleTranslate.apiKey');
 });
 

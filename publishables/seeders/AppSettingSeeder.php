@@ -20,7 +20,13 @@ class AppSettingSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'key' => 'allowRegistration',
+                'key' => 'allowAdminRegistration',
+                'value' => '0',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'key' => 'allowSiteRegistration',
                 'value' => '0',
                 'created_at' => now(),
                 'updated_at' => now(),
