@@ -1,11 +1,11 @@
 <?php
 
-// allowRegistration was only enforced by the admin frontend hiding its
+// allowAdminRegistration was only enforced by the admin frontend hiding its
 // sign-up form: the API created accounts for anyone, through /auth/register
 // as well as Google, Apple and phone sign-up. Sign-up is now checked server
 // side against two settings, both closed by default:
 //
-// - allowRegistration for the admin panel (requests made with guard=admin);
+// - allowAdminRegistration for the admin panel (requests made with guard=admin);
 // - allowSiteRegistration for sites built on a template and any other
 //   client (every other request).
 //
@@ -36,14 +36,14 @@ it('always lets the very first account register', function () {
     $this->postJson('/api/auth/register', registrationPayload(['guard' => 'admin']))->assertCreated();
 });
 
-it('refuses sign-up from the admin panel unless allowRegistration is on', function () {
+it('refuses sign-up from the admin panel unless allowAdminRegistration is on', function () {
     User::factory()->create();
 
     $this->postJson('/api/auth/register', registrationPayload(['guard' => 'admin']))
         ->assertStatus(403)
         ->assertJson(['errorCode' => ResponseErrorCode::AUTH_REGISTRATION_DISABLED->value]);
 
-    openRegistration('allowRegistration');
+    openRegistration('allowAdminRegistration');
 
     $this->postJson('/api/auth/register', registrationPayload(['guard' => 'admin']))->assertCreated();
 });
@@ -63,10 +63,10 @@ it('refuses sign-up from a site unless allowSiteRegistration is on', function ()
 it('keeps the admin and site settings independent', function () {
     User::factory()->create();
 
-    openRegistration('allowRegistration');
+    openRegistration('allowAdminRegistration');
     $this->postJson('/api/auth/register', registrationPayload(['guard' => 'web']))->assertStatus(403);
 
-    AppSetting::where('key', 'allowRegistration')->update(['value' => '0']);
+    AppSetting::where('key', 'allowAdminRegistration')->update(['value' => '0']);
     openRegistration('allowSiteRegistration');
     $this->postJson('/api/auth/register', registrationPayload(['guard' => 'admin']))->assertStatus(403);
 });
@@ -90,4 +90,15 @@ it('exposes both settings to pre-auth screens', function () {
     $keys = collect($this->getJson('/api/app-settings/public')->assertOk()->json('data'))->pluck('key');
 
     expect($keys)->toContain('allowSiteRegistration');
+});
+
+it('renames allowRegistration to allowAdminRegistration on existing installs, keeping its value', function () {
+    AppSetting::where('key', 'allowAdminRegistration')->delete();
+    AppSetting::create(['key' => 'allowRegistration', 'value' => '1']);
+
+    $migration = require __DIR__.'/../../database/migrations/2026_10_03_000001_rename_allow_registration_setting.php';
+    $migration->up();
+
+    expect(AppSetting::where('key', 'allowRegistration')->exists())->toBeFalse()
+        ->and(AppSetting::where('key', 'allowAdminRegistration')->value('value'))->toBe('1');
 });

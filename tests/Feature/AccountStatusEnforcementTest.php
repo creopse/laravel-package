@@ -96,7 +96,7 @@ it('signs in the account matching the username when it has no email', function (
 
 it('gives a pending registration a token limited to onboarding', function () {
     User::factory()->create();
-    AppSetting::updateOrCreate(['key' => 'allowRegistration'], ['value' => '1']);
+    AppSetting::updateOrCreate(['key' => 'allowAdminRegistration'], ['value' => '1']);
 
     $response = $this->postJson('/api/auth/register', [
         'firstname' => 'New',

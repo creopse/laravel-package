@@ -21,7 +21,7 @@ class ProvisionSocialUserAction
      * Setting that opens sign-up from the admin panel (requests made with
      * the admin guard).
      */
-    public const ADMIN_REGISTRATION_SETTING = 'allowRegistration';
+    public const ADMIN_REGISTRATION_SETTING = 'allowAdminRegistration';
 
     /**
      * Setting that opens sign-up from a site built on a template, or any

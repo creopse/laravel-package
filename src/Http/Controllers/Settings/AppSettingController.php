@@ -19,7 +19,7 @@ class AppSettingController extends Controller
      * secrets (translation API keys), so any key not listed here stays
      * behind auth:sanctum by default, including new ones added later.
      */
-    private const PUBLIC_KEYS = ['basePath', 'adminProfileTypeLabel', 'displayAdminProfileType', 'allowRegistration', 'allowSiteRegistration'];
+    private const PUBLIC_KEYS = ['basePath', 'adminProfileTypeLabel', 'displayAdminProfileType', 'allowAdminRegistration', 'allowSiteRegistration'];
 
     /**
      * Permissions whose screens use the translation API keys.
