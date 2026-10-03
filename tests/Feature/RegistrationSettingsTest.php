@@ -74,16 +74,19 @@ it('keeps the admin and site settings independent', function () {
 
 it('refuses phone sign-up unless allowSiteRegistration is on', function () {
     User::factory()->create();
-    FakePhoneVerifier::install();
+    $verifier = FakePhoneVerifier::install();
 
+    // Same answer as for a known number, so it doesn't tell which numbers
+    // have an account, but no code is sent.
     $this->postJson('/api/auth/phone', [
         'phone' => '+22990000000',
         'firstname' => 'New',
         'lastname' => 'Comer',
         'allow_registration' => true,
-    ])->assertStatus(403)->assertJson(['errorCode' => ResponseErrorCode::AUTH_REGISTRATION_DISABLED->value]);
+    ])->assertOk();
 
-    expect(User::where('phone', '+22990000000')->exists())->toBeFalse();
+    expect($verifier->codes)->toBeEmpty()
+        ->and(User::where('phone', '+22990000000')->exists())->toBeFalse();
 });
 
 it('exposes both settings to pre-auth screens', function () {

@@ -42,6 +42,12 @@ it('ignores a client-supplied account_status on phone registration once other us
         'account_status' => AccountStatus::ENABLED->value,
     ]);
 
+    $this->postJson('/api/auth/phone/verify', [
+        'phone' => '+15005550001',
+        'code' => '123456',
+        'account_status' => AccountStatus::ENABLED->value,
+    ]);
+
     $created = User::wherePhone('+15005550001')->first();
     expect($created)->not->toBeNull();
     expect($created->account_status)->toBe(AccountStatus::DISABLED->value);
