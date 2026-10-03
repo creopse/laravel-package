@@ -256,15 +256,15 @@ class Functions
             $base = array_merge($base, $symbolsBase);
         }
 
-        shuffle($base);
-
         $password = '';
 
+        // random_int() rather than array_rand()/rand(): these passwords are
+        // real credentials (imported users), so they need a CSPRNG.
         for ($i = 0; $i < $length; $i++) {
-            $char = $base[array_rand($base)];
+            $char = $base[random_int(0, count($base) - 1)];
 
             // Randomly convert letters to uppercase
-            if (in_array($char, $lettersBase) && rand(0, 1) === 0) {
+            if (in_array($char, $lettersBase) && random_int(0, 1) === 0) {
                 $char = strtoupper($char);
             }
 

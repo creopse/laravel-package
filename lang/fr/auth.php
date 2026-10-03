@@ -9,6 +9,7 @@ return [
     'email_already_verified_text' => 'Votre adresse email a déjà été vérifiée. Vous pouvez accéder à toutes les fonctionnalités.',
     'email_change' => 'Modification de votre adresse email',
     'email_changed_successfully' => 'L\'adresse email de votre compte a été modifiée avec succès.',
+    'email_changed_notice' => 'L\'adresse email de votre compte a été remplacée par :email. Si vous n\'êtes pas à l\'origine de ce changement, contactez immédiatement l\'administrateur du site.',
     'email_verification' => 'Vérification d\'email',
     'email_verified_successfully' => 'Email vérifié avec succès',
     'email_verified_successfully_text' => 'Votre adresse email a été vérifiée avec succès. Vous pouvez maintenant accéder à toutes les fonctionnalités.',

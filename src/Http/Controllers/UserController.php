@@ -11,6 +11,7 @@ use Creopse\Creopse\Enums\ResponseStatusCode;
 use Creopse\Creopse\Events\Auth\AccountActivatedEvent;
 use Creopse\Creopse\Events\Auth\UserRegisteredEvent;
 use Creopse\Creopse\Helpers\Functions;
+use Creopse\Creopse\Helpers\PasswordPolicy;
 use Creopse\Creopse\Helpers\UsernameGenerator;
 use Creopse\Creopse\Http\Resources\UserResource;
 use Creopse\Creopse\Mail\CommonMail;
@@ -95,7 +96,7 @@ class UserController extends Controller
             'lastname' => 'required',
             'firstname' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:8',
+            'password' => ['required', PasswordPolicy::complexity()],
             'account_status' => 'sometimes',
             'preferences' => 'sometimes|array',
             'avatar' => 'sometimes',
@@ -368,7 +369,7 @@ class UserController extends Controller
 
         if ($request->input('send_credentials_email')) {
             $validator = Validator::make($request->all(), [
-                'password' => 'required|min:8',
+                'password' => ['required', PasswordPolicy::complexity()],
             ]);
 
             // If data not valid return error

@@ -84,6 +84,7 @@ Route::prefix('/auth')->group(function () {
         ->name('verification.send.email');
 
     Route::get('/logout/{guard?}', LogoutController::class)
+        ->whereIn('guard', ['web', 'admin'])
         ->middleware('auth:sanctum')
         ->name('logout');
 

@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -47,6 +48,26 @@ class EmailVerificationController extends Controller
      */
     public function verify(EmailVerificationRequest $request): JsonResponse
     {
+        // The admin forwards the signed link's expires/signature here. They
+        // used to be ignored: an account could verify an address it doesn't
+        // own with nothing more than sha1() of it. The signature covers the
+        // link's own (web) route, so it is checked against that URL.
+        $signedLink = Request::create(route('verification.verify', [
+            'id' => $request->route('id'),
+            'hash' => $request->route('hash'),
+            'expires' => $request->query('expires'),
+            'signature' => $request->query('signature'),
+        ]));
+
+        if (! URL::hasValidSignature($signedLink)) {
+            return $this->sendResponse(
+                null,
+                ResponseStatusCode::FORBIDDEN,
+                'Invalid verification link',
+                ResponseErrorCode::AUTH_INVALID_TOKEN
+            );
+        }
+
         if ($request->user()->hasVerifiedEmail()) {
 
             return $this->sendResponse(
