@@ -5,25 +5,21 @@
 // with no profile yet (the normal state right after phone registration,
 // since a profile is only attached via a separate /auth/profile call)
 // still logged in - the disabled-account gate was bypassable for the whole
-// phone provider. Also hardens the OTP itself: it now expires
-// (verification_code_expires_at) instead of remaining valid indefinitely.
+// phone provider. Codes themselves are generated, expired and checked by
+// the provider (FakePhoneVerifier stands in for Twilio Verify here).
 
 use Creopse\Creopse\Models\User;
+use Creopse\Creopse\Tests\Support\FakePhoneVerifier;
 
 beforeEach(function () {
-    config([
-        'services.wassa_sms.token' => 'test-token',
-        'services.wassa_sms.endpoint' => 'http://127.0.0.1:1',
-    ]);
+    $this->phoneVerifier = FakePhoneVerifier::install();
 });
 
 it('refuses to log in a disabled account with no profile via phone verification', function () {
-    $user = User::factory()->disabled()->create([
-        'phone' => '+15005550002',
-        'verification_code' => '123456',
-        'verification_code_expires_at' => now()->addMinutes(10),
-    ]);
+    $user = User::factory()->disabled()->create(['phone' => '+15005550002']);
     expect($user->profile)->toBeNull();
+
+    $this->phoneVerifier->send('+15005550002');
 
     $this->postJson('/api/auth/phone/verify', [
         'phone' => '+15005550002',
@@ -31,12 +27,10 @@ it('refuses to log in a disabled account with no profile via phone verification'
     ])->assertStatus(403);
 });
 
-it('logs in an enabled account via phone verification with the correct, unexpired code', function () {
-    $user = User::factory()->create([
-        'phone' => '+15005550003',
-        'verification_code' => '123456',
-        'verification_code_expires_at' => now()->addMinutes(10),
-    ]);
+it('logs in an enabled account via phone verification with the correct code', function () {
+    User::factory()->create(['phone' => '+15005550003']);
+
+    $this->phoneVerifier->send('+15005550003');
 
     $this->postJson('/api/auth/phone/verify', [
         'phone' => '+15005550003',
@@ -44,15 +38,13 @@ it('logs in an enabled account via phone verification with the correct, unexpire
     ])->assertOk();
 });
 
-it('refuses an expired verification code', function () {
-    $user = User::factory()->create([
-        'phone' => '+15005550004',
-        'verification_code' => '123456',
-        'verification_code_expires_at' => now()->subMinute(),
-    ]);
+it('refuses a code the provider rejects', function () {
+    User::factory()->create(['phone' => '+15005550004']);
+
+    $this->phoneVerifier->send('+15005550004');
 
     $this->postJson('/api/auth/phone/verify', [
         'phone' => '+15005550004',
-        'code' => '123456',
+        'code' => '000000',
     ])->assertStatus(422);
 });

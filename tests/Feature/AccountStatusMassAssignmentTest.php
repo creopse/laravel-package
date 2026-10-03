@@ -10,6 +10,7 @@
 use Creopse\Creopse\Enums\AccountStatus;
 use Creopse\Creopse\Models\AppSetting;
 use Creopse\Creopse\Models\User;
+use Creopse\Creopse\Tests\Support\FakePhoneVerifier;
 
 it('ignores a client-supplied account_status on registration once other users already exist', function () {
     User::factory()->create();
@@ -31,8 +32,7 @@ it('ignores a client-supplied account_status on registration once other users al
 it('ignores a client-supplied account_status on phone registration once other users already exist', function () {
     User::factory()->create();
     AppSetting::updateOrCreate(['key' => 'allowSiteRegistration'], ['value' => '1']);
-    // An unreachable endpoint: sending fails, after the account is created.
-    config(['services.wassa_sms.token' => 'test-token', 'services.wassa_sms.endpoint' => 'http://127.0.0.1:1']);
+    FakePhoneVerifier::install();
 
     $this->postJson('/api/auth/phone', [
         'phone' => '+15005550001',

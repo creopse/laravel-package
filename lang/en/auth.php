@@ -18,5 +18,4 @@ return [
     'password_reset' => 'Password reset',
     'reset_password' => 'Reset password',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-    'verification_code' => 'Your verification code is :code',
 ];
